@@ -1,0 +1,23 @@
+[package]
+name = "mx-message"
+version = "0.1.0"
+edition = "2024"
+exclude = [".DS_Store", "/target", ".vscode", ".github"]
+authors = ["Plasmatic Engineering <shankar@goplasmatic.io>"]
+license = "Apache-2.0"
+description = "A fast, type-safe Rust implementation of MXMessage for parsing MX messages."
+readme = "README.md"
+homepage = "https://github.com/GoPlasmatic/MXMessage"
+repository = "https://github.com/GoPlasmatic/MXMessage"
+keywords = ["mx", "message", "parsing", "iso20022"]
+categories = ["data-structures", "development-tools", "parsing"]
+
+
+[dependencies]
+regex = "1.9.1"
+serde = { version = "1.0", features = ["derive"] }
+chrono = { version = "0.4", features = ["serde"] }
+
+[dev-dependencies]
+serde_json = "1.0"
+quick-xml = { version = "0.31", features = ["serialize"] }
