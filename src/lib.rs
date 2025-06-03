@@ -17,6 +17,11 @@
 // You may obtain a copy of this library at
 // https://github.com/GoPlasmatic/MXMessage
 
-pub mod document;
 pub mod common;
-pub mod pacs_008_001_13;
+pub mod document;
+
+pub mod camt_029_001_09;
+pub mod camt_056_001_08;
+pub mod camt_057_001_06;
+pub mod pacs_008_001_08;
+pub mod pacs_009_001_08;

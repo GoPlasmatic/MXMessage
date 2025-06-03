@@ -2,9 +2,9 @@
 // This example demonstrates XML serialization and deserialization of pacs.008 messages
 
 use mx_message::document::Document;
-use mx_message::pacs_008_001_13::*;
-use quick_xml::se::to_string as xml_to_string;
+use mx_message::pacs_008_001_08::*;
 use quick_xml::de::from_str as xml_from_str;
+use quick_xml::se::to_string as xml_to_string;
 use serde_json;
 use std::error::Error;
 
@@ -13,7 +13,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     // Create a sample message
     let document = create_minimal_pacs008_message()?;
-    
+
     // Validate the message
     println!("1. Validating the message...");
     if let Err(e) = document.validate() {
@@ -26,7 +26,10 @@ fn main() -> Result<(), Box<dyn Error>> {
     println!("2. JSON Serialization:");
     let json_output = serde_json::to_string_pretty(&document)?;
     println!("JSON (first 300 chars):");
-    println!("{}\n", &json_output[..std::cmp::min(300, json_output.len())]);
+    println!(
+        "{}\n",
+        &json_output[..std::cmp::min(300, json_output.len())]
+    );
 
     // Serialize to XML
     println!("3. XML Serialization:");
@@ -53,11 +56,11 @@ fn main() -> Result<(), Box<dyn Error>> {
         println!("✓ Original and deserialized messages are identical\n");
     } else {
         println!("✗ Original and deserialized messages differ\n");
-        
+
         // Show differences in JSON format for easier comparison
         let original_json = serde_json::to_string_pretty(&document)?;
         let deserialized_json = serde_json::to_string_pretty(&deserialized_document)?;
-        
+
         println!("Original JSON:");
         println!("{}\n", original_json);
         println!("Deserialized JSON:");
@@ -70,17 +73,16 @@ fn main() -> Result<(), Box<dyn Error>> {
 
 fn create_minimal_pacs008_message() -> Result<Document, Box<dyn Error>> {
     // Create a minimal but valid pacs.008 message for XML testing
-    
-    let group_header = GroupHeader131 {
+
+    let group_header = GroupHeader93 {
         msg_id: "XML123".to_string(),
         cre_dt_tm: "2024-01-15T10:30:00Z".to_string(),
-        xpry_dt_tm: None,
         btch_bookg: None,
         nb_of_txs: "1".to_string(),
         ctrl_sum: None,
         ttl_intr_bk_sttlm_amt: None,
         intr_bk_sttlm_dt: None,
-        sttlm_inf: SettlementInstruction15 {
+        sttlm_inf: SettlementInstruction7 {
             sttlm_mtd: SettlementMethod1Code::CodeINDA,
             sttlm_acct: None,
             clr_sys: None,
@@ -96,8 +98,8 @@ fn create_minimal_pacs008_message() -> Result<Document, Box<dyn Error>> {
         instd_agt: None,
     };
 
-    let debtor_agent = BranchAndFinancialInstitutionIdentification8 {
-        fin_instn_id: FinancialInstitutionIdentification23 {
+    let debtor_agent = BranchAndFinancialInstitutionIdentification6 {
+        fin_instn_id: FinancialInstitutionIdentification18 {
             bicfi: Some("TESTBIC1".to_string()),
             clr_sys_mmb_id: None,
             lei: None,
@@ -108,8 +110,8 @@ fn create_minimal_pacs008_message() -> Result<Document, Box<dyn Error>> {
         brnch_id: None,
     };
 
-    let creditor_agent = BranchAndFinancialInstitutionIdentification8 {
-        fin_instn_id: FinancialInstitutionIdentification23 {
+    let creditor_agent = BranchAndFinancialInstitutionIdentification6 {
+        fin_instn_id: FinancialInstitutionIdentification18 {
             bicfi: Some("TESTBIC2".to_string()),
             clr_sys_mmb_id: None,
             lei: None,
@@ -120,7 +122,7 @@ fn create_minimal_pacs008_message() -> Result<Document, Box<dyn Error>> {
         brnch_id: None,
     };
 
-    let debtor = PartyIdentification272 {
+    let debtor = PartyIdentification135 {
         nm: Some("Test Debtor".to_string()),
         pstl_adr: None,
         id: None,
@@ -128,7 +130,7 @@ fn create_minimal_pacs008_message() -> Result<Document, Box<dyn Error>> {
         ctct_dtls: None,
     };
 
-    let creditor = PartyIdentification272 {
+    let creditor = PartyIdentification135 {
         nm: Some("Test Creditor".to_string()),
         pstl_adr: None,
         id: None,
@@ -136,7 +138,7 @@ fn create_minimal_pacs008_message() -> Result<Document, Box<dyn Error>> {
         ctct_dtls: None,
     };
 
-    let payment_id = PaymentIdentification13 {
+    let payment_id = PaymentIdentification7 {
         instr_id: None,
         end_to_end_id: "E2EXML123".to_string(),
         tx_id: None,
@@ -144,7 +146,7 @@ fn create_minimal_pacs008_message() -> Result<Document, Box<dyn Error>> {
         clr_sys_ref: None,
     };
 
-    let credit_transfer_tx = CreditTransferTransaction70 {
+    let credit_transfer_tx = CreditTransferTransaction39 {
         pmt_id: payment_id,
         pmt_tp_inf: None,
         intr_bk_sttlm_amt: ActiveCurrencyAndAmount {
@@ -155,14 +157,12 @@ fn create_minimal_pacs008_message() -> Result<Document, Box<dyn Error>> {
         sttlm_prty: None,
         sttlm_tm_indctn: None,
         sttlm_tm_req: None,
-        addtl_dt_tm: None,
+        accptnc_dt_tm: None,
+        poolg_adjstmnt_dt: None,
         instd_amt: None,
         xchg_rate: None,
-        agrd_rate: None,
         chrg_br: ChargeBearerType1Code::CodeSHAR,
         chrgs_inf: None,
-        mndt_rltd_inf: None,
-        pmt_sgntr: None,
         prvs_instg_agt1: None,
         prvs_instg_agt1_acct: None,
         prvs_instg_agt2: None,
@@ -198,13 +198,13 @@ fn create_minimal_pacs008_message() -> Result<Document, Box<dyn Error>> {
         splmtry_data: None,
     };
 
-    let fi_to_fi_msg = FIToFICustomerCreditTransferV13 {
+    let fi_to_fi_msg = FIToFICustomerCreditTransferV08 {
         grp_hdr: group_header,
         cdt_trf_tx_inf: vec![credit_transfer_tx],
         splmtry_data: None,
     };
 
-    let document = Document::FIToFICustomerCreditTransferV13(Box::new(fi_to_fi_msg));
+    let document = Document::FIToFICustomerCreditTransferV08(Box::new(fi_to_fi_msg));
 
     Ok(document)
-} 
+}

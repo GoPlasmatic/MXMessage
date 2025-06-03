@@ -3,7 +3,7 @@
 // a pacs.008 (FI to FI Customer Credit Transfer) message
 
 use mx_message::document::Document;
-use mx_message::pacs_008_001_13::*;
+use mx_message::pacs_008_001_08::*;
 use serde_json;
 use std::error::Error;
 
@@ -12,14 +12,20 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     // Create a sample pacs.008 message
     let document = create_sample_pacs008_message()?;
-    
+
     // Validate the message
     println!("1. Validating the message...");
     match document.validate() {
         Ok(()) => println!("✓ Message validation successful\n"),
         Err(e) => {
-            println!("✗ Message validation failed: {} (code: {})\n", e.message, e.code);
-            return Err(Box::new(std::io::Error::new(std::io::ErrorKind::InvalidData, e.message)));
+            println!(
+                "✗ Message validation failed: {} (code: {})\n",
+                e.message, e.code
+            );
+            return Err(Box::new(std::io::Error::new(
+                std::io::ErrorKind::InvalidData,
+                e.message,
+            )));
         }
     }
 
@@ -27,7 +33,10 @@ fn main() -> Result<(), Box<dyn Error>> {
     println!("2. Serializing to JSON...");
     let json_output = serde_json::to_string_pretty(&document)?;
     println!("JSON Output (first 500 chars):");
-    println!("{}\n", &json_output[..std::cmp::min(500, json_output.len())]);
+    println!(
+        "{}\n",
+        &json_output[..std::cmp::min(500, json_output.len())]
+    );
     if json_output.len() > 500 {
         println!("... (truncated)\n");
     }
@@ -42,8 +51,14 @@ fn main() -> Result<(), Box<dyn Error>> {
     match deserialized_document.validate() {
         Ok(()) => println!("✓ Deserialized message validation successful\n"),
         Err(e) => {
-            println!("✗ Deserialized message validation failed: {} (code: {})\n", e.message, e.code);
-            return Err(Box::new(std::io::Error::new(std::io::ErrorKind::InvalidData, e.message)));
+            println!(
+                "✗ Deserialized message validation failed: {} (code: {})\n",
+                e.message, e.code
+            );
+            return Err(Box::new(std::io::Error::new(
+                std::io::ErrorKind::InvalidData,
+                e.message,
+            )));
         }
     }
 
@@ -56,23 +71,35 @@ fn main() -> Result<(), Box<dyn Error>> {
     }
 
     // Display message details
-    if let Document::FIToFICustomerCreditTransferV13(ref msg) = document {
+    if let Document::FIToFICustomerCreditTransferV08(ref msg) = document {
         println!("6. Message Details:");
         println!("   Message ID: {}", msg.grp_hdr.msg_id);
         println!("   Creation Date/Time: {}", msg.grp_hdr.cre_dt_tm);
         println!("   Number of Transactions: {}", msg.grp_hdr.nb_of_txs);
-        println!("   Settlement Method: {:?}", msg.grp_hdr.sttlm_inf.sttlm_mtd);
-        
+        println!(
+            "   Settlement Method: {:?}",
+            msg.grp_hdr.sttlm_inf.sttlm_mtd
+        );
+
         if let Some(ref total_amount) = msg.grp_hdr.ttl_intr_bk_sttlm_amt {
-            println!("   Total Settlement Amount: {} {}", total_amount.value, total_amount.ccy);
+            println!(
+                "   Total Settlement Amount: {} {}",
+                total_amount.value, total_amount.ccy
+            );
         }
-        
-        println!("   Credit Transfer Transactions: {}", msg.cdt_trf_tx_inf.len());
-        
+
+        println!(
+            "   Credit Transfer Transactions: {}",
+            msg.cdt_trf_tx_inf.len()
+        );
+
         for (i, tx) in msg.cdt_trf_tx_inf.iter().enumerate() {
             println!("   Transaction {}:", i + 1);
             println!("     End-to-End ID: {}", tx.pmt_id.end_to_end_id);
-            println!("     Settlement Amount: {} {}", tx.intr_bk_sttlm_amt.value, tx.intr_bk_sttlm_amt.ccy);
+            println!(
+                "     Settlement Amount: {} {}",
+                tx.intr_bk_sttlm_amt.value, tx.intr_bk_sttlm_amt.ccy
+            );
             println!("     Charge Bearer: {:?}", tx.chrg_br);
             if let Some(ref debtor_name) = tx.dbtr.nm {
                 println!("     Debtor: {}", debtor_name);
@@ -89,10 +116,9 @@ fn main() -> Result<(), Box<dyn Error>> {
 
 fn create_sample_pacs008_message() -> Result<Document, Box<dyn Error>> {
     // Create Group Header
-    let group_header = GroupHeader131 {
+    let group_header = GroupHeader93 {
         msg_id: "MSG123456789".to_string(),
         cre_dt_tm: "2024-01-15T10:30:00Z".to_string(),
-        xpry_dt_tm: None,
         btch_bookg: Some(false),
         nb_of_txs: "1".to_string(),
         ctrl_sum: Some(1000.00),
@@ -101,7 +127,7 @@ fn create_sample_pacs008_message() -> Result<Document, Box<dyn Error>> {
             value: 1000.00,
         }),
         intr_bk_sttlm_dt: Some("2024-01-15".to_string()),
-        sttlm_inf: SettlementInstruction15 {
+        sttlm_inf: SettlementInstruction7 {
             sttlm_mtd: SettlementMethod1Code::CodeCLRG,
             sttlm_acct: None,
             clr_sys: Some(ClearingSystemIdentification3Choice {
@@ -121,8 +147,8 @@ fn create_sample_pacs008_message() -> Result<Document, Box<dyn Error>> {
     };
 
     // Create Financial Institution Identification for Debtor Agent
-    let debtor_agent = BranchAndFinancialInstitutionIdentification8 {
-        fin_instn_id: FinancialInstitutionIdentification23 {
+    let debtor_agent = BranchAndFinancialInstitutionIdentification6 {
+        fin_instn_id: FinancialInstitutionIdentification18 {
             bicfi: Some("DEUTDEFF".to_string()),
             clr_sys_mmb_id: None,
             lei: None,
@@ -134,8 +160,8 @@ fn create_sample_pacs008_message() -> Result<Document, Box<dyn Error>> {
     };
 
     // Create Financial Institution Identification for Creditor Agent
-    let creditor_agent = BranchAndFinancialInstitutionIdentification8 {
-        fin_instn_id: FinancialInstitutionIdentification23 {
+    let creditor_agent = BranchAndFinancialInstitutionIdentification6 {
+        fin_instn_id: FinancialInstitutionIdentification18 {
             bicfi: Some("BNPAFRPP".to_string()),
             clr_sys_mmb_id: None,
             lei: None,
@@ -147,18 +173,16 @@ fn create_sample_pacs008_message() -> Result<Document, Box<dyn Error>> {
     };
 
     // Create Debtor Party
-    let debtor = PartyIdentification272 {
+    let debtor = PartyIdentification135 {
         nm: Some("ACME Corporation".to_string()),
-        pstl_adr: Some(PostalAddress27 {
+        pstl_adr: Some(PostalAddress24 {
             adr_tp: None,
-            care_of: None,
             dept: None,
             sub_dept: None,
             strt_nm: Some("Main Street".to_string()),
             bldg_nb: Some("123".to_string()),
             bldg_nm: None,
             flr: None,
-            unit_nb: None,
             pst_bx: None,
             room: None,
             pst_cd: Some("12345".to_string()),
@@ -175,18 +199,16 @@ fn create_sample_pacs008_message() -> Result<Document, Box<dyn Error>> {
     };
 
     // Create Creditor Party
-    let creditor = PartyIdentification272 {
+    let creditor = PartyIdentification135 {
         nm: Some("Global Suppliers Ltd".to_string()),
-        pstl_adr: Some(PostalAddress27 {
+        pstl_adr: Some(PostalAddress24 {
             adr_tp: None,
-            care_of: None,
             dept: None,
             sub_dept: None,
             strt_nm: Some("Rue de la Paix".to_string()),
             bldg_nb: Some("456".to_string()),
             bldg_nm: None,
             flr: None,
-            unit_nb: None,
             pst_bx: None,
             room: None,
             pst_cd: Some("75001".to_string()),
@@ -203,7 +225,7 @@ fn create_sample_pacs008_message() -> Result<Document, Box<dyn Error>> {
     };
 
     // Create Payment Identification
-    let payment_id = PaymentIdentification13 {
+    let payment_id = PaymentIdentification7 {
         instr_id: Some("INSTR123".to_string()),
         end_to_end_id: "E2E123456789".to_string(),
         tx_id: Some("TXN123456789".to_string()),
@@ -212,7 +234,7 @@ fn create_sample_pacs008_message() -> Result<Document, Box<dyn Error>> {
     };
 
     // Create Credit Transfer Transaction
-    let credit_transfer_tx = CreditTransferTransaction70 {
+    let credit_transfer_tx = CreditTransferTransaction39 {
         pmt_id: payment_id,
         pmt_tp_inf: None,
         intr_bk_sttlm_amt: ActiveCurrencyAndAmount {
@@ -223,17 +245,15 @@ fn create_sample_pacs008_message() -> Result<Document, Box<dyn Error>> {
         sttlm_prty: Some(Priority3Code::CodeNORM),
         sttlm_tm_indctn: None,
         sttlm_tm_req: None,
-        addtl_dt_tm: None,
+        accptnc_dt_tm: None,
+        poolg_adjstmnt_dt: None,
         instd_amt: Some(ActiveOrHistoricCurrencyAndAmount {
             ccy: "EUR".to_string(),
             value: 1000.00,
         }),
         xchg_rate: None,
-        agrd_rate: None,
         chrg_br: ChargeBearerType1Code::CodeSHAR,
         chrgs_inf: None,
-        mndt_rltd_inf: None,
-        pmt_sgntr: None,
         prvs_instg_agt1: None,
         prvs_instg_agt1_acct: None,
         prvs_instg_agt2: None,
@@ -251,11 +271,11 @@ fn create_sample_pacs008_message() -> Result<Document, Box<dyn Error>> {
         ultmt_dbtr: None,
         initg_pty: None,
         dbtr: debtor,
-        dbtr_acct: Some(CashAccount40 {
-            id: Some(AccountIdentification4Choice {
+        dbtr_acct: Some(CashAccount38 {
+            id: AccountIdentification4Choice {
                 iban: Some("DE89370400440532013000".to_string()),
                 othr: None,
-            }),
+            },
             tp: None,
             ccy: Some("EUR".to_string()),
             nm: Some("ACME Main Account".to_string()),
@@ -266,11 +286,11 @@ fn create_sample_pacs008_message() -> Result<Document, Box<dyn Error>> {
         cdtr_agt: creditor_agent,
         cdtr_agt_acct: None,
         cdtr: creditor,
-        cdtr_acct: Some(CashAccount40 {
-            id: Some(AccountIdentification4Choice {
+        cdtr_acct: Some(CashAccount38 {
+            id: AccountIdentification4Choice {
                 iban: Some("FR1420041010050500013M02606".to_string()),
                 othr: None,
-            }),
+            },
             tp: None,
             ccy: Some("EUR".to_string()),
             nm: Some("Supplier Account".to_string()),
@@ -286,7 +306,7 @@ fn create_sample_pacs008_message() -> Result<Document, Box<dyn Error>> {
         rgltry_rptg: None,
         tax: None,
         rltd_rmt_inf: None,
-        rmt_inf: Some(RemittanceInformation22 {
+        rmt_inf: Some(RemittanceInformation16 {
             ustrd: Some(vec!["Payment for Invoice INV-2024-001".to_string()]),
             strd: None,
         }),
@@ -294,14 +314,14 @@ fn create_sample_pacs008_message() -> Result<Document, Box<dyn Error>> {
     };
 
     // Create the main FI to FI Customer Credit Transfer message
-    let fi_to_fi_msg = FIToFICustomerCreditTransferV13 {
+    let fi_to_fi_msg = FIToFICustomerCreditTransferV08 {
         grp_hdr: group_header,
         cdt_trf_tx_inf: vec![credit_transfer_tx],
         splmtry_data: None,
     };
 
     // Wrap in Document
-    let document = Document::FIToFICustomerCreditTransferV13(Box::new(fi_to_fi_msg));
+    let document = Document::FIToFICustomerCreditTransferV08(Box::new(fi_to_fi_msg));
 
     Ok(document)
-} 
+}

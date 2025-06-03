@@ -17,26 +17,29 @@
 // You may obtain a copy of this library at
 // https://github.com/GoPlasmatic/MXMessage
 
-use serde::{Deserialize, Serialize};
-use crate::pacs_008_001_13::*;
 use crate::common::ValidationError;
+use crate::pacs_008_001_08::*;
+use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
 pub enum Document {
-	#[serde(rename = "FIToFICstmrCdtTrf")]
-	FIToFICustomerCreditTransferV13(Box<FIToFICustomerCreditTransferV13>),
+    #[serde(rename = "FIToFICstmrCdtTrf")]
+    FIToFICustomerCreditTransferV08(Box<FIToFICustomerCreditTransferV08>),
 
-	#[default]
-	UNKNOWN,
+    #[default]
+    UNKNOWN,
 }
 
 impl Document {
     pub fn validate(&self) -> Result<(), ValidationError> {
         match self {
-			Document::FIToFICustomerCreditTransferV13(value) => value.validate(),
-			Document::UNKNOWN => {
+            Document::FIToFICustomerCreditTransferV08(value) => value.validate(),
+            Document::UNKNOWN => {
                 // Return an error for the UNKNOWN case
-                Err(ValidationError::new(9999, "Unknown document type".to_string()))
+                Err(ValidationError::new(
+                    9999,
+                    "Unknown document type".to_string(),
+                ))
             }
         }
     }
