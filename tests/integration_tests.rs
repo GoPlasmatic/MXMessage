@@ -237,6 +237,28 @@ fn test_remittance_information() {
     }
 }
 
+#[test]
+fn test_document_message_type_identification() {
+    let document = create_test_pacs008_message();
+
+    // Test message type identification
+    assert_eq!(document.message_type(), "pacs.008.001.08");
+
+    // Test CBPR+ compliance
+    assert!(document.is_cbpr_plus_compliant());
+}
+
+#[test]
+fn test_unknown_document_cbpr_compliance() {
+    let document = Document::UNKNOWN;
+
+    // Test message type identification
+    assert_eq!(document.message_type(), "unknown");
+
+    // Test CBPR+ compliance
+    assert!(!document.is_cbpr_plus_compliant());
+}
+
 // Helper function to create a test pacs.008 message
 fn create_test_pacs008_message() -> Document {
     let group_header = GroupHeader93 {
