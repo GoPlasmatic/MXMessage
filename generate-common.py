@@ -15,7 +15,7 @@ class StructMatch:
 
 def scan_rust_files(directory: str) -> tuple[defaultdict, dict, list]:
     """
-    Scan .rs files for struct and enum definitions and their usage in type definitions.
+    Scan camt_*.rs and pacs_*.rs files for struct and enum definitions and their usage in type definitions.
     Returns uppercase types for common.rs and lowercase types for removal.
     """
     type_locations = defaultdict(list)
@@ -24,19 +24,26 @@ def scan_rust_files(directory: str) -> tuple[defaultdict, dict, list]:
     
     # Compile regex patterns once
     type_pattern = re.compile(
-        r'(\n\n// (\w+) \.\.\.\n'
+        r'(// (\w+) \.\.\.\n'
         r'#\[derive\(Debug, Default, Serialize, Deserialize, Clone, PartialEq\)\]\n'
-        r'(?:pub struct|pub enum)\s+\w+.*?\t\tOk\(\(\)\)\n\t\}\n\}\n)',
+        r'(?:pub struct|pub enum)\s+\w+.*?'
+        r'impl \w+ \{\s*pub fn validate\(&self\) -> Result<\(\), ValidationError> \{.*?\n\s*\}\s*\n\})',
         re.DOTALL
     )
     
-    # More efficient base pattern for type usage
-    base_usage_pattern = r'(?m)^[^/]*?:\s*(?:{}|Option<{}>|Vec<{}>|Option<Vec<{}>>)\s*,'
-    base_usage_pattern = r'(?m)^[^/]*?:\s*([\w\d]+|Option<[\w\d]+>|Vec<[\w\d]+>|Option<Vec<[\w\d]+>>)\s*,'
-    type_usage_patterns = re.compile(base_usage_pattern)
+    # Pattern for type usage in field definitions
+    type_usage_patterns = re.compile(r'pub \w+: ([\w\d]+|Option<[\w\d]+>|Vec<[\w\d]+>|Option<Vec<[\w\d]+>>)\s*,')
 
     dir_path = Path(directory).resolve()
-    rust_files = [f for f in os.listdir(dir_path) if f.endswith('.rs')]
+    # Filter for only camt_*.rs and pacs_*.rs files
+    rust_files = [f for f in os.listdir(dir_path) 
+                  if f.endswith('.rs') and (f.startswith('camt_') or f.startswith('pacs_'))]
+    
+    if not rust_files:
+        print(f"No camt_*.rs or pacs_*.rs files found in {directory}")
+        return defaultdict(list), {}, []
+    
+    print(f"Found {len(rust_files)} camt_/pacs_ files: {', '.join(sorted(rust_files))}")
     
     # Process each file only once
     for filename in rust_files:
@@ -50,7 +57,8 @@ def scan_rust_files(directory: str) -> tuple[defaultdict, dict, list]:
                 type_matches = list(type_pattern.finditer(content))
                 
                 def extract_type(type_str):
-                    base_type = re.search(r'(\w+)(?:>)*,?$', type_str)
+                    # Extract base type from Option<Type>, Vec<Type>, Option<Vec<Type>>, or just Type
+                    base_type = re.search(r'(?:Option<(?:Vec<)?)?(\w+)(?:>)?>?', type_str)
                     return base_type.group(1) if base_type else None
 
                 type_usages = []
@@ -143,7 +151,9 @@ def print_summary(type_locations: defaultdict, lowercase_matches: list, typecoun
         print("-" * 40)
         by_file = defaultdict(list)
         for match in lowercase_matches:
-            by_file[match.filename].append(re.search(r'// (\w+) \.\.\.', match.content).group(1))
+            type_match = re.search(r'// (\w+) \.\.\.\n', match.content)
+            if type_match:
+                by_file[match.filename].append(type_match.group(1))
         
         for filename, types in sorted(by_file.items()):
             print(f"{filename}:")
@@ -151,19 +161,39 @@ def print_summary(type_locations: defaultdict, lowercase_matches: list, typecoun
                 print(f"  - {type_name}")
         print()
     
-    # Print uppercase types summary
+    # Identify root structs that should stay in their original files
+    root_structs = set()
+    for filename in set(match.filename for matches in type_locations.values() for match in matches):
+        # Extract the message type from filename (e.g., camt_057_001_06.rs -> camt.057.001.06)
+        if filename.startswith(('camt_', 'pacs_')):
+            # Look for structs that match the file pattern (these are usually the root message structs)
+            file_base = filename.replace('.rs', '').replace('_', '').upper()
+            for type_name in type_locations.keys():
+                # Root structs often contain the file identifier or are main message types
+                type_upper = type_name.upper()
+                if (file_base[:4] in type_upper or  # e.g., CAMT in CamtXXXXXXVXX
+                    type_name.endswith(('V01', 'V02', 'V03', 'V04', 'V05', 'V06', 'V07', 'V08', 'V09')) or
+                    'PROPRIETARYMESSAGE' in type_upper or
+                    'DOCUMENT' in type_upper):
+                    # Check if this type is only in one file (root structs shouldn't be duplicated)
+                    if len(type_locations[type_name]) == 1 and type_locations[type_name][0].filename == filename:
+                        root_structs.add(type_name)
+
+    print(f"\nIdentified root structs to keep in original files: {', '.join(sorted(root_structs))}")
+    
+    # Print uppercase types summary - focus on types that appear in multiple files, excluding root structs
     frequent_types = {
         name: matches 
         for name, matches in type_locations.items() 
-        if sum(match.usage_count for match in matches) >= typecount
+        if name not in root_structs and len(matches) > 1  # Only move types that appear in multiple files
     }
     
     if not frequent_types:
-        print(f"No uppercase types found with usage count >= {typecount}.")
+        print(f"No uppercase types found that appear in multiple files (excluding root structs).")
         return
     
-    print(f"\nUppercase types with usage count >= {typecount}:")
-    print("-" * 40)
+    print(f"\nUppercase types that appear in multiple files (excluding root structs):")
+    print("-" * 70)
     
     # Pre-calculate usage counts
     usage_data = [
@@ -171,12 +201,12 @@ def print_summary(type_locations: defaultdict, lowercase_matches: list, typecoun
         for type_name, matches in frequent_types.items()
     ]
     
-    # Sort by total usage count
+    # Sort by number of files first, then by total usage count
     for type_name, matches, total_usage in sorted(
-        usage_data, key=lambda x: x[2], reverse=True
+        usage_data, key=lambda x: (len(x[1]), x[2]), reverse=True
     ):
         files = [match.filename for match in matches]
-        print(f"{type_name}: used {total_usage} times across {len(files)} files")
+        print(f"{type_name}: appears in {len(files)} files, used {total_usage} times total")
         for match in matches:
             print(f"  - {match.filename}: {match.usage_count} uses")
     print()
@@ -197,10 +227,10 @@ def read_existing_common(output_file: str) -> tuple[set, str]:
 
 def main():
     parser = argparse.ArgumentParser(
-        description='Find frequently used structs and move to common.rs'
+        description='Find frequently used structs in camt_*.rs and pacs_*.rs files and move to common.rs'
     )
     parser.add_argument('directory', 
-                       help='Directory containing .rs files (default: current directory)',
+                       help='Directory containing camt_*.rs and pacs_*.rs files (default: current directory)',
                        default='.',
                        nargs='?')
 

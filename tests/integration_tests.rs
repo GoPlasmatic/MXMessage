@@ -1,8 +1,8 @@
 // Integration tests for the MX Message library
 
+use mx_message::common::*;
 use mx_message::document::Document;
 use mx_message::pacs_008_001_08::*;
-use serde_json;
 
 #[test]
 fn test_create_and_validate_pacs008_message() {

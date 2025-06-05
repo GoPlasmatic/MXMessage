@@ -1,11 +1,11 @@
 // Plasmatic MX Message Parsing Library - XML Serialization Example
 // This example demonstrates XML serialization and deserialization of pacs.008 messages
 
+use mx_message::common::*;
 use mx_message::document::Document;
 use mx_message::pacs_008_001_08::*;
 use quick_xml::de::from_str as xml_from_str;
 use quick_xml::se::to_string as xml_to_string;
-use serde_json;
 use std::error::Error;
 
 fn main() -> Result<(), Box<dyn Error>> {

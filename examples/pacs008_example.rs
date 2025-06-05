@@ -2,9 +2,9 @@
 // This example demonstrates how to create, serialize, deserialize, and validate
 // a pacs.008 (FI to FI Customer Credit Transfer) message
 
+use mx_message::common::*;
 use mx_message::document::Document;
 use mx_message::pacs_008_001_08::*;
-use serde_json;
 use std::error::Error;
 
 fn main() -> Result<(), Box<dyn Error>> {
