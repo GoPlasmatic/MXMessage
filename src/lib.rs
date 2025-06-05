@@ -20,8 +20,13 @@
 pub mod common;
 pub mod document;
 
+pub mod camt_027_001_07;
+pub mod camt_028_001_09;
 pub mod camt_029_001_09;
+pub mod camt_052_001_08;
+pub mod camt_053_001_08;
 pub mod camt_056_001_08;
 pub mod camt_057_001_06;
+pub mod camt_998_001_03;
 pub mod pacs_008_001_08;
 pub mod pacs_009_001_08;

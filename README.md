@@ -17,7 +17,7 @@ Add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-mx-message = "0.1.0"
+mx-message = "0.1"
 serde_json = "1.0"  # For JSON serialization
 quick-xml = { version = "0.31", features = ["serialize"] }  # For XML serialization
 ```
@@ -210,9 +210,14 @@ cargo test test_json_serialization_roundtrip
 - **pacs.009.001.08**: FI to FI Customer Direct Debit
 
 **Cash Management Messages (camt)**
+- **camt.027.001.07**: Claim Non Receipt
+- **camt.028.001.09**: Additional Payment Information
 - **camt.029.001.09**: Resolution of Investigation
+- **camt.052.001.08**: Bank to Customer Account Report
+- **camt.053.001.08**: Bank to Customer Statement
 - **camt.056.001.08**: FI to FI Payment Cancellation Request
 - **camt.057.001.06**: Notification to Receive
+- **camt.998.001.03**: Cash Management Proprietary Message
 
 ### Planned Support
 - pacs.002: FI to FI Payment Status Report
@@ -232,9 +237,14 @@ src/
 ├── common.rs              # Shared types and validation errors
 ├── pacs_008_001_08.rs     # FI to FI Customer Credit Transfer
 ├── pacs_009_001_08.rs     # FI to FI Customer Direct Debit
+├── camt_027_001_07.rs     # Claim Non Receipt
+├── camt_028_001_09.rs     # Additional Payment Information
 ├── camt_029_001_09.rs     # Resolution of Investigation
+├── camt_052_001_08.rs     # Bank to Customer Account Report
+├── camt_053_001_08.rs     # Bank to Customer Statement
 ├── camt_056_001_08.rs     # Payment Cancellation Request
-└── camt_057_001_06.rs     # Notification to Receive
+├── camt_057_001_06.rs     # Notification to Receive
+└── camt_998_001_03.rs     # Cash Management Proprietary Message
 ```
 
 ## Contributing
