@@ -17,7 +17,7 @@
 // You may obtain a copy of this library at
 // https://github.com/GoPlasmatic/MXMessage
 
-use crate::common::ValidationError;
+use crate::common::*;
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 

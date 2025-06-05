@@ -17,7 +17,7 @@
 // You may obtain a copy of this library at
 // https://github.com/GoPlasmatic/MXMessage
 
-use crate::common::ValidationError;
+use crate::common::*;
 use serde::{Deserialize, Serialize};
 
 // CashManagementProprietaryMessageV03: Business content of this element is not specified.
