@@ -1,9 +1,8 @@
 // Plasmatic MX Message Parsing Library - XML Serialization Example
 // This example demonstrates XML serialization and deserialization of pacs.008 messages
 
-use mx_message::common::*;
-use mx_message::document::Document;
-use mx_message::pacs_008_001_08::*;
+use mx_message::app_document::Document;
+use mx_message::document::pacs_008_001_08::*;
 use quick_xml::de::from_str as xml_from_str;
 use quick_xml::se::to_string as xml_to_string;
 use std::error::Error;
@@ -74,18 +73,13 @@ fn main() -> Result<(), Box<dyn Error>> {
 fn create_minimal_pacs008_message() -> Result<Document, Box<dyn Error>> {
     // Create a minimal but valid pacs.008 message for XML testing
 
-    let group_header = GroupHeader93 {
+    let group_header = GroupHeader931 {
         msg_id: "XML123".to_string(),
         cre_dt_tm: "2024-01-15T10:30:00Z".to_string(),
-        btch_bookg: None,
-        nb_of_txs: "1".to_string(),
-        ctrl_sum: None,
-        ttl_intr_bk_sttlm_amt: None,
-        intr_bk_sttlm_dt: None,
-        sttlm_inf: SettlementInstruction7 {
-            sttlm_mtd: SettlementMethod1Code::CodeINDA,
+        nb_of_txs: Max15NumericTextfixed::Code1,
+        sttlm_inf: SettlementInstruction71 {
+            sttlm_mtd: SettlementMethod1Code1::CodeINDA,
             sttlm_acct: None,
-            clr_sys: None,
             instg_rmbrsmnt_agt: None,
             instg_rmbrsmnt_agt_acct: None,
             instd_rmbrsmnt_agt: None,
@@ -93,75 +87,81 @@ fn create_minimal_pacs008_message() -> Result<Document, Box<dyn Error>> {
             thrd_rmbrsmnt_agt: None,
             thrd_rmbrsmnt_agt_acct: None,
         },
-        pmt_tp_inf: None,
-        instg_agt: None,
-        instd_agt: None,
     };
 
-    let debtor_agent = BranchAndFinancialInstitutionIdentification6 {
-        fin_instn_id: FinancialInstitutionIdentification18 {
+    let debtor_agent = BranchAndFinancialInstitutionIdentification61 {
+        fin_instn_id: FinancialInstitutionIdentification181 {
             bicfi: Some("TESTBIC1".to_string()),
             clr_sys_mmb_id: None,
             lei: None,
             nm: None,
             pstl_adr: None,
-            othr: None,
         },
-        brnch_id: None,
     };
 
-    let creditor_agent = BranchAndFinancialInstitutionIdentification6 {
-        fin_instn_id: FinancialInstitutionIdentification18 {
+    let creditor_agent = BranchAndFinancialInstitutionIdentification63 {
+        fin_instn_id: FinancialInstitutionIdentification181 {
             bicfi: Some("TESTBIC2".to_string()),
             clr_sys_mmb_id: None,
             lei: None,
             nm: None,
             pstl_adr: None,
-            othr: None,
         },
         brnch_id: None,
     };
 
-    let debtor = PartyIdentification135 {
+    let instructing_agent = BranchAndFinancialInstitutionIdentification62 {
+        fin_instn_id: FinancialInstitutionIdentification182 {
+            bicfi: "TESTBIC3".to_string(),
+            clr_sys_mmb_id: None,
+            lei: None,
+        },
+    };
+
+    let instructed_agent = BranchAndFinancialInstitutionIdentification62 {
+        fin_instn_id: FinancialInstitutionIdentification182 {
+            bicfi: "TESTBIC4".to_string(),
+            clr_sys_mmb_id: None,
+            lei: None,
+        },
+    };
+
+    let debtor = PartyIdentification1352 {
         nm: Some("Test Debtor".to_string()),
         pstl_adr: None,
         id: None,
         ctry_of_res: None,
-        ctct_dtls: None,
     };
 
-    let creditor = PartyIdentification135 {
+    let creditor = PartyIdentification1353 {
         nm: Some("Test Creditor".to_string()),
         pstl_adr: None,
         id: None,
         ctry_of_res: None,
-        ctct_dtls: None,
     };
 
-    let payment_id = PaymentIdentification7 {
-        instr_id: None,
+    let payment_id = PaymentIdentification71 {
+        instr_id: "INSTR123".to_string(),
         end_to_end_id: "E2EXML123".to_string(),
         tx_id: None,
-        uetr: None,
+        uetr: "550e8400-e29b-41d4-a716-446655440000".to_string(),
         clr_sys_ref: None,
     };
 
-    let credit_transfer_tx = CreditTransferTransaction39 {
+    let credit_transfer_tx = CreditTransferTransaction391 {
         pmt_id: payment_id,
         pmt_tp_inf: None,
-        intr_bk_sttlm_amt: ActiveCurrencyAndAmount {
+        intr_bk_sttlm_amt: CBPRAmount1 {
             ccy: "USD".to_string(),
             value: 100.00,
         },
-        intr_bk_sttlm_dt: None,
+        intr_bk_sttlm_dt: "2024-01-16".to_string(),
         sttlm_prty: None,
         sttlm_tm_indctn: None,
         sttlm_tm_req: None,
-        accptnc_dt_tm: None,
-        poolg_adjstmnt_dt: None,
         instd_amt: None,
         xchg_rate: None,
-        chrg_br: ChargeBearerType1Code::CodeSHAR,
+        chrg_br: ChargeBearerType1Code1::CodeSHAR,
         chrgs_inf: None,
         prvs_instg_agt1: None,
         prvs_instg_agt1_acct: None,
@@ -169,8 +169,8 @@ fn create_minimal_pacs008_message() -> Result<Document, Box<dyn Error>> {
         prvs_instg_agt2_acct: None,
         prvs_instg_agt3: None,
         prvs_instg_agt3_acct: None,
-        instg_agt: None,
-        instd_agt: None,
+        instg_agt: instructing_agent,
+        instd_agt: instructed_agent,
         intrmy_agt1: None,
         intrmy_agt1_acct: None,
         intrmy_agt2: None,
@@ -192,16 +192,13 @@ fn create_minimal_pacs008_message() -> Result<Document, Box<dyn Error>> {
         instr_for_nxt_agt: None,
         purp: None,
         rgltry_rptg: None,
-        tax: None,
         rltd_rmt_inf: None,
         rmt_inf: None,
-        splmtry_data: None,
     };
 
     let fi_to_fi_msg = FIToFICustomerCreditTransferV08 {
         grp_hdr: group_header,
-        cdt_trf_tx_inf: vec![credit_transfer_tx],
-        splmtry_data: None,
+        cdt_trf_tx_inf: credit_transfer_tx,
     };
 
     let document = Document::FIToFICustomerCreditTransferV08(Box::new(fi_to_fi_msg));

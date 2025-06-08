@@ -17,9 +17,14 @@
 // You may obtain a copy of this library at
 // https://github.com/GoPlasmatic/MXMessage
 
-pub mod document;
-pub mod error;
-pub mod header;
+#[derive(Debug)]
+pub struct ValidationError {
+    pub code: u32,
+    pub message: String,
+}
 
-pub mod app_document;
-pub mod app_header;
+impl ValidationError {
+    pub fn new(code: u32, message: String) -> Self {
+        ValidationError { code, message }
+    }
+}
