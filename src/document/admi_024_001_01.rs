@@ -85,7 +85,7 @@ impl CorrespondenceNotification11 {
                 "[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]+",
             )
             .unwrap();
-            if !pattern.is_match(item) {
+            if !pattern.is_match(&item) {
                 return Err(ValidationError::new(
                     1005,
                     "ntfctn_nrrtv does not match the required pattern".to_string(),

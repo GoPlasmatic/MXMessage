@@ -1032,7 +1032,7 @@ impl PostalAddress271 {
                     "[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]+",
                 )
                 .unwrap();
-                if !pattern.is_match(item) {
+                if !pattern.is_match(&item) {
                     return Err(ValidationError::new(
                         1005,
                         "adr_line does not match the required pattern".to_string(),

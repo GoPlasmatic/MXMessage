@@ -255,7 +255,7 @@ impl StatusReasonInformation141 {
                     ));
                 }
                 let pattern = Regex::new("[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+").unwrap();
-                if !pattern.is_match(item) {
+                if !pattern.is_match(&item) {
                     return Err(ValidationError::new(
                         1005,
                         "addtl_inf does not match the required pattern".to_string(),

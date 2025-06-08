@@ -49,9 +49,6 @@ echo '// Plasmatic MX Message Parsing Library
 // You may obtain a copy of this library at
 // https://github.com/GoPlasmatic/MXMessage
 
-pub mod common;
-pub mod document;
-
 ' > "$mod_file"
 
 for f in `find $output_directory -iname "*.rs" -type f -print | sort -n`; do
