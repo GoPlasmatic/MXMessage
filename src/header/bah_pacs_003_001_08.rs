@@ -24,7 +24,7 @@ use serde::{Deserialize, Serialize};
 // app_hdr ...
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
 pub struct AppHdr {
-    #[serde(rename = "AppHdr")]
+    #[serde(flatten)]
     pub app_hdr: BusinessApplicationHeaderV02,
 }
 

@@ -69,6 +69,9 @@ for f in `find $output_directory -iname "*.rs" -type f -print`; do
 
     # Replace app_hdr with AppHdr
     sed -i '' 's/app_hdr {/AppHdr {/g' "$f"
+
+    # Replace serde rename AppHdr with flatten
+    sed -i '' 's/#\[serde(rename = "AppHdr")\]/#\[serde(flatten)\]/g' "$f"
    
 done
 
