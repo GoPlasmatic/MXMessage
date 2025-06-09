@@ -21,6 +21,20 @@ use crate::error::*;
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 
+// app_hdr ...
+#[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+pub struct AppHdr {
+    #[serde(rename = "AppHdr")]
+    pub app_hdr: BusinessApplicationHeaderV02,
+}
+
+impl AppHdr {
+    pub fn validate(&self) -> Result<(), ValidationError> {
+        self.app_hdr.validate()?;
+        Ok(())
+    }
+}
+
 // BranchAndFinancialInstitutionIdentification66: Unique and unambiguous identification of a financial institution, as assigned under an internationally recognised or proprietary identification scheme.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
 pub struct BranchAndFinancialInstitutionIdentification66 {

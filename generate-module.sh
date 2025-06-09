@@ -67,11 +67,9 @@ for f in `find $output_directory -iname "*.rs" -type f -print`; do
     # Remove the empty impl block that follows
     sed -i '' '/^impl document {$/,/^}$/d' "$f"
 
-    # Use sed to remove the app_hdr struct pattern
-    sed -i '' '/^\/\/ app_hdr \.\.\./,/^}$/d' "$f"
-    # Remove the empty impl block that follows
-    sed -i '' '/^impl app_hdr {$/,/^}$/d' "$f"
-
+    # Replace app_hdr with AppHdr
+    sed -i '' 's/app_hdr {/AppHdr {/g' "$f"
+   
 done
 
 # python3 generate-common.py $output_directory
