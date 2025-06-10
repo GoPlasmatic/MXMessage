@@ -21,20 +21,6 @@ use crate::error::*;
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 
-// app_hdr ...
-#[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
-pub struct AppHdr {
-    #[serde(flatten)]
-    pub app_hdr: BusinessApplicationHeaderV02,
-}
-
-impl AppHdr {
-    pub fn validate(&self) -> Result<(), ValidationError> {
-        self.app_hdr.validate()?;
-        Ok(())
-    }
-}
-
 // BranchAndFinancialInstitutionIdentification64: Unique and unambiguous identification of a financial institution, as assigned under an internationally recognised or proprietary identification scheme.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
 pub struct BranchAndFinancialInstitutionIdentification64 {
@@ -131,6 +117,7 @@ impl BusinessApplicationHeader51 {
 // BusinessApplicationHeaderV02: Specifies the Business Application Header(s) of the Business Message(s) to which this Business Message relates.
 // Can be used when replying to a query; can also be used when canceling or amending.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[serde(rename = "AppHdr")]
 pub struct BusinessApplicationHeaderV02 {
     #[serde(rename = "CharSet", skip_serializing_if = "Option::is_none")]
     pub char_set: Option<String>,

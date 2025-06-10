@@ -67,12 +67,16 @@ for f in `find $output_directory -iname "*.rs" -type f -print`; do
     # Remove the empty impl block that follows
     sed -i '' '/^impl document {$/,/^}$/d' "$f"
 
-    # Replace app_hdr with AppHdr
-    sed -i '' 's/app_hdr {/AppHdr {/g' "$f"
 
-    # Replace serde rename AppHdr with flatten
-    sed -i '' 's/#\[serde(rename = "AppHdr")\]/#\[serde(flatten)\]/g' "$f"
-   
+    # Use sed to remove the app_hdr struct pattern
+    sed -i '' '/^\/\/ app_hdr \.\.\./,/^}$/d' "$f"
+    # Remove the empty impl block that follows
+    sed -i '' '/^impl app_hdr {$/,/^}$/d' "$f"
+
+
+    # Replace serde rename AppHdr with flatten for XML serialization
+    sed -i '' 's/pub struct BusinessApplicationHeaderV02 {/#[serde(rename = "AppHdr")]\npub struct BusinessApplicationHeaderV02 {/g' "$f"
+
 done
 
 # python3 generate-common.py $output_directory
