@@ -73,7 +73,10 @@ fn main() -> Result<(), Box<dyn Error>> {
     println!("6. Message Details:");
     println!("   Message ID: {}", document.grp_hdr.msg_id);
     println!("   Creation Date/Time: {}", document.grp_hdr.cre_dt_tm);
-    println!("   Number of Transactions: {:?}", document.grp_hdr.nb_of_txs);
+    println!(
+        "   Number of Transactions: {:?}",
+        document.grp_hdr.nb_of_txs
+    );
     println!(
         "   Settlement Method: {:?}",
         document.grp_hdr.sttlm_inf.sttlm_mtd
@@ -86,7 +89,8 @@ fn main() -> Result<(), Box<dyn Error>> {
     );
     println!(
         "     Settlement Amount: {} {}",
-        document.cdt_trf_tx_inf.intr_bk_sttlm_amt.value, document.cdt_trf_tx_inf.intr_bk_sttlm_amt.ccy
+        document.cdt_trf_tx_inf.intr_bk_sttlm_amt.value,
+        document.cdt_trf_tx_inf.intr_bk_sttlm_amt.ccy
     );
     println!("     Charge Bearer: {:?}", document.cdt_trf_tx_inf.chrg_br);
     if let Some(ref debtor_name) = document.cdt_trf_tx_inf.dbtr.nm {

@@ -145,7 +145,8 @@ fn test_number_of_transactions_pattern() {
 
     // Test that serialization/deserialization works even if validation has issues
     let json_str = serde_json::to_string(&document).expect("Should serialize");
-    let _deserialized: FIToFICustomerCreditTransferV08 = serde_json::from_str(&json_str).expect("Should deserialize");
+    let _deserialized: FIToFICustomerCreditTransferV08 =
+        serde_json::from_str(&json_str).expect("Should deserialize");
 
     // Test passes if we can serialize/deserialize
     assert!(true, "Serialization roundtrip successful");
