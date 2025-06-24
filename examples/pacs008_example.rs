@@ -2,7 +2,6 @@
 // This example demonstrates how to create, serialize, deserialize, and validate
 // a pacs.008 (FI to FI Customer Credit Transfer) message
 
-use mx_message::app_document::Document;
 use mx_message::document::pacs_008_001_08::*;
 use std::error::Error;
 
@@ -42,7 +41,8 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     // Deserialize from JSON
     println!("3. Deserializing from JSON...");
-    let deserialized_document: Document = serde_json::from_str(&json_output)?;
+    let deserialized_document: FIToFICustomerCreditTransferV08 =
+        serde_json::from_str(&json_output)?;
     println!("✓ Successfully deserialized from JSON\n");
 
     // Validate the deserialized message
@@ -70,39 +70,37 @@ fn main() -> Result<(), Box<dyn Error>> {
     }
 
     // Display message details
-    if let Document::FIToFICustomerCreditTransferV08(ref msg) = document {
-        println!("6. Message Details:");
-        println!("   Message ID: {}", msg.grp_hdr.msg_id);
-        println!("   Creation Date/Time: {}", msg.grp_hdr.cre_dt_tm);
-        println!("   Number of Transactions: {:?}", msg.grp_hdr.nb_of_txs);
-        println!(
-            "   Settlement Method: {:?}",
-            msg.grp_hdr.sttlm_inf.sttlm_mtd
-        );
+    println!("6. Message Details:");
+    println!("   Message ID: {}", document.grp_hdr.msg_id);
+    println!("   Creation Date/Time: {}", document.grp_hdr.cre_dt_tm);
+    println!("   Number of Transactions: {:?}", document.grp_hdr.nb_of_txs);
+    println!(
+        "   Settlement Method: {:?}",
+        document.grp_hdr.sttlm_inf.sttlm_mtd
+    );
 
-        println!("   Credit Transfer Transaction Details:");
-        println!(
-            "     End-to-End ID: {}",
-            msg.cdt_trf_tx_inf.pmt_id.end_to_end_id
-        );
-        println!(
-            "     Settlement Amount: {} {}",
-            msg.cdt_trf_tx_inf.intr_bk_sttlm_amt.value, msg.cdt_trf_tx_inf.intr_bk_sttlm_amt.ccy
-        );
-        println!("     Charge Bearer: {:?}", msg.cdt_trf_tx_inf.chrg_br);
-        if let Some(ref debtor_name) = msg.cdt_trf_tx_inf.dbtr.nm {
-            println!("     Debtor: {}", debtor_name);
-        }
-        if let Some(ref creditor_name) = msg.cdt_trf_tx_inf.cdtr.nm {
-            println!("     Creditor: {}", creditor_name);
-        }
+    println!("   Credit Transfer Transaction Details:");
+    println!(
+        "     End-to-End ID: {}",
+        document.cdt_trf_tx_inf.pmt_id.end_to_end_id
+    );
+    println!(
+        "     Settlement Amount: {} {}",
+        document.cdt_trf_tx_inf.intr_bk_sttlm_amt.value, document.cdt_trf_tx_inf.intr_bk_sttlm_amt.ccy
+    );
+    println!("     Charge Bearer: {:?}", document.cdt_trf_tx_inf.chrg_br);
+    if let Some(ref debtor_name) = document.cdt_trf_tx_inf.dbtr.nm {
+        println!("     Debtor: {}", debtor_name);
+    }
+    if let Some(ref creditor_name) = document.cdt_trf_tx_inf.cdtr.nm {
+        println!("     Creditor: {}", creditor_name);
     }
 
     println!("\n=== Example completed successfully ===");
     Ok(())
 }
 
-fn create_sample_pacs008_message() -> Result<Document, Box<dyn Error>> {
+fn create_sample_pacs008_message() -> Result<FIToFICustomerCreditTransferV08, Box<dyn Error>> {
     // Create Group Header
     let group_header = GroupHeader931 {
         msg_id: "MSG123456789".to_string(),
@@ -300,8 +298,5 @@ fn create_sample_pacs008_message() -> Result<Document, Box<dyn Error>> {
         cdt_trf_tx_inf: credit_transfer_tx,
     };
 
-    // Wrap in Document
-    let document = Document::FIToFICustomerCreditTransferV08(Box::new(fi_to_fi_msg));
-
-    Ok(document)
+    Ok(fi_to_fi_msg)
 }

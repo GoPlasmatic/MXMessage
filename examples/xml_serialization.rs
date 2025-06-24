@@ -1,7 +1,6 @@
 // Plasmatic MX Message Parsing Library - XML Serialization Example
 // This example demonstrates XML serialization and deserialization of pacs.008 messages
 
-use mx_message::app_document::Document;
 use mx_message::document::pacs_008_001_08::*;
 use quick_xml::de::from_str as xml_from_str;
 use quick_xml::se::to_string as xml_to_string;
@@ -38,7 +37,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     // Deserialize from XML
     println!("4. XML Deserialization:");
-    let deserialized_document: Document = xml_from_str(&xml_output)?;
+    let deserialized_document: FIToFICustomerCreditTransferV08 = xml_from_str(&xml_output)?;
     println!("✓ Successfully deserialized from XML\n");
 
     // Validate the deserialized message
@@ -70,7 +69,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     Ok(())
 }
 
-fn create_minimal_pacs008_message() -> Result<Document, Box<dyn Error>> {
+fn create_minimal_pacs008_message() -> Result<FIToFICustomerCreditTransferV08, Box<dyn Error>> {
     // Create a minimal but valid pacs.008 message for XML testing
 
     let group_header = GroupHeader931 {
@@ -201,7 +200,5 @@ fn create_minimal_pacs008_message() -> Result<Document, Box<dyn Error>> {
         cdt_trf_tx_inf: credit_transfer_tx,
     };
 
-    let document = Document::FIToFICustomerCreditTransferV08(Box::new(fi_to_fi_msg));
-
-    Ok(document)
+    Ok(fi_to_fi_msg)
 }

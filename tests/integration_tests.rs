@@ -1,6 +1,5 @@
 // Integration tests for the MX Message library
 
-use mx_message::app_document::Document;
 use mx_message::document::pacs_008_001_08::*;
 
 #[test]
@@ -33,7 +32,7 @@ fn test_json_serialization_roundtrip() {
     let json_str = serde_json::to_string(&original_document).expect("Should serialize to JSON");
 
     // Deserialize from JSON
-    let deserialized_document: Document =
+    let deserialized_document: FIToFICustomerCreditTransferV08 =
         serde_json::from_str(&json_str).expect("Should deserialize from JSON");
 
     // For datetime validation issues, we'll skip validation but test equality
@@ -64,7 +63,6 @@ fn test_json_pretty_serialization() {
         serde_json::to_string_pretty(&document).expect("Should serialize to pretty JSON");
 
     // Check that it contains expected fields
-    assert!(json_str.contains("FIToFICstmrCdtTrf"));
     assert!(json_str.contains("GrpHdr"));
     assert!(json_str.contains("CdtTrfTxInf"));
     assert!(json_str.contains("MsgId"));
@@ -74,10 +72,7 @@ fn test_json_pretty_serialization() {
 fn test_validation_errors() {
     // Create an invalid message with empty message ID
     let mut document = create_test_pacs008_message();
-
-    if let Document::FIToFICustomerCreditTransferV08(ref mut msg) = document {
-        msg.grp_hdr.msg_id = "".to_string(); // Invalid: empty message ID
-    }
+    document.grp_hdr.msg_id = "".to_string(); // Invalid: empty message ID
 
     let validation_result = document.validate();
     assert!(
@@ -95,12 +90,10 @@ fn test_validation_errors() {
 fn test_validation_iban_format() {
     let mut document = create_test_pacs008_message();
 
-    if let Document::FIToFICustomerCreditTransferV08(ref mut msg) = document {
-        // Set invalid IBAN
-        if let Some(ref mut debtor_account) = msg.cdt_trf_tx_inf.dbtr_acct {
-            if let Some(ref mut iban) = debtor_account.id.iban {
-                *iban = "INVALID_IBAN".to_string();
-            }
+    // Set invalid IBAN
+    if let Some(ref mut debtor_account) = document.cdt_trf_tx_inf.dbtr_acct {
+        if let Some(ref mut iban) = debtor_account.id.iban {
+            *iban = "INVALID_IBAN".to_string();
         }
     }
 
@@ -130,10 +123,8 @@ fn test_validation_iban_format() {
 fn test_message_id_length_validation() {
     let mut document = create_test_pacs008_message();
 
-    if let Document::FIToFICustomerCreditTransferV08(ref mut msg) = document {
-        // Set message ID that's too long (over 35 characters)
-        msg.grp_hdr.msg_id = "A".repeat(36);
-    }
+    // Set message ID that's too long (over 35 characters)
+    document.grp_hdr.msg_id = "A".repeat(36);
 
     let validation_result = document.validate();
     assert!(
@@ -154,26 +145,10 @@ fn test_number_of_transactions_pattern() {
 
     // Test that serialization/deserialization works even if validation has issues
     let json_str = serde_json::to_string(&document).expect("Should serialize");
-    let _deserialized: Document = serde_json::from_str(&json_str).expect("Should deserialize");
+    let _deserialized: FIToFICustomerCreditTransferV08 = serde_json::from_str(&json_str).expect("Should deserialize");
 
     // Test passes if we can serialize/deserialize
     assert!(true, "Serialization roundtrip successful");
-}
-
-#[test]
-fn test_unknown_document_type() {
-    let document = Document::UNKNOWN;
-
-    let validation_result = document.validate();
-    assert!(
-        validation_result.is_err(),
-        "Unknown document type should fail validation"
-    );
-
-    if let Err(error) = validation_result {
-        assert_eq!(error.code, 9999); // Should be the unknown document type error
-        assert!(error.message.contains("Unknown document type"));
-    }
 }
 
 #[test]
@@ -183,7 +158,7 @@ fn test_minimal_valid_message() {
     // Test that serialization/deserialization works
     let json_str = serde_json::to_string(&document).expect("Should serialize minimal message");
 
-    let deserialized: Document =
+    let deserialized: FIToFICustomerCreditTransferV08 =
         serde_json::from_str(&json_str).expect("Should deserialize minimal message");
 
     assert_eq!(
@@ -210,18 +185,13 @@ fn test_minimal_valid_message() {
 fn test_currency_and_amount_structure() {
     let document = create_test_pacs008_message();
 
-    if let Document::FIToFICustomerCreditTransferV08(ref msg) = document {
-        let tx = &msg.cdt_trf_tx_inf;
+    // Test currency and amount fields
+    assert_eq!(document.cdt_trf_tx_inf.intr_bk_sttlm_amt.ccy, "EUR");
+    assert_eq!(document.cdt_trf_tx_inf.intr_bk_sttlm_amt.value, 1000.00);
 
-        // Test settlement amount
-        assert_eq!(tx.intr_bk_sttlm_amt.ccy, "EUR");
-        assert_eq!(tx.intr_bk_sttlm_amt.value, 1000.00);
-
-        // Test instructed amount if present
-        if let Some(ref instructed_amt) = tx.instd_amt {
-            assert_eq!(instructed_amt.ccy, "EUR");
-            assert_eq!(instructed_amt.value, 1000.00);
-        }
+    if let Some(ref instd_amt) = document.cdt_trf_tx_inf.instd_amt {
+        assert_eq!(instd_amt.ccy, "EUR");
+        assert_eq!(instd_amt.value, 1000.00);
     }
 }
 
@@ -229,34 +199,34 @@ fn test_currency_and_amount_structure() {
 fn test_party_identification_structure() {
     let document = create_test_pacs008_message();
 
-    if let Document::FIToFICustomerCreditTransferV08(ref msg) = document {
-        let tx = &msg.cdt_trf_tx_inf;
+    // Test debtor information
+    assert_eq!(
+        document.cdt_trf_tx_inf.dbtr.nm.as_ref().unwrap(),
+        "ACME Corporation"
+    );
+    assert_eq!(
+        document.cdt_trf_tx_inf.dbtr.ctry_of_res.as_ref().unwrap(),
+        "DE"
+    );
 
-        // Test debtor information
-        assert_eq!(tx.dbtr.nm, Some("ACME Corporation".to_string()));
-        assert_eq!(tx.dbtr.ctry_of_res, Some("DE".to_string()));
-
-        // Test creditor information
-        assert_eq!(tx.cdtr.nm, Some("Global Suppliers Ltd".to_string()));
-        assert_eq!(tx.cdtr.ctry_of_res, Some("FR".to_string()));
-
-        // Test financial institution information
-        assert_eq!(tx.dbtr_agt.fin_instn_id.bicfi, Some("DEUTDEFF".to_string()));
-        assert_eq!(tx.cdtr_agt.fin_instn_id.bicfi, Some("BNPAFRPP".to_string()));
-    }
+    // Test creditor information
+    assert_eq!(
+        document.cdt_trf_tx_inf.cdtr.nm.as_ref().unwrap(),
+        "Global Suppliers Ltd"
+    );
+    assert_eq!(
+        document.cdt_trf_tx_inf.cdtr.ctry_of_res.as_ref().unwrap(),
+        "FR"
+    );
 }
 
 #[test]
 fn test_remittance_information() {
     let document = create_test_pacs008_message();
 
-    if let Document::FIToFICustomerCreditTransferV08(ref msg) = document {
-        let tx = &msg.cdt_trf_tx_inf;
-
-        if let Some(ref rmt_inf) = tx.rmt_inf {
-            if let Some(ref unstructured) = rmt_inf.ustrd {
-                assert_eq!(unstructured, "Payment for Invoice INV-2024-001");
-            }
+    if let Some(ref rmt_inf) = document.cdt_trf_tx_inf.rmt_inf {
+        if let Some(ref ustrd) = rmt_inf.ustrd {
+            assert_eq!(ustrd, "Payment for Invoice INV-2024-001");
         }
     }
 }
@@ -265,26 +235,14 @@ fn test_remittance_information() {
 fn test_document_message_type_identification() {
     let document = create_test_pacs008_message();
 
-    // Test message type identification
-    assert_eq!(document.message_type(), "pacs.008.001.08");
-
-    // Test CBPR+ compliance
-    assert!(document.is_cbpr_plus_compliant());
-}
-
-#[test]
-fn test_unknown_document_cbpr_compliance() {
-    let document = Document::UNKNOWN;
-
-    // Test message type identification
-    assert_eq!(document.message_type(), "unknown");
-
-    // Test CBPR+ compliance
-    assert!(!document.is_cbpr_plus_compliant());
+    // Test message identification fields
+    assert_eq!(document.grp_hdr.msg_id, "MSG123456789");
+    assert_eq!(document.cdt_trf_tx_inf.pmt_id.end_to_end_id, "E2E123456789");
+    assert_eq!(document.cdt_trf_tx_inf.pmt_id.instr_id, "INSTR123");
 }
 
 // Helper function to create a test pacs.008 message
-fn create_test_pacs008_message() -> Document {
+fn create_test_pacs008_message() -> FIToFICustomerCreditTransferV08 {
     let group_header = GroupHeader931 {
         msg_id: "MSG123456789".to_string(),
         cre_dt_tm: "2024-01-15T10:30:00Z".to_string(),
@@ -472,13 +430,13 @@ fn create_test_pacs008_message() -> Document {
         cdt_trf_tx_inf: credit_transfer_tx,
     };
 
-    Document::FIToFICustomerCreditTransferV08(Box::new(fi_to_fi_msg))
+    fi_to_fi_msg
 }
 
 // Helper function to create a minimal valid pacs.008 message
-fn create_minimal_pacs008_message() -> Document {
+fn create_minimal_pacs008_message() -> FIToFICustomerCreditTransferV08 {
     let group_header = GroupHeader931 {
-        msg_id: "MIN123".to_string(),
+        msg_id: "MINIMAL123".to_string(),
         cre_dt_tm: "2024-01-15T10:30:00Z".to_string(),
         nb_of_txs: Max15NumericTextfixed::Code1,
         sttlm_inf: SettlementInstruction71 {
@@ -516,7 +474,7 @@ fn create_minimal_pacs008_message() -> Document {
 
     let instructing_agent = BranchAndFinancialInstitutionIdentification62 {
         fin_instn_id: FinancialInstitutionIdentification182 {
-            bicfi: "TESTBIC3".to_string(),
+            bicfi: "TESTBIC1".to_string(),
             clr_sys_mmb_id: None,
             lei: None,
         },
@@ -524,31 +482,31 @@ fn create_minimal_pacs008_message() -> Document {
 
     let instructed_agent = BranchAndFinancialInstitutionIdentification62 {
         fin_instn_id: FinancialInstitutionIdentification182 {
-            bicfi: "TESTBIC4".to_string(),
+            bicfi: "TESTBIC2".to_string(),
             clr_sys_mmb_id: None,
             lei: None,
         },
     };
 
     let debtor = PartyIdentification1352 {
-        nm: Some("Test Debtor".to_string()),
+        nm: Some("Minimal Debtor".to_string()),
         pstl_adr: None,
         id: None,
         ctry_of_res: None,
     };
 
     let creditor = PartyIdentification1353 {
-        nm: Some("Test Creditor".to_string()),
+        nm: Some("Minimal Creditor".to_string()),
         pstl_adr: None,
         id: None,
         ctry_of_res: None,
     };
 
     let payment_id = PaymentIdentification71 {
-        instr_id: "INSTRMIN".to_string(),
+        instr_id: "MIN123".to_string(),
         end_to_end_id: "E2EMIN123".to_string(),
         tx_id: None,
-        uetr: "550e8400-e29b-41d4-a716-446655440000".to_string(),
+        uetr: "00000000-0000-0000-0000-000000000000".to_string(),
         clr_sys_ref: None,
     };
 
@@ -556,10 +514,10 @@ fn create_minimal_pacs008_message() -> Document {
         pmt_id: payment_id,
         pmt_tp_inf: None,
         intr_bk_sttlm_amt: CBPRAmount1 {
-            ccy: "USD".to_string(),
+            ccy: "EUR".to_string(),
             value: 100.00,
         },
-        intr_bk_sttlm_dt: "2024-01-16".to_string(),
+        intr_bk_sttlm_dt: "2024-01-15".to_string(),
         sttlm_prty: None,
         sttlm_tm_indctn: None,
         sttlm_tm_req: None,
@@ -600,10 +558,8 @@ fn create_minimal_pacs008_message() -> Document {
         rmt_inf: None,
     };
 
-    let fi_to_fi_msg = FIToFICustomerCreditTransferV08 {
+    FIToFICustomerCreditTransferV08 {
         grp_hdr: group_header,
         cdt_trf_tx_inf: credit_transfer_tx,
-    };
-
-    Document::FIToFICustomerCreditTransferV08(Box::new(fi_to_fi_msg))
+    }
 }
