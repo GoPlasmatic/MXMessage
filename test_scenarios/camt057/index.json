@@ -1,0 +1,22 @@
+{
+    "message_type": "camt.057.001.06",
+    "description": "Notification to Receive",
+    "scenarios": [
+        {
+            "file": "expected_incoming_funds.json",
+            "description": "MT210 - Notice to Receive - Expected incoming funds notification"
+        },
+        {
+            "file": "fx_settlement_notice.json",
+            "description": "MT210 - Notice to Receive - Foreign exchange settlement notification"
+        },
+        {
+            "file": "securities_settlement_notice.json",
+            "description": "MT210 - Notice to Receive - Securities settlement notification"
+        },
+        {
+            "file": "single_payment_notice.json",
+            "description": "MT210 - Notice to Receive - Single payment notification"
+        }
+    ]
+}

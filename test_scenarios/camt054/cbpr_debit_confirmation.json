@@ -1,0 +1,190 @@
+{
+    "variables": {
+        "msg_id": {"cat": ["CBPR-DBIT-", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "ntfctn_id": {"cat": ["CBPR-NTFCTN-", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_time": {"fake": ["iso8601_datetime"]},
+        "account_id": {"fake": ["iban"]},
+        "account_owner": {"fake": ["company_name"]},
+        "account_owner_lei": {"fake": ["lei"]},
+        "servicer_bic": {"fake": ["bic"]},
+        "servicer_lei": {"fake": ["lei"]},
+        "entry_ref": {"cat": ["CBPR-ENT-", {"fake": ["i64", 1000000, 9999999]}]},
+        "debit_amount": {"fake": ["f64", 10000.0, 500000.0]},
+        "booking_date": {"fake": ["date", "%Y-%m-%d", "-1d", "-1d"]},
+        "value_date": {"fake": ["date", "%Y-%m-%d", "-1d", "-1d"]},
+        "transaction_ref": {"cat": ["CBPR-TXN-", {"fake": ["i64", 10000000, 99999999]}]},
+        "end_to_end_id": {"cat": ["CBPR-E2E-", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "uetr": {"fake": ["uuid_v4"]},
+        "creditor_name": {"fake": ["company_name"]},
+        "creditor_lei": {"fake": ["lei"]},
+        "creditor_bic": {"fake": ["bic"]}
+    },
+    "schema": {
+        "GrpHdr": {
+            "MsgId": {"var": "msg_id"},
+            "CreDtTm": {"var": "creation_datetime"},
+            "InitgPty": {
+                "Nm": {"var": "account_owner"},
+                "Id": {
+                    "OrgId": {
+                        "LEI": {"var": "account_owner_lei"}
+                    }
+                }
+            }
+        },
+        "Ntfctn": [
+            {
+                "Id": {"var": "ntfctn_id"},
+                "CreDtTm": {"var": "creation_time"},
+                "Acct": {
+                    "Id": {
+                        "IBAN": {"var": "account_id"}
+                    },
+                    "Ownr": {
+                        "Nm": {"var": "account_owner"},
+                        "Id": {
+                            "OrgId": {
+                                "LEI": {"var": "account_owner_lei"}
+                            }
+                        }
+                    },
+                    "Svcr": {
+                        "FinInstnId": {
+                            "BICFI": {"var": "servicer_bic"},
+                            "LEI": {"var": "servicer_lei"}
+                        }
+                    }
+                },
+                "Ntry": [
+                    {
+                        "NtryRef": {"var": "entry_ref"},
+                        "Amt": {
+                            "@Ccy": "USD",
+                            "$value": {"var": "debit_amount"}
+                        },
+                        "CdtDbtInd": "DBIT",
+                        "Sts": {
+                            "Cd": "BOOK"
+                        },
+                        "BookgDt": {
+                            "Dt": {"var": "booking_date"}
+                        },
+                        "ValDt": {
+                            "Dt": {"var": "value_date"}
+                        },
+                        "BkTxCd": {
+                            "Domn": {
+                                "Cd": "PMNT",
+                                "Fmly": {
+                                    "Cd": "ICDT",
+                                    "SubFmlyCd": "XBCT"
+                                }
+                            },
+                            "Prtry": {
+                                "Cd": "CBPR_PAYMENT",
+                                "Issr": "SWIFT"
+                            }
+                        },
+                        "NtryDtls": [
+                            {
+                                "TxDtls": [
+                                    {
+                                        "Refs": {
+                                            "AcctSvcrRef": {"var": "transaction_ref"},
+                                            "EndToEndId": {"var": "end_to_end_id"},
+                                            "UETR": {"var": "uetr"}
+                                        },
+                                        "Amt": {
+                                            "@Ccy": "USD",
+                                            "$value": {"var": "debit_amount"}
+                                        },
+                                        "CdtDbtInd": "DBIT",
+                                        "AmtDtls": {
+                                            "InstdAmt": {
+                                                "Amt": {
+                                                    "@Ccy": "USD",
+                                                    "$value": {"var": "debit_amount"}
+                                                }
+                                            },
+                                            "TxAmt": {
+                                                "Amt": {
+                                                    "@Ccy": "USD",
+                                                    "$value": {"var": "debit_amount"}
+                                                }
+                                            }
+                                        },
+                                        "RltdPties": {
+                                            "Cdtr": {
+                                                "Nm": {"var": "creditor_name"},
+                                                "Id": {
+                                                    "OrgId": {
+                                                        "LEI": {"var": "creditor_lei"}
+                                                    }
+                                                }
+                                            },
+                                            "CdtrAcct": {
+                                                "Id": {
+                                                    "IBAN": {"fake": ["iban"]}
+                                                }
+                                            }
+                                        },
+                                        "RltdAgts": {
+                                            "CdtrAgt": {
+                                                "FinInstnId": {
+                                                    "BICFI": {"var": "creditor_bic"},
+                                                    "LEI": {"fake": ["lei"]}
+                                                }
+                                            }
+                                        },
+                                        "Purp": {
+                                            "Cd": "GDDS"
+                                        },
+                                        "RmtInf": {
+                                            "Strd": [
+                                                {
+                                                    "RfrdDocInf": [
+                                                        {
+                                                            "Tp": {
+                                                                "CdOrPrtry": {
+                                                                    "Cd": "CINV"
+                                                                }
+                                                            },
+                                                            "Nb": {"cat": ["INV-", {"fake": ["i64", 100000, 999999]}]},
+                                                            "RltdDt": {"fake": ["date", "%Y-%m-%d", "-30d", "-1d"]},
+                                                            "LineDtls": [
+                                                                {
+                                                                    "Id": [
+                                                                        {
+                                                                            "Tp": {
+                                                                                "CdOrPrtry": {
+                                                                                    "Prtry": "LINE_ITEM"
+                                                                                }
+                                                                            },
+                                                                            "Nb": "1"
+                                                                        }
+                                                                    ],
+                                                                    "Amt": {
+                                                                        "DuePyblAmt": {
+                                                                            "@Ccy": "USD",
+                                                                            "$value": {"var": "debit_amount"}
+                                                                        }
+                                                                    }
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    }
+                                ]
+                            }
+                        ],
+                        "AddtlNtryInf": "CBPR+ compliant cross-border payment debit"
+                    }
+                ]
+            }
+        ]
+    }
+}

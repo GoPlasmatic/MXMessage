@@ -1,0 +1,103 @@
+{
+    "variables": {
+        "msg_id": {"cat": ["MAINT-", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "case_id": {"cat": ["MAINT-CASE-", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creator_bic": {"fake": ["bic"]},
+        "creator_lei": {"fake": ["lei"]},
+        "assignee_bic": {"fake": ["bic"]},
+        "assignee_lei": {"fake": ["lei"]},
+        "maintenance_start": {"fake": ["iso8601_datetime", "+7d", "+14d"]},
+        "maintenance_end": {"fake": ["iso8601_datetime", "+7d", "+14d"]},
+        "maintenance_duration_hours": {"fake": ["i64", 2, 6]},
+        "affected_services": {"fake": ["choice", ["SWIFT_MT", "SWIFT_MX", "TARGET2", "SEPA", "ACH"]]},
+        "impact_level": {"fake": ["choice", ["MINIMAL", "MODERATE", "SIGNIFICANT"]]},
+        "contact_name": {"fake": ["full_name"]},
+        "contact_phone": {"fake": ["phone_number"]},
+        "contact_email": {"fake": ["email"]}
+    },
+    "schema": {
+        "Assgnmt": {
+            "Id": {"var": "msg_id"},
+            "Assgnr": {
+                "Agt": {
+                    "FinInstnId": {
+                        "BICFI": {"var": "creator_bic"},
+                        "LEI": {"var": "creator_lei"}
+                    }
+                }
+            },
+            "Assgne": {
+                "Agt": {
+                    "FinInstnId": {
+                        "BICFI": {"var": "assignee_bic"},
+                        "LEI": {"var": "assignee_lei"}
+                    }
+                }
+            },
+            "CreDtTm": {"var": "creation_datetime"}
+        },
+        "Case": {
+            "Id": {"var": "case_id"},
+            "Cretr": {
+                "Agt": {
+                    "FinInstnId": {
+                        "BICFI": {"var": "creator_bic"},
+                        "LEI": {"var": "creator_lei"}
+                    }
+                }
+            }
+        },
+        "SplmtryData": [
+            {
+                "Envlp": {
+                    "SystemMaintenanceNotice": {
+                        "MaintenanceType": "SCHEDULED",
+                        "Priority": "HIGH",
+                        "MaintenanceWindow": {
+                            "StartTime": {"var": "maintenance_start"},
+                            "EndTime": {"var": "maintenance_end"},
+                            "Duration": {"cat": [{"var": "maintenance_duration_hours"}, " hours"]},
+                            "TimeZone": "UTC"
+                        },
+                        "AffectedServices": [
+                            {
+                                "ServiceName": {"var": "affected_services"},
+                                "ImpactLevel": {"var": "impact_level"},
+                                "ServiceDescription": "Payment processing and message routing"
+                            }
+                        ],
+                        "ImpactDescription": {
+                            "PaymentProcessing": "Delayed processing for non-urgent payments",
+                            "MessageRouting": "Alternative routing may be required",
+                            "SettlementImpact": "End-of-day settlement may be affected",
+                            "ContingencyPlan": "Emergency payments can be processed via backup channels"
+                        },
+                        "PreMaintenanceActions": [
+                            "Process all pending high-value payments before maintenance window",
+                            "Notify all counterparties of potential delays",
+                            "Ensure backup communication channels are operational",
+                            "Download end-of-day reports before maintenance start"
+                        ],
+                        "TechnicalDetails": {
+                            "SystemsAffected": ["Core Banking System", "Payment Gateway", "Message Router"],
+                            "MaintenanceReason": "System upgrade and security patches",
+                            "ExpectedImprovement": "Enhanced processing speed and improved security features"
+                        },
+                        "ContactInformation": {
+                            "PrimaryContact": {
+                                "Name": {"var": "contact_name"},
+                                "Phone": {"var": "contact_phone"},
+                                "Email": {"var": "contact_email"},
+                                "Available": "24/7 during maintenance window"
+                            },
+                            "EmergencyHotline": {"fake": ["phone_number"]},
+                            "StatusPage": {"cat": ["https://status.", {"fake": ["domain_name"]}]}
+                        },
+                        "NextUpdate": {"fake": ["iso8601_datetime", "+1d", "+3d"]}
+                    }
+                }
+            }
+        ]
+    }
+}

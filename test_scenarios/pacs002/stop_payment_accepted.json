@@ -1,0 +1,134 @@
+{
+    "variables": {
+        "msg_id": {"cat": ["MSG", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "original_msg_id": {"cat": ["ORIG-", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "stop_request_id": {"cat": ["STOP-REQ-", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "transaction_id": {"cat": ["TXN", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "instruction_id": {"cat": ["INSTR", {"fake": ["i64", 10000000, 99999999]}]},
+        "end_to_end_id": {"cat": ["E2E", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "cheque_number": {"cat": ["CHQ-", {"fake": ["i64", 100000, 999999]}]},
+        "amount": {"fake": ["f64", 500.0, 25000.0]},
+        "drawer_name": {"fake": ["full_name"]},
+        "drawer_account": {"fake": ["iban"]},
+        "drawer_bic": {"fake": ["bic"]},
+        "stop_effective_date": {"fake": ["date", "%Y-%m-%d", "+0d", "+0d"]},
+        "stop_expiry_date": {"fake": ["date", "%Y-%m-%d", "+180d", "+365d"]}
+    },
+    "schema": {
+        "GrpHdr": {
+            "MsgId": {"var": "msg_id"},
+            "CreDtTm": {"var": "creation_datetime"},
+            "InitgPty": {
+                "FinInstnId": {
+                    "BICFI": {"var": "drawer_bic"}
+                }
+            }
+        },
+        "OrgnlGrpInfAndSts": {
+            "OrgnlMsgId": {"var": "stop_request_id"},
+            "OrgnlMsgNmId": "pain.001.001.08",
+            "OrgnlCreDtTm": {"fake": ["iso8601_datetime", "-2h", "-1h"]},
+            "OrgnlNbOfTxs": "1",
+            "OrgnlCtrlSum": {"var": "amount"},
+            "GrpSts": "ACCP"
+        },
+        "TxInfAndSts": [
+            {
+                "OrgnlInstrId": {"var": "instruction_id"},
+                "OrgnlEndToEndId": {"var": "end_to_end_id"},
+                "OrgnlTxId": {"var": "transaction_id"},
+                "TxSts": "ACCP",
+                "StsRsnInf": [
+                    {
+                        "Rsn": {
+                            "Prtry": "STOP_PAYMENT_ACCEPTED"
+                        },
+                        "AddtlInf": [
+                            "Stop payment request accepted and activated",
+                            {"cat": ["Effective from: ", {"var": "stop_effective_date"}]},
+                            {"cat": ["Valid until: ", {"var": "stop_expiry_date"}]},
+                            "Cheque will be rejected if presented"
+                        ]
+                    }
+                ],
+                "AccptncDtTm": {"fake": ["iso8601_datetime", "-5m", "-2m"]},
+                "AcctSvcrRef": {"cat": ["STOP-CONF-", {"fake": ["i64", 1000000, 9999999]}]},
+                "ClrSysRef": {"cat": ["CLR-STOP-", {"fake": ["i64", 1000000, 9999999]}]},
+                "OrgnlTxRef": {
+                    "Amt": {
+                        "InstdAmt": {
+                            "@Ccy": "USD",
+                            "$value": {"var": "amount"}
+                        }
+                    },
+                    "ReqdExctnDt": {
+                        "Dt": {"var": "stop_effective_date"}
+                    },
+                    "PmtTpInf": {
+                        "InstrPrty": "HIGH",
+                        "SvcLvl": [
+                            {"Cd": "URGP"}
+                        ],
+                        "LclInstrm": {
+                            "Prtry": "STOP_CHQ_CONFIRM"
+                        }
+                    },
+                    "PmtMtd": "CHK",
+                    "RmtInf": {
+                        "Strd": [
+                            {
+                                "RfrdDocInf": [
+                                    {
+                                        "Tp": {
+                                            "CdOrPrtry": {
+                                                "Prtry": "CHEQUE"
+                                            }
+                                        },
+                                        "Nb": {"var": "cheque_number"},
+                                        "RltdDt": {"fake": ["date", "%Y-%m-%d", "-30d", "-7d"]}
+                                    }
+                                ],
+                                "AddtlRmtInf": [
+                                    "Stop payment successfully activated",
+                                    "System updated - cheque blocked",
+                                    "All branches notified"
+                                ]
+                            }
+                        ]
+                    },
+                    "Dbtr": {
+                        "Nm": {"var": "drawer_name"},
+                        "PstlAdr": {
+                            "Ctry": {"fake": ["country_code"]}
+                        }
+                    },
+                    "DbtrAcct": {
+                        "Id": {
+                            "IBAN": {"var": "drawer_account"}
+                        }
+                    },
+                    "DbtrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {"var": "drawer_bic"}
+                        }
+                    }
+                },
+                "SplmtryData": [
+                    {
+                        "PlcAndNm": "StopPaymentConfirmation",
+                        "Envlp": {
+                            "Document": {
+                                "Prtry": {
+                                    "Tp": "STOP_STATUS",
+                                    "Id": "ACTIVE",
+                                    "Issr": {"cat": ["Valid: ", {"var": "stop_effective_date"}, " to ", {"var": "stop_expiry_date"}]}
+                                }
+                            }
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+}

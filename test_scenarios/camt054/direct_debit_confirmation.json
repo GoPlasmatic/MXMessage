@@ -1,0 +1,136 @@
+{
+    "variables": {
+        "msg_id": {"cat": ["DD-", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "ntfctn_id": {"cat": ["DD-NTFCTN-", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_time": {"fake": ["iso8601_datetime"]},
+        "account_id": {"fake": ["iban"]},
+        "account_owner": {"fake": ["full_name"]},
+        "servicer_bic": {"fake": ["bic"]},
+        "entry_ref": {"cat": ["DD-ENT-", {"fake": ["i64", 1000000, 9999999]}]},
+        "debit_amount": {"fake": ["f64", 50.0, 2000.0]},
+        "booking_date": {"fake": ["date", "%Y-%m-%d", "-1d", "-1d"]},
+        "value_date": {"fake": ["date", "%Y-%m-%d", "-1d", "-1d"]},
+        "transaction_ref": {"cat": ["DD-TXN-", {"fake": ["i64", 10000000, 99999999]}]},
+        "mandate_id": {"cat": ["MNDT-", {"fake": ["i64", 100000, 999999]}]},
+        "creditor_name": {"fake": ["company_name"]},
+        "creditor_id": {"cat": ["CID-", {"fake": ["i64", 100000, 999999]}]}
+    },
+    "schema": {
+        "GrpHdr": {
+            "MsgId": {"var": "msg_id"},
+            "CreDtTm": {"var": "creation_datetime"}
+        },
+        "Ntfctn": [
+            {
+                "Id": {"var": "ntfctn_id"},
+                "CreDtTm": {"var": "creation_time"},
+                "Acct": {
+                    "Id": {
+                        "IBAN": {"var": "account_id"}
+                    },
+                    "Ownr": {
+                        "Nm": {"var": "account_owner"}
+                    },
+                    "Svcr": {
+                        "FinInstnId": {
+                            "BICFI": {"var": "servicer_bic"}
+                        }
+                    }
+                },
+                "Ntry": [
+                    {
+                        "NtryRef": {"var": "entry_ref"},
+                        "Amt": {
+                            "@Ccy": "USD",
+                            "$value": {"var": "debit_amount"}
+                        },
+                        "CdtDbtInd": "DBIT",
+                        "Sts": {
+                            "Cd": "BOOK"
+                        },
+                        "BookgDt": {
+                            "Dt": {"var": "booking_date"}
+                        },
+                        "ValDt": {
+                            "Dt": {"var": "value_date"}
+                        },
+                        "BkTxCd": {
+                            "Domn": {
+                                "Cd": "PMNT",
+                                "Fmly": {
+                                    "Cd": "IDDT",
+                                    "SubFmlyCd": "PMDD"
+                                }
+                            }
+                        },
+                        "NtryDtls": [
+                            {
+                                "TxDtls": [
+                                    {
+                                        "Refs": {
+                                            "AcctSvcrRef": {"var": "transaction_ref"},
+                                            "MndtId": {"var": "mandate_id"}
+                                        },
+                                        "Amt": {
+                                            "@Ccy": "USD",
+                                            "$value": {"var": "debit_amount"}
+                                        },
+                                        "CdtDbtInd": "DBIT",
+                                        "RltdPties": {
+                                            "Cdtr": {
+                                                "Nm": {"var": "creditor_name"}
+                                            },
+                                            "CdtrAcct": {
+                                                "Id": {
+                                                    "IBAN": {"fake": ["iban"]}
+                                                }
+                                            }
+                                        },
+                                        "RltdAgts": {
+                                            "CdtrAgt": {
+                                                "FinInstnId": {
+                                                    "BICFI": {"fake": ["bic"]}
+                                                }
+                                            }
+                                        },
+                                        "Purp": {
+                                            "Cd": "SUBS"
+                                        },
+                                        "RltdDts": {
+                                            "MndtRltdInf": {
+                                                "MndtId": {"var": "mandate_id"},
+                                                "DtOfSgntr": {"fake": ["date", "%Y-%m-%d", "-365d", "-30d"]},
+                                                "FnlColltnDt": {"fake": ["date", "%Y-%m-%d", "+365d", "+730d"]},
+                                                "FrstColltnDt": {"fake": ["date", "%Y-%m-%d", "-180d", "-30d"]},
+                                                "Frqcy": {
+                                                    "Tp": "MNTH"
+                                                }
+                                            }
+                                        },
+                                        "RmtInf": {
+                                            "Ustrd": ["Monthly subscription payment"],
+                                            "Strd": [
+                                                {
+                                                    "CdtrRefInf": {
+                                                        "Tp": {
+                                                            "CdOrPrtry": {
+                                                                "Cd": "SCOR"
+                                                            }
+                                                        },
+                                                        "Ref": {"var": "creditor_id"}
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    }
+                                ]
+                            }
+                        ],
+                        "AddtlNtryInf": "Direct debit collection for subscription"
+                    }
+                ]
+            }
+        ]
+    }
+}

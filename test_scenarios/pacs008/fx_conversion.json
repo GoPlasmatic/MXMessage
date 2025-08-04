@@ -1,0 +1,483 @@
+{
+    "variables": {
+        "msg_id": {
+            "cat": [
+                "MSGFX",
+                {
+                    "fake": [
+                        "i64",
+                        100000000,
+                        999999999
+                    ]
+                }
+            ]
+        },
+        "creation_datetime": {
+            "fake": [
+                "iso8601_datetime"
+            ]
+        },
+        "tx_id": {
+            "cat": [
+                "TXFX",
+                {
+                    "fake": [
+                        "i64",
+                        1000000000,
+                        9999999999
+                    ]
+                }
+            ]
+        },
+        "end_to_end_id": {
+            "cat": [
+                "E2EFX",
+                {
+                    "fake": [
+                        "i64",
+                        100000000000,
+                        999999999999
+                    ]
+                }
+            ]
+        },
+        "uetr": {
+            "fake": [
+                "uuid"
+            ]
+        },
+        "source_amount": {
+            "fake": [
+                "f64",
+                10000.0,
+                100000.0
+            ]
+        },
+        "fx_rate": {
+            "fake": [
+                "f64",
+                1.05,
+                1.15
+            ]
+        },
+        "debtor_bic": {
+            "fake": [
+                "bic"
+            ]
+        },
+        "creditor_bic": {
+            "fake": [
+                "bic"
+            ]
+        },
+        "instg_lei": {
+            "fake": [
+                "lei"
+            ]
+        },
+        "instd_lei": {
+            "fake": [
+                "lei"
+            ]
+        }
+    },
+    "schema": {
+        "GrpHdr": {
+            "MsgId": {
+                "var": "msg_id"
+            },
+            "CreDtTm": {
+                "var": "creation_datetime"
+            },
+            "NbOfTxs": "1",
+            "SttlmInf": {
+                "SttlmMtd": "INDA",
+                "ClrSys": {
+                    "Cd": "TGT"
+                }
+            }
+        },
+        "CdtTrfTxInf": {
+            "PmtId": {
+                "InstrId": {
+                    "var": "tx_id"
+                },
+                "EndToEndId": {
+                    "var": "end_to_end_id"
+                },
+                "TxId": {
+                    "var": "tx_id"
+                },
+                "UETR": {
+                    "var": "uetr"
+                }
+            },
+            "PmtTpInf": {
+                "InstrPrty": "NORM",
+                "SvcLvl": [
+                    {
+                        "Cd": "G001"
+                    }
+                ],
+                "CtgyPurp": {
+                    "Cd": "TREA"
+                }
+            },
+            "IntrBkSttlmAmt": {
+                "@Ccy": "USD",
+                "$value": {
+                    "fake": [
+                        "f64",
+                        10500.0,
+                        115000.0
+                    ]
+                }
+            },
+            "IntrBkSttlmDt": {
+                "fake": [
+                    "date",
+                    "%Y-%m-%d",
+                    "+2d",
+                    "+2d"
+                ]
+            },
+            "SttlmPrty": "NORM",
+            "SttlmTmIndctn": {
+                "CdtDtTm": {
+                    "fake": [
+                        "iso8601_datetime",
+                        "+2d"
+                    ]
+                }
+            },
+            "InstdAmt": {
+                "@Ccy": "EUR",
+                "$value": {
+                    "var": "source_amount"
+                }
+            },
+            "XchgRate": {
+                "var": "fx_rate"
+            },
+            "ChrgBr": "SHAR",
+            "ChrgsInf": [
+                {
+                    "Amt": {
+                        "@Ccy": "EUR",
+                        "$value": {
+                            "fake": [
+                                "f64",
+                                25.0,
+                                50.0
+                            ]
+                        }
+                    },
+                    "Agt": {
+                        "FinInstnId": {
+                            "BICFI": {
+                                "var": "debtor_bic"
+                            }
+                        }
+                    },
+                    "Tp": {
+                        "Cd": "CORT"
+                    }
+                }
+            ],
+            "InstgAgt": {
+                "FinInstnId": {
+                    "BICFI": {
+                        "var": "debtor_bic"
+                    },
+                    "LEI": {
+                        "var": "instg_lei"
+                    }
+                }
+            },
+            "InstdAgt": {
+                "FinInstnId": {
+                    "BICFI": {
+                        "var": "creditor_bic"
+                    },
+                    "LEI": {
+                        "var": "instd_lei"
+                    }
+                }
+            },
+            "Dbtr": {
+                "Nm": {
+                    "cat": [
+                        {
+                            "fake": [
+                                "company_name"
+                            ]
+                        },
+                        " EU Branch"
+                    ]
+                },
+                "PstlAdr": {
+                    "Ctry": "FR",
+                    "AdrLine": [
+                        {
+                            "fake": [
+                                "street_address"
+                            ]
+                        },
+                        {
+                            "cat": [
+                                {
+                                    "fake": [
+                                        "postcode"
+                                    ]
+                                },
+                                " Paris"
+                            ]
+                        }
+                    ]
+                },
+                "Id": {
+                    "OrgId": {
+                        "LEI": {
+                            "fake": [
+                                "lei"
+                            ]
+                        },
+                        "Othr": [
+                            {
+                                "Id": {
+                                    "cat": [
+                                        "FR",
+                                        {
+                                            "fake": [
+                                                "i64",
+                                                100000000,
+                                                999999999
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "SchmeNm": {
+                                    "Cd": "TXID"
+                                }
+                            }
+                        ]
+                    }
+                }
+            },
+            "DbtrAcct": {
+                "Id": {
+                    "IBAN": {
+                        "fake": [
+                            "iban",
+                            "FR"
+                        ]
+                    }
+                },
+                "Tp": {
+                    "Cd": "CACC"
+                },
+                "Ccy": "EUR"
+            },
+            "DbtrAgt": {
+                "FinInstnId": {
+                    "BICFI": {
+                        "var": "debtor_bic"
+                    },
+                    "LEI": {
+                        "var": "instg_lei"
+                    }
+                }
+            },
+            "CdtrAgt": {
+                "FinInstnId": {
+                    "BICFI": {
+                        "var": "creditor_bic"
+                    },
+                    "LEI": {
+                        "var": "instd_lei"
+                    }
+                }
+            },
+            "Cdtr": {
+                "Nm": {
+                    "cat": [
+                        {
+                            "fake": [
+                                "company_name"
+                            ]
+                        },
+                        " US Corp"
+                    ]
+                },
+                "PstlAdr": {
+                    "Ctry": "US",
+                    "AdrLine": [
+                        {
+                            "fake": [
+                                "street_address"
+                            ]
+                        },
+                        {
+                            "cat": [
+                                {
+                                    "fake": [
+                                        "city_name"
+                                    ]
+                                },
+                                ", NY ",
+                                {
+                                    "fake": [
+                                        "postcode"
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "Id": {
+                    "OrgId": {
+                        "LEI": {
+                            "fake": [
+                                "lei"
+                            ]
+                        },
+                        "Othr": [
+                            {
+                                "Id": {
+                                    "cat": [
+                                        "EIN-",
+                                        {
+                                            "fake": [
+                                                "i64",
+                                                10,
+                                                99
+                                            ]
+                                        },
+                                        "-",
+                                        {
+                                            "fake": [
+                                                "i64",
+                                                1000000,
+                                                9999999
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "SchmeNm": {
+                                    "Cd": "TXID"
+                                }
+                            }
+                        ]
+                    }
+                }
+            },
+            "CdtrAcct": {
+                "Id": {
+                    "Othr": {
+                        "Id": {
+                            "cat": [
+                                {
+                                    "fake": [
+                                        "i64",
+                                        100000000,
+                                        999999999
+                                    ]
+                                }
+                            ]
+                        },
+                        "SchmeNm": {
+                            "Prtry": "ACCT"
+                        }
+                    }
+                },
+                "Tp": {
+                    "Cd": "CACC"
+                },
+                "Ccy": "USD"
+            },
+            "Purp": {
+                "Cd": "TREA"
+            },
+            "RgltryRptg": [
+                {
+                    "Dtls": [
+                        {
+                            "Tp": "CRED",
+                            "Dt": {
+                                "fake": [
+                                    "date",
+                                    "%Y-%m-%d",
+                                    "+2d",
+                                    "+2d"
+                                ]
+                            },
+                            "Ctry": "FR",
+                            "Cd": "150",
+                            "Amt": {
+                                "@Ccy": "EUR",
+                                "$value": {
+                                    "var": "source_amount"
+                                }
+                            },
+                            "Inf": [
+                                "FX CONVERSION",
+                                "EUR TO USD"
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "RmtInf": {
+                "Ustrd": "Treasury operations - FX conversion",
+                "Strd": [
+                    {
+                        "AddtlRmtInf": [
+                            {
+                                "cat": [
+                                    "Source amount: EUR ",
+                                    {
+                                        "var": "source_amount"
+                                    }
+                                ]
+                            },
+                            {
+                                "cat": [
+                                    "FX rate: ",
+                                    {
+                                        "var": "fx_rate"
+                                    }
+                                ]
+                            },
+                            {
+                                "cat": [
+                                    "Target amount: USD ",
+                                    {
+                                        "fake": [
+                                            "f64",
+                                            10500.0,
+                                            115000.0
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "cat": [
+                                    "Value date: ",
+                                    {
+                                        "fake": [
+                                            "date",
+                                            "%Y-%m-%d",
+                                            "+2d",
+                                            "+2d"
+                                        ]
+                                    }
+                                ]
+                            },
+                            "Treasury management - Liquidity transfer"
+                        ]
+                    }
+                ]
+            }
+        }
+    }
+}

@@ -1,0 +1,476 @@
+{
+    "variables": {
+        "msg_id": {
+            "cat": [
+                "MSGSAL",
+                {
+                    "fake": [
+                        "i64",
+                        100000000,
+                        999999999
+                    ]
+                }
+            ]
+        },
+        "creation_datetime": {
+            "fake": [
+                "iso8601_datetime"
+            ]
+        },
+        "tx_id": {
+            "cat": [
+                "TXSAL",
+                {
+                    "fake": [
+                        "i64",
+                        1000000000,
+                        9999999999
+                    ]
+                }
+            ]
+        },
+        "end_to_end_id": {
+            "cat": [
+                "E2ESAL",
+                {
+                    "fake": [
+                        "i64",
+                        100000000000,
+                        999999999999
+                    ]
+                }
+            ]
+        },
+        "uetr": {
+            "fake": [
+                "uuid"
+            ]
+        },
+        "net_salary": {
+            "fake": [
+                "f64",
+                2000.0,
+                15000.0
+            ]
+        },
+        "employee_name": {
+            "fake": [
+                "name"
+            ]
+        },
+        "employee_id": {
+            "cat": [
+                "EMP-",
+                {
+                    "fake": [
+                        "i64",
+                        10001,
+                        99999
+                    ]
+                }
+            ]
+        },
+        "company_lei": {
+            "fake": [
+                "lei"
+            ]
+        },
+        "debtor_bic": {
+            "fake": [
+                "bic"
+            ]
+        },
+        "creditor_bic": {
+            "fake": [
+                "bic"
+            ]
+        },
+        "instg_lei": {
+            "fake": [
+                "lei"
+            ]
+        },
+        "instd_lei": {
+            "fake": [
+                "lei"
+            ]
+        }
+    },
+    "schema": {
+        "GrpHdr": {
+            "MsgId": {
+                "var": "msg_id"
+            },
+            "CreDtTm": {
+                "var": "creation_datetime"
+            },
+            "NbOfTxs": "1",
+            "SttlmInf": {
+                "SttlmMtd": "INDA",
+                "ClrSys": {
+                    "Cd": "RTG"
+                }
+            }
+        },
+        "CdtTrfTxInf": {
+            "PmtId": {
+                "InstrId": {
+                    "var": "tx_id"
+                },
+                "EndToEndId": {
+                    "var": "end_to_end_id"
+                },
+                "TxId": {
+                    "var": "tx_id"
+                },
+                "UETR": {
+                    "var": "uetr"
+                }
+            },
+            "PmtTpInf": {
+                "InstrPrty": "HIGH",
+                "SvcLvl": [
+                    {
+                        "Cd": "G001"
+                    }
+                ],
+                "CtgyPurp": {
+                    "Cd": "SALA"
+                }
+            },
+            "IntrBkSttlmAmt": {
+                "@Ccy": "EUR",
+                "$value": {
+                    "var": "net_salary"
+                }
+            },
+            "IntrBkSttlmDt": {
+                "fake": [
+                    "date",
+                    "%Y-%m-25",
+                    "+0d",
+                    "+0d"
+                ]
+            },
+            "SttlmPrty": "HIGH",
+            "SttlmTmIndctn": {
+                "CdtDtTm": {
+                    "fake": [
+                        "iso8601_datetime"
+                    ]
+                }
+            },
+            "ChrgBr": "DEBT",
+            "InstgAgt": {
+                "FinInstnId": {
+                    "BICFI": {
+                        "var": "debtor_bic"
+                    },
+                    "LEI": {
+                        "var": "instg_lei"
+                    }
+                }
+            },
+            "InstdAgt": {
+                "FinInstnId": {
+                    "BICFI": {
+                        "var": "creditor_bic"
+                    },
+                    "LEI": {
+                        "var": "instd_lei"
+                    }
+                }
+            },
+            "Dbtr": {
+                "Nm": {
+                    "cat": [
+                        {
+                            "fake": [
+                                "company_name"
+                            ]
+                        },
+                        " GmbH"
+                    ]
+                },
+                "PstlAdr": {
+                    "Ctry": "DE",
+                    "AdrLine": [
+                        {
+                            "fake": [
+                                "street_address"
+                            ]
+                        },
+                        {
+                            "cat": [
+                                {
+                                    "fake": [
+                                        "postcode"
+                                    ]
+                                },
+                                " ",
+                                {
+                                    "fake": [
+                                        "city_name"
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "Id": {
+                    "OrgId": {
+                        "LEI": {
+                            "var": "company_lei"
+                        },
+                        "Othr": [
+                            {
+                                "Id": {
+                                    "cat": [
+                                        "DE",
+                                        {
+                                            "fake": [
+                                                "i64",
+                                                100000000,
+                                                999999999
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "SchmeNm": {
+                                    "Cd": "TXID"
+                                }
+                            }
+                        ]
+                    }
+                }
+            },
+            "DbtrAcct": {
+                "Id": {
+                    "IBAN": {
+                        "fake": [
+                            "iban",
+                            "DE"
+                        ]
+                    }
+                },
+                "Tp": {
+                    "Cd": "CACC"
+                },
+                "Nm": "Payroll Account"
+            },
+            "DbtrAgt": {
+                "FinInstnId": {
+                    "BICFI": {
+                        "var": "debtor_bic"
+                    },
+                    "LEI": {
+                        "var": "instg_lei"
+                    }
+                }
+            },
+            "CdtrAgt": {
+                "FinInstnId": {
+                    "BICFI": {
+                        "var": "creditor_bic"
+                    },
+                    "LEI": {
+                        "var": "instd_lei"
+                    }
+                }
+            },
+            "Cdtr": {
+                "Nm": {
+                    "var": "employee_name"
+                },
+                "PstlAdr": {
+                    "Ctry": {
+                        "fake": [
+                            "country_code"
+                        ]
+                    },
+                    "AdrLine": [
+                        {
+                            "fake": [
+                                "street_address"
+                            ]
+                        },
+                        {
+                            "cat": [
+                                {
+                                    "fake": [
+                                        "postcode"
+                                    ]
+                                },
+                                " ",
+                                {
+                                    "fake": [
+                                        "city_name"
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "Id": {
+                    "PrvtId": {
+                        "DtAndPlcOfBirth": {
+                            "BirthDt": {
+                                "fake": [
+                                    "date",
+                                    "%Y-%m-%d",
+                                    "-65y",
+                                    "-18y"
+                                ]
+                            },
+                            "CityOfBirth": {
+                                "fake": [
+                                    "city_name"
+                                ]
+                            },
+                            "CtryOfBirth": {
+                                "fake": [
+                                    "country_code"
+                                ]
+                            }
+                        },
+                        "Othr": [
+                            {
+                                "Id": {
+                                    "var": "employee_id"
+                                },
+                                "SchmeNm": {
+                                    "Prtry": "EMPLOYEE_ID"
+                                }
+                            },
+                            {
+                                "Id": {
+                                    "cat": [
+                                        "SSN-",
+                                        {
+                                            "fake": [
+                                                "i64",
+                                                100,
+                                                999
+                                            ]
+                                        },
+                                        "-",
+                                        {
+                                            "fake": [
+                                                "i64",
+                                                10,
+                                                99
+                                            ]
+                                        },
+                                        "-",
+                                        {
+                                            "fake": [
+                                                "i64",
+                                                1000,
+                                                9999
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "SchmeNm": {
+                                    "Cd": "SOSE"
+                                }
+                            }
+                        ]
+                    }
+                }
+            },
+            "CdtrAcct": {
+                "Id": {
+                    "IBAN": {
+                        "fake": [
+                            "iban"
+                        ]
+                    }
+                },
+                "Tp": {
+                    "Cd": "CACC"
+                }
+            },
+            "Purp": {
+                "Cd": "SALA"
+            },
+            "RgltryRptg": [
+                {
+                    "Dtls": [
+                        {
+                            "Tp": "CRED",
+                            "Dt": {
+                                "fake": [
+                                    "date",
+                                    "%Y-%m-25",
+                                    "+0d",
+                                    "+0d"
+                                ]
+                            },
+                            "Ctry": "DE",
+                            "Cd": "150",
+                            "Amt": {
+                                "@Ccy": "EUR",
+                                "$value": {
+                                    "var": "net_salary"
+                                }
+                            },
+                            "Inf": [
+                                "CBPR+ SALARY PAYMENT",
+                                "MONTHLY PAYROLL"
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "RmtInf": {
+                "Strd": [
+                    {
+                        "RfrdDocInf": [
+                            {
+                                "Tp": {
+                                    "CdOrPrtry": {
+                                        "Prtry": "PAYSLIP"
+                                    }
+                                },
+                                "Nb": {
+                                    "cat": [
+                                        "PAY-",
+                                        {
+                                            "fake": [
+                                                "date",
+                                                "%Y%m",
+                                                "+0d",
+                                                "+0d"
+                                            ]
+                                        },
+                                        "-",
+                                        {
+                                            "var": "employee_id"
+                                        }
+                                    ]
+                                },
+                                "RltdDt": {
+                                    "fake": [
+                                        "date",
+                                        "%Y-%m-25",
+                                        "+0d",
+                                        "+0d"
+                                    ]
+                                }
+                            }
+                        ],
+                        "AddtlRmtInf": [
+                            "Generated remittance information",
+                            "Generated remittance information",
+                            "Generated remittance information",
+                            "Generated remittance information",
+                            "Generated remittance information",
+                            "Generated remittance information"
+                        ]
+                    }
+                ]
+            }
+        }
+    }
+}

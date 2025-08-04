@@ -1,0 +1,69 @@
+{
+    "variables": {
+        "msg_id": {"cat": ["MIN", {"fake": ["i64", 100000000, 999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "end_to_end_id": {"cat": ["E2EMIN", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "amount": {"fake": ["f64", 10.0, 1000.0]},
+        "debtor_bic": {"fake": ["bic"]},
+        "creditor_bic": {"fake": ["bic"]}
+    },
+    "schema": {
+        "GrpHdr": {
+            "MsgId": {"var": "msg_id"},
+            "CreDtTm": {"var": "creation_datetime"},
+            "NbOfTxs": "1",
+            "SttlmInf": {
+                "SttlmMtd": "INDA"
+            }
+        },
+        "CdtTrfTxInf": {
+                "PmtId": {
+                    "InstrId": {"cat": ["INSTR", {"fake": ["i64", 1000000, 9999999]}]},
+                    "EndToEndId": {"var": "end_to_end_id"},
+                    "UETR": {"fake": ["uuid"]}
+                },
+                "IntrBkSttlmAmt": {
+                    "@Ccy": "EUR",
+                    "$value": {"var": "amount"}
+                },
+                "IntrBkSttlmDt": {"fake": ["date", "%Y-%m-%d", "+0d", "+0d"]},
+                "ChrgBr": "SHAR",
+                "InstgAgt": {
+                    "FinInstnId": {
+                        "BICFI": {"var": "debtor_bic"}
+                    }
+                },
+                "InstdAgt": {
+                    "FinInstnId": {
+                        "BICFI": {"var": "creditor_bic"}
+                    }
+                },
+                "Dbtr": {
+                    "Nm": {"fake": ["name"]}
+                },
+                "DbtrAcct": {
+                    "Id": {
+                        "IBAN": {"fake": ["iban"]}
+                    }
+                },
+                "DbtrAgt": {
+                    "FinInstnId": {
+                        "BICFI": {"var": "debtor_bic"}
+                    }
+                },
+                "CdtrAgt": {
+                    "FinInstnId": {
+                        "BICFI": {"var": "creditor_bic"}
+                    }
+                },
+                "Cdtr": {
+                    "Nm": {"fake": ["name"]}
+                },
+                "CdtrAcct": {
+                    "Id": {
+                        "IBAN": {"fake": ["iban"]}
+                    }
+                }
+        }
+    }
+}

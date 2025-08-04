@@ -1,0 +1,222 @@
+{
+    "variables": {
+        "msg_id": {
+            "cat": [
+                "DUP-UETR-",
+                {
+                    "fake": [
+                        "i64",
+                        100000000000,
+                        999999999999
+                    ]
+                }
+            ]
+        },
+        "creation_datetime": {
+            "fake": [
+                "iso8601_datetime"
+            ]
+        },
+        "payment_id": {
+            "cat": [
+                "DUP-PMT-",
+                {
+                    "fake": [
+                        "i64",
+                        100000,
+                        999999
+                    ]
+                }
+            ]
+        },
+        "duplicate_uetr": "550e8400-e29b-41d4-a716-446655440000",
+        "amount": {
+            "fake": [
+                "f64",
+                5000.0,
+                50000.0
+            ]
+        },
+        "currency": {
+            "fake": [
+                "enum",
+                "USD",
+                "EUR",
+                "GBP"
+            ]
+        },
+        "sender_bic": {
+            "fake": [
+                "bic"
+            ]
+        },
+        "receiver_bic": {
+            "fake": [
+                "bic"
+            ]
+        },
+        "ordering_customer": {
+            "fake": [
+                "company_name"
+            ]
+        },
+        "ordering_account": {
+            "fake": [
+                "iban"
+            ]
+        },
+        "beneficiary_customer": {
+            "fake": [
+                "company_name"
+            ]
+        },
+        "beneficiary_account": {
+            "fake": [
+                "iban"
+            ]
+        },
+        "original_msg_id": {
+            "cat": [
+                "ORIG-",
+                {
+                    "fake": [
+                        "i64",
+                        100000000000,
+                        999999999999
+                    ]
+                }
+            ]
+        },
+        "original_payment_id": {
+            "cat": [
+                "ORIG-PMT-",
+                {
+                    "fake": [
+                        "i64",
+                        100000,
+                        999999
+                    ]
+                }
+            ]
+        }
+    },
+    "schema": {
+        "GrpHdr": {
+            "MsgId": {
+                "var": "msg_id"
+            },
+            "CreDtTm": {
+                "var": "creation_datetime"
+            },
+            "NbOfTxs": "1",
+            "SttlmInf": {
+                "SttlmMtd": "INDA"
+            }
+        },
+        "CdtTrfTxInf": {
+            "PmtId": {
+                "InstrId": {
+                    "var": "payment_id"
+                },
+                "EndToEndId": {
+                    "var": "payment_id"
+                },
+                "UETR": {
+                    "var": "duplicate_uetr"
+                }
+            },
+            "PmtTpInf": {
+                "InstrPrty": "NORM",
+                "SvcLvl": [
+                    {
+                        "Cd": "G001"
+                    }
+                ]
+            },
+            "IntrBkSttlmAmt": {
+                "@Ccy": {
+                    "var": "currency"
+                },
+                "$value": {
+                    "var": "amount"
+                }
+            },
+            "IntrBkSttlmDt": {
+                "fake": [
+                    "date",
+                    "%Y-%m-%d",
+                    "0d",
+                    "+1d"
+                ]
+            },
+            "InstdAmt": {
+                "@Ccy": {
+                    "var": "currency"
+                },
+                "$value": {
+                    "var": "amount"
+                }
+            },
+            "ChrgBr": "SHAR",
+            "Dbtr": {
+                "Nm": {
+                    "var": "ordering_customer"
+                }
+            },
+            "DbtrAcct": {
+                "Id": {
+                    "IBAN": {
+                        "var": "ordering_account"
+                    }
+                }
+            },
+            "DbtrAgt": {
+                "FinInstnId": {
+                    "BICFI": {
+                        "var": "sender_bic"
+                    }
+                }
+            },
+            "CdtrAgt": {
+                "FinInstnId": {
+                    "BICFI": {
+                        "var": "receiver_bic"
+                    }
+                }
+            },
+            "Cdtr": {
+                "Nm": {
+                    "var": "beneficiary_customer"
+                }
+            },
+            "CdtrAcct": {
+                "Id": {
+                    "IBAN": {
+                        "var": "beneficiary_account"
+                    }
+                }
+            },
+            "RmtInf": {
+                "Ustrd": "Duplicate UETR test scenario - payment attempt with existing UETR"
+            },
+            "InstgAgt": {
+                "FinInstnId": {
+                    "BICFI": {
+                        "fake": [
+                            "bic"
+                        ]
+                    }
+                }
+            },
+            "InstdAgt": {
+                "FinInstnId": {
+                    "BICFI": {
+                        "fake": [
+                            "bic"
+                        ]
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,240 @@
+{
+    "variables": {
+        "msg_id": {"cat": ["CBPR-RSP-", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "original_msg_id": {"cat": ["CBPR-REQ-", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "investigation_id": {"cat": ["CBPR-INV-", {"fake": ["i64", 1000000000, 9999999999]}]},
+        "original_payment_id": {"cat": ["CBPR-PMT-", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "original_uetr": {"fake": ["uuid_v4"]},
+        "cancellation_amount": {"fake": ["f64", 50000.0, 2000000.0]},
+        "original_date": {"fake": ["date", "%Y-%m-%d", "-3d", "-1d"]},
+        "responder_bic": {"fake": ["bic"]},
+        "responder_lei": {"fake": ["lei"]},
+        "originator_bic": {"fake": ["bic"]},
+        "originator_lei": {"fake": ["lei"]},
+        "charge_bearer": {"rand": ["DEBT", "CRED", "SHAR"]},
+        "cancellation_charges": {"fake": ["f64", 25.0, 150.0]}
+    },
+    "schema": {
+        "Assgnmt": {
+            "Id": {"var": "msg_id"},
+            "Assgnr": {
+                "Agt": {
+                    "FinInstnId": {
+                        "BICFI": {"var": "responder_bic"},
+                        "LEI": {"var": "responder_lei"}
+                    }
+                }
+            },
+            "Assgne": {
+                "Agt": {
+                    "FinInstnId": {
+                        "BICFI": {"var": "originator_bic"},
+                        "LEI": {"var": "originator_lei"}
+                    }
+                }
+            },
+            "CreDtTm": {"var": "creation_datetime"}
+        },
+        "RsltnOfInvstgtn": {
+            "Sts": {
+                "Conf": "ACCR"
+            },
+            "CxlDtls": [
+                {
+                    "OrgnlGrpInfAndSts": {
+                        "OrgnlMsgId": {"var": "original_payment_id"},
+                        "OrgnlMsgNmId": "pacs.008",
+                        "OrgnlCreDtTm": {"cat": [{"var": "original_date"}, "T10:00:00Z"]},
+                        "GrpCxlSts": "ACCR"
+                    },
+                    "TxInfAndSts": [
+                        {
+                            "CxlStsId": {"var": "investigation_id"},
+                            "OrgnlGrpInf": {
+                                "OrgnlMsgId": {"var": "original_payment_id"},
+                                "OrgnlMsgNmId": "pacs.008"
+                            },
+                            "OrgnlInstrId": {"var": "original_payment_id"},
+                            "OrgnlEndToEndId": {"cat": ["CBPR-E2E-", {"var": "original_payment_id"}]},
+                            "OrgnlUETR": {"var": "original_uetr"},
+                            "TxCxlSts": "ACCR",
+                            "CxlStsRsnInf": [
+                                {
+                                    "Orgtr": {
+                                        "Id": {
+                                            "OrgId": {
+                                                "LEI": {"var": "originator_lei"}
+                                            }
+                                        }
+                                    },
+                                    "Rsn": {
+                                        "Cd": "DUPL"
+                                    },
+                                    "AddtlInf": [
+                                        "CBPR+ compliant cancellation processed",
+                                        "Duplicate payment identified and cancelled",
+                                        "Funds returned with full GPI tracking"
+                                    ]
+                                }
+                            ],
+                            "OrgnlTxRef": {
+                                "IntrBkSttlmAmt": {
+                                    "@Ccy": "USD",
+                                    "$value": {"var": "cancellation_amount"}
+                                },
+                                "IntrBkSttlmDt": {"var": "original_date"},
+                                "SttlmInf": {
+                                    "SttlmMtd": "INDA",
+                                    "ClrSys": {
+                                        "Cd": "TGT"
+                                    }
+                                },
+                                "PmtTpInf": {
+                                    "SvcLvl": [
+                                        {"Cd": "G001"}
+                                    ],
+                                    "LclInstrm": {
+                                        "Prtry": "CBPR+"
+                                    }
+                                },
+                                "Dbtr": {
+                                    "Nm": {"fake": ["company_name"]},
+                                    "PstlAdr": {
+                                        "Ctry": "US"
+                                    },
+                                    "Id": {
+                                        "OrgId": {
+                                            "LEI": {"fake": ["lei"]}
+                                        }
+                                    }
+                                },
+                                "DbtrAcct": {
+                                    "Id": {
+                                        "IBAN": {"fake": ["iban"]}
+                                    }
+                                },
+                                "DbtrAgt": {
+                                    "FinInstnId": {
+                                        "BICFI": {"var": "originator_bic"},
+                                        "LEI": {"var": "originator_lei"}
+                                    }
+                                },
+                                "CdtrAgt": {
+                                    "FinInstnId": {
+                                        "BICFI": {"var": "responder_bic"},
+                                        "LEI": {"var": "responder_lei"}
+                                    }
+                                },
+                                "Cdtr": {
+                                    "Nm": {"fake": ["company_name"]},
+                                    "PstlAdr": {
+                                        "Ctry": "US"
+                                    },
+                                    "Id": {
+                                        "OrgId": {
+                                            "LEI": {"fake": ["lei"]}
+                                        }
+                                    }
+                                },
+                                "CdtrAcct": {
+                                    "Id": {
+                                        "IBAN": {"fake": ["iban"]}
+                                    }
+                                },
+                                "Purp": {
+                                    "Cd": "GDDS"
+                                },
+                                "RgltryRptg": [
+                                    {
+                                        "DbtCdtRptgInd": "BOTH",
+                                        "Authrty": {
+                                            "Nm": "US Treasury",
+                                            "Ctry": "US"
+                                        },
+                                        "Dtls": [
+                                            {
+                                                "Tp": "REGULATORY_REPORTING",
+                                                "Cd": "150"
+                                            }
+                                        ]
+                                    }
+                                ],
+                                "SplmtryData": [
+                                    {
+                                        "Envlp": {
+                                            "CBPR_Plus_Data": {
+                                                "TrackerInformationIdentifier": {"var": "original_uetr"},
+                                                "ServiceTypeIdentifier": "001",
+                                                "SettlementMethod": "INDA",
+                                                "ClearingSystem": "TGT"
+                                            }
+                                        }
+                                    }
+                                ]
+                            },
+                            "ChrgsInf": [
+                                {
+                                    "Amt": {
+                                        "@Ccy": "USD",
+                                        "$value": {"var": "cancellation_charges"}
+                                    },
+                                    "Agt": {
+                                        "FinInstnId": {
+                                            "BICFI": {"var": "responder_bic"}
+                                        }
+                                    },
+                                    "Tp": {
+                                        "Cd": "CBPR"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "ModDtls": {
+                "OrgnlGrpInf": {
+                    "OrgnlMsgId": {"var": "original_payment_id"},
+                    "OrgnlMsgNmId": "pacs.008"
+                },
+                "InvstgtnSts": {
+                    "Sts": "FULF",
+                    "DtTm": {"var": "creation_datetime"},
+                    "Rsn": {
+                        "Cd": "ACCP"
+                    }
+                }
+            }
+        },
+        "SplmtryData": [
+            {
+                "Envlp": {
+                    "CBPR_Cancellation_Confirmation": {
+                        "ComplianceVerification": {
+                            "UETR_Tracking": {"var": "original_uetr"},
+                            "ServiceLevel": "G001",
+                            "ComplianceStatus": "VERIFIED",
+                            "ChargeTransparency": {
+                                "ChargeBearer": {"var": "charge_bearer"},
+                                "TotalCharges": {"var": "cancellation_charges"},
+                                "ChargeBreakdown": [
+                                    {
+                                        "Type": "CANCELLATION_FEE",
+                                        "Amount": {"var": "cancellation_charges"},
+                                        "Agent": {"var": "responder_bic"}
+                                    }
+                                ]
+                            }
+                        },
+                        "RefundDetails": {
+                            "RefundMethod": "ORIGINAL_RAILS",
+                            "ExpectedCreditDate": {"fake": ["date", "%Y-%m-%d", "+1d", "+2d"]},
+                            "RefundReference": {"cat": ["CBPR-REFUND-", {"fake": ["i64", 10000000, 99999999]}]}
+                        }
+                    }
+                }
+            }
+        ]
+    }
+}

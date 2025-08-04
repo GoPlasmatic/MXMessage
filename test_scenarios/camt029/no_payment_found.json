@@ -1,0 +1,131 @@
+{
+    "variables": {
+        "msg_id": {"cat": ["NFND-RSP-", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "original_msg_id": {"cat": ["SRCH-", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "investigation_id": {"cat": ["INV-", {"fake": ["i64", 1000000000, 9999999999]}]},
+        "search_payment_id": {"cat": ["UNKNOWN-", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "search_uetr": {"fake": ["uuid_v4"]},
+        "search_amount": {"fake": ["f64", 1000.0, 100000.0]},
+        "search_date": {"fake": ["date", "%Y-%m-%d", "-30d", "-20d"]},
+        "responder_bic": {"fake": ["bic"]},
+        "originator_bic": {"fake": ["bic"]},
+        "search_account": {"fake": ["iban"]}
+    },
+    "schema": {
+        "Assgnmt": {
+            "Id": {"var": "msg_id"},
+            "Assgnr": {
+                "Agt": {
+                    "FinInstnId": {
+                        "BICFI": {"var": "responder_bic"}
+                    }
+                }
+            },
+            "Assgne": {
+                "Agt": {
+                    "FinInstnId": {
+                        "BICFI": {"var": "originator_bic"}
+                    }
+                }
+            },
+            "CreDtTm": {"var": "creation_datetime"}
+        },
+        "RsltnOfInvstgtn": {
+            "Sts": {
+                "Conf": "NFND"
+            },
+            "CxlDtls": [
+                {
+                    "TxInfAndSts": [
+                        {
+                            "CxlStsId": {"var": "investigation_id"},
+                            "OrgnlGrpInf": {
+                                "OrgnlMsgId": {"var": "search_payment_id"},
+                                "OrgnlMsgNmId": "pacs.008"
+                            },
+                            "OrgnlInstrId": {"var": "search_payment_id"},
+                            "OrgnlEndToEndId": {"cat": ["E2E-", {"var": "search_payment_id"}]},
+                            "OrgnlUETR": {"var": "search_uetr"},
+                            "TxCxlSts": "NFND",
+                            "CxlStsRsnInf": [
+                                {
+                                    "Orgtr": {
+                                        "Id": {
+                                            "OrgId": {
+                                                "AnyBIC": {"var": "responder_bic"}
+                                            }
+                                        }
+                                    },
+                                    "Rsn": {
+                                        "Cd": "NOOR"
+                                    },
+                                    "AddtlInf": [
+                                        "No payment found matching the provided criteria",
+                                        "Search performed across all active and archived records",
+                                        "Please verify the reference information"
+                                    ]
+                                }
+                            ],
+                            "OrgnlTxRef": {
+                                "IntrBkSttlmAmt": {
+                                    "@Ccy": "USD",
+                                    "$value": {"var": "search_amount"}
+                                },
+                                "IntrBkSttlmDt": {"var": "search_date"},
+                                "CdtrAcct": {
+                                    "Id": {
+                                        "IBAN": {"var": "search_account"}
+                                    }
+                                },
+                                "CdtrAgt": {
+                                    "FinInstnId": {
+                                        "BICFI": {"var": "responder_bic"}
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                }
+            ],
+            "ModDtls": {
+                "InvstgtnSts": {
+                    "Sts": "CLOS",
+                    "DtTm": {"var": "creation_datetime"},
+                    "Rsn": {
+                        "Cd": "NFND",
+                        "Prtry": "NO_MATCHING_TRANSACTION"
+                    }
+                }
+            }
+        },
+        "SplmtryData": [
+            {
+                "Envlp": {
+                    "SearchDetails": {
+                        "SearchCriteria": {
+                            "PaymentId": {"var": "search_payment_id"},
+                            "UETR": {"var": "search_uetr"},
+                            "Amount": {"var": "search_amount"},
+                            "ValueDate": {"var": "search_date"},
+                            "BeneficiaryAccount": {"var": "search_account"}
+                        },
+                        "SearchScope": {
+                            "SystemsSearched": ["CORE_BANKING", "PAYMENT_HUB", "ARCHIVE_SYSTEM"],
+                            "DateRangeSearched": {
+                                "From": {"fake": ["date", "%Y-%m-%d", "-90d", "-90d"]},
+                                "To": {"fake": ["date", "%Y-%m-%d", "+0d", "+0d"]}
+                            }
+                        },
+                        "Recommendations": [
+                            "Verify the payment reference and UETR",
+                            "Check if payment was sent to a different BIC",
+                            "Confirm the value date and amount",
+                            "Contact sending institution for clarification"
+                        ]
+                    }
+                }
+            }
+        ]
+    }
+}

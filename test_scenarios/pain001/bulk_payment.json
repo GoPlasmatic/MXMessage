@@ -1,0 +1,425 @@
+{
+    "variables": {
+        "msg_id": {"cat": ["MSGBULK", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "initiator_name": {"fake": ["company_name"]},
+        "pmt_inf_id": {"cat": ["BULKPMT", {"fake": ["i64", 10000000, 99999999]}]},
+        "execution_date": "2024-12-20",
+        "debtor_name": {"fake": ["company_name"]},
+        "debtor_iban": {"fake": ["iban", "DE"]},
+        "debtor_bic": {"fake": ["bic"]},
+        "currency": {"fake": ["currency_code"]},
+        "total_amount": {"fake": ["f64", 500000.0, 1000000.0]}
+    },
+    "schema": {
+        "GrpHdr": {
+            "MsgId": {"var": "msg_id"},
+            "CreDtTm": {"var": "creation_datetime"},
+            "NbOfTxs": "10",
+            "InitgPty": {
+                "Nm": {"var": "initiator_name"},
+                "Id": {
+                    "OrgId": {
+                        "AnyBIC": {"var": "debtor_bic"}
+                    }
+                }
+            }
+        },
+        "PmtInf": {
+            "PmtInfId": {"var": "pmt_inf_id"},
+            "PmtMtd": "TRF",
+            "BtchBookg": true,
+            "NbOfTxs": "10",
+            "CtrlSum": {"var": "total_amount"},
+            "PmtTpInf": {
+                "SvcLvl": [
+                    {
+                        "Cd": "NORM"
+                    }
+                ],
+                "LclInstrm": {
+                    "Cd": "INST"
+                },
+                "CtgyPurp": {
+                    "Cd": "SUPP"
+                }
+            },
+            "ReqdExctnDt": {
+                "Dt": {"var": "execution_date"}
+            },
+            "Dbtr": {
+                "Nm": {"var": "debtor_name"},
+                "PstlAdr": {
+                    "Ctry": "DE",
+                    "AdrLine": [
+                        {"fake": ["street_address"]},
+                        {"cat": [{"fake": ["postcode"]}, " ", {"fake": ["city_name"]}]}
+                    ]
+                },
+                "Id": {
+                    "OrgId": {
+                        "LEI": {"fake": ["lei"]}
+                    }
+                }
+            },
+            "DbtrAcct": {
+                "Id": {
+                    "IBAN": {"var": "debtor_iban"}
+                },
+                "Tp": {
+                    "Cd": "CACC"
+                },
+                "Ccy": {"var": "currency"}
+            },
+            "DbtrAgt": {
+                "FinInstnId": {
+                    "BICFI": {"var": "debtor_bic"},
+                    "Nm": {"fake": ["company_name"]}
+                }
+            },
+            "ChrgBr": "SLEV",
+            "CdtTrfTxInf": [
+                {
+                    "PmtId": {
+                        "InstrId": {"cat": ["INSTR", {"fake": ["i64", 1, 10]}]},
+                        "EndToEndId": {"cat": ["E2E", {"fake": ["i64", 100000000000, 999999999999]}]}
+                    },
+                    "Amt": {
+                        "InstdAmt": {
+                            "@Ccy": {"var": "currency"},
+                            "$value": {"fake": ["f64", 10000.0, 150000.0]}
+                        }
+                    },
+                    "CdtrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {"fake": ["bic"]}
+                        }
+                    },
+                    "Cdtr": {
+                        "Nm": {"fake": ["company_name"]},
+                        "PstlAdr": {
+                            "Ctry": {"fake": ["country_code"]}
+                        }
+                    },
+                    "CdtrAcct": {
+                        "Id": {
+                            "IBAN": {"fake": ["iban", "FR"]}
+                        }
+                    },
+                    "Purp": {
+                        "Cd": "SUPP"
+                    },
+                    "RmtInf": {
+                        "Ustrd": {"cat": ["Invoice Payment - ", {"fake": ["word"]}, "-", {"fake": ["i64", 2024001, 2024999]}]}
+                    }
+                },
+                {
+                    "PmtId": {
+                        "InstrId": {"cat": ["INSTR", {"fake": ["i64", 11, 20]}]},
+                        "EndToEndId": {"cat": ["E2E", {"fake": ["i64", 100000000000, 999999999999]}]}
+                    },
+                    "Amt": {
+                        "InstdAmt": {
+                            "@Ccy": {"var": "currency"},
+                            "$value": {"fake": ["f64", 10000.0, 150000.0]}
+                        }
+                    },
+                    "CdtrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {"fake": ["bic"]}
+                        }
+                    },
+                    "Cdtr": {
+                        "Nm": {"fake": ["company_name"]},
+                        "PstlAdr": {
+                            "Ctry": {"fake": ["country_code"]}
+                        }
+                    },
+                    "CdtrAcct": {
+                        "Id": {
+                            "IBAN": {"fake": ["iban", "ES"]}
+                        }
+                    },
+                    "Purp": {
+                        "Cd": "SUPP"
+                    },
+                    "RmtInf": {
+                        "Ustrd": {"cat": ["Invoice Payment - ", {"fake": ["word"]}, "-", {"fake": ["i64", 2024001, 2024999]}]}
+                    }
+                },
+                {
+                    "PmtId": {
+                        "InstrId": {"cat": ["INSTR", {"fake": ["i64", 21, 30]}]},
+                        "EndToEndId": {"cat": ["E2E", {"fake": ["i64", 100000000000, 999999999999]}]}
+                    },
+                    "Amt": {
+                        "InstdAmt": {
+                            "@Ccy": {"var": "currency"},
+                            "$value": {"fake": ["f64", 10000.0, 150000.0]}
+                        }
+                    },
+                    "CdtrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {"fake": ["bic"]}
+                        }
+                    },
+                    "Cdtr": {
+                        "Nm": {"fake": ["company_name"]},
+                        "PstlAdr": {
+                            "Ctry": {"fake": ["country_code"]}
+                        }
+                    },
+                    "CdtrAcct": {
+                        "Id": {
+                            "IBAN": {"fake": ["iban", "IT"]}
+                        }
+                    },
+                    "Purp": {
+                        "Cd": "SUPP"
+                    },
+                    "RmtInf": {
+                        "Ustrd": {"cat": ["Invoice Payment - ", {"fake": ["word"]}, "-", {"fake": ["i64", 2024001, 2024999]}]}
+                    }
+                },
+                {
+                    "PmtId": {
+                        "InstrId": {"cat": ["INSTR", {"fake": ["i64", 31, 40]}]},
+                        "EndToEndId": {"cat": ["E2E", {"fake": ["i64", 100000000000, 999999999999]}]}
+                    },
+                    "Amt": {
+                        "InstdAmt": {
+                            "@Ccy": {"var": "currency"},
+                            "$value": {"fake": ["f64", 10000.0, 150000.0]}
+                        }
+                    },
+                    "CdtrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {"fake": ["bic"]}
+                        }
+                    },
+                    "Cdtr": {
+                        "Nm": {"fake": ["company_name"]},
+                        "PstlAdr": {
+                            "Ctry": {"fake": ["country_code"]}
+                        }
+                    },
+                    "CdtrAcct": {
+                        "Id": {
+                            "IBAN": {"fake": ["iban", "NL"]}
+                        }
+                    },
+                    "Purp": {
+                        "Cd": "SUPP"
+                    },
+                    "RmtInf": {
+                        "Ustrd": {"cat": ["Invoice Payment - ", {"fake": ["word"]}, "-", {"fake": ["i64", 2024001, 2024999]}]}
+                    }
+                },
+                {
+                    "PmtId": {
+                        "InstrId": {"cat": ["INSTR", {"fake": ["i64", 41, 50]}]},
+                        "EndToEndId": {"cat": ["E2E", {"fake": ["i64", 100000000000, 999999999999]}]}
+                    },
+                    "Amt": {
+                        "InstdAmt": {
+                            "@Ccy": {"var": "currency"},
+                            "$value": {"fake": ["f64", 10000.0, 150000.0]}
+                        }
+                    },
+                    "CdtrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {"fake": ["bic"]}
+                        }
+                    },
+                    "Cdtr": {
+                        "Nm": {"fake": ["company_name"]},
+                        "PstlAdr": {
+                            "Ctry": {"fake": ["country_code"]}
+                        }
+                    },
+                    "CdtrAcct": {
+                        "Id": {
+                            "IBAN": {"fake": ["iban", "BE"]}
+                        }
+                    },
+                    "Purp": {
+                        "Cd": "SUPP"
+                    },
+                    "RmtInf": {
+                        "Ustrd": {"cat": ["Invoice Payment - ", {"fake": ["word"]}, "-", {"fake": ["i64", 2024001, 2024999]}]}
+                    }
+                },
+                {
+                    "PmtId": {
+                        "InstrId": {"cat": ["INSTR", {"fake": ["i64", 51, 60]}]},
+                        "EndToEndId": {"cat": ["E2E", {"fake": ["i64", 100000000000, 999999999999]}]}
+                    },
+                    "Amt": {
+                        "InstdAmt": {
+                            "@Ccy": {"var": "currency"},
+                            "$value": {"fake": ["f64", 10000.0, 150000.0]}
+                        }
+                    },
+                    "CdtrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {"fake": ["bic"]}
+                        }
+                    },
+                    "Cdtr": {
+                        "Nm": {"fake": ["company_name"]},
+                        "PstlAdr": {
+                            "Ctry": {"fake": ["country_code"]}
+                        }
+                    },
+                    "CdtrAcct": {
+                        "Id": {
+                            "IBAN": {"fake": ["iban", "AT"]}
+                        }
+                    },
+                    "Purp": {
+                        "Cd": "SUPP"
+                    },
+                    "RmtInf": {
+                        "Ustrd": {"cat": ["Invoice Payment - ", {"fake": ["word"]}, "-", {"fake": ["i64", 2024001, 2024999]}]}
+                    }
+                },
+                {
+                    "PmtId": {
+                        "InstrId": {"cat": ["INSTR", {"fake": ["i64", 61, 70]}]},
+                        "EndToEndId": {"cat": ["E2E", {"fake": ["i64", 100000000000, 999999999999]}]}
+                    },
+                    "Amt": {
+                        "InstdAmt": {
+                            "@Ccy": {"var": "currency"},
+                            "$value": {"fake": ["f64", 10000.0, 150000.0]}
+                        }
+                    },
+                    "CdtrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {"fake": ["bic"]}
+                        }
+                    },
+                    "Cdtr": {
+                        "Nm": {"fake": ["company_name"]},
+                        "PstlAdr": {
+                            "Ctry": {"fake": ["country_code"]}
+                        }
+                    },
+                    "CdtrAcct": {
+                        "Id": {
+                            "IBAN": {"fake": ["iban", "LU"]}
+                        }
+                    },
+                    "Purp": {
+                        "Cd": "SUPP"
+                    },
+                    "RmtInf": {
+                        "Ustrd": {"cat": ["Invoice Payment - ", {"fake": ["word"]}, "-", {"fake": ["i64", 2024001, 2024999]}]}
+                    }
+                },
+                {
+                    "PmtId": {
+                        "InstrId": {"cat": ["INSTR", {"fake": ["i64", 71, 80]}]},
+                        "EndToEndId": {"cat": ["E2E", {"fake": ["i64", 100000000000, 999999999999]}]}
+                    },
+                    "Amt": {
+                        "InstdAmt": {
+                            "@Ccy": {"var": "currency"},
+                            "$value": {"fake": ["f64", 10000.0, 150000.0]}
+                        }
+                    },
+                    "CdtrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {"fake": ["bic"]}
+                        }
+                    },
+                    "Cdtr": {
+                        "Nm": {"fake": ["company_name"]},
+                        "PstlAdr": {
+                            "Ctry": {"fake": ["country_code"]}
+                        }
+                    },
+                    "CdtrAcct": {
+                        "Id": {
+                            "IBAN": {"fake": ["iban", "CH"]}
+                        }
+                    },
+                    "Purp": {
+                        "Cd": "SUPP"
+                    },
+                    "RmtInf": {
+                        "Ustrd": {"cat": ["Invoice Payment - ", {"fake": ["word"]}, "-", {"fake": ["i64", 2024001, 2024999]}]}
+                    }
+                },
+                {
+                    "PmtId": {
+                        "InstrId": {"cat": ["INSTR", {"fake": ["i64", 81, 90]}]},
+                        "EndToEndId": {"cat": ["E2E", {"fake": ["i64", 100000000000, 999999999999]}]}
+                    },
+                    "Amt": {
+                        "InstdAmt": {
+                            "@Ccy": {"var": "currency"},
+                            "$value": {"fake": ["f64", 10000.0, 150000.0]}
+                        }
+                    },
+                    "CdtrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {"fake": ["bic"]}
+                        }
+                    },
+                    "Cdtr": {
+                        "Nm": {"fake": ["company_name"]},
+                        "PstlAdr": {
+                            "Ctry": {"fake": ["country_code"]}
+                        }
+                    },
+                    "CdtrAcct": {
+                        "Id": {
+                            "IBAN": {"fake": ["iban", "GB"]}
+                        }
+                    },
+                    "Purp": {
+                        "Cd": "SUPP"
+                    },
+                    "RmtInf": {
+                        "Ustrd": {"cat": ["Invoice Payment - ", {"fake": ["word"]}, "-", {"fake": ["i64", 2024001, 2024999]}]}
+                    }
+                },
+                {
+                    "PmtId": {
+                        "InstrId": {"cat": ["INSTR", {"fake": ["i64", 91, 100]}]},
+                        "EndToEndId": {"cat": ["E2E", {"fake": ["i64", 100000000000, 999999999999]}]}
+                    },
+                    "Amt": {
+                        "InstdAmt": {
+                            "@Ccy": {"var": "currency"},
+                            "$value": {"fake": ["f64", 10000.0, 150000.0]}
+                        }
+                    },
+                    "CdtrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {"fake": ["bic"]}
+                        }
+                    },
+                    "Cdtr": {
+                        "Nm": {"fake": ["company_name"]},
+                        "PstlAdr": {
+                            "Ctry": {"fake": ["country_code"]}
+                        }
+                    },
+                    "CdtrAcct": {
+                        "Id": {
+                            "IBAN": {"fake": ["iban", "PT"]}
+                        }
+                    },
+                    "Purp": {
+                        "Cd": "SUPP"
+                    },
+                    "RmtInf": {
+                        "Ustrd": {"cat": ["Invoice Payment - ", {"fake": ["word"]}, "-", {"fake": ["i64", 2024001, 2024999]}]}
+                    }
+                }
+            ]
+        }
+    }
+}

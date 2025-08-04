@@ -1,0 +1,222 @@
+{
+    "message_type": "pacs.008.001.08",
+    "description": "FI to FI Customer Credit Transfer",
+    "scenarios": [
+        {
+            "file": "standard.json",
+            "description": "Standard payment transfer"
+        },
+        {
+            "file": "high_value.json",
+            "description": "High value payment with enhanced compliance"
+        },
+        {
+            "file": "cbpr_business_payment.json",
+            "description": "CBPR+ compliant business-to-business payment"
+        },
+        {
+            "file": "cbpr_charity_donation.json",
+            "description": "CBPR+ compliant charity donation payment"
+        },
+        {
+            "file": "cbpr_commission_payment.json",
+            "description": "CBPR+ compliant commission payment"
+        },
+        {
+            "file": "cbpr_dividend_payment.json",
+            "description": "CBPR+ compliant dividend payment to shareholders"
+        },
+        {
+            "file": "cbpr_salary_payment.json",
+            "description": "CBPR+ compliant salary payment"
+        },
+        {
+            "file": "minimal.json",
+            "description": "Minimal required fields only"
+        },
+        {
+            "file": "correspondent_banking.json",
+            "description": "Correspondent banking with intermediary agents"
+        },
+        {
+            "file": "fx_conversion.json",
+            "description": "Payment with foreign exchange conversion"
+        },
+        {
+            "file": "cbpr_rent_payment.json",
+            "description": "CBPR+ compliant rental payment"
+        },
+        {
+            "file": "cbpr_healthcare_payment.json",
+            "description": "CBPR+ compliant healthcare payment"
+        },
+        {
+            "file": "cbpr_pension_payment.json",
+            "description": "CBPR+ compliant pension payment"
+        },
+        {
+            "file": "cbpr_tax_payment.json",
+            "description": "CBPR+ compliant tax payment"
+        },
+        {
+            "file": "cbpr_education_payment.json",
+            "description": "CBPR+ compliant education payment"
+        },
+        {
+            "file": "remit_basic.json",
+            "description": "Basic remittance transfer"
+        },
+        {
+            "file": "return.json",
+            "description": "Payment return scenario"
+        },
+        {
+            "file": "rejection.json",
+            "description": "Payment rejection scenario"
+        },
+        {
+            "file": "cbpr_fees_payment.json",
+            "description": "CBPR+ compliant professional fees payment"
+        },
+        {
+            "file": "cbpr_insurance_payment.json",
+            "description": "CBPR+ compliant insurance premium payment"
+        },
+        {
+            "file": "cbpr_person_to_person.json",
+            "description": "CBPR+ compliant person-to-person payment"
+        },
+        {
+            "file": "cbpr_royalty_payment.json",
+            "description": "CBPR+ compliant royalty payment"
+        },
+        {
+            "file": "cbpr_utility_payment.json",
+            "description": "CBPR+ compliant utility bill payment"
+        },
+        {
+            "file": "remit_structured.json",
+            "description": "Structured remittance with invoice details"
+        },
+        {
+            "file": "stp.json",
+            "description": "Straight-through processing optimized payment"
+        },
+        {
+            "file": "treasury_payment.json",
+            "description": "Corporate treasury payment"
+        },
+        {
+            "file": "cbpr_ecommerce_b2c.json",
+            "description": "CBPR+ compliant e-commerce B2C payment"
+        },
+        {
+            "file": "cbpr_gig_economy.json",
+            "description": "CBPR+ compliant gig economy payment"
+        },
+        {
+            "file": "cbpr_loan_disbursement.json",
+            "description": "CBPR+ compliant loan disbursement"
+        },
+        {
+            "file": "cbpr_real_estate.json",
+            "description": "CBPR+ compliant real estate transaction"
+        },
+        {
+            "file": "cbpr_social_security.json",
+            "description": "CBPR+ compliant social security payment"
+        },
+        {
+            "file": "cbpr_subscription_saas.json",
+            "description": "CBPR+ compliant SaaS subscription payment"
+        },
+        {
+            "file": "cover_payment.json",
+            "description": "Cover payment for underlying transaction"
+        },
+        {
+            "file": "regulatory_compliant.json",
+            "description": "Enhanced regulatory compliance payment"
+        },
+        {
+            "file": "cbpr_crypto_settlement.json",
+            "description": "CBPR+ compliant cryptocurrency settlement"
+        },
+        {
+            "file": "cbpr_dividend_distribution.json",
+            "description": "CBPR+ compliant dividend distribution to multiple shareholders"
+        },
+        {
+            "file": "cbpr_education_international.json",
+            "description": "CBPR+ compliant international education payment"
+        },
+        {
+            "file": "cbpr_government_disbursement.json",
+            "description": "CBPR+ compliant government benefit disbursement"
+        },
+        {
+            "file": "cbpr_insurance_cross_border.json",
+            "description": "CBPR+ compliant cross-border insurance claim settlement"
+        },
+        {
+            "file": "cbpr_interest_payment.json",
+            "description": "CBPR+ compliant bond interest payment"
+        },
+        {
+            "file": "cbpr_investment_payment.json",
+            "description": "CBPR+ compliant investment fund subscription"
+        },
+        {
+            "file": "cbpr_remittance_corridor.json",
+            "description": "CBPR+ compliant remittance corridor payment"
+        },
+        {
+            "file": "cbpr_sanctions_failure.json",
+            "description": "CBPR+ payment failing sanctions screening"
+        },
+        {
+            "file": "cbpr_stp_compliant.json",
+            "description": "CBPR+ fully STP compliant payment"
+        },
+        {
+            "file": "cbpr_stp_enhanced.json",
+            "description": "CBPR+ enhanced STP with full automation"
+        },
+        {
+            "file": "cbpr_supplier_payment.json",
+            "description": "CBPR+ compliant supplier payment with invoice details"
+        },
+        {
+            "file": "cbpr_trade_finance.json",
+            "description": "CBPR+ compliant trade finance payment"
+        },
+        {
+            "file": "cbpr_treasury_intercompany.json",
+            "description": "CBPR+ compliant intercompany treasury transfer"
+        },
+        {
+            "file": "cbpr_utility_cross_border.json",
+            "description": "CBPR+ compliant cross-border utility payment"
+        },
+        {
+            "file": "cbpr_validation_failure.json",
+            "description": "CBPR+ payment with validation failures"
+        },
+        {
+            "file": "duplicate_uetr.json",
+            "description": "Payment with duplicate UETR detection"
+        },
+        {
+            "file": "missing_lei_entity.json",
+            "description": "High-value payment missing required LEI"
+        },
+        {
+            "file": "remittance_enhanced.json",
+            "description": "Enhanced remittance with full sender/receiver details"
+        },
+        {
+            "file": "unresolved_intermediary.json",
+            "description": "Payment with unresolved intermediary bank"
+        }
+    ]
+}

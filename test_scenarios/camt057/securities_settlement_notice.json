@@ -1,0 +1,115 @@
+{
+    "variables": {
+        "msg_id": {"cat": ["SEC-NOTIF-", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "settlement_date": {"fake": ["date", "%Y-%m-%d", "+3d", "+3d"]},
+        "sender_bic": {"fake": ["bic"]},
+        "receiver_bic": {"fake": ["bic"]},
+        "trade_reference": {"cat": ["SEC-TRD-", {"fake": ["i64", 100000, 999999]}]},
+        "settlement_amount": {"fake": ["f64", 100000.00, 10000000.00]},
+        "currency": {"fake": ["enum", "USD", "EUR", "GBP", "JPY"]},
+        "isin": {"cat": ["US", {"fake": ["alphanumeric", 10, 10]}]},
+        "quantity": {"fake": ["i64", 100, 100000]},
+        "price": {"fake": ["f64", 10.00, 500.00]},
+        "counterparty": {"fake": ["company_name"]},
+        "counterparty_bic": {"fake": ["bic"]},
+        "custody_account": {"cat": ["CUST-", {"fake": ["i64", 10000000, 99999999]}]}
+    },
+    "schema": {
+        "Assgnmt": {
+            "Id": {"var": "msg_id"},
+            "Assgnr": {
+                "Agt": {
+                    "FinInstnId": {
+                        "BICFI": {"var": "sender_bic"}
+                    }
+                }
+            },
+            "Assgne": {
+                "Agt": {
+                    "FinInstnId": {
+                        "BICFI": {"var": "receiver_bic"}
+                    }
+                }
+            },
+            "CreDtTm": {"var": "creation_datetime"}
+        },
+        "Ntfctn": {
+            "Id": {"cat": ["SEC-SETTLE-", {"fake": ["i64", 100000, 999999]}]},
+            "CreDtTm": {"var": "creation_datetime"},
+            "Acct": {
+                "Id": {
+                    "Othr": {
+                        "Id": {"var": "custody_account"}
+                    }
+                }
+            },
+            "Itm": [
+                {
+                    "Id": {"var": "trade_reference"},
+                    "XpctdValDt": {"var": "settlement_date"},
+                    "Amt": {
+                        "Amt": {
+                            "Value": {"var": "settlement_amount"},
+                            "Ccy": {"var": "currency"}
+                        }
+                    },
+                    "RmtInf": {
+                        "Ustrd": [{"cat": ["Securities Settlement - ", {"var": "isin"}]}],
+                        "Strd": [
+                            {
+                                "RfrdDocInf": [
+                                    {
+                                        "Tp": {
+                                            "CdOrPrtry": {
+                                                "Prtry": "SEC_TRADE"
+                                            }
+                                        },
+                                        "Nb": {"var": "trade_reference"}
+                                    }
+                                ],
+                                "AddtlRmtInf": [
+                                    {"cat": ["ISIN: ", {"var": "isin"}]},
+                                    {"cat": ["Qty: ", {"var": "quantity"}, " @ ", {"var": "price"}]}
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        "SplmtryData": [
+            {
+                "Envlp": {
+                    "SecuritiesSettlementDetails": {
+                        "TradeReference": {"var": "trade_reference"},
+                        "TradeDate": {"var": "creation_datetime"},
+                        "SettlementDate": {"var": "settlement_date"},
+                        "Security": {
+                            "ISIN": {"var": "isin"},
+                            "Description": "Corporate Bond",
+                            "Quantity": {"var": "quantity"},
+                            "Price": {"var": "price"},
+                            "Currency": {"var": "currency"}
+                        },
+                        "CashConsideration": {
+                            "Amount": {"var": "settlement_amount"},
+                            "Currency": {"var": "currency"},
+                            "SettlementType": "DVP"
+                        },
+                        "Counterparty": {
+                            "Name": {"var": "counterparty"},
+                            "BIC": {"var": "counterparty_bic"},
+                            "SafekeepingAccount": {"fake": ["alphanumeric", 10, 10]}
+                        },
+                        "SettlementInstructions": {
+                            "Place": "DTCC",
+                            "SafekeepingAccount": {"var": "custody_account"},
+                            "Priority": "NORMAL"
+                        }
+                    }
+                }
+            }
+        ]
+    }
+}

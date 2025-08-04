@@ -1,0 +1,46 @@
+{
+    "message_type": "camt.029.001.09",
+    "description": "Resolution of Investigation - Response to payment investigations and cancellation requests",
+    "scenarios": [
+        {
+            "file": "answer_cancellation.json",
+            "description": "Response confirming cancellation of payment has been processed"
+        },
+        {
+            "file": "answer_inquiry_response.json",
+            "description": "Response to payment inquiry with transaction details"
+        },
+        {
+            "file": "answer_pending_investigation.json",
+            "description": "Interim response indicating investigation is ongoing"
+        },
+        {
+            "file": "answer_rejection.json",
+            "description": "Response rejecting the investigation request"
+        },
+        {
+            "file": "cbpr_cancellation_response.json",
+            "description": "CBPR+ compliant response to cancellation request with UETR tracking"
+        },
+        {
+            "file": "cancellation_accepted.json",
+            "description": "Confirmation that cancellation request has been accepted"
+        },
+        {
+            "file": "cancellation_rejected.json",
+            "description": "Notification that cancellation request has been rejected"
+        },
+        {
+            "file": "inquiry_response.json",
+            "description": "Detailed response to payment status inquiry"
+        },
+        {
+            "file": "no_payment_found.json",
+            "description": "Response indicating no matching payment was found"
+        },
+        {
+            "file": "partial_cancellation.json",
+            "description": "Response confirming partial cancellation of payment"
+        }
+    ]
+}

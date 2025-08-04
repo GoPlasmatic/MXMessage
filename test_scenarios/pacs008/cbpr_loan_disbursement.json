@@ -1,0 +1,505 @@
+{
+    "variables": {
+        "msg_id": {
+            "cat": [
+                "MSG",
+                {
+                    "fake": [
+                        "i64",
+                        100000000000,
+                        999999999999
+                    ]
+                }
+            ]
+        },
+        "creation_datetime": {
+            "fake": [
+                "iso8601_datetime"
+            ]
+        },
+        "sender_bic": {
+            "fake": [
+                "bic"
+            ]
+        },
+        "receiver_bic": {
+            "fake": [
+                "bic"
+            ]
+        },
+        "transaction_ref": {
+            "cat": [
+                "TXN",
+                {
+                    "fake": [
+                        "i64",
+                        100000000000,
+                        999999999999
+                    ]
+                }
+            ]
+        },
+        "instruction_id": {
+            "cat": [
+                "INSTR",
+                {
+                    "fake": [
+                        "i64",
+                        10000000,
+                        99999999
+                    ]
+                }
+            ]
+        },
+        "end_to_end_id": {
+            "cat": [
+                "E2E",
+                {
+                    "fake": [
+                        "i64",
+                        100000000000,
+                        999999999999
+                    ]
+                }
+            ]
+        },
+        "uetr": {
+            "fake": [
+                "uuid"
+            ]
+        },
+        "loan_amount": {
+            "fake": [
+                "f64",
+                10000.0,
+                500000.0
+            ]
+        },
+        "borrower_name": {
+            "fake": [
+                "name"
+            ]
+        },
+        "lender_name": {
+            "cat": [
+                {
+                    "fake": [
+                        "company_name"
+                    ]
+                },
+                " Finance Corp"
+            ]
+        },
+        "loan_number": {
+            "cat": [
+                "LOAN-",
+                {
+                    "fake": [
+                        "i64",
+                        2024000000,
+                        2024999999
+                    ]
+                }
+            ]
+        },
+        "interest_rate": {
+            "fake": [
+                "f64",
+                3.5,
+                12.5
+            ]
+        },
+        "loan_term_months": {
+            "fake": [
+                "regex",
+                "(12|24|36|48|60|72|84|120|180|240|360)"
+            ]
+        }
+    },
+    "schema": {
+        "GrpHdr": {
+            "MsgId": {
+                "var": "msg_id"
+            },
+            "CreDtTm": {
+                "var": "creation_datetime"
+            },
+            "NbOfTxs": "1",
+            "SttlmInf": {
+                "SttlmMtd": "INDA"
+            }
+        },
+        "CdtTrfTxInf": {
+            "PmtId": {
+                "InstrId": {
+                    "var": "instruction_id"
+                },
+                "EndToEndId": {
+                    "var": "end_to_end_id"
+                },
+                "TxId": {
+                    "var": "transaction_ref"
+                },
+                "UETR": {
+                    "var": "uetr"
+                }
+            },
+            "PmtTpInf": {
+                "InstrPrty": "HIGH",
+                "SvcLvl": [
+                    {
+                        "Cd": "CBPR"
+                    }
+                ],
+                "CtgyPurp": {
+                    "Cd": "LOAN"
+                },
+                "LclInstrm": {
+                    "Prtry": "LOAN_DISBURSEMENT"
+                }
+            },
+            "IntrBkSttlmAmt": {
+                "@Ccy": "USD",
+                "$value": {
+                    "var": "loan_amount"
+                }
+            },
+            "IntrBkSttlmDt": {
+                "fake": [
+                    "date",
+                    "%Y-%m-%d",
+                    "+0d",
+                    "+0d"
+                ]
+            },
+            "SttlmPrty": "HIGH",
+            "InstdAmt": {
+                "@Ccy": "USD",
+                "$value": {
+                    "var": "loan_amount"
+                }
+            },
+            "ChrgBr": "DEBT",
+            "InstgAgt": {
+                "FinInstnId": {
+                    "BICFI": {
+                        "var": "sender_bic"
+                    },
+                    "LEI": {
+                        "fake": [
+                            "lei"
+                        ]
+                    }
+                }
+            },
+            "InstdAgt": {
+                "FinInstnId": {
+                    "BICFI": {
+                        "var": "receiver_bic"
+                    },
+                    "LEI": {
+                        "fake": [
+                            "lei"
+                        ]
+                    }
+                }
+            },
+            "Dbtr": {
+                "Nm": {
+                    "var": "lender_name"
+                },
+                "PstlAdr": {
+                    "StrtNm": {
+                        "cat": [
+                            {
+                                "fake": [
+                                    "i64",
+                                    1,
+                                    999
+                                ]
+                            },
+                            " Financial Plaza"
+                        ]
+                    },
+                    "PstCd": {
+                        "fake": [
+                            "postcode"
+                        ]
+                    },
+                    "TwnNm": {
+                        "fake": [
+                            "city_name"
+                        ]
+                    },
+                    "CtrySubDvsn": {
+                        "fake": [
+                            "state_abbr"
+                        ]
+                    },
+                    "Ctry": "US"
+                },
+                "CtryOfRes": "US",
+                "Id": {
+                    "OrgId": {
+                        "LEI": {
+                            "fake": [
+                                "lei"
+                            ]
+                        },
+                        "Othr": [
+                            {
+                                "Id": {
+                                    "cat": [
+                                        "NMLS-",
+                                        {
+                                            "fake": [
+                                                "i64",
+                                                100000,
+                                                999999
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "SchmeNm": {
+                                    "Prtry": "NMLS_LICENSE"
+                                }
+                            }
+                        ]
+                    }
+                }
+            },
+            "DbtrAcct": {
+                "Id": {
+                    "IBAN": {
+                        "fake": [
+                            "iban",
+                            "US"
+                        ]
+                    }
+                },
+                "Ccy": "USD",
+                "Nm": "Loan Funding Account"
+            },
+            "DbtrAgt": {
+                "FinInstnId": {
+                    "BICFI": {
+                        "var": "sender_bic"
+                    },
+                    "Nm": {
+                        "fake": [
+                            "company_name"
+                        ]
+                    },
+                    "LEI": {
+                        "fake": [
+                            "lei"
+                        ]
+                    }
+                }
+            },
+            "CdtrAgt": {
+                "FinInstnId": {
+                    "BICFI": {
+                        "var": "receiver_bic"
+                    },
+                    "Nm": {
+                        "fake": [
+                            "company_name"
+                        ]
+                    },
+                    "LEI": {
+                        "fake": [
+                            "lei"
+                        ]
+                    }
+                }
+            },
+            "Cdtr": {
+                "Nm": {
+                    "var": "borrower_name"
+                },
+                "PstlAdr": {
+                    "StrtNm": {
+                        "fake": [
+                            "street_name"
+                        ]
+                    },
+                    "BldgNb": {
+                        "cat": [
+                            {
+                                "fake": [
+                                    "i64",
+                                    1,
+                                    999
+                                ]
+                            }
+                        ]
+                    },
+                    "PstCd": {
+                        "fake": [
+                            "postcode"
+                        ]
+                    },
+                    "TwnNm": {
+                        "fake": [
+                            "city_name"
+                        ]
+                    },
+                    "CtrySubDvsn": {
+                        "fake": [
+                            "state_abbr"
+                        ]
+                    },
+                    "Ctry": "US"
+                },
+                "CtryOfRes": "US",
+                "Id": {
+                    "PrvtId": {
+                        "DtAndPlcOfBirth": {
+                            "BirthDt": {
+                                "fake": [
+                                    "date",
+                                    "%Y-%m-%d",
+                                    "-65y",
+                                    "-21y"
+                                ]
+                            },
+                            "CityOfBirth": {
+                                "fake": [
+                                    "city_name"
+                                ]
+                            },
+                            "CtryOfBirth": "US"
+                        },
+                        "Othr": [
+                            {
+                                "Id": {
+                                    "cat": [
+                                        {
+                                            "fake": [
+                                                "i64",
+                                                100,
+                                                999
+                                            ]
+                                        },
+                                        "-",
+                                        {
+                                            "fake": [
+                                                "i64",
+                                                10,
+                                                99
+                                            ]
+                                        },
+                                        "-",
+                                        {
+                                            "fake": [
+                                                "i64",
+                                                1000,
+                                                9999
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "SchmeNm": {
+                                    "Cd": "DRLC"
+                                }
+                            }
+                        ]
+                    }
+                }
+            },
+            "CdtrAcct": {
+                "Id": {
+                    "IBAN": {
+                        "fake": [
+                            "iban",
+                            "US"
+                        ]
+                    }
+                },
+                "Ccy": "USD",
+                "Nm": "Personal Checking Account"
+            },
+            "Purp": {
+                "Cd": "LOAN"
+            },
+            "RgltryRptg": [
+                {
+                    "Dtls": [
+                        {
+                            "Tp": "DEBT",
+                            "Dt": {
+                                "fake": [
+                                    "date",
+                                    "%Y-%m-%d",
+                                    "+0d",
+                                    "+0d"
+                                ]
+                            },
+                            "Ctry": "US",
+                            "Cd": "150",
+                            "Amt": {
+                                "@Ccy": "USD",
+                                "$value": {
+                                    "var": "loan_amount"
+                                }
+                            },
+                            "Inf": [
+                                "CBPR+ LOAN DISBURSEMENT - CONSUMER"
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "RmtInf": {
+                "Strd": [
+                    {
+                        "RfrdDocInf": [
+                            {
+                                "Tp": {
+                                    "CdOrPrtry": {
+                                        "Prtry": "LOAN_AGREEMENT"
+                                    }
+                                },
+                                "Nb": {
+                                    "var": "loan_number"
+                                },
+                                "RltdDt": {
+                                    "fake": [
+                                        "date",
+                                        "%Y-%m-%d",
+                                        "-7d",
+                                        "-1d"
+                                    ]
+                                }
+                            }
+                        ],
+                        "RfrdDocAmt": {
+                            "DuePyblAmt": {
+                                "@Ccy": "USD",
+                                "$value": {
+                                    "var": "loan_amount"
+                                }
+                            }
+                        },
+                        "CdtrRefInf": {
+                            "Tp": {
+                                "CdOrPrtry": {
+                                    "Prtry": "LOAN_REFERENCE"
+                                }
+                            },
+                            "Ref": {
+                                "var": "loan_number"
+                            }
+                        },
+                        "AddtlRmtInf": [
+                            "Generated remittance information",
+                            "Generated remittance information",
+                            "Funds available immediately upon receipt"
+                        ]
+                    }
+                ]
+            }
+        }
+    }
+}

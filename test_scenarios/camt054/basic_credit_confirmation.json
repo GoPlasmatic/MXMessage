@@ -1,0 +1,109 @@
+{
+    "variables": {
+        "msg_id": {"cat": ["CRDT-", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "ntfctn_id": {"cat": ["CRDTNTFCTN-", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_time": {"fake": ["iso8601_datetime"]},
+        "account_id": {"fake": ["iban"]},
+        "account_owner": {"fake": ["full_name"]},
+        "servicer_bic": {"fake": ["bic"]},
+        "entry_ref": {"cat": ["ENT-", {"fake": ["i64", 1000000, 9999999]}]},
+        "credit_amount": {"fake": ["f64", 100.0, 50000.0]},
+        "booking_date": {"fake": ["date", "%Y-%m-%d", "-1d", "-1d"]},
+        "value_date": {"fake": ["date", "%Y-%m-%d", "-1d", "-1d"]},
+        "transaction_ref": {"cat": ["TXN-", {"fake": ["i64", 10000000, 99999999]}]},
+        "end_to_end_id": {"cat": ["E2E-", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "debtor_name": {"fake": ["company_name"]},
+        "debtor_bic": {"fake": ["bic"]}
+    },
+    "schema": {
+        "GrpHdr": {
+            "MsgId": {"var": "msg_id"},
+            "CreDtTm": {"var": "creation_datetime"}
+        },
+        "Ntfctn": [
+            {
+                "Id": {"var": "ntfctn_id"},
+                "CreDtTm": {"var": "creation_time"},
+                "Acct": {
+                    "Id": {
+                        "IBAN": {"var": "account_id"}
+                    },
+                    "Ownr": {
+                        "Nm": {"var": "account_owner"}
+                    },
+                    "Svcr": {
+                        "FinInstnId": {
+                            "BICFI": {"var": "servicer_bic"}
+                        }
+                    }
+                },
+                "Ntry": [
+                    {
+                        "NtryRef": {"var": "entry_ref"},
+                        "Amt": {
+                            "@Ccy": "USD",
+                            "$value": {"var": "credit_amount"}
+                        },
+                        "CdtDbtInd": "CRDT",
+                        "Sts": {
+                            "Cd": "BOOK"
+                        },
+                        "BookgDt": {
+                            "Dt": {"var": "booking_date"}
+                        },
+                        "ValDt": {
+                            "Dt": {"var": "value_date"}
+                        },
+                        "BkTxCd": {
+                            "Domn": {
+                                "Cd": "PMNT",
+                                "Fmly": {
+                                    "Cd": "RCDT",
+                                    "SubFmlyCd": "ESCT"
+                                }
+                            }
+                        },
+                        "NtryDtls": [
+                            {
+                                "TxDtls": [
+                                    {
+                                        "Refs": {
+                                            "AcctSvcrRef": {"var": "transaction_ref"},
+                                            "EndToEndId": {"var": "end_to_end_id"}
+                                        },
+                                        "Amt": {
+                                            "@Ccy": "USD",
+                                            "$value": {"var": "credit_amount"}
+                                        },
+                                        "CdtDbtInd": "CRDT",
+                                        "RltdPties": {
+                                            "Dbtr": {
+                                                "Nm": {"var": "debtor_name"}
+                                            },
+                                            "DbtrAcct": {
+                                                "Id": {
+                                                    "IBAN": {"fake": ["iban"]}
+                                                }
+                                            }
+                                        },
+                                        "RltdAgts": {
+                                            "DbtrAgt": {
+                                                "FinInstnId": {
+                                                    "BICFI": {"var": "debtor_bic"}
+                                                }
+                                            }
+                                        },
+                                        "RmtInf": {
+                                            "Ustrd": ["Payment received"]
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}

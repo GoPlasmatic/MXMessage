@@ -1,0 +1,92 @@
+{
+    "variables": {
+        "msg_id": {"cat": ["MIN-RTN-", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "payment_id": {"cat": ["RTN-", {"fake": ["i64", 100000, 999999]}]},
+        "original_id": {"cat": ["ORIG-", {"fake": ["i64", 100000, 999999]}]},
+        "uetr": {"fake": ["uuid"]},
+        "amount": {"fake": ["f64", 10000.00, 500000.00]},
+        "currency": {"fake": ["enum", "USD", "EUR", "GBP"]},
+        "sender_bic": {"fake": ["bic"]},
+        "receiver_bic": {"fake": ["bic"]},
+        "return_reason": {"fake": ["enum", "AC01", "AC04", "AG01", "AM05"]}
+    },
+    "schema": {
+        "GrpHdr": {
+            "MsgId": {"var": "msg_id"},
+            "CreDtTm": {"var": "creation_datetime"},
+            "NbOfTxs": "1",
+            "SttlmInf": {
+                "SttlmMtd": "INDA"
+            }
+        },
+        "CdtTrfTxInf": [
+            {
+                "PmtId": {
+                    "InstrId": {"var": "payment_id"},
+                    "EndToEndId": {"var": "original_id"},
+                    "UETR": {"var": "uetr"}
+                },
+                "PmtTpInf": {
+                    "InstrPrty": "HIGH",
+                    "SvcLvl": [
+                        {
+                            "Cd": "G001"
+                        }
+                    ],
+                    "LclInstrm": {
+                        "Prtry": "RETURN"
+                    }
+                },
+                "IntrBkSttlmAmt": {
+                    "Amt": {
+                        "Value": {"var": "amount"},
+                        "Ccy": {"var": "currency"}
+                    }
+                },
+                "IntrBkSttlmDt": {"fake": ["date", "%Y-%m-%d", "0d", "0d"]},
+                "ChrgBr": "SHAR",
+                "InstgAgt": {
+                    "FinInstnId": {
+                        "BICFI": {"var": "receiver_bic"}
+                    }
+                },
+                "InstdAgt": {
+                    "FinInstnId": {
+                        "BICFI": {"var": "sender_bic"}
+                    }
+                },
+                "RtrInf": {
+                    "OrgnlTxRef": {
+                        "IntrBkSttlmAmt": {
+                            "Amt": {
+                                "Value": {"var": "amount"},
+                                "Ccy": {"var": "currency"}
+                            }
+                        },
+                        "PmtId": {
+                            "EndToEndId": {"var": "original_id"}
+                        }
+                    },
+                    "Rsn": {
+                        "Cd": {"var": "return_reason"}
+                    },
+                    "AddtlInf": ["Account closed"]
+                },
+                "SplmtryData": [
+                    {
+                        "Envlp": {
+                            "ReturnDetails": {
+                                "OriginalPaymentId": {"var": "original_id"},
+                                "ReturnReason": {"var": "return_reason"},
+                                "ReturnReasonDescription": "Account closed",
+                                "OriginalAmount": {"var": "amount"},
+                                "OriginalCurrency": {"var": "currency"}
+                            }
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+}

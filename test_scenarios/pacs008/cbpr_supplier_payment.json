@@ -1,0 +1,331 @@
+{
+    "variables": {
+        "msg_id": {
+            "cat": [
+                "CBPR-SUPP-",
+                {
+                    "fake": [
+                        "i64",
+                        100000000000,
+                        999999999999
+                    ]
+                }
+            ]
+        },
+        "creation_datetime": {
+            "fake": [
+                "iso8601_datetime"
+            ]
+        },
+        "payment_id": {
+            "cat": [
+                "SUPP-PMT-",
+                {
+                    "fake": [
+                        "i64",
+                        100000,
+                        999999
+                    ]
+                }
+            ]
+        },
+        "uetr": {
+            "fake": [
+                "uuid"
+            ]
+        },
+        "amount": {
+            "fake": [
+                "f64",
+                5000.0,
+                250000.0
+            ]
+        },
+        "currency": {
+            "fake": [
+                "enum",
+                "USD",
+                "EUR",
+                "GBP",
+                "JPY"
+            ]
+        },
+        "sender_bic": {
+            "fake": [
+                "bic"
+            ]
+        },
+        "receiver_bic": {
+            "fake": [
+                "bic"
+            ]
+        },
+        "ordering_company": {
+            "fake": [
+                "company_name"
+            ]
+        },
+        "ordering_country": {
+            "fake": [
+                "country_code"
+            ]
+        },
+        "ordering_account": {
+            "fake": [
+                "iban"
+            ]
+        },
+        "supplier_name": {
+            "fake": [
+                "company_name"
+            ]
+        },
+        "supplier_country": {
+            "fake": [
+                "country_code"
+            ]
+        },
+        "supplier_account": {
+            "fake": [
+                "iban"
+            ]
+        },
+        "po_number": {
+            "cat": [
+                "PO-",
+                {
+                    "fake": [
+                        "i64",
+                        100000,
+                        999999
+                    ]
+                }
+            ]
+        },
+        "invoice_number": {
+            "cat": [
+                "INV-",
+                {
+                    "fake": [
+                        "i64",
+                        100000,
+                        999999
+                    ]
+                }
+            ]
+        },
+        "invoice_date": {
+            "fake": [
+                "date",
+                "%Y-%m-%d",
+                "-30d",
+                "-5d"
+            ]
+        },
+        "due_date": {
+            "fake": [
+                "date",
+                "%Y-%m-%d",
+                "+5d",
+                "+30d"
+            ]
+        }
+    },
+    "schema": {
+        "GrpHdr": {
+            "MsgId": {
+                "var": "msg_id"
+            },
+            "CreDtTm": {
+                "var": "creation_datetime"
+            },
+            "NbOfTxs": "1",
+            "SttlmInf": {
+                "SttlmMtd": "INDA"
+            }
+        },
+        "CdtTrfTxInf": {
+            "PmtId": {
+                "InstrId": {
+                    "var": "payment_id"
+                },
+                "EndToEndId": {
+                    "var": "po_number"
+                },
+                "UETR": {
+                    "var": "uetr"
+                }
+            },
+            "PmtTpInf": {
+                "InstrPrty": "NORM",
+                "SvcLvl": [
+                    {
+                        "Cd": "G001"
+                    }
+                ],
+                "CtgyPurp": {
+                    "Cd": "SUPP"
+                }
+            },
+            "IntrBkSttlmAmt": {
+                "@Ccy": {
+                    "var": "currency"
+                },
+                "$value": {
+                    "var": "amount"
+                }
+            },
+            "IntrBkSttlmDt": {
+                "fake": [
+                    "date",
+                    "%Y-%m-%d",
+                    "0d",
+                    "+2d"
+                ]
+            },
+            "InstdAmt": {
+                "@Ccy": {
+                    "var": "currency"
+                },
+                "$value": {
+                    "var": "amount"
+                }
+            },
+            "ChrgBr": "SHAR",
+            "Dbtr": {
+                "Nm": {
+                    "var": "ordering_company"
+                },
+                "PstlAdr": {
+                    "Ctry": {
+                        "var": "ordering_country"
+                    }
+                }
+            },
+            "DbtrAcct": {
+                "Id": {
+                    "IBAN": {
+                        "var": "ordering_account"
+                    }
+                }
+            },
+            "DbtrAgt": {
+                "FinInstnId": {
+                    "BICFI": {
+                        "var": "sender_bic"
+                    }
+                }
+            },
+            "CdtrAgt": {
+                "FinInstnId": {
+                    "BICFI": {
+                        "var": "receiver_bic"
+                    }
+                }
+            },
+            "Cdtr": {
+                "Nm": {
+                    "var": "supplier_name"
+                },
+                "PstlAdr": {
+                    "Ctry": {
+                        "var": "supplier_country"
+                    }
+                }
+            },
+            "CdtrAcct": {
+                "Id": {
+                    "IBAN": {
+                        "var": "supplier_account"
+                    }
+                }
+            },
+            "Purp": {
+                "Cd": "GDDS"
+            },
+            "RmtInf": {
+                "Strd": [
+                    {
+                        "RfrdDocInf": [
+                            {
+                                "Tp": {
+                                    "CdOrPrtry": {
+                                        "Cd": "CINV"
+                                    }
+                                },
+                                "Nb": {
+                                    "var": "invoice_number"
+                                },
+                                "RltdDt": {
+                                    "var": "invoice_date"
+                                }
+                            },
+                            {
+                                "Tp": {
+                                    "CdOrPrtry": {
+                                        "Cd": "PUOR"
+                                    }
+                                },
+                                "Nb": {
+                                    "var": "po_number"
+                                }
+                            }
+                        ],
+                        "RfrdDocAmt": {
+                            "DuePyblAmt": {
+                                "@Ccy": {
+                                    "var": "currency"
+                                },
+                                "$value": {
+                                    "var": "amount"
+                                }
+                            },
+                            "DscntApldAmt": [
+                                {
+                                    "Amt": {
+                                        "@Ccy": {
+                                            "var": "currency"
+                                        },
+                                        "$value": {
+                                            "fake": [
+                                                "f64",
+                                                50.0,
+                                                500.0
+                                            ]
+                                        }
+                                    },
+                                    "Tp": {
+                                        "Cd": "EARL"
+                                    }
+                                }
+                            ]
+                        },
+                        "AddtlRmtInf": [
+                            "Generated remittance information",
+                            "Generated remittance information",
+                            "Generated remittance information"
+                        ]
+                    }
+                ]
+            },
+            "InstgAgt": {
+                "FinInstnId": {
+                    "BICFI": {
+                        "fake": [
+                            "bic"
+                        ]
+                    }
+                }
+            },
+            "InstdAgt": {
+                "FinInstnId": {
+                    "BICFI": {
+                        "fake": [
+                            "bic"
+                        ]
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,154 @@
+{
+    "variables": {
+        "msg_id": {"cat": ["MSG", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "original_msg_id": {"cat": ["ORIG-", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "uetr": {"fake": ["uuid"]},
+        "transaction_id": {"cat": ["TXN", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "instruction_id": {"cat": ["INSTR", {"fake": ["i64", 10000000, 99999999]}]},
+        "end_to_end_id": {"cat": ["E2E", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "amount": {"fake": ["f64", 10000.0, 500000.0]},
+        "cancellation_id": {"cat": ["CANC-", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "sender_bic": {"fake": ["bic"]},
+        "receiver_bic": {"fake": ["bic"]},
+        "sender_lei": {"fake": ["lei"]},
+        "receiver_lei": {"fake": ["lei"]},
+        "original_date": {"fake": ["date", "%Y-%m-%d", "-3d", "-1d"]}
+    },
+    "schema": {
+        "Assgnmt": {
+            "Id": {"var": "msg_id"},
+            "Assgnr": {
+                "Agt": {
+                    "FinInstnId": {
+                        "BICFI": {"var": "sender_bic"},
+                        "LEI": {"var": "sender_lei"}
+                    }
+                }
+            },
+            "Assgne": {
+                "Agt": {
+                    "FinInstnId": {
+                        "BICFI": {"var": "receiver_bic"},
+                        "LEI": {"var": "receiver_lei"}
+                    }
+                }
+            },
+            "CreDtTm": {"var": "creation_datetime"}
+        },
+        "CtrlData": {
+            "NbOfTxs": "1",
+            "CtrlSum": {"var": "amount"}
+        },
+        "Undrlyg": [
+            {
+                "TxInf": {
+                    "CxlId": {"var": "cancellation_id"},
+                    "OrgnlGrpInf": {
+                        "OrgnlMsgId": {"var": "original_msg_id"},
+                        "OrgnlMsgNmId": "pacs.008.001.08",
+                        "OrgnlCreDtTm": {"fake": ["iso8601_datetime", "-3d", "-1d"]}
+                    },
+                    "OrgnlInstrId": {"var": "instruction_id"},
+                    "OrgnlEndToEndId": {"var": "end_to_end_id"},
+                    "OrgnlTxId": {"var": "transaction_id"},
+                    "OrgnlUETR": {"var": "uetr"},
+                    "OrgnlIntrBkSttlmAmt": {
+                        "@Ccy": "USD",
+                        "$value": {"var": "amount"}
+                    },
+                    "OrgnlIntrBkSttlmDt": {"var": "original_date"},
+                    "CxlRsnInf": [
+                        {
+                            "Orgtr": {
+                                "Nm": "Compliance Department",
+                                "Id": {
+                                    "OrgId": {
+                                        "AnyBIC": {"var": "sender_bic"}
+                                    }
+                                }
+                            },
+                            "Rsn": {
+                                "Cd": "CUST"
+                            },
+                            "AddtlInf": [
+                                "Customer requested cancellation",
+                                "CBPR+ compliant cancellation request",
+                                "Funds not yet credited to beneficiary"
+                            ]
+                        }
+                    ],
+                    "OrgnlTxRef": {
+                        "IntrBkSttlmAmt": {
+                            "@Ccy": "USD",
+                            "$value": {"var": "amount"}
+                        },
+                        "IntrBkSttlmDt": {"var": "original_date"},
+                        "SttlmInf": {
+                            "SttlmMtd": "INDA",
+                            "ClrSys": {
+                                "Cd": "ILF"
+                            }
+                        },
+                        "PmtTpInf": {
+                            "InstrPrty": "HIGH",
+                            "SvcLvl": [
+                                {"Cd": "G001"}
+                            ]
+                        },
+                        "RmtInf": {
+                            "Ustrd": ["CBPR+ payment to be cancelled"]
+                        },
+                        "Dbtr": {
+                            "Nm": {"fake": ["full_name"]},
+                            "PstlAdr": {
+                                "Ctry": {"fake": ["country_code"]}
+                            }
+                        },
+                        "DbtrAcct": {
+                            "Id": {
+                                "IBAN": {"fake": ["iban"]}
+                            }
+                        },
+                        "DbtrAgt": {
+                            "FinInstnId": {
+                                "BICFI": {"var": "sender_bic"},
+                                "LEI": {"var": "sender_lei"}
+                            }
+                        },
+                        "CdtrAgt": {
+                            "FinInstnId": {
+                                "BICFI": {"var": "receiver_bic"},
+                                "LEI": {"var": "receiver_lei"}
+                            }
+                        },
+                        "Cdtr": {
+                            "Nm": {"fake": ["full_name"]},
+                            "PstlAdr": {
+                                "Ctry": {"fake": ["country_code"]}
+                            }
+                        },
+                        "CdtrAcct": {
+                            "Id": {
+                                "IBAN": {"fake": ["iban"]}
+                            }
+                        }
+                    }
+                }
+            }
+        ],
+        "SplmtryData": [
+            {
+                "PlcAndNm": "CBPRPlusCompliance",
+                "Envlp": {
+                    "Document": {
+                        "Prtry": {
+                            "Tp": "CBPR_TRACKING",
+                            "Id": {"var": "uetr"}
+                        }
+                    }
+                }
+            }
+        ]
+    }
+}

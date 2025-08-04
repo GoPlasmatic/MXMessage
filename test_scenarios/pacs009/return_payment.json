@@ -1,0 +1,153 @@
+{
+    "variables": {
+        "msg_id": {"cat": ["MSG", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "sender_bic": {"fake": ["bic"]},
+        "receiver_bic": {"fake": ["bic"]},
+        "transaction_ref": {"cat": ["TXN", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "instruction_id": {"cat": ["INSTR", {"fake": ["i64", 10000000, 99999999]}]},
+        "end_to_end_id": {"cat": ["E2E", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "amount": {"fake": ["f64", 100000.0, 10000000.0]},
+        "original_transaction": {"cat": ["ORIG-TXN-", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "return_reason": {"fake": ["regex", "(TECH|FRAD|CUST|AGNT)"]},
+        "sender_lei": {"fake": ["lei"]},
+        "receiver_lei": {"fake": ["lei"]}
+    },
+    "schema": {
+        "GrpHdr": {
+            "MsgId": {"var": "msg_id"},
+            "CreDtTm": {"var": "creation_datetime"},
+            "NbOfTxs": "1",
+            "SttlmInf": {
+                "SttlmMtd": "INDA"
+            }
+        },
+        "CdtTrfTxInf": {
+            "PmtId": {
+                "InstrId": {"var": "instruction_id"},
+                "EndToEndId": {"var": "end_to_end_id"},
+                "TxId": {"var": "transaction_ref"}
+            },
+            "PmtTpInf": {
+                "InstrPrty": "HIGH",
+                "SvcLvl": [
+                    {"Cd": "URGP"}
+                ],
+                "LclInstrm": {
+                    "Prtry": "FI_RETURN"
+                }
+            },
+            "IntrBkSttlmAmt": {
+                "@Ccy": "USD",
+                "$value": {"var": "amount"}
+            },
+            "IntrBkSttlmDt": {"fake": ["date", "%Y-%m-%d", "+0d", "+0d"]},
+            "InstgAgt": {
+                "FinInstnId": {
+                    "BICFI": {"var": "receiver_bic"},
+                    "LEI": {"var": "receiver_lei"}
+                }
+            },
+            "InstdAgt": {
+                "FinInstnId": {
+                    "BICFI": {"var": "sender_bic"},
+                    "LEI": {"var": "sender_lei"}
+                }
+            },
+            "PrvsInstgAgt1": {
+                "FinInstnId": {
+                    "BICFI": {"var": "sender_bic"},
+                    "LEI": {"var": "sender_lei"}
+                }
+            },
+            "Dbtr": {
+                "FinInstnId": {
+                    "BICFI": {"var": "receiver_bic"},
+                    "LEI": {"var": "receiver_lei"},
+                    "Nm": {"fake": ["company_name"]}
+                }
+            },
+            "DbtrAcct": {
+                "Id": {
+                    "Othr": {
+                        "Id": {"cat": ["POSITION-", {"fake": ["i64", 100000, 999999]}]},
+                        "SchmeNm": {
+                            "Prtry": "POSITION_ACCOUNT"
+                        }
+                    }
+                },
+                "Ccy": "USD"
+            },
+            "DbtrAgt": {
+                "FinInstnId": {
+                    "BICFI": {"var": "receiver_bic"},
+                    "LEI": {"var": "receiver_lei"}
+                }
+            },
+            "CdtrAgt": {
+                "FinInstnId": {
+                    "BICFI": {"var": "sender_bic"},
+                    "LEI": {"var": "sender_lei"}
+                }
+            },
+            "Cdtr": {
+                "FinInstnId": {
+                    "BICFI": {"var": "sender_bic"},
+                    "LEI": {"var": "sender_lei"},
+                    "Nm": {"fake": ["company_name"]}
+                }
+            },
+            "CdtrAcct": {
+                "Id": {
+                    "Othr": {
+                        "Id": {"cat": ["POSITION-", {"fake": ["i64", 100000, 999999]}]},
+                        "SchmeNm": {
+                            "Prtry": "POSITION_ACCOUNT"
+                        }
+                    }
+                },
+                "Ccy": "USD"
+            },
+            "InstrForCdtrAgt": [
+                {
+                    "Cd": "REPA",
+                    "InstrInf": "RETURN OF FUNDS"
+                }
+            ],
+            "Purp": {
+                "Prtry": "FI_RETURN"
+            },
+            "RtrInf": {
+                "OrgnlGrpInf": {
+                    "OrgnlMsgId": {"var": "original_transaction"},
+                    "OrgnlMsgNmId": "pacs.009.001.08"
+                },
+                "Rsn": {
+                    "Prtry": {"var": "return_reason"},
+                    "AddtlInf": [
+                        "FI to FI payment return",
+                        {"fake": ["regex", "(Technical error|Fraud suspected|Customer request|Agent decision)"]}
+                    ]
+                },
+                "OrgnlTxRef": {
+                    "IntrBkSttlmAmt": {
+                        "@Ccy": "USD",
+                        "$value": {"var": "amount"}
+                    },
+                    "IntrBkSttlmDt": {"fake": ["date", "%Y-%m-%d", "-10d", "-1d"]}
+                }
+            },
+            "RmtInf": {
+                "Strd": [
+                    {
+                        "AddtlRmtInf": [
+                            {"cat": ["Return of FI payment: ", {"var": "original_transaction"}]},
+                            {"cat": ["Return reason: ", {"var": "return_reason"}]},
+                            "Full amount returned"
+                        ]
+                    }
+                ]
+            }
+        }
+    }
+}

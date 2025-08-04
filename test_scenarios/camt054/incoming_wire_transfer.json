@@ -1,0 +1,144 @@
+{
+    "variables": {
+        "msg_id": {"cat": ["WIRE-", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "ntfctn_id": {"cat": ["WIRE-NTFCTN-", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_time": {"fake": ["iso8601_datetime"]},
+        "account_id": {"fake": ["iban"]},
+        "account_owner": {"fake": ["full_name"]},
+        "servicer_bic": {"fake": ["bic"]},
+        "entry_ref": {"cat": ["WIRE-ENT-", {"fake": ["i64", 1000000, 9999999]}]},
+        "credit_amount": {"fake": ["f64", 5000.0, 250000.0]},
+        "booking_date": {"fake": ["date", "%Y-%m-%d", "-1d", "-1d"]},
+        "value_date": {"fake": ["date", "%Y-%m-%d", "-1d", "-1d"]},
+        "transaction_ref": {"cat": ["WIRE-TXN-", {"fake": ["i64", 10000000, 99999999]}]},
+        "end_to_end_id": {"cat": ["WIRE-E2E-", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "uetr": {"fake": ["uuid_v4"]},
+        "debtor_name": {"fake": ["company_name"]},
+        "debtor_address": {"fake": ["street_address"]},
+        "debtor_country": {"fake": ["country_code"]},
+        "intermediary_bic": {"fake": ["bic"]},
+        "sender_ref": {"cat": ["SNDREF-", {"fake": ["i64", 100000, 999999]}]}
+    },
+    "schema": {
+        "GrpHdr": {
+            "MsgId": {"var": "msg_id"},
+            "CreDtTm": {"var": "creation_datetime"}
+        },
+        "Ntfctn": [
+            {
+                "Id": {"var": "ntfctn_id"},
+                "CreDtTm": {"var": "creation_time"},
+                "Acct": {
+                    "Id": {
+                        "IBAN": {"var": "account_id"}
+                    },
+                    "Ownr": {
+                        "Nm": {"var": "account_owner"}
+                    },
+                    "Svcr": {
+                        "FinInstnId": {
+                            "BICFI": {"var": "servicer_bic"}
+                        }
+                    }
+                },
+                "Ntry": [
+                    {
+                        "NtryRef": {"var": "entry_ref"},
+                        "Amt": {
+                            "@Ccy": "USD",
+                            "$value": {"var": "credit_amount"}
+                        },
+                        "CdtDbtInd": "CRDT",
+                        "Sts": {
+                            "Cd": "BOOK"
+                        },
+                        "BookgDt": {
+                            "Dt": {"var": "booking_date"}
+                        },
+                        "ValDt": {
+                            "Dt": {"var": "value_date"}
+                        },
+                        "BkTxCd": {
+                            "Domn": {
+                                "Cd": "PMNT",
+                                "Fmly": {
+                                    "Cd": "RCDT",
+                                    "SubFmlyCd": "XBCT"
+                                }
+                            },
+                            "Prtry": {
+                                "Cd": "WIRE_TRANSFER",
+                                "Issr": "SWIFT"
+                            }
+                        },
+                        "NtryDtls": [
+                            {
+                                "TxDtls": [
+                                    {
+                                        "Refs": {
+                                            "AcctSvcrRef": {"var": "transaction_ref"},
+                                            "EndToEndId": {"var": "end_to_end_id"},
+                                            "UETR": {"var": "uetr"},
+                                            "Prtry": [
+                                                {
+                                                    "Tp": "SENDER_REF",
+                                                    "Ref": {"var": "sender_ref"}
+                                                }
+                                            ]
+                                        },
+                                        "Amt": {
+                                            "@Ccy": "USD",
+                                            "$value": {"var": "credit_amount"}
+                                        },
+                                        "CdtDbtInd": "CRDT",
+                                        "RltdPties": {
+                                            "Dbtr": {
+                                                "Nm": {"var": "debtor_name"},
+                                                "PstlAdr": {
+                                                    "AdrLine": [{"var": "debtor_address"}],
+                                                    "Ctry": {"var": "debtor_country"}
+                                                }
+                                            },
+                                            "DbtrAcct": {
+                                                "Id": {
+                                                    "Othr": {
+                                                        "Id": {"fake": ["i64", 1000000000, 9999999999]},
+                                                        "SchmeNm": {
+                                                            "Prtry": "ACCOUNT_NUMBER"
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "RltdAgts": {
+                                            "DbtrAgt": {
+                                                "FinInstnId": {
+                                                    "BICFI": {"fake": ["bic"]}
+                                                }
+                                            },
+                                            "IntrmyAgt1": {
+                                                "FinInstnId": {
+                                                    "BICFI": {"var": "intermediary_bic"}
+                                                }
+                                            }
+                                        },
+                                        "RmtInf": {
+                                            "Ustrd": ["International wire transfer"],
+                                            "Strd": [
+                                                {
+                                                    "AddtlRmtInf": ["Cross-border payment via SWIFT network"]
+                                                }
+                                            ]
+                                        }
+                                    }
+                                ]
+                            }
+                        ],
+                        "AddtlNtryInf": "Incoming international wire transfer"
+                    }
+                ]
+            }
+        ]
+    }
+}

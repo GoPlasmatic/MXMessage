@@ -1,0 +1,18 @@
+{
+    "message_type": "camt.060.001.05",
+    "description": "Account Reporting Request",
+    "scenarios": [
+        {
+            "file": "interim_report_request.json",
+            "description": "MT920 - Request for interim statement"
+        },
+        {
+            "file": "multi_account_request.json",
+            "description": "MT920 - Request for statements for multiple accounts"
+        },
+        {
+            "file": "statement_request_basic.json",
+            "description": "MT920 - Basic statement request"
+        }
+    ]
+}

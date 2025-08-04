@@ -1,0 +1,310 @@
+{
+    "variables": {
+        "msg_id": {
+            "cat": [
+                "NO-LEI-",
+                {
+                    "fake": [
+                        "i64",
+                        100000000000,
+                        999999999999
+                    ]
+                }
+            ]
+        },
+        "creation_datetime": {
+            "fake": [
+                "iso8601_datetime"
+            ]
+        },
+        "payment_id": {
+            "cat": [
+                "PMNL",
+                {
+                    "fake": [
+                        "i64",
+                        100000000000,
+                        999999999999
+                    ]
+                }
+            ]
+        },
+        "uetr": {
+            "fake": [
+                "uuid"
+            ]
+        },
+        "amount": {
+            "fake": [
+                "f64",
+                100000.0,
+                1000000.0
+            ]
+        },
+        "currency": {
+            "fake": [
+                "enum",
+                "USD",
+                "EUR",
+                "GBP"
+            ]
+        },
+        "sender_bic": {
+            "fake": [
+                "bic"
+            ]
+        },
+        "receiver_bic": {
+            "fake": [
+                "bic"
+            ]
+        },
+        "ordering_company": {
+            "cat": [
+                {
+                    "fake": [
+                        "company_name"
+                    ]
+                },
+                " Corporation"
+            ]
+        },
+        "ordering_country": {
+            "fake": [
+                "country_code"
+            ]
+        },
+        "ordering_account": {
+            "fake": [
+                "iban"
+            ]
+        },
+        "beneficiary_company": {
+            "cat": [
+                {
+                    "fake": [
+                        "company_name"
+                    ]
+                },
+                " Ltd"
+            ]
+        },
+        "beneficiary_country": {
+            "fake": [
+                "country_code"
+            ]
+        },
+        "beneficiary_account": {
+            "fake": [
+                "iban"
+            ]
+        },
+        "tax_id": {
+            "cat": [
+                "TAX-",
+                {
+                    "fake": [
+                        "i64",
+                        100000000,
+                        999999999
+                    ]
+                }
+            ]
+        },
+        "company_reg": {
+            "cat": [
+                "REG-",
+                {
+                    "fake": [
+                        "i64",
+                        1000000,
+                        9999999
+                    ]
+                }
+            ]
+        }
+    },
+    "schema": {
+        "GrpHdr": {
+            "MsgId": {
+                "var": "msg_id"
+            },
+            "CreDtTm": {
+                "var": "creation_datetime"
+            },
+            "NbOfTxs": "1",
+            "SttlmInf": {
+                "SttlmMtd": "INDA"
+            }
+        },
+        "CdtTrfTxInf": {
+            "PmtId": {
+                "InstrId": {
+                    "var": "payment_id"
+                },
+                "EndToEndId": {
+                    "var": "payment_id"
+                },
+                "UETR": {
+                    "var": "uetr"
+                }
+            },
+            "PmtTpInf": {
+                "InstrPrty": "NORM",
+                "SvcLvl": [
+                    {
+                        "Cd": "G001"
+                    }
+                ],
+                "CtgyPurp": {
+                    "Cd": "TRAD"
+                }
+            },
+            "IntrBkSttlmAmt": {
+                "@Ccy": {
+                    "var": "currency"
+                },
+                "$value": {
+                    "var": "amount"
+                }
+            },
+            "IntrBkSttlmDt": {
+                "fake": [
+                    "date",
+                    "%Y-%m-%d",
+                    "0d",
+                    "+2d"
+                ]
+            },
+            "InstdAmt": {
+                "@Ccy": {
+                    "var": "currency"
+                },
+                "$value": {
+                    "var": "amount"
+                }
+            },
+            "ChrgBr": "SHAR",
+            "Dbtr": {
+                "Nm": {
+                    "var": "ordering_company"
+                },
+                "PstlAdr": {
+                    "Ctry": {
+                        "var": "ordering_country"
+                    }
+                },
+                "Id": {
+                    "OrgId": {
+                        "Othr": [
+                            {
+                                "Id": {
+                                    "var": "tax_id"
+                                },
+                                "SchmeNm": {
+                                    "Cd": "TXID"
+                                }
+                            },
+                            {
+                                "Id": {
+                                    "var": "company_reg"
+                                },
+                                "SchmeNm": {
+                                    "Prtry": "COMPANY_REG"
+                                }
+                            }
+                        ]
+                    }
+                }
+            },
+            "DbtrAcct": {
+                "Id": {
+                    "IBAN": {
+                        "var": "ordering_account"
+                    }
+                }
+            },
+            "DbtrAgt": {
+                "FinInstnId": {
+                    "BICFI": {
+                        "var": "sender_bic"
+                    }
+                }
+            },
+            "CdtrAgt": {
+                "FinInstnId": {
+                    "BICFI": {
+                        "var": "receiver_bic"
+                    }
+                }
+            },
+            "Cdtr": {
+                "Nm": {
+                    "var": "beneficiary_company"
+                },
+                "PstlAdr": {
+                    "Ctry": {
+                        "var": "beneficiary_country"
+                    }
+                },
+                "Id": {
+                    "OrgId": {
+                        "Othr": [
+                            {
+                                "Id": {
+                                    "fake": [
+                                        "alphanumeric",
+                                        10,
+                                        10
+                                    ]
+                                },
+                                "SchmeNm": {
+                                    "Cd": "TXID"
+                                }
+                            }
+                        ]
+                    }
+                }
+            },
+            "CdtrAcct": {
+                "Id": {
+                    "IBAN": {
+                        "var": "beneficiary_account"
+                    }
+                }
+            },
+            "Purp": {
+                "Cd": "TRAD"
+            },
+            "RmtInf": {
+                "Ustrd": "High-value corporate payment - LEI registration pending",
+                "Strd": [
+                    {
+                        "AddtlRmtInf": [
+                            "Entity exceeds LEI threshold but registration incomplete",
+                            "Alternative identifiers provided for compliance"
+                        ]
+                    }
+                ]
+            },
+            "InstgAgt": {
+                "FinInstnId": {
+                    "BICFI": {
+                        "fake": [
+                            "bic"
+                        ]
+                    }
+                }
+            },
+            "InstdAgt": {
+                "FinInstnId": {
+                    "BICFI": {
+                        "fake": [
+                            "bic"
+                        ]
+                    }
+                }
+            }
+        }
+    }
+}

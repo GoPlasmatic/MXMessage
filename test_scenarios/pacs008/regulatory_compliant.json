@@ -1,0 +1,1046 @@
+{
+    "variables": {
+        "msg_id": {
+            "cat": [
+                "MSG",
+                {
+                    "fake": [
+                        "i64",
+                        100000000000,
+                        999999999999
+                    ]
+                }
+            ]
+        },
+        "creation_datetime": {
+            "fake": [
+                "iso8601_datetime"
+            ]
+        },
+        "sender_bic": {
+            "fake": [
+                "bic"
+            ]
+        },
+        "receiver_bic": {
+            "fake": [
+                "bic"
+            ]
+        },
+        "transaction_ref": {
+            "cat": [
+                "TXN",
+                {
+                    "fake": [
+                        "i64",
+                        100000000000,
+                        999999999999
+                    ]
+                }
+            ]
+        },
+        "instruction_id": {
+            "cat": [
+                "INSTR",
+                {
+                    "fake": [
+                        "i64",
+                        10000000,
+                        99999999
+                    ]
+                }
+            ]
+        },
+        "end_to_end_id": {
+            "cat": [
+                "E2E",
+                {
+                    "fake": [
+                        "i64",
+                        100000000000,
+                        999999999999
+                    ]
+                }
+            ]
+        },
+        "uetr": {
+            "fake": [
+                "uuid"
+            ]
+        },
+        "amount": {
+            "fake": [
+                "f64",
+                50000.0,
+                500000.0
+            ]
+        },
+        "sender_lei": {
+            "fake": [
+                "lei"
+            ]
+        },
+        "receiver_lei": {
+            "fake": [
+                "lei"
+            ]
+        },
+        "sender_name": {
+            "fake": [
+                "company_name"
+            ]
+        },
+        "receiver_name": {
+            "fake": [
+                "company_name"
+            ]
+        },
+        "purpose_of_payment": {
+            "fake": [
+                "regex",
+                "(IMPORT_GOODS|EXPORT_SERVICES|CAPITAL_INVESTMENT|LOAN_REPAYMENT)"
+            ]
+        }
+    },
+    "schema": {
+        "GrpHdr": {
+            "MsgId": {
+                "var": "msg_id"
+            },
+            "CreDtTm": {
+                "var": "creation_datetime"
+            },
+            "NbOfTxs": "1",
+            "TtlIntrBkSttlmAmt": {
+                "@Ccy": "USD",
+                "$value": {
+                    "var": "amount"
+                }
+            },
+            "IntrBkSttlmDt": {
+                "fake": [
+                    "date",
+                    "%Y-%m-%d",
+                    "+0d",
+                    "+0d"
+                ]
+            },
+            "SttlmInf": {
+                "SttlmMtd": "INDA"
+            },
+            "InstgAgt": {
+                "FinInstnId": {
+                    "BICFI": {
+                        "var": "sender_bic"
+                    },
+                    "LEI": {
+                        "var": "sender_lei"
+                    }
+                }
+            },
+            "InstdAgt": {
+                "FinInstnId": {
+                    "BICFI": {
+                        "var": "receiver_bic"
+                    },
+                    "LEI": {
+                        "var": "receiver_lei"
+                    }
+                }
+            }
+        },
+        "CdtTrfTxInf": {
+            "PmtId": {
+                "InstrId": {
+                    "var": "instruction_id"
+                },
+                "EndToEndId": {
+                    "var": "end_to_end_id"
+                },
+                "TxId": {
+                    "var": "transaction_ref"
+                },
+                "UETR": {
+                    "var": "uetr"
+                }
+            },
+            "PmtTpInf": {
+                "InstrPrty": "HIGH",
+                "SvcLvl": [
+                    {
+                        "Cd": "G001"
+                    }
+                ],
+                "CtgyPurp": {
+                    "Cd": "TRAD"
+                }
+            },
+            "IntrBkSttlmAmt": {
+                "@Ccy": "USD",
+                "$value": {
+                    "var": "amount"
+                }
+            },
+            "IntrBkSttlmDt": {
+                "fake": [
+                    "date",
+                    "%Y-%m-%d",
+                    "+0d",
+                    "+0d"
+                ]
+            },
+            "SttlmPrty": "HIGH",
+            "SttlmTmIndctn": {
+                "DbtDtTm": {
+                    "fake": [
+                        "iso8601_datetime"
+                    ]
+                },
+                "CdtDtTm": {
+                    "fake": [
+                        "iso8601_datetime"
+                    ]
+                }
+            },
+            "SttlmTmReq": {
+                "CLSTm": {
+                    "fake": [
+                        "time",
+                        "%H:%M:%S"
+                    ]
+                }
+            },
+            "InstdAmt": {
+                "@Ccy": "USD",
+                "$value": {
+                    "var": "amount"
+                }
+            },
+            "XchgRate": 1.0,
+            "ChrgBr": "SHAR",
+            "ChrgsInf": [
+                {
+                    "Amt": {
+                        "@Ccy": "USD",
+                        "$value": {
+                            "fake": [
+                                "f64",
+                                25.0,
+                                100.0
+                            ]
+                        }
+                    },
+                    "Agt": {
+                        "FinInstnId": {
+                            "BICFI": {
+                                "var": "sender_bic"
+                            }
+                        }
+                    },
+                    "Tp": {
+                        "Prtry": "PROCESSING_FEE"
+                    }
+                }
+            ],
+            "InstgAgt": {
+                "FinInstnId": {
+                    "BICFI": {
+                        "var": "sender_bic"
+                    },
+                    "LEI": {
+                        "var": "sender_lei"
+                    }
+                }
+            },
+            "InstdAgt": {
+                "FinInstnId": {
+                    "BICFI": {
+                        "var": "receiver_bic"
+                    },
+                    "LEI": {
+                        "var": "receiver_lei"
+                    }
+                }
+            },
+            "IntrmyAgt1": {
+                "FinInstnId": {
+                    "BICFI": {
+                        "fake": [
+                            "bic"
+                        ]
+                    },
+                    "LEI": {
+                        "fake": [
+                            "lei"
+                        ]
+                    }
+                }
+            },
+            "IntrmyAgt1Acct": {
+                "Id": {
+                    "Othr": {
+                        "Id": {
+                            "cat": [
+                                "SWIFT-",
+                                {
+                                    "fake": [
+                                        "i64",
+                                        100000,
+                                        999999
+                                    ]
+                                }
+                            ]
+                        },
+                        "SchmeNm": {
+                            "Cd": "BBAN"
+                        }
+                    }
+                }
+            },
+            "Dbtr": {
+                "Nm": {
+                    "var": "sender_name"
+                },
+                "PstlAdr": {
+                    "StrtNm": {
+                        "fake": [
+                            "street_name"
+                        ]
+                    },
+                    "BldgNb": {
+                        "cat": [
+                            {
+                                "fake": [
+                                    "i64",
+                                    1,
+                                    999
+                                ]
+                            }
+                        ]
+                    },
+                    "BldgNm": {
+                        "cat": [
+                            {
+                                "fake": [
+                                    "word"
+                                ]
+                            },
+                            " Tower"
+                        ]
+                    },
+                    "Flr": {
+                        "cat": [
+                            {
+                                "fake": [
+                                    "i64",
+                                    1,
+                                    50
+                                ]
+                            }
+                        ]
+                    },
+                    "PstBx": {
+                        "cat": [
+                            "PO Box ",
+                            {
+                                "fake": [
+                                    "i64",
+                                    1000,
+                                    9999
+                                ]
+                            }
+                        ]
+                    },
+                    "Room": {
+                        "cat": [
+                            "Suite ",
+                            {
+                                "fake": [
+                                    "i64",
+                                    100,
+                                    999
+                                ]
+                            }
+                        ]
+                    },
+                    "PstCd": {
+                        "fake": [
+                            "postcode"
+                        ]
+                    },
+                    "TwnNm": {
+                        "fake": [
+                            "city_name"
+                        ]
+                    },
+                    "TwnLctnNm": {
+                        "fake": [
+                            "word"
+                        ]
+                    },
+                    "DstrctNm": {
+                        "fake": [
+                            "word"
+                        ]
+                    },
+                    "CtrySubDvsn": {
+                        "fake": [
+                            "state_abbr"
+                        ]
+                    },
+                    "Ctry": "US",
+                    "AdrLine": [
+                        {
+                            "cat": [
+                                {
+                                    "var": "sender_name"
+                                },
+                                " Corporation"
+                            ]
+                        },
+                        "Attention: Treasury Department"
+                    ]
+                },
+                "CtryOfRes": "US",
+                "Id": {
+                    "OrgId": {
+                        "LEI": {
+                            "var": "sender_lei"
+                        },
+                        "AnyBIC": {
+                            "var": "sender_bic"
+                        },
+                        "Othr": [
+                            {
+                                "Id": {
+                                    "cat": [
+                                        {
+                                            "fake": [
+                                                "i64",
+                                                10,
+                                                99
+                                            ]
+                                        },
+                                        "-",
+                                        {
+                                            "fake": [
+                                                "i64",
+                                                1000000,
+                                                9999999
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "SchmeNm": {
+                                    "Cd": "TXID"
+                                },
+                                "Issr": "US"
+                            }
+                        ]
+                    }
+                },
+                "CtctDtls": {
+                    "NmPrfx": "ATTN",
+                    "Nm": "Treasury Operations",
+                    "PhneNb": {
+                        "fake": [
+                            "phone_number"
+                        ]
+                    },
+                    "MobNb": {
+                        "fake": [
+                            "phone_number"
+                        ]
+                    },
+                    "FaxNb": {
+                        "fake": [
+                            "phone_number"
+                        ]
+                    },
+                    "EmailAdr": {
+                        "fake": [
+                            "email"
+                        ]
+                    },
+                    "EmailPurp": "REGULATORY_REPORTING",
+                    "JobTitl": "Head of Compliance",
+                    "Rspnsblty": "AML/KYC",
+                    "Dept": "Compliance",
+                    "Othr": [
+                        {
+                            "ChanlTp": "EMAL",
+                            "Id": "compliance@company.com"
+                        }
+                    ],
+                    "PrefrdMtd": "EMAL"
+                }
+            },
+            "DbtrAcct": {
+                "Id": {
+                    "IBAN": {
+                        "fake": [
+                            "iban",
+                            "US"
+                        ]
+                    }
+                },
+                "Tp": {
+                    "Cd": "CACC"
+                },
+                "Ccy": "USD",
+                "Nm": "Corporate Operating Account",
+                "Prxy": {
+                    "Tp": {
+                        "Cd": "EMAL"
+                    },
+                    "Id": {
+                        "fake": [
+                            "email"
+                        ]
+                    }
+                }
+            },
+            "DbtrAgt": {
+                "FinInstnId": {
+                    "BICFI": {
+                        "var": "sender_bic"
+                    },
+                    "LEI": {
+                        "var": "sender_lei"
+                    },
+                    "Nm": {
+                        "fake": [
+                            "company_name"
+                        ]
+                    },
+                    "PstlAdr": {
+                        "Ctry": "US"
+                    }
+                }
+            },
+            "DbtrAgtAcct": {
+                "Id": {
+                    "Othr": {
+                        "Id": {
+                            "cat": [
+                                "CORR-",
+                                {
+                                    "fake": [
+                                        "i64",
+                                        100000,
+                                        999999
+                                    ]
+                                }
+                            ]
+                        },
+                        "SchmeNm": {
+                            "Cd": "BBAN"
+                        }
+                    }
+                }
+            },
+            "CdtrAgt": {
+                "FinInstnId": {
+                    "BICFI": {
+                        "var": "receiver_bic"
+                    },
+                    "LEI": {
+                        "var": "receiver_lei"
+                    },
+                    "Nm": {
+                        "fake": [
+                            "company_name"
+                        ]
+                    },
+                    "PstlAdr": {
+                        "Ctry": {
+                            "fake": [
+                                "regex",
+                                "(GB|DE|FR|SG|HK)"
+                            ]
+                        }
+                    }
+                }
+            },
+            "CdtrAgtAcct": {
+                "Id": {
+                    "Othr": {
+                        "Id": {
+                            "cat": [
+                                "CORR-",
+                                {
+                                    "fake": [
+                                        "i64",
+                                        100000,
+                                        999999
+                                    ]
+                                }
+                            ]
+                        },
+                        "SchmeNm": {
+                            "Cd": "BBAN"
+                        }
+                    }
+                }
+            },
+            "Cdtr": {
+                "Nm": {
+                    "var": "receiver_name"
+                },
+                "PstlAdr": {
+                    "StrtNm": {
+                        "fake": [
+                            "street_name"
+                        ]
+                    },
+                    "BldgNb": {
+                        "cat": [
+                            {
+                                "fake": [
+                                    "i64",
+                                    1,
+                                    999
+                                ]
+                            }
+                        ]
+                    },
+                    "PstCd": {
+                        "fake": [
+                            "postcode"
+                        ]
+                    },
+                    "TwnNm": {
+                        "fake": [
+                            "city_name"
+                        ]
+                    },
+                    "Ctry": {
+                        "fake": [
+                            "regex",
+                            "(GB|DE|FR|SG|HK)"
+                        ]
+                    }
+                },
+                "CtryOfRes": {
+                    "fake": [
+                        "regex",
+                        "(GB|DE|FR|SG|HK)"
+                    ]
+                },
+                "Id": {
+                    "OrgId": {
+                        "LEI": {
+                            "var": "receiver_lei"
+                        },
+                        "AnyBIC": {
+                            "var": "receiver_bic"
+                        },
+                        "Othr": [
+                            {
+                                "Id": {
+                                    "cat": [
+                                        "REG-",
+                                        {
+                                            "fake": [
+                                                "i64",
+                                                100000000,
+                                                999999999
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "SchmeNm": {
+                                    "Prtry": "COMPANY_REGISTRATION"
+                                }
+                            }
+                        ]
+                    }
+                }
+            },
+            "CdtrAcct": {
+                "Id": {
+                    "IBAN": {
+                        "fake": [
+                            "iban",
+                            "GB"
+                        ]
+                    }
+                },
+                "Tp": {
+                    "Cd": "CACC"
+                },
+                "Ccy": "USD",
+                "Nm": "Treasury Account"
+            },
+            "UltmtDbtr": {
+                "Nm": {
+                    "cat": [
+                        {
+                            "var": "sender_name"
+                        },
+                        " Parent Holdings"
+                    ]
+                },
+                "Id": {
+                    "OrgId": {
+                        "LEI": {
+                            "fake": [
+                                "lei"
+                            ]
+                        }
+                    }
+                }
+            },
+            "UltmtCdtr": {
+                "Nm": {
+                    "cat": [
+                        {
+                            "var": "receiver_name"
+                        },
+                        " Group Ltd"
+                    ]
+                },
+                "Id": {
+                    "OrgId": {
+                        "LEI": {
+                            "fake": [
+                                "lei"
+                            ]
+                        }
+                    }
+                }
+            },
+            "InstrForCdtrAgt": [
+                {
+                    "Cd": "CHQB",
+                    "InstrInf": "REGULATORY COMPLIANCE REQUIRED"
+                }
+            ],
+            "InstrForNxtAgt": [
+                {
+                    "InstrInf": "ENHANCED DUE DILIGENCE COMPLETED"
+                }
+            ],
+            "Purp": {
+                "Cd": "TRAD"
+            },
+            "RgltryRptg": [
+                {
+                    "DbtCdtRptgInd": "BOTH",
+                    "Authrty": {
+                        "Nm": "Financial Crimes Enforcement Network",
+                        "Ctry": "US"
+                    },
+                    "Dtls": [
+                        {
+                            "Tp": "BOTH",
+                            "Dt": {
+                                "fake": [
+                                    "date",
+                                    "%Y-%m-%d",
+                                    "+0d",
+                                    "+0d"
+                                ]
+                            },
+                            "Ctry": "US",
+                            "Cd": "10000",
+                            "Amt": {
+                                "@Ccy": "USD",
+                                "$value": {
+                                    "var": "amount"
+                                }
+                            },
+                            "Inf": [
+                                "CURRENCY TRANSACTION REPORT"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "Authrty": {
+                        "Nm": "Office of Foreign Assets Control",
+                        "Ctry": "US"
+                    },
+                    "Dtls": [
+                        {
+                            "Tp": "BOTH",
+                            "Dt": {
+                                "fake": [
+                                    "date",
+                                    "%Y-%m-%d",
+                                    "+0d",
+                                    "+0d"
+                                ]
+                            },
+                            "Ctry": "US",
+                            "Cd": "OFAC",
+                            "Inf": [
+                                "SANCTIONS SCREENING COMPLETED - NO HITS"
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "RltdRmtInf": [
+                {
+                    "RmtId": {
+                        "cat": [
+                            "DOC-",
+                            {
+                                "fake": [
+                                    "i64",
+                                    100000,
+                                    999999
+                                ]
+                            }
+                        ]
+                    },
+                    "RmtLctnDtls": [
+                        {
+                            "Mtd": "EMAL",
+                            "ElctrncAdr": {
+                                "fake": [
+                                    "email"
+                                ]
+                            },
+                            "RmtLctnPstlAdr": {
+                                "Nm": "Document Management System",
+                                "Adr": {
+                                    "Ctry": "US"
+                                }
+                            }
+                        }
+                    ]
+                }
+            ],
+            "RmtInf": {
+                "Strd": [
+                    {
+                        "RfrdDocInf": [
+                            {
+                                "Tp": {
+                                    "CdOrPrtry": {
+                                        "Prtry": "IMPORT_GOODS"
+                                    }
+                                },
+                                "Nb": {
+                                    "cat": [
+                                        "CONTRACT-",
+                                        {
+                                            "fake": [
+                                                "i64",
+                                                2024000000,
+                                                2024999999
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "RltdDt": {
+                                    "fake": [
+                                        "date",
+                                        "%Y-%m-%d",
+                                        "-180d",
+                                        "-30d"
+                                    ]
+                                },
+                                "LineDtls": [
+                                    {
+                                        "Id": [
+                                            {
+                                                "Tp": {
+                                                    "CdOrPrtry": {
+                                                        "Prtry": "LINE_ITEM"
+                                                    }
+                                                },
+                                                "Nb": "1",
+                                                "RltdDt": {
+                                                    "fake": [
+                                                        "date",
+                                                        "%Y-%m-%d",
+                                                        "+0d",
+                                                        "+0d"
+                                                    ]
+                                                }
+                                            }
+                                        ],
+                                        "Desc": "Partial payment for contracted services",
+                                        "Amt": {
+                                            "DuePyblAmt": {
+                                                "@Ccy": "USD",
+                                                "$value": {
+                                                    "var": "amount"
+                                                }
+                                            }
+                                        }
+                                    }
+                                ]
+                            }
+                        ],
+                        "RfrdDocAmt": {
+                            "DuePyblAmt": {
+                                "@Ccy": "USD",
+                                "$value": {
+                                    "var": "amount"
+                                }
+                            },
+                            "RmtdAmt": {
+                                "@Ccy": "USD",
+                                "$value": {
+                                    "var": "amount"
+                                }
+                            }
+                        },
+                        "CdtrRefInf": {
+                            "Tp": {
+                                "CdOrPrtry": {
+                                    "Cd": "RADM"
+                                }
+                            },
+                            "Ref": {
+                                "cat": [
+                                    "REF-",
+                                    {
+                                        "fake": [
+                                            "i64",
+                                            100000000,
+                                            999999999
+                                        ]
+                                    }
+                                ]
+                            }
+                        },
+                        "Invcr": {
+                            "Nm": {
+                                "var": "receiver_name"
+                            },
+                            "PstlAdr": {
+                                "Ctry": {
+                                    "fake": [
+                                        "regex",
+                                        "(GB|DE|FR|SG|HK)"
+                                    ]
+                                }
+                            },
+                            "Id": {
+                                "OrgId": {
+                                    "LEI": {
+                                        "var": "receiver_lei"
+                                    }
+                                }
+                            },
+                            "CtctDtls": {
+                                "Nm": "Accounts Receivable",
+                                "EmailAdr": {
+                                    "fake": [
+                                        "email"
+                                    ]
+                                }
+                            }
+                        },
+                        "Invcee": {
+                            "Nm": {
+                                "var": "sender_name"
+                            },
+                            "PstlAdr": {
+                                "Ctry": "US"
+                            },
+                            "Id": {
+                                "OrgId": {
+                                    "LEI": {
+                                        "var": "sender_lei"
+                                    }
+                                }
+                            }
+                        },
+                        "TaxRmt": {
+                            "Cdtr": {
+                                "TaxId": {
+                                    "fake": [
+                                        "word"
+                                    ]
+                                },
+                                "RegnId": {
+                                    "fake": [
+                                        "word"
+                                    ]
+                                }
+                            },
+                            "Dbtr": {
+                                "TaxId": {
+                                    "cat": [
+                                        {
+                                            "fake": [
+                                                "i64",
+                                                10,
+                                                99
+                                            ]
+                                        },
+                                        "-",
+                                        {
+                                            "fake": [
+                                                "i64",
+                                                1000000,
+                                                9999999
+                                            ]
+                                        }
+                                    ]
+                                }
+                            },
+                            "UltmtDbtr": {
+                                "TaxId": {
+                                    "fake": [
+                                        "word"
+                                    ]
+                                }
+                            },
+                            "AdmstnZone": "US",
+                            "RefNb": {
+                                "cat": [
+                                    "TAX-",
+                                    {
+                                        "fake": [
+                                            "i64",
+                                            100000,
+                                            999999
+                                        ]
+                                    }
+                                ]
+                            },
+                            "Mtd": "EUQD",
+                            "TtlTaxblBaseAmt": {
+                                "@Ccy": "USD",
+                                "$value": {
+                                    "var": "amount"
+                                }
+                            },
+                            "TtlTaxAmt": {
+                                "@Ccy": "USD",
+                                "$value": 0.0
+                            },
+                            "Dt": {
+                                "fake": [
+                                    "date",
+                                    "%Y-%m-%d",
+                                    "+0d",
+                                    "+0d"
+                                ]
+                            }
+                        },
+                        "AddtlRmtInf": [
+                            {
+                                "cat": [
+                                    "Purpose: ",
+                                    {
+                                        "var": "purpose_of_payment"
+                                    }
+                                ]
+                            },
+                            "All regulatory requirements satisfied",
+                            "Enhanced due diligence documentation available upon request"
+                        ]
+                    }
+                ]
+            }
+        }
+    }
+}

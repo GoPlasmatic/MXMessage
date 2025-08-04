@@ -1,0 +1,155 @@
+{
+    "variables": {
+        "msg_id": {"cat": ["DIV-", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "ntfctn_id": {"cat": ["DIV-NTFCTN-", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_time": {"fake": ["iso8601_datetime"]},
+        "account_id": {"fake": ["iban"]},
+        "account_owner": {"fake": ["full_name"]},
+        "servicer_bic": {"fake": ["bic"]},
+        "entry_ref": {"cat": ["DIV-ENT-", {"fake": ["i64", 1000000, 9999999]}]},
+        "gross_dividend": {"fake": ["f64", 1000.0, 50000.0]},
+        "tax_amount": {"fake": ["f64", 150.0, 7500.0]},
+        "net_dividend": {"fake": ["f64", 850.0, 42500.0]},
+        "booking_date": {"fake": ["date", "%Y-%m-%d", "-1d", "-1d"]},
+        "value_date": {"fake": ["date", "%Y-%m-%d", "-1d", "-1d"]},
+        "transaction_ref": {"cat": ["DIV-TXN-", {"fake": ["i64", 10000000, 99999999]}]},
+        "issuer_name": {"fake": ["company_name"]},
+        "isin": {"cat": ["US", {"fake": ["i64", 1000000000, 9999999999]}]},
+        "shares": {"fake": ["i64", 100, 10000]},
+        "dividend_per_share": {"fake": ["f64", 0.50, 5.00]}
+    },
+    "schema": {
+        "GrpHdr": {
+            "MsgId": {"var": "msg_id"},
+            "CreDtTm": {"var": "creation_datetime"}
+        },
+        "Ntfctn": [
+            {
+                "Id": {"var": "ntfctn_id"},
+                "CreDtTm": {"var": "creation_time"},
+                "Acct": {
+                    "Id": {
+                        "IBAN": {"var": "account_id"}
+                    },
+                    "Ownr": {
+                        "Nm": {"var": "account_owner"}
+                    },
+                    "Svcr": {
+                        "FinInstnId": {
+                            "BICFI": {"var": "servicer_bic"}
+                        }
+                    }
+                },
+                "Ntry": [
+                    {
+                        "NtryRef": {"var": "entry_ref"},
+                        "Amt": {
+                            "@Ccy": "USD",
+                            "$value": {"var": "net_dividend"}
+                        },
+                        "CdtDbtInd": "CRDT",
+                        "Sts": {
+                            "Cd": "BOOK"
+                        },
+                        "BookgDt": {
+                            "Dt": {"var": "booking_date"}
+                        },
+                        "ValDt": {
+                            "Dt": {"var": "value_date"}
+                        },
+                        "BkTxCd": {
+                            "Domn": {
+                                "Cd": "PMNT",
+                                "Fmly": {
+                                    "Cd": "RCDT",
+                                    "SubFmlyCd": "DVCA"
+                                }
+                            }
+                        },
+                        "NtryDtls": [
+                            {
+                                "TxDtls": [
+                                    {
+                                        "Refs": {
+                                            "AcctSvcrRef": {"var": "transaction_ref"}
+                                        },
+                                        "Amt": {
+                                            "@Ccy": "USD",
+                                            "$value": {"var": "net_dividend"}
+                                        },
+                                        "CdtDbtInd": "CRDT",
+                                        "AmtDtls": {
+                                            "InstdAmt": {
+                                                "Amt": {
+                                                    "@Ccy": "USD",
+                                                    "$value": {"var": "gross_dividend"}
+                                                }
+                                            },
+                                            "TxAmt": {
+                                                "Amt": {
+                                                    "@Ccy": "USD",
+                                                    "$value": {"var": "net_dividend"}
+                                                }
+                                            }
+                                        },
+                                        "RltdPties": {
+                                            "Dbtr": {
+                                                "Nm": {"var": "issuer_name"}
+                                            }
+                                        },
+                                        "RltdAgts": {
+                                            "DbtrAgt": {
+                                                "FinInstnId": {
+                                                    "BICFI": {"fake": ["bic"]}
+                                                }
+                                            }
+                                        },
+                                        "Tax": [
+                                            {
+                                                "Tp": {
+                                                    "Cd": "WITF"
+                                                },
+                                                "Amt": {
+                                                    "@Ccy": "USD",
+                                                    "$value": {"var": "tax_amount"}
+                                                },
+                                                "Rate": 15.0,
+                                                "TaxblBaseAmt": {
+                                                    "@Ccy": "USD",
+                                                    "$value": {"var": "gross_dividend"}
+                                                }
+                                            }
+                                        ],
+                                        "RltdQties": {
+                                            "Qty": {
+                                                "Unit": {"var": "shares"}
+                                            }
+                                        },
+                                        "FinInstrmId": {
+                                            "ISIN": {"var": "isin"}
+                                        },
+                                        "Purp": {
+                                            "Cd": "DIVI"
+                                        },
+                                        "RmtInf": {
+                                            "Strd": [
+                                                {
+                                                    "AddtlRmtInf": [
+                                                        {"cat": ["Dividend payment for ", {"var": "shares"}, " shares at $", {"var": "dividend_per_share"}, " per share"]},
+                                                        {"cat": ["Tax withheld: $", {"var": "tax_amount"}]}
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    }
+                                ]
+                            }
+                        ],
+                        "AddtlNtryInf": "Quarterly dividend payment"
+                    }
+                ]
+            }
+        ]
+    }
+}

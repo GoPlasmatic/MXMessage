@@ -1,0 +1,82 @@
+{
+    "variables": {
+        "msg_id": {"cat": ["STMT-REQ-", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "sender_bic": {"fake": ["bic"]},
+        "receiver_bic": {"fake": ["bic"]},
+        "account_iban": {"fake": ["iban"]},
+        "account_currency": {"fake": ["enum", "USD", "EUR", "GBP", "CHF", "JPY"]},
+        "account_name": {"fake": ["full_name"]},
+        "statement_date": {"fake": ["date", "%Y-%m-%d", "-1d", "-1d"]},
+        "request_reference": {"cat": ["REF-", {"fake": ["i64", 100000, 999999]}]}
+    },
+    "schema": {
+        "GrpHdr": {
+            "MsgId": {"var": "msg_id"},
+            "CreDtTm": {"var": "creation_datetime"},
+            "MsgSndr": {
+                "Agt": {
+                    "FinInstnId": {
+                        "BICFI": {"var": "sender_bic"}
+                    }
+                }
+            },
+            "MsgRcpt": {
+                "Agt": {
+                    "FinInstnId": {
+                        "BICFI": {"var": "receiver_bic"}
+                    }
+                }
+            }
+        },
+        "AcctRptgReq": {
+            "RptgReq": {
+                "Id": {"var": "request_reference"},
+                "ReqdMsgNmId": "camt.053.001.08",
+                "Acct": {
+                    "Id": {
+                        "IBAN": {"var": "account_iban"}
+                    },
+                    "Ccy": {"var": "account_currency"},
+                    "Nm": {"var": "account_name"}
+                },
+                "AcctOwnr": {
+                    "Nm": {"var": "account_name"}
+                },
+                "RptgPrd": {
+                    "FrToDt": {
+                        "FrDt": {"var": "statement_date"},
+                        "ToDt": {"var": "statement_date"}
+                    },
+                    "Tp": "FIXD"
+                }
+            }
+        },
+        "SplmtryData": [
+            {
+                "Envlp": {
+                    "BasicStatementRequest": {
+                        "StatementType": "DAILY_STATEMENT",
+                        "RequestPurpose": "REGULATORY_REPORTING",
+                        "StatementOptions": {
+                            "IncludeOpeningBalance": true,
+                            "IncludeClosingBalance": true,
+                            "IncludeTransactionDetails": true,
+                            "IncludeValueDatedEntries": true
+                        },
+                        "FormatPreferences": {
+                            "DateFormat": "YYYY-MM-DD",
+                            "AmountFormat": "DECIMAL",
+                            "BalanceType": "BOOKED"
+                        },
+                        "DeliveryMethod": {
+                            "Channel": "SWIFT_MT940",
+                            "Urgency": "NORMAL",
+                            "RetryIfFailed": true
+                        }
+                    }
+                }
+            }
+        ]
+    }
+}

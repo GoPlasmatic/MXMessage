@@ -1,0 +1,100 @@
+{
+    "variables": {
+        "msg_id": {"cat": ["FX-NOTIF-", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "value_date": {"fake": ["date", "%Y-%m-%d", "+2d", "+2d"]},
+        "sender_bic": {"fake": ["bic"]},
+        "receiver_bic": {"fake": ["bic"]},
+        "deal_reference": {"cat": ["FX-DEAL-", {"fake": ["i64", 100000, 999999]}]},
+        "buy_amount": {"fake": ["f64", 100000.00, 5000000.00]},
+        "buy_currency": {"fake": ["enum", "USD", "EUR", "GBP"]},
+        "sell_amount": {"fake": ["f64", 100000.00, 5000000.00]},
+        "sell_currency": {"fake": ["enum", "JPY", "CHF", "CAD"]},
+        "exchange_rate": {"fake": ["f64", 0.5000, 150.0000]},
+        "counterparty": {"fake": ["company_name"]},
+        "counterparty_bic": {"fake": ["bic"]},
+        "nostro_account": {"fake": ["iban"]}
+    },
+    "schema": {
+        "Assgnmt": {
+            "Id": {"var": "msg_id"},
+            "Assgnr": {
+                "Agt": {
+                    "FinInstnId": {
+                        "BICFI": {"var": "sender_bic"}
+                    }
+                }
+            },
+            "Assgne": {
+                "Agt": {
+                    "FinInstnId": {
+                        "BICFI": {"var": "receiver_bic"}
+                    }
+                }
+            },
+            "CreDtTm": {"var": "creation_datetime"}
+        },
+        "Ntfctn": {
+            "Id": {"cat": ["FX-SETTLE-", {"fake": ["i64", 100000, 999999]}]},
+            "CreDtTm": {"var": "creation_datetime"},
+            "Acct": {
+                "Id": {
+                    "IBAN": {"var": "nostro_account"}
+                }
+            },
+            "Itm": [
+                {
+                    "Id": {"var": "deal_reference"},
+                    "XpctdValDt": {"var": "value_date"},
+                    "Amt": {
+                        "Amt": {
+                            "Value": {"var": "buy_amount"},
+                            "Ccy": {"var": "buy_currency"}
+                        }
+                    },
+                    "RmtInf": {
+                        "Ustrd": [{"cat": ["FX Settlement - Deal ", {"var": "deal_reference"}]}],
+                        "Strd": [
+                            {
+                                "AddtlRmtInf": [
+                                    {"cat": ["Buy ", {"var": "buy_currency"}, " ", {"var": "buy_amount"}]},
+                                    {"cat": ["Sell ", {"var": "sell_currency"}, " ", {"var": "sell_amount"}]},
+                                    {"cat": ["Rate: ", {"var": "exchange_rate"}]}
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        "SplmtryData": [
+            {
+                "Envlp": {
+                    "FXSettlementDetails": {
+                        "DealReference": {"var": "deal_reference"},
+                        "TradeDate": {"var": "creation_datetime"},
+                        "ValueDate": {"var": "value_date"},
+                        "BuySide": {
+                            "Amount": {"var": "buy_amount"},
+                            "Currency": {"var": "buy_currency"}
+                        },
+                        "SellSide": {
+                            "Amount": {"var": "sell_amount"},
+                            "Currency": {"var": "sell_currency"}
+                        },
+                        "ExchangeRate": {"var": "exchange_rate"},
+                        "Counterparty": {
+                            "Name": {"var": "counterparty"},
+                            "BIC": {"var": "counterparty_bic"}
+                        },
+                        "SettlementInstructions": {
+                            "Method": "GROSS",
+                            "NostroAccount": {"var": "nostro_account"},
+                            "ConfirmationRequired": true
+                        }
+                    }
+                }
+            }
+        ]
+    }
+}

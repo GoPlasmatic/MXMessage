@@ -1,0 +1,429 @@
+{
+    "variables": {
+        "msg_id": {
+            "cat": [
+                "MSG",
+                {
+                    "fake": [
+                        "i64",
+                        100000000000,
+                        999999999999
+                    ]
+                }
+            ]
+        },
+        "creation_datetime": {
+            "fake": [
+                "iso8601_datetime"
+            ]
+        },
+        "sender_bic": {
+            "fake": [
+                "bic"
+            ]
+        },
+        "receiver_bic": {
+            "fake": [
+                "bic"
+            ]
+        },
+        "transaction_ref": {
+            "cat": [
+                "TXN",
+                {
+                    "fake": [
+                        "i64",
+                        100000000000,
+                        999999999999
+                    ]
+                }
+            ]
+        },
+        "instruction_id": {
+            "cat": [
+                "INSTR",
+                {
+                    "fake": [
+                        "i64",
+                        10000000,
+                        99999999
+                    ]
+                }
+            ]
+        },
+        "end_to_end_id": {
+            "cat": [
+                "E2E",
+                {
+                    "fake": [
+                        "i64",
+                        100000000000,
+                        999999999999
+                    ]
+                }
+            ]
+        },
+        "uetr": {
+            "fake": [
+                "uuid"
+            ]
+        },
+        "amount": {
+            "fake": [
+                "f64",
+                50.0,
+                2000.0
+            ]
+        },
+        "sender_name": {
+            "fake": [
+                "name"
+            ]
+        },
+        "receiver_name": {
+            "fake": [
+                "name"
+            ]
+        },
+        "sender_phone": {
+            "fake": [
+                "phone_number"
+            ]
+        },
+        "receiver_phone": {
+            "fake": [
+                "phone_number"
+            ]
+        },
+        "purpose": {
+            "fake": [
+                "regex",
+                "(Birthday gift|Wedding gift|Holiday gift|Shared expenses|Personal loan repayment)"
+            ]
+        }
+    },
+    "schema": {
+        "GrpHdr": {
+            "MsgId": {
+                "var": "msg_id"
+            },
+            "CreDtTm": {
+                "var": "creation_datetime"
+            },
+            "NbOfTxs": "1",
+            "SttlmInf": {
+                "SttlmMtd": "INDA"
+            }
+        },
+        "CdtTrfTxInf": {
+            "PmtId": {
+                "InstrId": {
+                    "var": "instruction_id"
+                },
+                "EndToEndId": {
+                    "var": "end_to_end_id"
+                },
+                "TxId": {
+                    "var": "transaction_ref"
+                },
+                "UETR": {
+                    "var": "uetr"
+                }
+            },
+            "PmtTpInf": {
+                "InstrPrty": "NORM",
+                "SvcLvl": [
+                    {
+                        "Cd": "CBPR"
+                    }
+                ],
+                "CtgyPurp": {
+                    "Cd": "CASH"
+                },
+                "LclInstrm": {
+                    "Prtry": "P2P_TRANSFER"
+                }
+            },
+            "IntrBkSttlmAmt": {
+                "@Ccy": "EUR",
+                "$value": {
+                    "var": "amount"
+                }
+            },
+            "IntrBkSttlmDt": {
+                "fake": [
+                    "date",
+                    "%Y-%m-%d",
+                    "+0d",
+                    "+0d"
+                ]
+            },
+            "SttlmPrty": "NORM",
+            "InstdAmt": {
+                "@Ccy": "EUR",
+                "$value": {
+                    "var": "amount"
+                }
+            },
+            "ChrgBr": "SHAR",
+            "InstgAgt": {
+                "FinInstnId": {
+                    "BICFI": {
+                        "var": "sender_bic"
+                    },
+                    "LEI": {
+                        "fake": [
+                            "lei"
+                        ]
+                    }
+                }
+            },
+            "InstdAgt": {
+                "FinInstnId": {
+                    "BICFI": {
+                        "var": "receiver_bic"
+                    },
+                    "LEI": {
+                        "fake": [
+                            "lei"
+                        ]
+                    }
+                }
+            },
+            "Dbtr": {
+                "Nm": {
+                    "var": "sender_name"
+                },
+                "PstlAdr": {
+                    "StrtNm": {
+                        "fake": [
+                            "street_name"
+                        ]
+                    },
+                    "BldgNb": {
+                        "cat": [
+                            {
+                                "fake": [
+                                    "i64",
+                                    1,
+                                    999
+                                ]
+                            }
+                        ]
+                    },
+                    "PstCd": {
+                        "fake": [
+                            "postcode"
+                        ]
+                    },
+                    "TwnNm": {
+                        "fake": [
+                            "city_name"
+                        ]
+                    },
+                    "Ctry": "NL"
+                },
+                "CtryOfRes": "NL",
+                "Id": {
+                    "PrvtId": {
+                        "DtAndPlcOfBirth": {
+                            "BirthDt": {
+                                "fake": [
+                                    "date",
+                                    "%Y-%m-%d",
+                                    "-65y",
+                                    "-18y"
+                                ]
+                            },
+                            "CityOfBirth": {
+                                "fake": [
+                                    "city_name"
+                                ]
+                            },
+                            "CtryOfBirth": "NL"
+                        },
+                        "Othr": [
+                            {
+                                "Id": {
+                                    "fake": [
+                                        "phone_number"
+                                    ]
+                                },
+                                "SchmeNm": {
+                                    "Prtry": "MOBILE_NUMBER"
+                                }
+                            }
+                        ]
+                    }
+                },
+                "CtctDtls": {
+                    "MobNb": {
+                        "var": "sender_phone"
+                    },
+                    "EmailAdr": {
+                        "fake": [
+                            "email"
+                        ]
+                    }
+                }
+            },
+            "DbtrAcct": {
+                "Id": {
+                    "IBAN": {
+                        "fake": [
+                            "iban",
+                            "NL"
+                        ]
+                    }
+                },
+                "Ccy": "EUR",
+                "Nm": "Personal Current Account"
+            },
+            "DbtrAgt": {
+                "FinInstnId": {
+                    "BICFI": {
+                        "var": "sender_bic"
+                    },
+                    "Nm": {
+                        "fake": [
+                            "company_name"
+                        ]
+                    },
+                    "LEI": {
+                        "fake": [
+                            "lei"
+                        ]
+                    }
+                }
+            },
+            "CdtrAgt": {
+                "FinInstnId": {
+                    "BICFI": {
+                        "var": "receiver_bic"
+                    },
+                    "Nm": {
+                        "fake": [
+                            "company_name"
+                        ]
+                    },
+                    "LEI": {
+                        "fake": [
+                            "lei"
+                        ]
+                    }
+                }
+            },
+            "Cdtr": {
+                "Nm": {
+                    "var": "receiver_name"
+                },
+                "PstlAdr": {
+                    "StrtNm": {
+                        "fake": [
+                            "street_name"
+                        ]
+                    },
+                    "BldgNb": {
+                        "cat": [
+                            {
+                                "fake": [
+                                    "i64",
+                                    1,
+                                    999
+                                ]
+                            }
+                        ]
+                    },
+                    "PstCd": {
+                        "fake": [
+                            "postcode"
+                        ]
+                    },
+                    "TwnNm": {
+                        "fake": [
+                            "city_name"
+                        ]
+                    },
+                    "Ctry": "BE"
+                },
+                "CtryOfRes": "BE",
+                "Id": {
+                    "PrvtId": {
+                        "Othr": [
+                            {
+                                "Id": {
+                                    "fake": [
+                                        "phone_number"
+                                    ]
+                                },
+                                "SchmeNm": {
+                                    "Prtry": "MOBILE_NUMBER"
+                                }
+                            }
+                        ]
+                    }
+                },
+                "CtctDtls": {
+                    "MobNb": {
+                        "var": "receiver_phone"
+                    }
+                }
+            },
+            "CdtrAcct": {
+                "Id": {
+                    "IBAN": {
+                        "fake": [
+                            "iban",
+                            "BE"
+                        ]
+                    }
+                },
+                "Ccy": "EUR",
+                "Nm": "Personal Account"
+            },
+            "Purp": {
+                "Cd": "CASH"
+            },
+            "RgltryRptg": [
+                {
+                    "Dtls": [
+                        {
+                            "Tp": "BOTH",
+                            "Dt": {
+                                "fake": [
+                                    "date",
+                                    "%Y-%m-%d",
+                                    "+0d",
+                                    "+0d"
+                                ]
+                            },
+                            "Ctry": "NL",
+                            "Cd": "150",
+                            "Amt": {
+                                "@Ccy": "EUR",
+                                "$value": {
+                                    "var": "amount"
+                                }
+                            },
+                            "Inf": [
+                                "CBPR+ PERSON TO PERSON TRANSFER"
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "RmtInf": {
+                "Ustrd": {
+                    "var": "purpose"
+                },
+                "Strd": [
+                    {
+                        "AddtlRmtInf": [
+                            "Generated remittance information"
+                        ]
+                    }
+                ]
+            }
+        }
+    }
+}

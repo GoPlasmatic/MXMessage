@@ -1,0 +1,317 @@
+{
+    "variables": {
+        "msg_id": {"cat": ["INTM-", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "stmt_id": {"cat": ["INTRA-", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "legal_seq_number": {"fake": ["i64", 100, 999]},
+        "from_datetime": {"fake": ["iso8601_datetime", "-6h", "-6h"]},
+        "to_datetime": {"fake": ["iso8601_datetime"]},
+        "account_id": {"fake": ["iban"]},
+        "account_owner": {"fake": ["company_name"]},
+        "account_owner_lei": {"fake": ["lei"]},
+        "servicer_bic": {"fake": ["bic"]},
+        "opening_balance": {"fake": ["f64", 100000.0, 500000.0]},
+        "interim_balance": {"fake": ["f64", 95000.0, 505000.0]},
+        "available_balance": {"fake": ["f64", 90000.0, 500000.0]},
+        "pending_credits": {"fake": ["f64", 5000.0, 50000.0]},
+        "pending_debits": {"fake": ["f64", 3000.0, 30000.0]}
+    },
+    "schema": {
+        "GrpHdr": {
+            "MsgId": {"var": "msg_id"},
+            "CreDtTm": {"var": "creation_datetime"},
+            "MsgRcpt": {
+                "Pty": {
+                    "Nm": {"var": "account_owner"},
+                    "Id": {
+                        "OrgId": {
+                            "LEI": {"var": "account_owner_lei"}
+                        }
+                    }
+                }
+            },
+            "AddtlInf": "Intraday statement - positions may change"
+        },
+        "Stmt": [
+            {
+                "Id": {"var": "stmt_id"},
+                "StmtPgntn": {
+                    "PgNb": "1",
+                    "LastPgInd": true
+                },
+                "ElctrncSeqNb": {"var": "legal_seq_number"},
+                "CreDtTm": {"var": "creation_datetime"},
+                "FrToDt": {
+                    "FrDtTm": {"var": "from_datetime"},
+                    "ToDtTm": {"var": "to_datetime"}
+                },
+                "RptgSrc": {
+                    "Prtry": "INTRADAY_SNAPSHOT"
+                },
+                "Acct": {
+                    "Id": {
+                        "IBAN": {"var": "account_id"}
+                    },
+                    "Tp": {
+                        "Cd": "CACC"
+                    },
+                    "Ccy": "USD",
+                    "Nm": "Real-Time Transaction Account",
+                    "Ownr": {
+                        "Nm": {"var": "account_owner"},
+                        "Id": {
+                            "OrgId": {
+                                "LEI": {"var": "account_owner_lei"}
+                            }
+                        }
+                    },
+                    "Svcr": {
+                        "FinInstnId": {
+                            "BICFI": {"var": "servicer_bic"}
+                        }
+                    }
+                },
+                "Bal": [
+                    {
+                        "Tp": {
+                            "CdOrPrtry": {
+                                "Cd": "OPBD"
+                            }
+                        },
+                        "Amt": {
+                            "@Ccy": "USD",
+                            "$value": {"var": "opening_balance"}
+                        },
+                        "CdtDbtInd": "CRDT",
+                        "Dt": {
+                            "DtTm": {"var": "from_datetime"}
+                        }
+                    },
+                    {
+                        "Tp": {
+                            "CdOrPrtry": {
+                                "Cd": "ITBD"
+                            }
+                        },
+                        "Amt": {
+                            "@Ccy": "USD",
+                            "$value": {"var": "interim_balance"}
+                        },
+                        "CdtDbtInd": "CRDT",
+                        "Dt": {
+                            "DtTm": {"var": "to_datetime"}
+                        }
+                    },
+                    {
+                        "Tp": {
+                            "CdOrPrtry": {
+                                "Cd": "ITAV"
+                            }
+                        },
+                        "Amt": {
+                            "@Ccy": "USD",
+                            "$value": {"var": "available_balance"}
+                        },
+                        "CdtDbtInd": "CRDT",
+                        "Dt": {
+                            "DtTm": {"var": "to_datetime"}
+                        }
+                    },
+                    {
+                        "Tp": {
+                            "CdOrPrtry": {
+                                "Prtry": "PENDING_CREDIT"
+                            }
+                        },
+                        "Amt": {
+                            "@Ccy": "USD",
+                            "$value": {"var": "pending_credits"}
+                        },
+                        "CdtDbtInd": "CRDT",
+                        "Dt": {
+                            "DtTm": {"var": "to_datetime"}
+                        }
+                    },
+                    {
+                        "Tp": {
+                            "CdOrPrtry": {
+                                "Prtry": "PENDING_DEBIT"
+                            }
+                        },
+                        "Amt": {
+                            "@Ccy": "USD",
+                            "$value": {"var": "pending_debits"}
+                        },
+                        "CdtDbtInd": "DBIT",
+                        "Dt": {
+                            "DtTm": {"var": "to_datetime"}
+                        }
+                    }
+                ],
+                "Ntry": [
+                    {
+                        "NtryRef": {"cat": ["PDNG-", {"fake": ["i64", 1000000, 9999999]}]},
+                        "Amt": {
+                            "@Ccy": "USD",
+                            "$value": {"fake": ["f64", 5000.0, 25000.0]}
+                        },
+                        "CdtDbtInd": "CRDT",
+                        "Sts": {
+                            "Cd": "PDNG"
+                        },
+                        "BookgDt": {
+                            "DtTm": {"fake": ["iso8601_datetime", "+1h", "+2h"]}
+                        },
+                        "ValDt": {
+                            "DtTm": {"fake": ["iso8601_datetime", "+1h", "+2h"]}
+                        },
+                        "BkTxCd": {
+                            "Domn": {
+                                "Cd": "PMNT",
+                                "Fmly": {
+                                    "Cd": "RCDT",
+                                    "SubFmlyCd": "ESCT"
+                                }
+                            },
+                            "Prtry": {
+                                "Cd": "INSTANT_PAYMENT",
+                                "Issr": "SCT_INST"
+                            }
+                        },
+                        "NtryDtls": [
+                            {
+                                "TxDtls": [
+                                    {
+                                        "Refs": {
+                                            "AcctSvcrRef": {"cat": ["INST-", {"fake": ["i64", 10000000, 99999999]}]},
+                                            "EndToEndId": {"cat": ["E2E-", {"fake": ["i64", 100000000000, 999999999999]}]},
+                                            "UETR": {"fake": ["uuid_v4"]}
+                                        },
+                                        "Amt": {
+                                            "@Ccy": "USD",
+                                            "$value": {"fake": ["f64", 5000.0, 25000.0]}
+                                        },
+                                        "CdtDbtInd": "CRDT",
+                                        "RltdPties": {
+                                            "Dbtr": {
+                                                "Nm": {"fake": ["full_name"]}
+                                            }
+                                        },
+                                        "RmtInf": {
+                                            "Ustrd": ["Instant payment - pending settlement"]
+                                        }
+                                    }
+                                ]
+                            }
+                        ],
+                        "AddtlNtryInf": "Real-time payment awaiting final clearing"
+                    },
+                    {
+                        "NtryRef": {"cat": ["BOOK-", {"fake": ["i64", 1000000, 9999999]}]},
+                        "Amt": {
+                            "@Ccy": "USD",
+                            "$value": {"fake": ["f64", 3000.0, 20000.0]}
+                        },
+                        "CdtDbtInd": "DBIT",
+                        "Sts": {
+                            "Cd": "BOOK"
+                        },
+                        "BookgDt": {
+                            "DtTm": {"fake": ["iso8601_datetime", "-3h", "-1h"]}
+                        },
+                        "ValDt": {
+                            "DtTm": {"fake": ["iso8601_datetime", "-3h", "-1h"]}
+                        },
+                        "BkTxCd": {
+                            "Domn": {
+                                "Cd": "PMNT",
+                                "Fmly": {
+                                    "Cd": "ICDT",
+                                    "SubFmlyCd": "PRCT"
+                                }
+                            }
+                        },
+                        "NtryDtls": [
+                            {
+                                "TxDtls": [
+                                    {
+                                        "Refs": {
+                                            "AcctSvcrRef": {"cat": ["WIRE-", {"fake": ["i64", 10000000, 99999999]}]},
+                                            "EndToEndId": {"cat": ["E2E-", {"fake": ["i64", 100000000000, 999999999999]}]}
+                                        },
+                                        "Amt": {
+                                            "@Ccy": "USD",
+                                            "$value": {"fake": ["f64", 3000.0, 20000.0]}
+                                        },
+                                        "CdtDbtInd": "DBIT",
+                                        "RltdPties": {
+                                            "Cdtr": {
+                                                "Nm": {"fake": ["company_name"]}
+                                            }
+                                        },
+                                        "RmtInf": {
+                                            "Ustrd": ["Priority payment completed"]
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "NtryRef": {"cat": ["INFO-", {"fake": ["i64", 1000000, 9999999]}]},
+                        "Amt": {
+                            "@Ccy": "USD",
+                            "$value": {"fake": ["f64", 10000.0, 50000.0]}
+                        },
+                        "CdtDbtInd": "CRDT",
+                        "Sts": {
+                            "Cd": "INFO"
+                        },
+                        "BookgDt": {
+                            "DtTm": {"fake": ["iso8601_datetime", "+3h", "+4h"]}
+                        },
+                        "ValDt": {
+                            "DtTm": {"fake": ["iso8601_datetime", "+3h", "+4h"]}
+                        },
+                        "BkTxCd": {
+                            "Domn": {
+                                "Cd": "PMNT",
+                                "Fmly": {
+                                    "Cd": "RCDT",
+                                    "SubFmlyCd": "XBCT"
+                                }
+                            }
+                        },
+                        "NtryDtls": [
+                            {
+                                "TxDtls": [
+                                    {
+                                        "Refs": {
+                                            "AcctSvcrRef": {"cat": ["EXPECTED-", {"fake": ["i64", 10000000, 99999999]}]},
+                                            "EndToEndId": {"cat": ["E2E-", {"fake": ["i64", 100000000000, 999999999999]}]}
+                                        },
+                                        "Amt": {
+                                            "@Ccy": "USD",
+                                            "$value": {"fake": ["f64", 10000.0, 50000.0]}
+                                        },
+                                        "CdtDbtInd": "CRDT",
+                                        "RltdPties": {
+                                            "Dbtr": {
+                                                "Nm": {"fake": ["company_name"]}
+                                            }
+                                        },
+                                        "RmtInf": {
+                                            "Ustrd": ["Expected incoming payment - pre-advised"]
+                                        }
+                                    }
+                                ]
+                            }
+                        ],
+                        "AddtlNtryInf": "Payment expected - not yet received"
+                    }
+                ],
+                "AddtlStmtInf": "Intraday interim statement - positions subject to change"
+            }
+        ]
+    }
+}

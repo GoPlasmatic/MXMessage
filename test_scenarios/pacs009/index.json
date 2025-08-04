@@ -1,0 +1,78 @@
+{
+    "message_type": "pacs.009.001.08",
+    "description": "FI to FI Financial Institution Credit Transfer",
+    "scenarios": [
+        {
+            "file": "standard.json",
+            "description": "Standard cover payment"
+        },
+        {
+            "file": "cbpr_cov_standard.json",
+            "description": "CBPR+ compliant standard cover payment"
+        },
+        {
+            "file": "cbpr_cov_complex_routing.json",
+            "description": "CBPR+ cover payment with complex routing"
+        },
+        {
+            "file": "cbpr_cov_compliance_enhanced.json",
+            "description": "CBPR+ cover payment with enhanced compliance"
+        },
+        {
+            "file": "cbpr_cov_rejection.json",
+            "description": "CBPR+ cover payment rejection"
+        },
+        {
+            "file": "cbpr_cov_return.json",
+            "description": "CBPR+ cover payment return"
+        },
+        {
+            "file": "cbpr_serial_payment.json",
+            "description": "CBPR+ serial payment through correspondent"
+        },
+        {
+            "file": "cov_mismatch.json",
+            "description": "Cover payment with mismatch"
+        },
+        {
+            "file": "fi_to_fi_transparency.json",
+            "description": "FI to FI payment with full transparency"
+        },
+        {
+            "file": "bank_transfer_cover.json",
+            "description": "Bank transfer with cover (MT205)"
+        },
+        {
+            "file": "bank_transfer_non_cover.json",
+            "description": "Bank transfer non-cover (MT205)"
+        },
+        {
+            "file": "regulatory_reporting.json",
+            "description": "Payment with regulatory reporting (MT205)"
+        },
+        {
+            "file": "rejection_payment.json",
+            "description": "Rejection of FI payment (MT205)"
+        },
+        {
+            "file": "return_payment.json",
+            "description": "Return of FI payment (MT205)"
+        },
+        {
+            "file": "urgent_liquidity_transfer.json",
+            "description": "Urgent liquidity transfer (MT205)"
+        },
+        {
+            "file": "minimal_return.json",
+            "description": "Minimal return payment (MT202)"
+        },
+        {
+            "file": "return.json",
+            "description": "Return payment with full details (MT202)"
+        },
+        {
+            "file": "return_simple.json",
+            "description": "Simple return payment (MT202)"
+        }
+    ]
+}

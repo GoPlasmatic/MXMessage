@@ -1,0 +1,177 @@
+{
+    "variables": {
+        "msg_id": {"cat": ["MSG", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "original_msg_id": {"cat": ["ORIG-", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "uetr": {"fake": ["uuid"]},
+        "transaction_id": {"cat": ["TXN", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "instruction_id": {"cat": ["INSTR", {"fake": ["i64", 10000000, 99999999]}]},
+        "end_to_end_id": {"cat": ["E2E", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "amount": {"fake": ["f64", 250000.0, 10000000.0]},
+        "cancellation_id": {"cat": ["URG-CANC-", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "sender_bic": {"fake": ["bic"]},
+        "receiver_bic": {"fake": ["bic"]},
+        "sender_lei": {"fake": ["lei"]},
+        "receiver_lei": {"fake": ["lei"]},
+        "original_date": {"fake": ["date", "%Y-%m-%d", "-0d", "-0d"]}
+    },
+    "schema": {
+        "Assgnmt": {
+            "Id": {"var": "msg_id"},
+            "Assgnr": {
+                "Agt": {
+                    "FinInstnId": {
+                        "BICFI": {"var": "sender_bic"},
+                        "LEI": {"var": "sender_lei"}
+                    }
+                }
+            },
+            "Assgne": {
+                "Agt": {
+                    "FinInstnId": {
+                        "BICFI": {"var": "receiver_bic"},
+                        "LEI": {"var": "receiver_lei"}
+                    }
+                }
+            },
+            "CreDtTm": {"var": "creation_datetime"}
+        },
+        "CtrlData": {
+            "NbOfTxs": "1",
+            "CtrlSum": {"var": "amount"}
+        },
+        "Undrlyg": [
+            {
+                "TxInf": {
+                    "CxlId": {"var": "cancellation_id"},
+                    "OrgnlGrpInf": {
+                        "OrgnlMsgId": {"var": "original_msg_id"},
+                        "OrgnlMsgNmId": "pacs.009.001.08",
+                        "OrgnlCreDtTm": {"fake": ["iso8601_datetime", "-2h", "-1h"]}
+                    },
+                    "OrgnlInstrId": {"var": "instruction_id"},
+                    "OrgnlEndToEndId": {"var": "end_to_end_id"},
+                    "OrgnlTxId": {"var": "transaction_id"},
+                    "OrgnlUETR": {"var": "uetr"},
+                    "OrgnlIntrBkSttlmAmt": {
+                        "@Ccy": "USD",
+                        "$value": {"var": "amount"}
+                    },
+                    "OrgnlIntrBkSttlmDt": {"var": "original_date"},
+                    "CxlRsnInf": [
+                        {
+                            "Orgtr": {
+                                "Nm": "Treasury Operations",
+                                "Id": {
+                                    "OrgId": {
+                                        "AnyBIC": {"var": "sender_bic"}
+                                    }
+                                }
+                            },
+                            "Rsn": {
+                                "Cd": "TECH"
+                            },
+                            "AddtlInf": [
+                                "URGENT CANCELLATION REQUIRED",
+                                "Wrong amount entered - decimal error",
+                                "Cover payment sent with incorrect amount",
+                                "Immediate action required to prevent loss"
+                            ]
+                        }
+                    ],
+                    "OrgnlTxRef": {
+                        "IntrBkSttlmAmt": {
+                            "@Ccy": "USD",
+                            "$value": {"var": "amount"}
+                        },
+                        "IntrBkSttlmDt": {"var": "original_date"},
+                        "SttlmInf": {
+                            "SttlmMtd": "INDA",
+                            "SttlmPrty": "URGT",
+                            "ClrSys": {
+                                "Cd": "RTG"
+                            }
+                        },
+                        "PmtTpInf": {
+                            "InstrPrty": "URGT",
+                            "SvcLvl": [
+                                {"Cd": "URGP"}
+                            ],
+                            "LclInstrm": {
+                                "Prtry": "COVER_PAYMENT"
+                            }
+                        },
+                        "RmtInf": {
+                            "Ustrd": [
+                                "MT202 cover payment",
+                                "URGENT - Amount error detected"
+                            ]
+                        },
+                        "Dbtr": {
+                            "FinInstnId": {
+                                "BICFI": {"var": "sender_bic"},
+                                "LEI": {"var": "sender_lei"},
+                                "Nm": {"fake": ["company_name"]}
+                            }
+                        },
+                        "DbtrAcct": {
+                            "Id": {
+                                "Othr": {
+                                    "Id": {"cat": ["NOSTRO-", {"fake": ["i64", 100000, 999999]}]},
+                                    "SchmeNm": {
+                                        "Prtry": "NOSTRO_ACCOUNT"
+                                    }
+                                }
+                            },
+                            "Ccy": "USD"
+                        },
+                        "DbtrAgt": {
+                            "FinInstnId": {
+                                "BICFI": {"var": "sender_bic"},
+                                "LEI": {"var": "sender_lei"}
+                            }
+                        },
+                        "CdtrAgt": {
+                            "FinInstnId": {
+                                "BICFI": {"var": "receiver_bic"},
+                                "LEI": {"var": "receiver_lei"}
+                            }
+                        },
+                        "Cdtr": {
+                            "FinInstnId": {
+                                "BICFI": {"var": "receiver_bic"},
+                                "LEI": {"var": "receiver_lei"},
+                                "Nm": {"fake": ["company_name"]}
+                            }
+                        },
+                        "CdtrAcct": {
+                            "Id": {
+                                "Othr": {
+                                    "Id": {"cat": ["VOSTRO-", {"fake": ["i64", 100000, 999999]}]},
+                                    "SchmeNm": {
+                                        "Prtry": "VOSTRO_ACCOUNT"
+                                    }
+                                }
+                            },
+                            "Ccy": "USD"
+                        }
+                    },
+                    "SplmtryData": [
+                        {
+                            "PlcAndNm": "UrgentAction",
+                            "Envlp": {
+                                "Document": {
+                                    "Prtry": {
+                                        "Tp": "CRITICAL_PRIORITY",
+                                        "Id": "IMMEDIATE_ACTION",
+                                        "Issr": {"cat": ["Time: ", {"fake": ["time", "%H:%M:%S"]}]}
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}

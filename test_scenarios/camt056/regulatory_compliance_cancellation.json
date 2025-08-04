@@ -1,0 +1,201 @@
+{
+    "variables": {
+        "msg_id": {"cat": ["MSG", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "original_msg_id": {"cat": ["ORIG-", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "uetr": {"fake": ["uuid"]},
+        "transaction_id": {"cat": ["TXN", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "instruction_id": {"cat": ["INSTR", {"fake": ["i64", 10000000, 99999999]}]},
+        "end_to_end_id": {"cat": ["E2E", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "amount": {"fake": ["f64", 100000.0, 5000000.0]},
+        "cancellation_id": {"cat": ["COMP-CANC-", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "compliance_ref": {"cat": ["OFAC-", {"fake": ["i64", 2024000000, 2024999999]}]},
+        "sender_bic": {"fake": ["bic"]},
+        "receiver_bic": {"fake": ["bic"]},
+        "sender_lei": {"fake": ["lei"]},
+        "receiver_lei": {"fake": ["lei"]},
+        "original_date": {"fake": ["date", "%Y-%m-%d", "-2d", "-1d"]}
+    },
+    "schema": {
+        "Assgnmt": {
+            "Id": {"var": "msg_id"},
+            "Assgnr": {
+                "Agt": {
+                    "FinInstnId": {
+                        "BICFI": {"var": "sender_bic"},
+                        "LEI": {"var": "sender_lei"}
+                    }
+                }
+            },
+            "Assgne": {
+                "Agt": {
+                    "FinInstnId": {
+                        "BICFI": {"var": "receiver_bic"},
+                        "LEI": {"var": "receiver_lei"}
+                    }
+                }
+            },
+            "CreDtTm": {"var": "creation_datetime"}
+        },
+        "CtrlData": {
+            "NbOfTxs": "1",
+            "CtrlSum": {"var": "amount"}
+        },
+        "Undrlyg": [
+            {
+                "TxInf": {
+                    "CxlId": {"var": "cancellation_id"},
+                    "OrgnlGrpInf": {
+                        "OrgnlMsgId": {"var": "original_msg_id"},
+                        "OrgnlMsgNmId": "pacs.008.001.08",
+                        "OrgnlCreDtTm": {"fake": ["iso8601_datetime", "-48h", "-24h"]}
+                    },
+                    "OrgnlInstrId": {"var": "instruction_id"},
+                    "OrgnlEndToEndId": {"var": "end_to_end_id"},
+                    "OrgnlTxId": {"var": "transaction_id"},
+                    "OrgnlUETR": {"var": "uetr"},
+                    "OrgnlIntrBkSttlmAmt": {
+                        "@Ccy": "USD",
+                        "$value": {"var": "amount"}
+                    },
+                    "OrgnlIntrBkSttlmDt": {"var": "original_date"},
+                    "CxlRsnInf": [
+                        {
+                            "Orgtr": {
+                                "Nm": "Regulatory Compliance",
+                                "Id": {
+                                    "OrgId": {
+                                        "Othr": [
+                                            {
+                                                "Id": "COMPLIANCE",
+                                                "SchmeNm": {
+                                                    "Cd": "BANK"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            },
+                            "Rsn": {
+                                "Cd": "DUPL"
+                            },
+                            "AddtlInf": [
+                                "Regulatory compliance requirement",
+                                "Sanctions screening hit - investigation required",
+                                {"cat": ["Compliance reference: ", {"var": "compliance_ref"}]},
+                                "Payment frozen pending investigation"
+                            ]
+                        }
+                    ],
+                    "OrgnlTxRef": {
+                        "IntrBkSttlmAmt": {
+                            "@Ccy": "USD",
+                            "$value": {"var": "amount"}
+                        },
+                        "IntrBkSttlmDt": {"var": "original_date"},
+                        "SttlmInf": {
+                            "SttlmMtd": "INDA",
+                            "ClrSys": {
+                                "Cd": "ILF"
+                            }
+                        },
+                        "PmtTpInf": {
+                            "InstrPrty": "HIGH",
+                            "SvcLvl": [
+                                {"Cd": "G001"}
+                            ],
+                            "CtgyPurp": {
+                                "Cd": "INTC"
+                            }
+                        },
+                        "RgltryRptg": [
+                            {
+                                "Dtls": [
+                                    {
+                                        "Tp": "BOTH",
+                                        "Dt": {"var": "original_date"},
+                                        "Ctry": "US",
+                                        "Cd": "SANC",
+                                        "Amt": {
+                                            "@Ccy": "USD",
+                                            "$value": {"var": "amount"}
+                                        },
+                                        "Inf": ["OFAC screening required", {"var": "compliance_ref"}]
+                                    }
+                                ]
+                            }
+                        ],
+                        "RmtInf": {
+                            "Ustrd": ["International wire transfer - compliance review"]
+                        },
+                        "Dbtr": {
+                            "Nm": {"fake": ["company_name"]},
+                            "PstlAdr": {
+                                "Ctry": {"fake": ["country_code"]}
+                            },
+                            "Id": {
+                                "OrgId": {
+                                    "LEI": {"fake": ["lei"]}
+                                }
+                            }
+                        },
+                        "DbtrAcct": {
+                            "Id": {
+                                "IBAN": {"fake": ["iban"]}
+                            }
+                        },
+                        "DbtrAgt": {
+                            "FinInstnId": {
+                                "BICFI": {"var": "sender_bic"},
+                                "LEI": {"var": "sender_lei"}
+                            }
+                        },
+                        "CdtrAgt": {
+                            "FinInstnId": {
+                                "BICFI": {"var": "receiver_bic"},
+                                "LEI": {"var": "receiver_lei"}
+                            }
+                        },
+                        "Cdtr": {
+                            "Nm": {"fake": ["company_name"]},
+                            "PstlAdr": {
+                                "Ctry": {"fake": ["country_code"]}
+                            },
+                            "Id": {
+                                "OrgId": {
+                                    "Othr": [
+                                        {
+                                            "Id": "UNDER_REVIEW",
+                                            "SchmeNm": {
+                                                "Prtry": "COMPLIANCE_STATUS"
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        "CdtrAcct": {
+                            "Id": {
+                                "IBAN": {"fake": ["iban"]}
+                            }
+                        }
+                    },
+                    "SplmtryData": [
+                        {
+                            "PlcAndNm": "ComplianceData",
+                            "Envlp": {
+                                "Document": {
+                                    "Prtry": {
+                                        "Tp": "REGULATORY_HOLD",
+                                        "Id": {"var": "compliance_ref"},
+                                        "Issr": "OFAC_SANCTIONS"
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}

@@ -1,0 +1,105 @@
+{
+    "variables": {
+        "msg_id": {"cat": ["LOAN-ADJ-", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "related_msg_id": {"cat": ["LOAN-NOTIF-", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "loan_account": {"cat": ["LOAN-", {"fake": ["i64", 10000000, 99999999]}]},
+        "sender_bic": {"fake": ["bic"]},
+        "receiver_bic": {"fake": ["bic"]},
+        "customer_name": {"fake": ["full_name"]},
+        "customer_id": {"cat": ["CUST-", {"fake": ["i64", 100000, 999999]}]},
+        "old_rate": {"fake": ["f64", 4.5, 6.5]},
+        "new_rate": {"fake": ["f64", 5.0, 7.0]},
+        "adjustment_amount": {"fake": ["f64", 50.0, 500.0]},
+        "old_payment": {"fake": ["f64", 1000.0, 5000.0]},
+        "new_payment": {"fake": ["f64", 1050.0, 5250.0]},
+        "outstanding_balance": {"fake": ["f64", 50000.0, 500000.0]},
+        "adjustment_date": {"fake": ["date", "%Y-%m-%d", "+30d", "+30d"]},
+        "next_review_date": {"fake": ["date", "%Y-%m-%d", "+365d", "+365d"]}
+    },
+    "schema": {
+        "Assgnmt": {
+            "Id": {"var": "msg_id"},
+            "Assgnr": {
+                "Agt": {
+                    "FinInstnId": {
+                        "BICFI": {"var": "sender_bic"}
+                    }
+                }
+            },
+            "Assgne": {
+                "Agt": {
+                    "FinInstnId": {
+                        "BICFI": {"var": "receiver_bic"}
+                    }
+                }
+            },
+            "CreDtTm": {"var": "creation_datetime"}
+        },
+        "Rct": {
+            "RltdMsgRcpt": {
+                "RcptId": {"var": "related_msg_id"},
+                "RcptDtTm": {"var": "creation_datetime"},
+                "RltdRef": {
+                    "Ref": {"var": "loan_account"}
+                }
+            }
+        },
+        "SplmtryData": [
+            {
+                "Envlp": {
+                    "LoanRateAdjustment": {
+                        "AdjustmentType": "VARIABLE_RATE_CHANGE",
+                        "Customer": {
+                            "Name": {"var": "customer_name"},
+                            "Id": {"var": "customer_id"}
+                        },
+                        "LoanDetails": {
+                            "AccountNumber": {"var": "loan_account"},
+                            "ProductType": "VARIABLE_RATE_MORTGAGE",
+                            "OutstandingBalance": {"var": "outstanding_balance"},
+                            "Currency": "USD",
+                            "MaturityDate": {"fake": ["date", "%Y-%m-%d", "+5y", "+25y"]}
+                        },
+                        "RateAdjustment": {
+                            "OldRate": {"var": "old_rate"},
+                            "NewRate": {"var": "new_rate"},
+                            "RateType": "VARIABLE",
+                            "IndexRate": "PRIME",
+                            "Margin": 1.50,
+                            "AdjustmentReason": "Prime rate change",
+                            "EffectiveDate": {"var": "adjustment_date"}
+                        },
+                        "PaymentImpact": {
+                            "OldMonthlyPayment": {"var": "old_payment"},
+                            "NewMonthlyPayment": {"var": "new_payment"},
+                            "MonthlyIncrease": {"var": "adjustment_amount"},
+                            "PaymentFrequency": "MONTHLY",
+                            "NextPaymentDate": {"fake": ["date", "%Y-%m-%d", "+1M", "+1M"]}
+                        },
+                        "Terms": {
+                            "RateCapFloor": {
+                                "Cap": 10.0,
+                                "Floor": 2.0,
+                                "LifetimeCap": 12.0
+                            },
+                            "NextReviewDate": {"var": "next_review_date"},
+                            "PrepaymentOption": "ALLOWED_WITH_PENALTY"
+                        },
+                        "CustomerOptions": [
+                            "Accept rate adjustment",
+                            "Refinance to fixed rate",
+                            "Make additional principal payment",
+                            "Request payment restructuring"
+                        ],
+                        "ContactInformation": {
+                            "Department": "Loan Servicing",
+                            "Phone": {"fake": ["phone_number"]},
+                            "Email": {"cat": ["loanservicing@", {"fake": ["domain_name"]}]}
+                        }
+                    }
+                }
+            }
+        ]
+    }
+}

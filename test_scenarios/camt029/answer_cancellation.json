@@ -1,0 +1,128 @@
+{
+    "variables": {
+        "msg_id": {"cat": ["CANC-RSP-", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "original_msg_id": {"cat": ["CANC-REQ-", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "investigation_id": {"cat": ["INV-", {"fake": ["i64", 1000000000, 9999999999]}]},
+        "original_payment_id": {"cat": ["PMT-", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "original_uetr": {"fake": ["uuid_v4"]},
+        "cancellation_amount": {"fake": ["f64", 10000.0, 500000.0]},
+        "original_date": {"fake": ["date", "%Y-%m-%d", "-5d", "-2d"]},
+        "resolution_date": {"fake": ["iso8601_datetime"]},
+        "responder_bic": {"fake": ["bic"]},
+        "originator_bic": {"fake": ["bic"]}
+    },
+    "schema": {
+        "Assgnmt": {
+            "Id": {"var": "msg_id"},
+            "Assgnr": {
+                "Agt": {
+                    "FinInstnId": {
+                        "BICFI": {"var": "responder_bic"}
+                    }
+                }
+            },
+            "Assgne": {
+                "Agt": {
+                    "FinInstnId": {
+                        "BICFI": {"var": "originator_bic"}
+                    }
+                }
+            },
+            "CreDtTm": {"var": "creation_datetime"}
+        },
+        "RsltnOfInvstgtn": {
+            "Sts": {
+                "Conf": "CANC"
+            },
+            "CxlDtls": [
+                {
+                    "OrgnlGrpInfAndSts": {
+                        "OrgnlMsgId": {"var": "original_payment_id"},
+                        "OrgnlMsgNmId": "pacs.008",
+                        "OrgnlCreDtTm": {"cat": [{"var": "original_date"}, "T10:00:00Z"]}
+                    },
+                    "TxInfAndSts": [
+                        {
+                            "CxlStsId": {"var": "investigation_id"},
+                            "OrgnlGrpInf": {
+                                "OrgnlMsgId": {"var": "original_payment_id"},
+                                "OrgnlMsgNmId": "pacs.008"
+                            },
+                            "OrgnlInstrId": {"var": "original_payment_id"},
+                            "OrgnlEndToEndId": {"cat": ["E2E-", {"var": "original_payment_id"}]},
+                            "OrgnlUETR": {"var": "original_uetr"},
+                            "TxCxlSts": "ACCR",
+                            "CxlStsRsnInf": [
+                                {
+                                    "Orgtr": {
+                                        "Id": {
+                                            "OrgId": {
+                                                "AnyBIC": {"var": "originator_bic"}
+                                            }
+                                        }
+                                    },
+                                    "Rsn": {
+                                        "Cd": "CUST"
+                                    },
+                                    "AddtlInf": ["Cancellation requested by customer", "Funds returned to originator"]
+                                }
+                            ],
+                            "OrgnlTxRef": {
+                                "IntrBkSttlmAmt": {
+                                    "@Ccy": "USD",
+                                    "$value": {"var": "cancellation_amount"}
+                                },
+                                "IntrBkSttlmDt": {"var": "original_date"},
+                                "Dbtr": {
+                                    "Nm": {"fake": ["company_name"]}
+                                },
+                                "DbtrAcct": {
+                                    "Id": {
+                                        "IBAN": {"fake": ["iban"]}
+                                    }
+                                },
+                                "DbtrAgt": {
+                                    "FinInstnId": {
+                                        "BICFI": {"var": "originator_bic"}
+                                    }
+                                },
+                                "CdtrAgt": {
+                                    "FinInstnId": {
+                                        "BICFI": {"var": "responder_bic"}
+                                    }
+                                },
+                                "Cdtr": {
+                                    "Nm": {"fake": ["company_name"]}
+                                },
+                                "CdtrAcct": {
+                                    "Id": {
+                                        "IBAN": {"fake": ["iban"]}
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                }
+            ],
+            "ModDtls": {
+                "OrgnlGrpInf": {
+                    "OrgnlMsgId": {"var": "original_payment_id"},
+                    "OrgnlMsgNmId": "pacs.008"
+                }
+            }
+        },
+        "SplmtryData": [
+            {
+                "Envlp": {
+                    "CancellationDetails": {
+                        "ResolutionTime": {"var": "resolution_date"},
+                        "RefundMethod": "ORIGINAL_CHANNEL",
+                        "RefundReference": {"cat": ["REFUND-", {"fake": ["i64", 10000000, 99999999]}]},
+                        "ProcessingNotes": "Payment successfully cancelled and funds returned"
+                    }
+                }
+            }
+        ]
+    }
+}

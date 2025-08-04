@@ -1,0 +1,292 @@
+{
+    "variables": {
+        "msg_id": {"cat": ["MSGMULTI", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "company_name": {"fake": ["company_name"]},
+        "pmt_inf_id": {"cat": ["MULTICCY", {"fake": ["i64", 10000000, 99999999]}]},
+        "execution_date": "2024-12-20",
+        "debtor_name": {"fake": ["company_name"]},
+        "debtor_iban": {"fake": ["iban", "DE"]},
+        "debtor_bic": {"fake": ["bic"]},
+        "amount_eur": {"fake": ["f64", 50000.0, 100000.0]},
+        "amount_usd": {"fake": ["f64", 60000.0, 120000.0]},
+        "amount_gbp": {"fake": ["f64", 40000.0, 80000.0]},
+        "amount_chf": {"fake": ["f64", 45000.0, 90000.0]},
+        "amount_jpy": {"fake": ["f64", 5000000.0, 10000000.0]}
+    },
+    "schema": {
+        "GrpHdr": {
+            "MsgId": {"var": "msg_id"},
+            "CreDtTm": {"var": "creation_datetime"},
+            "NbOfTxs": "5",
+            "InitgPty": {
+                "Nm": {"var": "company_name"},
+                "Id": {
+                    "OrgId": {
+                        "AnyBIC": {"var": "debtor_bic"}
+                    }
+                }
+            }
+        },
+        "PmtInf": {
+            "PmtInfId": {"var": "pmt_inf_id"},
+            "PmtMtd": "TRF",
+            "BtchBookg": false,
+            "PmtTpInf": {
+                "InstrPrty": "NORM",
+                "SvcLvl": [
+                    {
+                        "Cd": "G001"
+                    }
+                ]
+            },
+            "ReqdExctnDt": {
+                "Dt": {"var": "execution_date"}
+            },
+            "Dbtr": {
+                "Nm": {"var": "debtor_name"},
+                "PstlAdr": {
+                    "Ctry": "DE"
+                }
+            },
+            "DbtrAcct": {
+                "Id": {
+                    "IBAN": {"var": "debtor_iban"}
+                },
+                "Tp": {
+                    "Cd": "CACC"
+                }
+            },
+            "DbtrAgt": {
+                "FinInstnId": {
+                    "BICFI": {"var": "debtor_bic"}
+                }
+            },
+            "CdtTrfTxInf": [
+                {
+                    "PmtId": {
+                        "InstrId": {"cat": ["MCCYEUR", {"fake": ["i64", 100001, 999999]}]},
+                        "EndToEndId": {"cat": ["E2EMCCY", {"fake": ["i64", 100000000000, 999999999999]}]}
+                    },
+                    "Amt": {
+                        "InstdAmt": {
+                            "@Ccy": "EUR",
+                            "$value": {"var": "amount_eur"}
+                        }
+                    },
+                    "XchgRateInf": {
+                        "UnitCcy": "EUR",
+                        "XchgRate": 1.0000,
+                        "RateTp": "SPOT"
+                    },
+                    "CdtrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {"fake": ["bic"]}
+                        }
+                    },
+                    "Cdtr": {
+                        "Nm": {"fake": ["company_name"]},
+                        "PstlAdr": {
+                            "Ctry": "FR"
+                        }
+                    },
+                    "CdtrAcct": {
+                        "Id": {
+                            "IBAN": {"fake": ["iban", "FR"]}
+                        }
+                    },
+                    "Purp": {
+                        "Cd": "TREA"
+                    },
+                    "RmtInf": {
+                        "Ustrd": "EUR Payment - Treasury Transfer"
+                    }
+                },
+                {
+                    "PmtId": {
+                        "InstrId": {"cat": ["MCCYUSD", {"fake": ["i64", 100001, 999999]}]},
+                        "EndToEndId": {"cat": ["E2EMCCY", {"fake": ["i64", 100000000000, 999999999999]}]}
+                    },
+                    "Amt": {
+                        "InstdAmt": {
+                            "@Ccy": "USD",
+                            "$value": {"var": "amount_usd"}
+                        }
+                    },
+                    "XchgRateInf": {
+                        "UnitCcy": "EUR",
+                        "XchgRate": 1.0823,
+                        "RateTp": "SPOT"
+                    },
+                    "CdtrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {"fake": ["bic"]},
+                            "ClrSysMmbId": {
+                                "ClrSysId": {
+                                    "Cd": "USABA"
+                                },
+                                "MmbId": {"fake": ["i64", 100000000, 999999999]}
+                            }
+                        }
+                    },
+                    "Cdtr": {
+                        "Nm": {"fake": ["company_name"]},
+                        "PstlAdr": {
+                            "Ctry": "US"
+                        }
+                    },
+                    "CdtrAcct": {
+                        "Id": {
+                            "Othr": {
+                                "Id": {"cat": [{"fake": ["i64", 1000000000, 9999999999]}]},
+                                "SchmeNm": {
+                                    "Cd": "BBAN"
+                                }
+                            }
+                        }
+                    },
+                    "Purp": {
+                        "Cd": "TREA"
+                    },
+                    "RmtInf": {
+                        "Ustrd": "USD Payment - International Transfer"
+                    }
+                },
+                {
+                    "PmtId": {
+                        "InstrId": {"cat": ["MCCYGBP", {"fake": ["i64", 100001, 999999]}]},
+                        "EndToEndId": {"cat": ["E2EMCCY", {"fake": ["i64", 100000000000, 999999999999]}]}
+                    },
+                    "Amt": {
+                        "InstdAmt": {
+                            "@Ccy": "GBP",
+                            "$value": {"var": "amount_gbp"}
+                        }
+                    },
+                    "XchgRateInf": {
+                        "UnitCcy": "EUR",
+                        "XchgRate": 0.8567,
+                        "RateTp": "SPOT"
+                    },
+                    "CdtrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {"fake": ["bic"]},
+                            "ClrSysMmbId": {
+                                "ClrSysId": {
+                                    "Cd": "GBDSC"
+                                },
+                                "MmbId": {"fake": ["i64", 100000, 999999]}
+                            }
+                        }
+                    },
+                    "Cdtr": {
+                        "Nm": {"fake": ["company_name"]},
+                        "PstlAdr": {
+                            "Ctry": "GB"
+                        }
+                    },
+                    "CdtrAcct": {
+                        "Id": {
+                            "IBAN": {"fake": ["iban", "GB"]}
+                        }
+                    },
+                    "Purp": {
+                        "Cd": "TREA"
+                    },
+                    "RmtInf": {
+                        "Ustrd": "GBP Payment - UK Branch Transfer"
+                    }
+                },
+                {
+                    "PmtId": {
+                        "InstrId": {"cat": ["MCCYCHF", {"fake": ["i64", 100001, 999999]}]},
+                        "EndToEndId": {"cat": ["E2EMCCY", {"fake": ["i64", 100000000000, 999999999999]}]}
+                    },
+                    "Amt": {
+                        "InstdAmt": {
+                            "@Ccy": "CHF",
+                            "$value": {"var": "amount_chf"}
+                        }
+                    },
+                    "XchgRateInf": {
+                        "UnitCcy": "EUR",
+                        "XchgRate": 0.9821,
+                        "RateTp": "SPOT"
+                    },
+                    "CdtrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {"fake": ["bic"]}
+                        }
+                    },
+                    "Cdtr": {
+                        "Nm": {"fake": ["company_name"]},
+                        "PstlAdr": {
+                            "Ctry": "CH"
+                        }
+                    },
+                    "CdtrAcct": {
+                        "Id": {
+                            "IBAN": {"fake": ["iban", "CH"]}
+                        }
+                    },
+                    "Purp": {
+                        "Cd": "TREA"
+                    },
+                    "RmtInf": {
+                        "Ustrd": "CHF Payment - Swiss Operations"
+                    }
+                },
+                {
+                    "PmtId": {
+                        "InstrId": {"cat": ["MCCYJPY", {"fake": ["i64", 100001, 999999]}]},
+                        "EndToEndId": {"cat": ["E2EMCCY", {"fake": ["i64", 100000000000, 999999999999]}]}
+                    },
+                    "Amt": {
+                        "InstdAmt": {
+                            "@Ccy": "JPY",
+                            "$value": {"var": "amount_jpy"}
+                        }
+                    },
+                    "XchgRateInf": {
+                        "UnitCcy": "EUR",
+                        "XchgRate": 158.4231,
+                        "RateTp": "SPOT"
+                    },
+                    "CdtrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {"fake": ["bic"]},
+                            "ClrSysMmbId": {
+                                "ClrSysId": {
+                                    "Cd": "JPZZJ"
+                                },
+                                "MmbId": {"cat": [{"fake": ["i64", 1000, 9999]}]}
+                            }
+                        }
+                    },
+                    "Cdtr": {
+                        "Nm": {"fake": ["company_name"]},
+                        "PstlAdr": {
+                            "Ctry": "JP"
+                        }
+                    },
+                    "CdtrAcct": {
+                        "Id": {
+                            "Othr": {
+                                "Id": {"cat": [{"fake": ["i64", 1000000, 9999999]}, "-", {"fake": ["i64", 10000000, 99999999]}]},
+                                "SchmeNm": {
+                                    "Cd": "BBAN"
+                                }
+                            }
+                        }
+                    },
+                    "Purp": {
+                        "Cd": "TREA"
+                    },
+                    "RmtInf": {
+                        "Ustrd": "JPY Payment - Asia Pacific Operations"
+                    }
+                }
+            ]
+        }
+    }
+}

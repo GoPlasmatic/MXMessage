@@ -1,0 +1,545 @@
+{
+    "variables": {
+        "msg_id": {"cat": ["MSGSAL", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "company_name": {"fake": ["company_name"]},
+        "company_id": {"cat": ["DE", {"fake": ["i64", 100000000, 999999999]}]},
+        "pmt_inf_id": {"cat": ["SAL", {"fake": ["i64", 202401, 202412]}]},
+        "execution_date": "2024-12-28",
+        "debtor_name": {"fake": ["company_name"]},
+        "debtor_iban": {"fake": ["iban", "DE"]},
+        "debtor_bic": {"fake": ["bic"]},
+        "total_salary": {"fake": ["f64", 100000.0, 300000.0]}
+    },
+    "schema": {
+        "GrpHdr": {
+            "MsgId": {"var": "msg_id"},
+            "CreDtTm": {"var": "creation_datetime"},
+            "NbOfTxs": "8",
+            "CtrlSum": {"var": "total_salary"},
+            "InitgPty": {
+                "Nm": {"var": "company_name"},
+                "Id": {
+                    "OrgId": {
+                        "Othr": [
+                            {
+                                "Id": {"var": "company_id"},
+                                "SchmeNm": {
+                                    "Cd": "TXID"
+                                }
+                            }
+                        ]
+                    }
+                }
+            }
+        },
+        "PmtInf": {
+            "PmtInfId": {"var": "pmt_inf_id"},
+            "PmtMtd": "TRF",
+            "BtchBookg": true,
+            "NbOfTxs": "8",
+            "CtrlSum": {"var": "total_salary"},
+            "PmtTpInf": {
+                "InstrPrty": "NORM",
+                "SvcLvl": [
+                    {
+                        "Cd": "SEPA"
+                    }
+                ],
+                "LclInstrm": {
+                    "Cd": "SALA"
+                },
+                "CtgyPurp": {
+                    "Cd": "SALA"
+                }
+            },
+            "ReqdExctnDt": {
+                "Dt": {"var": "execution_date"}
+            },
+            "Dbtr": {
+                "Nm": {"var": "debtor_name"},
+                "PstlAdr": {
+                    "Ctry": "DE",
+                    "AdrLine": [
+                        {"fake": ["street_address"]},
+                        {"cat": [{"fake": ["postcode"]}, " ", {"fake": ["city_name"]}]}
+                    ]
+                }
+            },
+            "DbtrAcct": {
+                "Id": {
+                    "IBAN": {"var": "debtor_iban"}
+                },
+                "Tp": {
+                    "Cd": "CACC"
+                },
+                "Ccy": "EUR",
+                "Nm": "Payroll Account"
+            },
+            "DbtrAgt": {
+                "FinInstnId": {
+                    "BICFI": {"var": "debtor_bic"}
+                }
+            },
+            "ChrgBr": "SLEV",
+            "CdtTrfTxInf": [
+                {
+                    "PmtId": {
+                        "InstrId": {"cat": ["SALINS", {"fake": ["i64", 1000001, 9999999]}]},
+                        "EndToEndId": {"cat": ["SALARY-DEC-", {"fake": ["i64", 10001, 99999]}]}
+                    },
+                    "PmtTpInf": {
+                        "CtgyPurp": {
+                            "Cd": "SALA"
+                        }
+                    },
+                    "Amt": {
+                        "InstdAmt": {
+                            "@Ccy": "EUR",
+                            "$value": {"fake": ["f64", 3500.0, 6500.0]}
+                        }
+                    },
+                    "CdtrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {"fake": ["bic"]}
+                        }
+                    },
+                    "Cdtr": {
+                        "Nm": {"fake": ["name"]},
+                        "PstlAdr": {
+                            "Ctry": "DE",
+                            "AdrLine": [
+                                {"fake": ["street_address"]},
+                                {"cat": [{"fake": ["postcode"]}, " ", {"fake": ["city_name"]}]}
+                            ]
+                        },
+                        "Id": {
+                            "PrvtId": {
+                                "Othr": [
+                                    {
+                                        "Id": {"cat": ["EMP", {"fake": ["i64", 10001, 99999]}]},
+                                        "SchmeNm": {
+                                            "Prtry": "EMPLOYEE_ID"
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "CdtrAcct": {
+                        "Id": {
+                            "IBAN": {"fake": ["iban", "DE"]}
+                        }
+                    },
+                    "Purp": {
+                        "Cd": "SALA"
+                    },
+                    "RmtInf": {
+                        "Ustrd": "Salary December 2024",
+                        "Strd": [
+                            {
+                                "AddtlRmtInf": [
+                                    "Net Salary: EUR 3,500.00",
+                                    "Tax ID: DE123456789"
+                                ]
+                            }
+                        ]
+                    }
+                },
+                {
+                    "PmtId": {
+                        "InstrId": {"cat": ["SALINS", {"fake": ["i64", 1000001, 9999999]}]},
+                        "EndToEndId": {"cat": ["SALARY-DEC-", {"fake": ["i64", 10001, 99999]}]}
+                    },
+                    "PmtTpInf": {
+                        "CtgyPurp": {
+                            "Cd": "SALA"
+                        }
+                    },
+                    "Amt": {
+                        "InstdAmt": {
+                            "@Ccy": "EUR",
+                            "$value": {"fake": ["f64", 4000.0, 8000.0]}
+                        }
+                    },
+                    "CdtrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {"fake": ["bic"]}
+                        }
+                    },
+                    "Cdtr": {
+                        "Nm": {"fake": ["name"]},
+                        "PstlAdr": {
+                            "Ctry": "DE",
+                            "AdrLine": [
+                                {"fake": ["street_address"]},
+                                {"cat": [{"fake": ["postcode"]}, " ", {"fake": ["city_name"]}]}
+                            ]
+                        },
+                        "Id": {
+                            "PrvtId": {
+                                "Othr": [
+                                    {
+                                        "Id": {"cat": ["EMP", {"fake": ["i64", 10001, 99999]}]},
+                                        "SchmeNm": {
+                                            "Prtry": "EMPLOYEE_ID"
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "CdtrAcct": {
+                        "Id": {
+                            "IBAN": {"fake": ["iban", "DE"]}
+                        }
+                    },
+                    "Purp": {
+                        "Cd": "SALA"
+                    },
+                    "RmtInf": {
+                        "Ustrd": "Salary December 2024"
+                    }
+                },
+                {
+                    "PmtId": {
+                        "InstrId": {"cat": ["SALINS", {"fake": ["i64", 1000001, 9999999]}]},
+                        "EndToEndId": {"cat": ["SALARY-DEC-", {"fake": ["i64", 10001, 99999]}]}
+                    },
+                    "PmtTpInf": {
+                        "CtgyPurp": {
+                            "Cd": "SALA"
+                        }
+                    },
+                    "Amt": {
+                        "InstdAmt": {
+                            "@Ccy": "EUR",
+                            "$value": {"fake": ["f64", 5500.0, 12000.0]}
+                        }
+                    },
+                    "CdtrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {"fake": ["bic"]}
+                        }
+                    },
+                    "Cdtr": {
+                        "Nm": {"fake": ["name"]},
+                        "PstlAdr": {
+                            "Ctry": "DE",
+                            "AdrLine": [
+                                {"fake": ["street_address"]},
+                                {"cat": [{"fake": ["postcode"]}, " ", {"fake": ["city_name"]}]}
+                            ]
+                        },
+                        "Id": {
+                            "PrvtId": {
+                                "Othr": [
+                                    {
+                                        "Id": {"cat": ["EMP", {"fake": ["i64", 10001, 99999]}]},
+                                        "SchmeNm": {
+                                            "Prtry": "EMPLOYEE_ID"
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "CdtrAcct": {
+                        "Id": {
+                            "IBAN": {"fake": ["iban", "DE"]}
+                        }
+                    },
+                    "Purp": {
+                        "Cd": "SALA"
+                    },
+                    "RmtInf": {
+                        "Ustrd": "Salary December 2024"
+                    }
+                },
+                {
+                    "PmtId": {
+                        "InstrId": {"cat": ["SALINS", {"fake": ["i64", 1000001, 9999999]}]},
+                        "EndToEndId": {"cat": ["SALARY-DEC-", {"fake": ["i64", 10001, 99999]}]}
+                    },
+                    "PmtTpInf": {
+                        "CtgyPurp": {
+                            "Cd": "SALA"
+                        }
+                    },
+                    "Amt": {
+                        "InstdAmt": {
+                            "@Ccy": "EUR",
+                            "$value": {"fake": ["f64", 7000.0, 15000.0]}
+                        }
+                    },
+                    "CdtrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {"fake": ["bic"]}
+                        }
+                    },
+                    "Cdtr": {
+                        "Nm": {"fake": ["name"]},
+                        "PstlAdr": {
+                            "Ctry": "DE",
+                            "AdrLine": [
+                                {"fake": ["street_address"]},
+                                {"cat": [{"fake": ["postcode"]}, " ", {"fake": ["city_name"]}]}
+                            ]
+                        },
+                        "Id": {
+                            "PrvtId": {
+                                "Othr": [
+                                    {
+                                        "Id": {"cat": ["MGR", {"fake": ["i64", 1001, 9999]}]},
+                                        "SchmeNm": {
+                                            "Prtry": "EMPLOYEE_ID"
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "CdtrAcct": {
+                        "Id": {
+                            "IBAN": {"fake": ["iban", "DE"]}
+                        }
+                    },
+                    "Purp": {
+                        "Cd": "SALA"
+                    },
+                    "RmtInf": {
+                        "Ustrd": "Salary December 2024 - Management"
+                    }
+                },
+                {
+                    "PmtId": {
+                        "InstrId": {"cat": ["SALINS", {"fake": ["i64", 1000001, 9999999]}]},
+                        "EndToEndId": {"cat": ["SALARY-DEC-", {"fake": ["i64", 10001, 99999]}]}
+                    },
+                    "PmtTpInf": {
+                        "CtgyPurp": {
+                            "Cd": "SALA"
+                        }
+                    },
+                    "Amt": {
+                        "InstdAmt": {
+                            "@Ccy": "EUR",
+                            "$value": {"fake": ["f64", 2800.0, 4500.0]}
+                        }
+                    },
+                    "CdtrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {"fake": ["bic"]}
+                        }
+                    },
+                    "Cdtr": {
+                        "Nm": {"fake": ["name"]},
+                        "PstlAdr": {
+                            "Ctry": "DE",
+                            "AdrLine": [
+                                {"fake": ["street_address"]},
+                                {"cat": [{"fake": ["postcode"]}, " ", {"fake": ["city_name"]}]}
+                            ]
+                        },
+                        "Id": {
+                            "PrvtId": {
+                                "Othr": [
+                                    {
+                                        "Id": {"cat": ["INT", {"fake": ["i64", 1001, 9999]}]},
+                                        "SchmeNm": {
+                                            "Prtry": "INTERN_ID"
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "CdtrAcct": {
+                        "Id": {
+                            "IBAN": {"fake": ["iban", "DE"]}
+                        }
+                    },
+                    "Purp": {
+                        "Cd": "SALA"
+                    },
+                    "RmtInf": {
+                        "Ustrd": "Internship Stipend December 2024"
+                    }
+                },
+                {
+                    "PmtId": {
+                        "InstrId": {"cat": ["SALINS", {"fake": ["i64", 1000001, 9999999]}]},
+                        "EndToEndId": {"cat": ["SALARY-DEC-", {"fake": ["i64", 10001, 99999]}]}
+                    },
+                    "PmtTpInf": {
+                        "CtgyPurp": {
+                            "Cd": "SALA"
+                        }
+                    },
+                    "Amt": {
+                        "InstdAmt": {
+                            "@Ccy": "EUR",
+                            "$value": {"fake": ["f64", 3200.0, 5500.0]}
+                        }
+                    },
+                    "CdtrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {"fake": ["bic"]}
+                        }
+                    },
+                    "Cdtr": {
+                        "Nm": {"fake": ["name"]},
+                        "PstlAdr": {
+                            "Ctry": "AT",
+                            "AdrLine": [
+                                {"fake": ["street_address"]},
+                                {"cat": [{"fake": ["postcode"]}, " ", {"fake": ["city_name"]}]}
+                            ]
+                        },
+                        "Id": {
+                            "PrvtId": {
+                                "Othr": [
+                                    {
+                                        "Id": {"cat": ["EMP", {"fake": ["i64", 10001, 99999]}]},
+                                        "SchmeNm": {
+                                            "Prtry": "EMPLOYEE_ID"
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "CdtrAcct": {
+                        "Id": {
+                            "IBAN": {"fake": ["iban", "AT"]}
+                        }
+                    },
+                    "Purp": {
+                        "Cd": "SALA"
+                    },
+                    "RmtInf": {
+                        "Ustrd": "Salary December 2024 - Remote Austria"
+                    }
+                },
+                {
+                    "PmtId": {
+                        "InstrId": {"cat": ["SALINS", {"fake": ["i64", 1000001, 9999999]}]},
+                        "EndToEndId": {"cat": ["SALARY-DEC-", {"fake": ["i64", 10001, 99999]}]}
+                    },
+                    "PmtTpInf": {
+                        "CtgyPurp": {
+                            "Cd": "SALA"
+                        }
+                    },
+                    "Amt": {
+                        "InstdAmt": {
+                            "@Ccy": "EUR",
+                            "$value": {"fake": ["f64", 4500.0, 9000.0]}
+                        }
+                    },
+                    "CdtrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {"fake": ["bic"]}
+                        }
+                    },
+                    "Cdtr": {
+                        "Nm": {"fake": ["name"]},
+                        "PstlAdr": {
+                            "Ctry": "NL",
+                            "AdrLine": [
+                                {"fake": ["street_address"]},
+                                {"cat": [{"fake": ["postcode"]}, " ", {"fake": ["city_name"]}]}
+                            ]
+                        },
+                        "Id": {
+                            "PrvtId": {
+                                "Othr": [
+                                    {
+                                        "Id": {"cat": ["EMP", {"fake": ["i64", 10001, 99999]}]},
+                                        "SchmeNm": {
+                                            "Prtry": "EMPLOYEE_ID"
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "CdtrAcct": {
+                        "Id": {
+                            "IBAN": {"fake": ["iban", "NL"]}
+                        }
+                    },
+                    "Purp": {
+                        "Cd": "SALA"
+                    },
+                    "RmtInf": {
+                        "Ustrd": "Salary December 2024 - Netherlands Office"
+                    }
+                },
+                {
+                    "PmtId": {
+                        "InstrId": {"cat": ["SALINS", {"fake": ["i64", 1000001, 9999999]}]},
+                        "EndToEndId": {"cat": ["SALARY-DEC-", {"fake": ["i64", 10001, 99999]}]}
+                    },
+                    "PmtTpInf": {
+                        "CtgyPurp": {
+                            "Cd": "BONU"
+                        }
+                    },
+                    "Amt": {
+                        "InstdAmt": {
+                            "@Ccy": "EUR",
+                            "$value": {"fake": ["f64", 10000.0, 25000.0]}
+                        }
+                    },
+                    "CdtrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {"fake": ["bic"]}
+                        }
+                    },
+                    "Cdtr": {
+                        "Nm": {"fake": ["name"]},
+                        "PstlAdr": {
+                            "Ctry": "DE",
+                            "AdrLine": [
+                                {"fake": ["street_address"]},
+                                {"cat": [{"fake": ["postcode"]}, " ", {"fake": ["city_name"]}]}
+                            ]
+                        },
+                        "Id": {
+                            "PrvtId": {
+                                "Othr": [
+                                    {
+                                        "Id": {"cat": ["DIR", {"fake": ["i64", 101, 999]}]},
+                                        "SchmeNm": {
+                                            "Prtry": "DIRECTOR_ID"
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "CdtrAcct": {
+                        "Id": {
+                            "IBAN": {"fake": ["iban", "DE"]}
+                        }
+                    },
+                    "Purp": {
+                        "Cd": "BONU"
+                    },
+                    "RmtInf": {
+                        "Ustrd": "Year-End Bonus 2024",
+                        "Strd": [
+                            {
+                                "AddtlRmtInf": [
+                                    "Performance Bonus Q4 2024",
+                                    "Approved by Board Resolution 2024-12-15"
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    }
+}

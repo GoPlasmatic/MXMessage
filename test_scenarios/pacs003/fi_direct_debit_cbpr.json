@@ -1,0 +1,508 @@
+{
+    "variables": {
+        "msg_id": {"cat": ["MSGDDCBPR", {"fake": ["uuid"]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "settlement_date": "2025-01-22",
+        "num_txs": 3,
+        "total_amt": {"fake": ["f64", 50000.0, 150000.0]},
+        "instg_lei": {"fake": ["lei"]},
+        "instd_lei": {"fake": ["lei"]},
+        "instg_bic": {"fake": ["bic"]},
+        "instd_bic": {"fake": ["bic"]}
+    },
+    "schema": {
+        "GrpHdr": {
+            "MsgId": {"var": "msg_id"},
+            "CreDtTm": {"var": "creation_datetime"},
+            "NbOfTxs": {"cat": [{"var": "num_txs"}]},
+            "TtlIntrBkSttlmAmt": {
+                "@Ccy": "EUR",
+                "$value": {"var": "total_amt"}
+            },
+            "IntrBkSttlmDt": {"var": "settlement_date"},
+            "SttlmInf": {
+                "SttlmMtd": "CLRG",
+                "ClrSys": {
+                    "Cd": "TGT"
+                }
+            },
+            "InstgAgt": {
+                "FinInstnId": {
+                    "BICFI": {"var": "instg_bic"},
+                    "LEI": {"var": "instg_lei"}
+                }
+            },
+            "InstdAgt": {
+                "FinInstnId": {
+                    "BICFI": {"var": "instd_bic"},
+                    "LEI": {"var": "instd_lei"}
+                }
+            }
+        },
+        "DrctDbtTxInf": [
+            {
+                "PmtId": {
+                    "EndToEndId": {"cat": ["E2ECBPR", {"fake": ["i64", 100000000000, 999999999999]}]},
+                    "TxId": {"cat": ["TXCBPR", {"fake": ["uuid"]}]},
+                    "UETR": {"fake": ["uuid"]}
+                },
+                "PmtTpInf": {
+                    "InstrPrty": "NORM",
+                    "SvcLvl": [
+                        {
+                            "Cd": "G001"
+                        }
+                    ],
+                    "LclInstrm": {
+                        "Cd": "B2B"
+                    },
+                    "SeqTp": "RCUR",
+                    "CtgyPurp": {
+                        "Cd": "SUPP"
+                    }
+                },
+                "IntrBkSttlmAmt": {
+                    "@Ccy": "EUR",
+                    "$value": {"fake": ["f64", 15000.0, 50000.0]}
+                },
+                "IntrBkSttlmDt": {"var": "settlement_date"},
+                "InstdAmt": {
+                    "@Ccy": "EUR",
+                    "$value": {"fake": ["f64", 15000.0, 50000.0]}
+                },
+                "ChrgBr": "DEBT",
+                "DrctDbtTx": {
+                    "MndtRltdInf": {
+                        "MndtId": {"cat": ["MNDTCBPR", {"fake": ["i64", 1000000, 9999999]}]},
+                        "DtOfSgntr": "2023-06-15",
+                        "AmdmntInd": false,
+                        "ElctrncSgntr": {"cat": ["ESIG-", {"fake": ["uuid"]}]}
+                    },
+                    "CdtrSchmeId": {
+                        "Id": {
+                            "PrvtId": {
+                                "Othr": [
+                                    {
+                                        "Id": {"cat": ["DE", {"fake": ["i64", 10000000, 99999999]}, "ZZZ"]},
+                                        "SchmeNm": {
+                                            "Prtry": "SEPA"
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "PreNtfctnId": {"cat": ["NOTIF", {"fake": ["i64", 100001, 999999]}]},
+                    "PreNtfctnDt": "2025-01-15"
+                },
+                "DbtrAgt": {
+                    "FinInstnId": {
+                        "BICFI": {"fake": ["bic"]},
+                        "LEI": {"fake": ["lei"]}
+                    }
+                },
+                "Dbtr": {
+                    "Nm": {"fake": ["company_name"]},
+                    "PstlAdr": {
+                        "Ctry": "DE",
+                        "AdrLine": [
+                            {"fake": ["street_address"]},
+                            {"cat": [{"fake": ["postcode"]}, " ", {"fake": ["city_name"]}]}
+                        ]
+                    },
+                    "Id": {
+                        "OrgId": {
+                            "LEI": {"fake": ["lei"]},
+                            "Othr": [
+                                {
+                                    "Id": {"cat": ["DE", {"fake": ["i64", 100000000, 999999999]}]},
+                                    "SchmeNm": {
+                                        "Cd": "TXID"
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                },
+                "DbtrAcct": {
+                    "Id": {
+                        "IBAN": {"fake": ["iban", "DE"]}
+                    },
+                    "Tp": {
+                        "Cd": "CACC"
+                    }
+                },
+                "CdtrAgt": {
+                    "FinInstnId": {
+                        "BICFI": {"fake": ["bic"]},
+                        "LEI": {"fake": ["lei"]}
+                    }
+                },
+                "Cdtr": {
+                    "Nm": {"fake": ["company_name"]},
+                    "PstlAdr": {
+                        "Ctry": "FR",
+                        "AdrLine": [
+                            {"fake": ["street_address"]},
+                            {"cat": [{"fake": ["postcode"]}, " ", {"fake": ["city_name"]}]}
+                        ]
+                    },
+                    "Id": {
+                        "OrgId": {
+                            "LEI": {"fake": ["lei"]}
+                        }
+                    }
+                },
+                "CdtrAcct": {
+                    "Id": {
+                        "IBAN": {"fake": ["iban", "FR"]}
+                    },
+                    "Tp": {
+                        "Cd": "CACC"
+                    }
+                },
+                "UltmtCdtr": {
+                    "Nm": {"cat": [{"fake": ["company_name"]}, " Holdings"]},
+                    "Id": {
+                        "OrgId": {
+                            "LEI": {"fake": ["lei"]}
+                        }
+                    }
+                },
+                "RgltryRptg": [
+                    {
+                        "Dtls": [
+                            {
+                                "Tp": "DEBT",
+                                "Dt": "2025-01-22",
+                                "Ctry": "DE",
+                                "Cd": "150",
+                                "Amt": {
+                                    "@Ccy": "EUR",
+                                    "$value": {"fake": ["f64", 15000.0, 50000.0]}
+                                },
+                                "Inf": ["CBPR+ B2B DIRECT DEBIT"]
+                            }
+                        ]
+                    }
+                ],
+                "RmtInf": {
+                    "Strd": [
+                        {
+                            "RfrdDocInf": [
+                                {
+                                    "Tp": {
+                                        "CdOrPrtry": {
+                                            "Cd": "CINV"
+                                        }
+                                    },
+                                    "Nb": {"cat": ["INV-", {"fake": ["i64", 2025001, 2025999]}]},
+                                    "RltdDt": "2025-01-10"
+                                }
+                            ],
+                            "RfrdDocAmt": {
+                                "DuePyblAmt": {
+                                    "@Ccy": "EUR",
+                                    "$value": {"fake": ["f64", 15000.0, 50000.0]}
+                                },
+                                "DscntApldAmt": [
+                                    {
+                                        "@Ccy": "EUR",
+                                        "$value": {"fake": ["f64", 150.0, 500.0]}
+                                    }
+                                ],
+                                "TaxAmt": [
+                                    {
+                                        "@Ccy": "EUR",
+                                        "$value": {"fake": ["f64", 2850.0, 9500.0]}
+                                    }
+                                ]
+                            },
+                            "AddtlRmtInf": [
+                                "Supplier payment - Materials",
+                                "2% discount applied"
+                            ]
+                        }
+                    ]
+                }
+            },
+            {
+                "PmtId": {
+                    "EndToEndId": {"cat": ["E2ECBPR", {"fake": ["i64", 100000000000, 999999999999]}]},
+                    "TxId": {"cat": ["TXCBPR", {"fake": ["uuid"]}]},
+                    "UETR": {"fake": ["uuid"]}
+                },
+                "PmtTpInf": {
+                    "InstrPrty": "HIGH",
+                    "SvcLvl": [
+                        {
+                            "Cd": "G001"
+                        }
+                    ],
+                    "LclInstrm": {
+                        "Cd": "B2B"
+                    },
+                    "SeqTp": "RCUR",
+                    "CtgyPurp": {
+                        "Cd": "INTC"
+                    }
+                },
+                "IntrBkSttlmAmt": {
+                    "@Ccy": "EUR",
+                    "$value": {"fake": ["f64", 20000.0, 60000.0]}
+                },
+                "IntrBkSttlmDt": {"var": "settlement_date"},
+                "InstdAmt": {
+                    "@Ccy": "EUR",
+                    "$value": {"fake": ["f64", 20000.0, 60000.0]}
+                },
+                "ChrgBr": "DEBT",
+                "DrctDbtTx": {
+                    "MndtRltdInf": {
+                        "MndtId": {"cat": ["MNDTCBPR", {"fake": ["i64", 1000000, 9999999]}]},
+                        "DtOfSgntr": "2022-01-01",
+                        "AmdmntInd": true,
+                        "AmdmntInfDtls": {
+                            "OrgnlMndtId": {"cat": ["ORIGMNDT", {"fake": ["i64", 1000000, 9999999]}]},
+                            "OrgnlDbtrAcct": {
+                                "Id": {
+                                    "IBAN": {"fake": ["iban", "DE"]}
+                                }
+                            }
+                        }
+                    },
+                    "CdtrSchmeId": {
+                        "Id": {
+                            "PrvtId": {
+                                "Othr": [
+                                    {
+                                        "Id": {"cat": ["FR", {"fake": ["i64", 10000000, 99999999]}, "ZZZ"]},
+                                        "SchmeNm": {
+                                            "Prtry": "SEPA"
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                "DbtrAgt": {
+                    "FinInstnId": {
+                        "BICFI": {"fake": ["bic"]},
+                        "LEI": {"fake": ["lei"]}
+                    }
+                },
+                "Dbtr": {
+                    "Nm": {"cat": [{"fake": ["company_name"]}, " GmbH"]},
+                    "PstlAdr": {
+                        "Ctry": "DE",
+                        "AdrLine": [
+                            {"fake": ["street_address"]},
+                            {"cat": [{"fake": ["postcode"]}, " ", {"fake": ["city_name"]}]}
+                        ]
+                    },
+                    "Id": {
+                        "OrgId": {
+                            "LEI": {"fake": ["lei"]}
+                        }
+                    }
+                },
+                "DbtrAcct": {
+                    "Id": {
+                        "IBAN": {"fake": ["iban", "DE"]}
+                    },
+                    "Tp": {
+                        "Cd": "CACC"
+                    }
+                },
+                "CdtrAgt": {
+                    "FinInstnId": {
+                        "BICFI": {"fake": ["bic"]},
+                        "LEI": {"fake": ["lei"]}
+                    }
+                },
+                "Cdtr": {
+                    "Nm": {"cat": [{"fake": ["company_name"]}, " SA"]},
+                    "PstlAdr": {
+                        "Ctry": "FR",
+                        "AdrLine": [
+                            {"fake": ["street_address"]},
+                            {"cat": [{"fake": ["postcode"]}, " ", {"fake": ["city_name"]}]}
+                        ]
+                    },
+                    "Id": {
+                        "OrgId": {
+                            "LEI": {"fake": ["lei"]}
+                        }
+                    }
+                },
+                "CdtrAcct": {
+                    "Id": {
+                        "IBAN": {"fake": ["iban", "FR"]}
+                    }
+                },
+                "Purp": {
+                    "Cd": "INTC"
+                },
+                "RgltryRptg": [
+                    {
+                        "Dtls": [
+                            {
+                                "Tp": "DEBT",
+                                "Dt": "2025-01-22",
+                                "Ctry": "DE",
+                                "Cd": "150",
+                                "Amt": {
+                                    "@Ccy": "EUR",
+                                    "$value": {"fake": ["f64", 20000.0, 60000.0]}
+                                },
+                                "Inf": ["CBPR+ INTERCOMPANY TRANSFER"]
+                            }
+                        ]
+                    }
+                ],
+                "RmtInf": {
+                    "Ustrd": "Intercompany service charge - Q1 2025"
+                }
+            },
+            {
+                "PmtId": {
+                    "EndToEndId": {"cat": ["E2ECBPR", {"fake": ["i64", 100000000000, 999999999999]}]},
+                    "TxId": {"cat": ["TXCBPR", {"fake": ["uuid"]}]},
+                    "UETR": {"fake": ["uuid"]}
+                },
+                "PmtTpInf": {
+                    "InstrPrty": "NORM",
+                    "SvcLvl": [
+                        {
+                            "Cd": "G001"
+                        }
+                    ],
+                    "LclInstrm": {
+                        "Cd": "B2B"
+                    },
+                    "SeqTp": "RCUR",
+                    "CtgyPurp": {
+                        "Cd": "LOAN"
+                    }
+                },
+                "IntrBkSttlmAmt": {
+                    "@Ccy": "EUR",
+                    "$value": {"fake": ["f64", 10000.0, 40000.0]}
+                },
+                "IntrBkSttlmDt": {"var": "settlement_date"},
+                "InstdAmt": {
+                    "@Ccy": "EUR",
+                    "$value": {"fake": ["f64", 10000.0, 40000.0]}
+                },
+                "ChrgBr": "CRED",
+                "DrctDbtTx": {
+                    "MndtRltdInf": {
+                        "MndtId": {"cat": ["MNDTLOAN", {"fake": ["i64", 1000000, 9999999]}]},
+                        "DtOfSgntr": "2023-01-01",
+                        "AmdmntInd": false
+                    },
+                    "CdtrSchmeId": {
+                        "Id": {
+                            "PrvtId": {
+                                "Othr": [
+                                    {
+                                        "Id": {"cat": ["FR", {"fake": ["i64", 10000000, 99999999]}, "ZZZ"]},
+                                        "SchmeNm": {
+                                            "Prtry": "SEPA"
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                "DbtrAgt": {
+                    "FinInstnId": {
+                        "BICFI": {"fake": ["bic"]},
+                        "LEI": {"fake": ["lei"]}
+                    }
+                },
+                "Dbtr": {
+                    "Nm": {"fake": ["company_name"]},
+                    "PstlAdr": {
+                        "Ctry": "DE",
+                        "AdrLine": [
+                            {"fake": ["street_address"]},
+                            {"cat": [{"fake": ["postcode"]}, " ", {"fake": ["city_name"]}]}
+                        ]
+                    },
+                    "Id": {
+                        "OrgId": {
+                            "LEI": {"fake": ["lei"]}
+                        }
+                    }
+                },
+                "DbtrAcct": {
+                    "Id": {
+                        "IBAN": {"fake": ["iban", "DE"]}
+                    }
+                },
+                "CdtrAgt": {
+                    "FinInstnId": {
+                        "BICFI": {"fake": ["bic"]},
+                        "LEI": {"fake": ["lei"]}
+                    }
+                },
+                "Cdtr": {
+                    "Nm": {"cat": [{"fake": ["company_name"]}, " Bank"]},
+                    "PstlAdr": {
+                        "Ctry": "FR"
+                    },
+                    "Id": {
+                        "OrgId": {
+                            "LEI": {"fake": ["lei"]}
+                        }
+                    }
+                },
+                "CdtrAcct": {
+                    "Id": {
+                        "IBAN": {"fake": ["iban", "FR"]}
+                    }
+                },
+                "Purp": {
+                    "Cd": "LOAN"
+                },
+                "RmtInf": {
+                    "Strd": [
+                        {
+                            "RfrdDocInf": [
+                                {
+                                    "Tp": {
+                                        "CdOrPrtry": {
+                                            "Prtry": "LOAN_CONTRACT"
+                                        }
+                                    },
+                                    "Nb": {"cat": ["LOAN-", {"fake": ["i64", 2023001, 2023999]}]},
+                                    "RltdDt": "2023-01-01"
+                                }
+                            ],
+                            "AddtlRmtInf": [
+                                "Monthly loan repayment",
+                                "Payment 13 of 60"
+                            ]
+                        }
+                    ]
+                }
+            }
+        ],
+        "SplmtryData": [
+            {
+                "Envlp": {
+                    "CBPRPlusData": {
+                        "MessageVersion": "1.0",
+                        "ComplianceLevel": "FULL",
+                        "ProcessingPriority": "NORMAL",
+                        "DirectDebitType": "B2B",
+                        "BatchProcessing": false
+                    }
+                }
+            }
+        ]
+    }
+}

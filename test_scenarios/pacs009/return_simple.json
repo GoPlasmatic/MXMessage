@@ -1,0 +1,103 @@
+{
+    "variables": {
+        "msg_id": {"cat": ["RTN-SMPL-", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "payment_id": {"cat": ["RTRN-", {"fake": ["i64", 100000, 999999]}]},
+        "original_payment": {"cat": ["PMT-", {"fake": ["i64", 100000, 999999]}]},
+        "uetr": {"fake": ["uuid"]},
+        "amount": {"fake": ["f64", 1000.00, 50000.00]},
+        "currency": {"fake": ["enum", "USD", "EUR", "GBP"]},
+        "sender_bic": {"fake": ["bic"]},
+        "receiver_bic": {"fake": ["bic"]},
+        "debtor_name": {"fake": ["full_name"]},
+        "creditor_name": {"fake": ["full_name"]}
+    },
+    "schema": {
+        "GrpHdr": {
+            "MsgId": {"var": "msg_id"},
+            "CreDtTm": {"var": "creation_datetime"},
+            "NbOfTxs": "1",
+            "SttlmInf": {
+                "SttlmMtd": "INDA"
+            }
+        },
+        "CdtTrfTxInf": [
+            {
+                "PmtId": {
+                    "InstrId": {"var": "payment_id"},
+                    "EndToEndId": {"var": "original_payment"},
+                    "UETR": {"var": "uetr"}
+                },
+                "PmtTpInf": {
+                    "InstrPrty": "NORM",
+                    "SvcLvl": [
+                        {
+                            "Cd": "G001"
+                        }
+                    ],
+                    "LclInstrm": {
+                        "Prtry": "RETURN"
+                    }
+                },
+                "IntrBkSttlmAmt": {
+                    "Amt": {
+                        "Value": {"var": "amount"},
+                        "Ccy": {"var": "currency"}
+                    }
+                },
+                "IntrBkSttlmDt": {"fake": ["date", "%Y-%m-%d", "0d", "0d"]},
+                "ChrgBr": "SHAR",
+                "InstgAgt": {
+                    "FinInstnId": {
+                        "BICFI": {"var": "receiver_bic"}
+                    }
+                },
+                "InstdAgt": {
+                    "FinInstnId": {
+                        "BICFI": {"var": "sender_bic"}
+                    }
+                },
+                "RtrInf": {
+                    "OrgnlTxRef": {
+                        "IntrBkSttlmAmt": {
+                            "Amt": {
+                                "Value": {"var": "amount"},
+                                "Ccy": {"var": "currency"}
+                            }
+                        },
+                        "PmtId": {
+                            "EndToEndId": {"var": "original_payment"}
+                        }
+                    },
+                    "Rsn": {
+                        "Cd": "AC06"
+                    },
+                    "AddtlInf": ["Account blocked for debits - return of funds"]
+                },
+                "RmtInf": {
+                    "Ustrd": ["Account blocked for debits - return of funds"],
+                    "Strd": [
+                        {
+                            "AddtlRmtInf": [
+                                {"cat": ["Original reference: ", {"var": "original_payment"}]},
+                                "Return reason: AC06 - Account blocked"
+                            ]
+                        }
+                    ]
+                },
+                "SplmtryData": [
+                    {
+                        "Envlp": {
+                            "SimpleReturnInfo": {
+                                "OriginalReference": {"var": "original_payment"},
+                                "ReturnCode": "AC06",
+                                "Debtor": {"var": "debtor_name"},
+                                "Creditor": {"var": "creditor_name"}
+                            }
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+}

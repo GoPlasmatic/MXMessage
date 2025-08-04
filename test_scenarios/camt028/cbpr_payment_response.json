@@ -1,0 +1,126 @@
+{
+    "variables": {
+        "msg_id": {"cat": ["CBPR-RSP-", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "case_id": {"cat": ["CBPR-CASE-", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creator_bic": {"fake": ["bic"]},
+        "creator_lei": {"fake": ["lei"]},
+        "assignee_bic": {"fake": ["bic"]},
+        "assignee_lei": {"fake": ["lei"]},
+        "original_msg_id": {"cat": ["CBPR-ORIG-", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "original_msg_name": "pacs.008.001.08",
+        "original_creation_datetime": {"fake": ["iso8601_datetime", "-7d", "-1d"]},
+        "original_end_to_end_id": {"cat": ["CBPR-E2E-", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "original_uetr": {"fake": ["uuid_v4"]},
+        "original_amount": {"fake": ["f64", 10000.0, 500000.0]},
+        "settlement_date": {"fake": ["date", "%Y-%m-%d", "-1d", "-1d"]},
+        "settlement_time": {"fake": ["time", "%H:%M:%S"]},
+        "beneficiary_credit_date": {"fake": ["date", "%Y-%m-%d", "-1d", "-1d"]},
+        "debtor_name": {"fake": ["company_name"]},
+        "debtor_lei": {"fake": ["lei"]},
+        "creditor_name": {"fake": ["company_name"]},
+        "creditor_lei": {"fake": ["lei"]}
+    },
+    "schema": {
+        "Assgnmt": {
+            "Id": {"var": "msg_id"},
+            "Assgnr": {
+                "Agt": {
+                    "FinInstnId": {
+                        "BICFI": {"var": "assignee_bic"},
+                        "LEI": {"var": "assignee_lei"}
+                    }
+                }
+            },
+            "Assgne": {
+                "Agt": {
+                    "FinInstnId": {
+                        "BICFI": {"var": "creator_bic"},
+                        "LEI": {"var": "creator_lei"}
+                    }
+                }
+            },
+            "CreDtTm": {"var": "creation_datetime"}
+        },
+        "Case": {
+            "Id": {"var": "case_id"},
+            "Cretr": {
+                "Agt": {
+                    "FinInstnId": {
+                        "BICFI": {"var": "creator_bic"},
+                        "LEI": {"var": "creator_lei"}
+                    }
+                }
+            }
+        },
+        "Undrlyg": [
+            {
+                "InvstgtnInf": {
+                    "InvstgtnSts": "CONF",
+                    "CxlDtls": [
+                        {
+                            "TxInfAndSts": {
+                                "OrgnlGrpInf": {
+                                    "OrgnlMsgId": {"var": "original_msg_id"},
+                                    "OrgnlMsgNmId": {"var": "original_msg_name"},
+                                    "OrgnlCreDtTm": {"var": "original_creation_datetime"}
+                                },
+                                "OrgnlEndToEndId": {"var": "original_end_to_end_id"},
+                                "OrgnlUETR": {"var": "original_uetr"},
+                                "TxSts": "ACSC",
+                                "AccptncDtTm": {"var": "creation_datetime"},
+                                "OrgnlTxRef": {
+                                    "IntrBkSttlmAmt": {
+                                        "@Ccy": "USD",
+                                        "$value": {"var": "original_amount"}
+                                    },
+                                    "IntrBkSttlmDt": {"var": "settlement_date"},
+                                    "Dbtr": {
+                                        "Nm": {"var": "debtor_name"},
+                                        "Id": {
+                                            "OrgId": {
+                                                "LEI": {"var": "debtor_lei"}
+                                            }
+                                        }
+                                    },
+                                    "Cdtr": {
+                                        "Nm": {"var": "creditor_name"},
+                                        "Id": {
+                                            "OrgId": {
+                                                "LEI": {"var": "creditor_lei"}
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        ],
+        "SplmtryData": [
+            {
+                "Envlp": {
+                    "PaymentConfirmation": {
+                        "SettlementDetails": {
+                            "SettlementDate": {"var": "settlement_date"},
+                            "SettlementTime": {"var": "settlement_time"},
+                            "SettlementMethod": "INGA",
+                            "ClearingSystem": "TGT2"
+                        },
+                        "BeneficiaryCredit": {
+                            "CreditDate": {"var": "beneficiary_credit_date"},
+                            "CreditStatus": "COMPLETED",
+                            "AccountServicingBank": {"var": "assignee_bic"}
+                        },
+                        "CBPRCompliance": {
+                            "Status": "COMPLIANT",
+                            "ProcessingTime": "STP",
+                            "ValidationsPassed": ["AML", "SANCTIONS", "FRAUD", "REGULATORY"]
+                        }
+                    }
+                }
+            }
+        ]
+    }
+}

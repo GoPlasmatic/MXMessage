@@ -1,0 +1,98 @@
+{
+    "variables": {
+        "msg_id": {"cat": ["NOTIF-", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "expected_datetime": {"fake": ["iso8601_datetime", "+2h", "+8h"]},
+        "sender_bic": {"fake": ["bic"]},
+        "receiver_bic": {"fake": ["bic"]},
+        "amount": {"fake": ["f64", 100000.00, 10000000.00]},
+        "currency": {"fake": ["enum", "USD", "EUR", "GBP", "JPY", "CHF"]},
+        "ordering_customer": {"fake": ["company_name"]},
+        "ordering_bic": {"fake": ["bic"]},
+        "beneficiary_account": {"fake": ["iban"]},
+        "reference": {"cat": ["PAY-REF-", {"fake": ["i64", 100000, 999999]}]},
+        "purpose_code": {"fake": ["enum", "SUPP", "TRAD", "INTE", "DIVI", "COMM"]}
+    },
+    "schema": {
+        "Assgnmt": {
+            "Id": {"var": "msg_id"},
+            "Assgnr": {
+                "Agt": {
+                    "FinInstnId": {
+                        "BICFI": {"var": "sender_bic"}
+                    }
+                }
+            },
+            "Assgne": {
+                "Agt": {
+                    "FinInstnId": {
+                        "BICFI": {"var": "receiver_bic"}
+                    }
+                }
+            },
+            "CreDtTm": {"var": "creation_datetime"}
+        },
+        "Ntfctn": {
+            "Id": {"cat": ["NTFCTN-", {"fake": ["i64", 100000, 999999]}]},
+            "CreDtTm": {"var": "creation_datetime"},
+            "Acct": {
+                "Id": {
+                    "IBAN": {"var": "beneficiary_account"}
+                }
+            },
+            "Itm": [
+                {
+                    "Id": {"cat": ["ITM-", {"fake": ["i64", 1000, 9999]}]},
+                    "XpctdValDt": {"var": "expected_datetime"},
+                    "Amt": {
+                        "Amt": {
+                            "Value": {"var": "amount"},
+                            "Ccy": {"var": "currency"}
+                        }
+                    },
+                    "RmtInf": {
+                        "Strd": [
+                            {
+                                "RfrdDocInf": [
+                                    {
+                                        "Tp": {
+                                            "CdOrPrtry": {
+                                                "Cd": "MSIN"
+                                            }
+                                        },
+                                        "Nb": {"var": "reference"}
+                                    }
+                                ],
+                                "AddtlRmtInf": [{"cat": ["Expected payment from ", {"var": "ordering_customer"}]}]
+                            }
+                        ]
+                    },
+                    "Purp": {
+                        "Cd": {"var": "purpose_code"}
+                    }
+                }
+            ]
+        },
+        "SplmtryData": [
+            {
+                "Envlp": {
+                    "ExpectedFundsDetails": {
+                        "OrderingParty": {
+                            "Name": {"var": "ordering_customer"},
+                            "BIC": {"var": "ordering_bic"}
+                        },
+                        "ExpectedSettlement": {
+                            "Method": "SWIFT",
+                            "Priority": "NORMAL",
+                            "ChargeBearer": "SHAR"
+                        },
+                        "ComplianceChecks": {
+                            "AMLStatus": "PENDING",
+                            "SanctionsScreening": "REQUIRED"
+                        }
+                    }
+                }
+            }
+        ]
+    }
+}

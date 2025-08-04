@@ -1,0 +1,167 @@
+{
+    "variables": {
+        "msg_id": {"cat": ["MULTI-RATE-", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "related_msg_id": {"cat": ["RATE-NOTIF-", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "related_ref": {"cat": ["BANK-REF-", {"fake": ["i64", 100000, 999999]}]},
+        "sender_bic": {"fake": ["bic"]},
+        "receiver_bic": {"fake": ["bic"]},
+        "effective_date": {"fake": ["date", "%Y-%m-%d", "+7d", "+7d"]},
+        "savings_old": {"fake": ["f64", 0.1, 1.0]},
+        "savings_new": {"fake": ["f64", 0.5, 1.5]},
+        "checking_old": {"fake": ["f64", 0.01, 0.1]},
+        "checking_new": {"fake": ["f64", 0.05, 0.15]},
+        "mortgage_old": {"fake": ["f64", 5.5, 7.0]},
+        "mortgage_new": {"fake": ["f64", 6.0, 7.5]},
+        "personal_loan_old": {"fake": ["f64", 8.0, 10.0]},
+        "personal_loan_new": {"fake": ["f64", 8.5, 10.5]},
+        "credit_card_old": {"fake": ["f64", 18.0, 22.0]},
+        "credit_card_new": {"fake": ["f64", 18.5, 22.5]},
+        "overdraft_old": {"fake": ["f64", 15.0, 18.0]},
+        "overdraft_new": {"fake": ["f64", 15.5, 18.5]}
+    },
+    "schema": {
+        "Assgnmt": {
+            "Id": {"var": "msg_id"},
+            "Assgnr": {
+                "Agt": {
+                    "FinInstnId": {
+                        "BICFI": {"var": "sender_bic"}
+                    }
+                }
+            },
+            "Assgne": {
+                "Agt": {
+                    "FinInstnId": {
+                        "BICFI": {"var": "receiver_bic"}
+                    }
+                }
+            },
+            "CreDtTm": {"var": "creation_datetime"}
+        },
+        "Rct": {
+            "RltdMsgRcpt": {
+                "RcptId": {"var": "related_msg_id"},
+                "RcptDtTm": {"var": "creation_datetime"},
+                "RltdRef": {
+                    "Ref": {"var": "related_ref"}
+                }
+            }
+        },
+        "SplmtryData": [
+            {
+                "Envlp": {
+                    "MultiProductRateChange": {
+                        "NotificationType": "COMPREHENSIVE_RATE_UPDATE",
+                        "EffectiveDate": {"var": "effective_date"},
+                        "AnnouncementDate": {"var": "creation_datetime"},
+                        "DepositProducts": [
+                            {
+                                "ProductCategory": "SAVINGS",
+                                "Products": [
+                                    {
+                                        "ProductName": "Regular Savings",
+                                        "ProductCode": "SAV001",
+                                        "OldRate": {"var": "savings_old"},
+                                        "NewRate": {"var": "savings_new"},
+                                        "RateType": "APY",
+                                        "MinimumBalance": 100.0
+                                    },
+                                    {
+                                        "ProductName": "High Yield Savings",
+                                        "ProductCode": "SAV002",
+                                        "OldRate": {"fake": ["f64", 1.0, 2.0]},
+                                        "NewRate": {"fake": ["f64", 1.5, 2.5]},
+                                        "RateType": "APY",
+                                        "MinimumBalance": 10000.0
+                                    }
+                                ]
+                            },
+                            {
+                                "ProductCategory": "CHECKING",
+                                "Products": [
+                                    {
+                                        "ProductName": "Interest Checking",
+                                        "ProductCode": "CHK001",
+                                        "OldRate": {"var": "checking_old"},
+                                        "NewRate": {"var": "checking_new"},
+                                        "RateType": "APY",
+                                        "MinimumBalance": 1000.0
+                                    }
+                                ]
+                            }
+                        ],
+                        "LendingProducts": [
+                            {
+                                "ProductCategory": "MORTGAGE",
+                                "Products": [
+                                    {
+                                        "ProductName": "30-Year Fixed Mortgage",
+                                        "ProductCode": "MTG001",
+                                        "OldRate": {"var": "mortgage_old"},
+                                        "NewRate": {"var": "mortgage_new"},
+                                        "RateType": "APR",
+                                        "Term": "30Y"
+                                    }
+                                ]
+                            },
+                            {
+                                "ProductCategory": "PERSONAL_LOANS",
+                                "Products": [
+                                    {
+                                        "ProductName": "Personal Loan",
+                                        "ProductCode": "PL001",
+                                        "OldRate": {"var": "personal_loan_old"},
+                                        "NewRate": {"var": "personal_loan_new"},
+                                        "RateType": "APR",
+                                        "Term": "5Y"
+                                    }
+                                ]
+                            },
+                            {
+                                "ProductCategory": "CREDIT_CARDS",
+                                "Products": [
+                                    {
+                                        "ProductName": "Standard Credit Card",
+                                        "ProductCode": "CC001",
+                                        "OldRate": {"var": "credit_card_old"},
+                                        "NewRate": {"var": "credit_card_new"},
+                                        "RateType": "VARIABLE_APR"
+                                    }
+                                ]
+                            },
+                            {
+                                "ProductCategory": "OVERDRAFT",
+                                "Products": [
+                                    {
+                                        "ProductName": "Overdraft Line of Credit",
+                                        "ProductCode": "OD001",
+                                        "OldRate": {"var": "overdraft_old"},
+                                        "NewRate": {"var": "overdraft_new"},
+                                        "RateType": "APR"
+                                    }
+                                ]
+                            }
+                        ],
+                        "RateChangeReason": "Market conditions and central bank policy adjustment",
+                        "CustomerImpact": {
+                            "DepositAccounts": "Increased earnings on deposits",
+                            "LoanAccounts": "Higher borrowing costs",
+                            "ActionRequired": "None - rates automatically adjusted"
+                        },
+                        "SpecialOffers": [
+                            {
+                                "Offer": "Lock in current mortgage rates",
+                                "ValidUntil": {"fake": ["date", "%Y-%m-%d", "+14d", "+14d"]}
+                            },
+                            {
+                                "Offer": "CD rate promotion",
+                                "Details": "0.25% bonus on 12-month CDs"
+                            }
+                        ]
+                    }
+                }
+            }
+        ]
+    }
+}

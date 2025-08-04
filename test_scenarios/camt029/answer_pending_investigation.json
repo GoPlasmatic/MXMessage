@@ -1,0 +1,155 @@
+{
+    "variables": {
+        "msg_id": {"cat": ["PEND-RSP-", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "original_msg_id": {"cat": ["INV-REQ-", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "investigation_id": {"cat": ["INV-", {"fake": ["i64", 1000000000, 9999999999]}]},
+        "original_payment_id": {"cat": ["PMT-", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "original_uetr": {"fake": ["uuid_v4"]},
+        "payment_amount": {"fake": ["f64", 15000.0, 750000.0]},
+        "original_date": {"fake": ["date", "%Y-%m-%d", "-15d", "-10d"]},
+        "expected_resolution": {"fake": ["date", "%Y-%m-%d", "+2d", "+5d"]},
+        "responder_bic": {"fake": ["bic"]},
+        "originator_bic": {"fake": ["bic"]},
+        "investigating_agent": {"fake": ["bic"]}
+    },
+    "schema": {
+        "Assgnmt": {
+            "Id": {"var": "msg_id"},
+            "Assgnr": {
+                "Agt": {
+                    "FinInstnId": {
+                        "BICFI": {"var": "responder_bic"}
+                    }
+                }
+            },
+            "Assgne": {
+                "Agt": {
+                    "FinInstnId": {
+                        "BICFI": {"var": "originator_bic"}
+                    }
+                }
+            },
+            "CreDtTm": {"var": "creation_datetime"}
+        },
+        "RsltnOfInvstgtn": {
+            "Sts": {
+                "Conf": "PNDG"
+            },
+            "CxlDtls": [
+                {
+                    "TxInfAndSts": [
+                        {
+                            "CxlStsId": {"var": "investigation_id"},
+                            "OrgnlGrpInf": {
+                                "OrgnlMsgId": {"var": "original_payment_id"},
+                                "OrgnlMsgNmId": "pacs.008"
+                            },
+                            "OrgnlInstrId": {"var": "original_payment_id"},
+                            "OrgnlEndToEndId": {"cat": ["E2E-", {"var": "original_payment_id"}]},
+                            "OrgnlUETR": {"var": "original_uetr"},
+                            "TxCxlSts": "PNDG",
+                            "CxlStsRsnInf": [
+                                {
+                                    "Orgtr": {
+                                        "Id": {
+                                            "OrgId": {
+                                                "AnyBIC": {"var": "investigating_agent"}
+                                            }
+                                        }
+                                    },
+                                    "Rsn": {
+                                        "Prtry": "UNDER_INVESTIGATION"
+                                    },
+                                    "AddtlInf": [
+                                        "Investigation in progress with correspondent bank",
+                                        "Awaiting response from beneficiary institution",
+                                        {"cat": ["Expected resolution by: ", {"var": "expected_resolution"}]}
+                                    ]
+                                }
+                            ],
+                            "OrgnlTxRef": {
+                                "IntrBkSttlmAmt": {
+                                    "@Ccy": "USD",
+                                    "$value": {"var": "payment_amount"}
+                                },
+                                "IntrBkSttlmDt": {"var": "original_date"},
+                                "Dbtr": {
+                                    "Nm": {"fake": ["company_name"]}
+                                },
+                                "DbtrAcct": {
+                                    "Id": {
+                                        "IBAN": {"fake": ["iban"]}
+                                    }
+                                },
+                                "DbtrAgt": {
+                                    "FinInstnId": {
+                                        "BICFI": {"var": "originator_bic"}
+                                    }
+                                },
+                                "IntrmyAgt1": {
+                                    "FinInstnId": {
+                                        "BICFI": {"var": "investigating_agent"}
+                                    }
+                                },
+                                "CdtrAgt": {
+                                    "FinInstnId": {
+                                        "BICFI": {"var": "responder_bic"}
+                                    }
+                                },
+                                "Cdtr": {
+                                    "Nm": {"fake": ["company_name"]}
+                                },
+                                "CdtrAcct": {
+                                    "Id": {
+                                        "IBAN": {"fake": ["iban"]}
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                }
+            ],
+            "ModDtls": {
+                "InvstgtnSts": {
+                    "Sts": "PNDG",
+                    "DtTm": {"var": "creation_datetime"},
+                    "Rsn": {
+                        "Prtry": "AWAITING_CORRESPONDENT_RESPONSE"
+                    }
+                }
+            }
+        },
+        "SplmtryData": [
+            {
+                "Envlp": {
+                    "InvestigationTracking": {
+                        "CaseReference": {"var": "investigation_id"},
+                        "InvestigationSteps": [
+                            {
+                                "StepNumber": 1,
+                                "Description": "Investigation request received",
+                                "Status": "COMPLETED",
+                                "Timestamp": {"fake": ["iso8601_datetime", "-2d", "-2d"]}
+                            },
+                            {
+                                "StepNumber": 2,
+                                "Description": "Forwarded to correspondent bank",
+                                "Status": "COMPLETED",
+                                "Timestamp": {"fake": ["iso8601_datetime", "-1d", "-1d"]}
+                            },
+                            {
+                                "StepNumber": 3,
+                                "Description": "Awaiting beneficiary bank response",
+                                "Status": "IN_PROGRESS",
+                                "Timestamp": {"var": "creation_datetime"}
+                            }
+                        ],
+                        "NextAction": "Follow up with beneficiary institution",
+                        "ExpectedCompletionDate": {"var": "expected_resolution"}
+                    }
+                }
+            }
+        ]
+    }
+}

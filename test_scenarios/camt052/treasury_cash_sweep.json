@@ -1,0 +1,229 @@
+{
+    "variables": {
+        "msg_id": {"cat": ["MSG", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "report_id": {"cat": ["SWEEP-RPT-", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "master_account": {"fake": ["iban"]},
+        "account_owner": {"fake": ["company_name"]},
+        "account_owner_lei": {"fake": ["lei"]},
+        "servicer_bic": {"fake": ["bic"]},
+        "target_balance": {"fake": ["f64", 100000.0, 250000.0]},
+        "pre_sweep_balance": {"fake": ["f64", 500000.0, 2000000.0]},
+        "sweep_amount": {"fake": ["f64", 400000.0, 1750000.0]},
+        "investment_account": {"cat": ["INV-", {"fake": ["i64", 100000, 999999]}]}
+    },
+    "schema": {
+        "GrpHdr": {
+            "MsgId": {"var": "msg_id"},
+            "CreDtTm": {"var": "creation_datetime"},
+            "MsgRcpt": {
+                "Pty": {
+                    "Nm": {"var": "account_owner"},
+                    "Id": {
+                        "OrgId": {
+                            "LEI": {"var": "account_owner_lei"}
+                        }
+                    }
+                }
+            }
+        },
+        "Rpt": [
+            {
+                "Id": {"var": "report_id"},
+                "CreDtTm": {"var": "creation_datetime"},
+                "RptgSrc": {
+                    "Prtry": "TREASURY_CASH_SWEEP"
+                },
+                "Acct": {
+                    "Id": {
+                        "IBAN": {"var": "master_account"}
+                    },
+                    "Tp": {
+                        "Prtry": "MASTER_SWEEP"
+                    },
+                    "Ccy": "USD",
+                    "Nm": "Treasury Master Sweep Account",
+                    "Ownr": {
+                        "Nm": {"var": "account_owner"},
+                        "Id": {
+                            "OrgId": {
+                                "LEI": {"var": "account_owner_lei"}
+                            }
+                        }
+                    },
+                    "Svcr": {
+                        "FinInstnId": {
+                            "BICFI": {"var": "servicer_bic"}
+                        }
+                    }
+                },
+                "Bal": [
+                    {
+                        "Tp": {
+                            "CdOrPrtry": {
+                                "Cd": "OPBD"
+                            }
+                        },
+                        "Amt": {
+                            "@Ccy": "USD",
+                            "$value": {"var": "pre_sweep_balance"}
+                        },
+                        "CdtDbtInd": "CRDT",
+                        "Dt": {
+                            "DtTm": {"fake": ["iso8601_datetime", "-1h", "-1h"]}
+                        }
+                    },
+                    {
+                        "Tp": {
+                            "CdOrPrtry": {
+                                "Cd": "CLBD"
+                            }
+                        },
+                        "Amt": {
+                            "@Ccy": "USD",
+                            "$value": {"var": "target_balance"}
+                        },
+                        "CdtDbtInd": "CRDT",
+                        "Dt": {
+                            "DtTm": {"var": "creation_datetime"}
+                        }
+                    },
+                    {
+                        "Tp": {
+                            "CdOrPrtry": {
+                                "Prtry": "TARGET_BALANCE"
+                            }
+                        },
+                        "Amt": {
+                            "@Ccy": "USD",
+                            "$value": {"var": "target_balance"}
+                        },
+                        "CdtDbtInd": "CRDT",
+                        "Dt": {
+                            "DtTm": {"var": "creation_datetime"}
+                        }
+                    }
+                ],
+                "TxsSummry": {
+                    "TtlNtries": {
+                        "NbOfNtries": "1",
+                        "Sum": {"var": "sweep_amount"}
+                    },
+                    "TtlDbtNtries": {
+                        "NbOfNtries": "1",
+                        "Sum": {"var": "sweep_amount"}
+                    }
+                },
+                "Ntry": [
+                    {
+                        "NtryRef": {"cat": ["SWEEP-", {"fake": ["i64", 1000000, 9999999]}]},
+                        "Amt": {
+                            "@Ccy": "USD",
+                            "$value": {"var": "sweep_amount"}
+                        },
+                        "CdtDbtInd": "DBIT",
+                        "Sts": {
+                            "Cd": "BOOK"
+                        },
+                        "BookgDt": {
+                            "DtTm": {"fake": ["iso8601_datetime", "-30m", "-15m"]}
+                        },
+                        "ValDt": {
+                            "DtTm": {"fake": ["iso8601_datetime", "-30m", "-15m"]}
+                        },
+                        "BkTxCd": {
+                            "Domn": {
+                                "Cd": "LDAS",
+                                "Fmly": {
+                                    "Cd": "CSDR",
+                                    "SubFmlyCd": "SWEP"
+                                }
+                            },
+                            "Prtry": {
+                                "Cd": "AUTO_SWEEP",
+                                "Issr": "TREASURY_SYSTEM"
+                            }
+                        },
+                        "NtryDtls": [
+                            {
+                                "Btch": {
+                                    "MsgId": {"cat": ["SWEEP-BATCH-", {"fake": ["i64", 100000, 999999]}]},
+                                    "NbOfTxs": "1",
+                                    "TtlAmt": {
+                                        "@Ccy": "USD",
+                                        "$value": {"var": "sweep_amount"}
+                                    }
+                                },
+                                "TxDtls": [
+                                    {
+                                        "Refs": {
+                                            "AcctSvcrRef": {"cat": ["SWEEP-REF-", {"fake": ["i64", 10000000, 99999999]}]},
+                                            "InstrId": {"cat": ["SWEEP-INSTR-", {"fake": ["i64", 10000000, 99999999]}]},
+                                            "Prtry": [
+                                                {
+                                                    "Tp": "SWEEP_RULE_ID",
+                                                    "Ref": "DAILY_EXCESS_SWEEP"
+                                                }
+                                            ]
+                                        },
+                                        "Amt": {
+                                            "@Ccy": "USD",
+                                            "$value": {"var": "sweep_amount"}
+                                        },
+                                        "CdtDbtInd": "DBIT",
+                                        "BkTxCd": {
+                                            "Domn": {
+                                                "Cd": "LDAS",
+                                                "Fmly": {
+                                                    "Cd": "CSDR",
+                                                    "SubFmlyCd": "SWEP"
+                                                }
+                                            }
+                                        },
+                                        "RltdPties": {
+                                            "Dbtr": {
+                                                "Nm": {"cat": [{"var": "account_owner"}, " - Operating Account"]}
+                                            },
+                                            "DbtrAcct": {
+                                                "Id": {
+                                                    "IBAN": {"var": "master_account"}
+                                                }
+                                            },
+                                            "Cdtr": {
+                                                "Nm": {"cat": [{"var": "account_owner"}, " - Investment Account"]}
+                                            },
+                                            "CdtrAcct": {
+                                                "Id": {
+                                                    "Othr": {
+                                                        "Id": {"var": "investment_account"},
+                                                        "SchmeNm": {
+                                                            "Prtry": "INVESTMENT_ACCOUNT"
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "RmtInf": {
+                                            "Strd": [
+                                                {
+                                                    "AddtlRmtInf": [
+                                                        "Automated treasury cash sweep",
+                                                        "Excess funds transferred to overnight investment",
+                                                        {"cat": ["Target balance maintained: USD ", {"var": "target_balance"}]}
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        "AddtlTxInf": "End-of-day automated sweep"
+                                    }
+                                ]
+                            }
+                        ],
+                        "AddtlNtryInf": "Treasury management - automated cash concentration"
+                    }
+                ],
+                "AddtlRptInf": "Daily treasury sweep completed - funds invested overnight"
+            }
+        ]
+    }
+}

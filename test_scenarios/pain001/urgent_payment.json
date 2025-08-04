@@ -1,0 +1,179 @@
+{
+    "variables": {
+        "msg_id": {"cat": ["MSGURG", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "company_name": {"fake": ["company_name"]},
+        "company_lei": {"fake": ["lei"]},
+        "pmt_inf_id": {"cat": ["URGENT", {"fake": ["i64", 10000000, 99999999]}]},
+        "execution_date": "2024-12-20",
+        "debtor_name": {"fake": ["company_name"]},
+        "debtor_iban": {"fake": ["iban", "DE"]},
+        "debtor_bic": {"fake": ["bic"]},
+        "end_to_end_id": {"cat": ["URG", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "amount": {"fake": ["f64", 1000000.0, 5000000.0]},
+        "creditor_bic": {"fake": ["bic"]},
+        "creditor_iban": {"fake": ["iban", "FR"]}
+    },
+    "schema": {
+        "GrpHdr": {
+            "MsgId": {"var": "msg_id"},
+            "CreDtTm": {"var": "creation_datetime"},
+            "NbOfTxs": "1",
+            "InitgPty": {
+                "Nm": {"var": "company_name"},
+                "Id": {
+                    "OrgId": {
+                        "LEI": {"var": "company_lei"}
+                    }
+                }
+            }
+        },
+        "PmtInf": {
+            "PmtInfId": {"var": "pmt_inf_id"},
+            "PmtMtd": "TRF",
+            "PmtTpInf": {
+                "InstrPrty": "HIGH",
+                "SvcLvl": [
+                    {
+                        "Cd": "URGP"
+                    }
+                ],
+                "LclInstrm": {
+                    "Cd": "URGP"
+                }
+            },
+            "ReqdExctnDt": {
+                "Dt": {"var": "execution_date"}
+            },
+            "Dbtr": {
+                "Nm": {"var": "debtor_name"},
+                "PstlAdr": {
+                    "Ctry": "DE",
+                    "AdrLine": [
+                        {"fake": ["street_address"]},
+                        {"cat": [{"fake": ["postcode"]}, " ", {"fake": ["city_name"]}]}
+                    ]
+                },
+                "Id": {
+                    "OrgId": {
+                        "LEI": {"var": "company_lei"}
+                    }
+                }
+            },
+            "DbtrAcct": {
+                "Id": {
+                    "IBAN": {"var": "debtor_iban"}
+                },
+                "Tp": {
+                    "Cd": "CACC"
+                },
+                "Ccy": "EUR"
+            },
+            "DbtrAgt": {
+                "FinInstnId": {
+                    "BICFI": {"var": "debtor_bic"},
+                    "LEI": {"fake": ["lei"]}
+                }
+            },
+            "ChrgBr": "CRED",
+            "CdtTrfTxInf": [
+                {
+                    "PmtId": {
+                        "InstrId": {"cat": ["URGINSTR", {"fake": ["i64", 10000001, 99999999]}]},
+                        "EndToEndId": {"var": "end_to_end_id"}
+                    },
+                    "PmtTpInf": {
+                        "InstrPrty": "HIGH",
+                        "SvcLvl": [
+                            {
+                                "Cd": "URGP"
+                            }
+                        ],
+                        "CtgyPurp": {
+                            "Cd": "CASH"
+                        }
+                    },
+                    "Amt": {
+                        "InstdAmt": {
+                            "@Ccy": "EUR",
+                            "$value": {"var": "amount"}
+                        }
+                    },
+                    "CdtrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {"var": "creditor_bic"},
+                            "LEI": {"fake": ["lei"]}
+                        }
+                    },
+                    "Cdtr": {
+                        "Nm": {"fake": ["company_name"]},
+                        "PstlAdr": {
+                            "Ctry": "FR",
+                            "AdrLine": [
+                                {"fake": ["street_address"]},
+                                {"cat": [{"fake": ["postcode"]}, " ", {"fake": ["city_name"]}]}
+                            ]
+                        },
+                        "Id": {
+                            "OrgId": {
+                                "LEI": {"fake": ["lei"]}
+                            }
+                        }
+                    },
+                    "CdtrAcct": {
+                        "Id": {
+                            "IBAN": {"var": "creditor_iban"}
+                        }
+                    },
+                    "InstrForCdtrAgt": [
+                        {
+                            "Cd": "URGP"
+                        }
+                    ],
+                    "Purp": {
+                        "Cd": "CASH"
+                    },
+                    "RgltryRptg": [
+                        {
+                            "Dtls": [
+                                {
+                                    "Tp": "CRED",
+                                    "Dt": "2024-12-20",
+                                    "Ctry": "DE",
+                                    "Cd": "10",
+                                    "Amt": {
+                                        "@Ccy": "EUR",
+                                        "$value": {"var": "amount"}
+                                    },
+                                    "Inf": ["URGENT LIQUIDITY REQUIREMENT"]
+                                }
+                            ]
+                        }
+                    ],
+                    "RmtInf": {
+                        "Ustrd": "URGENT PAYMENT - IMMEDIATE SETTLEMENT REQUIRED",
+                        "Strd": [
+                            {
+                                "RfrdDocInf": [
+                                    {
+                                        "Tp": {
+                                            "CdOrPrtry": {
+                                                "Cd": "MSIN"
+                                            }
+                                        },
+                                        "Nb": {"cat": ["URG-", {"fake": ["i64", 2024001, 2024999]}]},
+                                        "RltdDt": "2024-12-20"
+                                    }
+                                ],
+                                "AddtlRmtInf": [
+                                    "Time-critical transaction requiring immediate processing",
+                                    "Contact Treasury Dept for confirmation"
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    }
+}

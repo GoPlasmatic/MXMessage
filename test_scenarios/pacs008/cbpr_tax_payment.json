@@ -1,0 +1,415 @@
+{
+    "variables": {
+        "msg_id": {
+            "cat": [
+                "MSG",
+                {
+                    "fake": [
+                        "i64",
+                        100000000000,
+                        999999999999
+                    ]
+                }
+            ]
+        },
+        "creation_datetime": {
+            "fake": [
+                "iso8601_datetime"
+            ]
+        },
+        "sender_bic": {
+            "fake": [
+                "bic"
+            ]
+        },
+        "receiver_bic": {
+            "fake": [
+                "bic"
+            ]
+        },
+        "transaction_ref": {
+            "cat": [
+                "TXN",
+                {
+                    "fake": [
+                        "i64",
+                        100000000000,
+                        999999999999
+                    ]
+                }
+            ]
+        },
+        "instruction_id": {
+            "cat": [
+                "INSTR",
+                {
+                    "fake": [
+                        "i64",
+                        10000000,
+                        99999999
+                    ]
+                }
+            ]
+        },
+        "end_to_end_id": {
+            "cat": [
+                "E2E",
+                {
+                    "fake": [
+                        "i64",
+                        100000000000,
+                        999999999999
+                    ]
+                }
+            ]
+        },
+        "uetr": {
+            "fake": [
+                "uuid"
+            ]
+        },
+        "amount": {
+            "fake": [
+                "f64",
+                5000.0,
+                50000.0
+            ]
+        },
+        "taxpayer_name": {
+            "fake": [
+                "company_name"
+            ]
+        },
+        "tax_id": {
+            "cat": [
+                {
+                    "fake": [
+                        "i64",
+                        10,
+                        99
+                    ]
+                },
+                "-",
+                {
+                    "fake": [
+                        "i64",
+                        1000000,
+                        9999999
+                    ]
+                }
+            ]
+        },
+        "tax_period": {
+            "fake": [
+                "date",
+                "%Y-Q%q",
+                "-3M",
+                "-0M"
+            ]
+        },
+        "assessment_number": {
+            "cat": [
+                "ASMT-",
+                {
+                    "fake": [
+                        "i64",
+                        100000000,
+                        999999999
+                    ]
+                }
+            ]
+        }
+    },
+    "schema": {
+        "GrpHdr": {
+            "MsgId": {
+                "var": "msg_id"
+            },
+            "CreDtTm": {
+                "var": "creation_datetime"
+            },
+            "NbOfTxs": "1",
+            "SttlmInf": {
+                "SttlmMtd": "INDA"
+            }
+        },
+        "CdtTrfTxInf": {
+            "PmtId": {
+                "InstrId": {
+                    "var": "instruction_id"
+                },
+                "EndToEndId": {
+                    "var": "end_to_end_id"
+                },
+                "TxId": {
+                    "var": "transaction_ref"
+                },
+                "UETR": {
+                    "var": "uetr"
+                }
+            },
+            "PmtTpInf": {
+                "InstrPrty": "HIGH",
+                "SvcLvl": [
+                    {
+                        "Cd": "CBPR"
+                    }
+                ],
+                "CtgyPurp": {
+                    "Cd": "TAXS"
+                },
+                "LclInstrm": {
+                    "Prtry": "CORPORATE_TAX"
+                }
+            },
+            "IntrBkSttlmAmt": {
+                "@Ccy": "USD",
+                "$value": {
+                    "var": "amount"
+                }
+            },
+            "IntrBkSttlmDt": {
+                "fake": [
+                    "date",
+                    "%Y-%m-%d",
+                    "+0d",
+                    "+0d"
+                ]
+            },
+            "SttlmPrty": "HIGH",
+            "InstdAmt": {
+                "@Ccy": "USD",
+                "$value": {
+                    "var": "amount"
+                }
+            },
+            "ChrgBr": "DEBT",
+            "InstgAgt": {
+                "FinInstnId": {
+                    "BICFI": {
+                        "var": "sender_bic"
+                    },
+                    "LEI": {
+                        "fake": [
+                            "lei"
+                        ]
+                    }
+                }
+            },
+            "InstdAgt": {
+                "FinInstnId": {
+                    "BICFI": {
+                        "var": "receiver_bic"
+                    },
+                    "LEI": {
+                        "fake": [
+                            "lei"
+                        ]
+                    }
+                }
+            },
+            "Dbtr": {
+                "Nm": {
+                    "var": "taxpayer_name"
+                },
+                "PstlAdr": {
+                    "StrtNm": {
+                        "fake": [
+                            "street_name"
+                        ]
+                    },
+                    "BldgNb": {
+                        "cat": [
+                            {
+                                "fake": [
+                                    "i64",
+                                    1,
+                                    999
+                                ]
+                            }
+                        ]
+                    },
+                    "PstCd": {
+                        "fake": [
+                            "postcode"
+                        ]
+                    },
+                    "TwnNm": {
+                        "fake": [
+                            "city_name"
+                        ]
+                    },
+                    "Ctry": "US"
+                },
+                "CtryOfRes": "US",
+                "Id": {
+                    "OrgId": {
+                        "LEI": {
+                            "fake": [
+                                "lei"
+                            ]
+                        },
+                        "Othr": [
+                            {
+                                "Id": {
+                                    "var": "tax_id"
+                                },
+                                "SchmeNm": {
+                                    "Cd": "TXID"
+                                }
+                            }
+                        ]
+                    }
+                }
+            },
+            "DbtrAcct": {
+                "Id": {
+                    "IBAN": {
+                        "fake": [
+                            "iban",
+                            "US"
+                        ]
+                    }
+                },
+                "Ccy": "USD",
+                "Nm": "Corporate Operating Account"
+            },
+            "DbtrAgt": {
+                "FinInstnId": {
+                    "BICFI": {
+                        "var": "sender_bic"
+                    },
+                    "Nm": {
+                        "fake": [
+                            "company_name"
+                        ]
+                    },
+                    "LEI": {
+                        "fake": [
+                            "lei"
+                        ]
+                    }
+                }
+            },
+            "CdtrAgt": {
+                "FinInstnId": {
+                    "BICFI": "IRVTUS3NXXX",
+                    "Nm": "US Treasury",
+                    "LEI": "254900HROIFWPRGM0V77"
+                }
+            },
+            "Cdtr": {
+                "Nm": "Internal Revenue Service",
+                "PstlAdr": {
+                    "StrtNm": "1111 Constitution Ave NW",
+                    "PstCd": "20224",
+                    "TwnNm": "Washington",
+                    "Ctry": "US"
+                },
+                "CtryOfRes": "US",
+                "Id": {
+                    "OrgId": {
+                        "Othr": [
+                            {
+                                "Id": "US-IRS",
+                                "SchmeNm": {
+                                    "Prtry": "GOVERNMENT_AGENCY"
+                                }
+                            }
+                        ]
+                    }
+                }
+            },
+            "CdtrAcct": {
+                "Id": {
+                    "Othr": {
+                        "Id": "091000019",
+                        "SchmeNm": {
+                            "Cd": "BBAN"
+                        }
+                    }
+                },
+                "Ccy": "USD",
+                "Nm": "US Treasury Tax Collection Account"
+            },
+            "Purp": {
+                "Cd": "TAXS"
+            },
+            "RgltryRptg": [
+                {
+                    "Dtls": [
+                        {
+                            "Tp": "DEBT",
+                            "Dt": {
+                                "fake": [
+                                    "date",
+                                    "%Y-%m-%d",
+                                    "+0d",
+                                    "+0d"
+                                ]
+                            },
+                            "Ctry": "US",
+                            "Cd": "150",
+                            "Amt": {
+                                "@Ccy": "USD",
+                                "$value": {
+                                    "var": "amount"
+                                }
+                            },
+                            "Inf": [
+                                "CBPR+ TAX PAYMENT - IRS CORPORATE T"
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "RmtInf": {
+                "Strd": [
+                    {
+                        "RfrdDocInf": [
+                            {
+                                "Tp": {
+                                    "CdOrPrtry": {
+                                        "Prtry": "TAX_ASSESSMENT"
+                                    }
+                                },
+                                "Nb": {
+                                    "var": "assessment_number"
+                                },
+                                "RltdDt": {
+                                    "fake": [
+                                        "date",
+                                        "%Y-%m-%d",
+                                        "-30d",
+                                        "-1d"
+                                    ]
+                                }
+                            }
+                        ],
+                        "RfrdDocAmt": {
+                            "DuePyblAmt": {
+                                "@Ccy": "USD",
+                                "$value": {
+                                    "var": "amount"
+                                }
+                            }
+                        },
+                        "CdtrRefInf": {
+                            "Tp": {
+                                "CdOrPrtry": {
+                                    "Cd": "RADM"
+                                }
+                            },
+                            "Ref": {
+                                "var": "tax_id"
+                            }
+                        },
+                        "AddtlRmtInf": [
+                            "Generated remittance information"
+                        ]
+                    }
+                ]
+            }
+        }
+    }
+}

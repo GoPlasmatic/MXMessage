@@ -1,0 +1,46 @@
+{
+    "message_type": "pacs.002.001.10",
+    "description": "Payment Status Report",
+    "scenarios": [
+        {
+            "file": "cheque_collection_advice.json",
+            "description": "Advice of successful cheque collection (MT110)"
+        },
+        {
+            "file": "foreign_cheque_collection.json",
+            "description": "Collection of foreign currency cheque (MT110)"
+        },
+        {
+            "file": "returned_cheque_advice.json",
+            "description": "Advice of returned cheque (MT110)"
+        },
+        {
+            "file": "single_cheque_advice.json",
+            "description": "Single cheque collection advice (MT110)"
+        },
+        {
+            "file": "duplicate_cheque_stop.json",
+            "description": "Stop payment request for duplicate cheque (MT111)"
+        },
+        {
+            "file": "fraud_prevention_stop.json",
+            "description": "Stop payment for fraud prevention (MT111)"
+        },
+        {
+            "file": "lost_cheque_stop.json",
+            "description": "Stop payment for lost cheque (MT111)"
+        },
+        {
+            "file": "stop_payment_accepted.json",
+            "description": "Stop payment request accepted (MT112)"
+        },
+        {
+            "file": "stop_payment_pending.json",
+            "description": "Stop payment request pending (MT112)"
+        },
+        {
+            "file": "stop_payment_rejected.json",
+            "description": "Stop payment request rejected (MT112)"
+        }
+    ]
+}

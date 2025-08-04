@@ -1,0 +1,148 @@
+{
+    "variables": {
+        "msg_id": {"cat": ["MSG", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "original_msg_id": {"cat": ["ORIG-", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "transaction_id": {"cat": ["TXN", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "instruction_id": {"cat": ["INSTR", {"fake": ["i64", 10000000, 99999999]}]},
+        "end_to_end_id": {"cat": ["E2E", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "cheque_start": {"cat": ["CHQ-", {"fake": ["i64", 100000, 199999]}]},
+        "cheque_end": {"cat": ["CHQ-", {"fake": ["i64", 200000, 299999]}]},
+        "amount_range_min": {"fake": ["f64", 1000.0, 5000.0]},
+        "amount_range_max": {"fake": ["f64", 10000.0, 100000.0]},
+        "drawer_name": {"fake": ["full_name"]},
+        "drawer_account": {"fake": ["iban"]},
+        "drawer_bic": {"fake": ["bic"]},
+        "fraud_case_id": {"cat": ["FRAUD-", {"fake": ["i64", 2024000000, 2024999999]}]}
+    },
+    "schema": {
+        "GrpHdr": {
+            "MsgId": {"var": "msg_id"},
+            "CreDtTm": {"var": "creation_datetime"},
+            "InitgPty": {
+                "FinInstnId": {
+                    "BICFI": {"var": "drawer_bic"}
+                }
+            }
+        },
+        "OrgnlGrpInfAndSts": {
+            "OrgnlMsgId": {"var": "original_msg_id"},
+            "OrgnlMsgNmId": "pain.001.001.08",
+            "OrgnlCreDtTm": {"fake": ["iso8601_datetime", "-30m", "-15m"]},
+            "OrgnlNbOfTxs": "1",
+            "GrpSts": "PDNG"
+        },
+        "TxInfAndSts": [
+            {
+                "OrgnlInstrId": {"var": "instruction_id"},
+                "OrgnlEndToEndId": {"var": "end_to_end_id"},
+                "OrgnlTxId": {"var": "transaction_id"},
+                "TxSts": "PDNG",
+                "StsRsnInf": [
+                    {
+                        "Rsn": {
+                            "Prtry": "FRAUD_STOP_PAYMENT"
+                        },
+                        "AddtlInf": [
+                            "Stop payment request - Fraud prevention",
+                            "Account compromise suspected",
+                            "Stop all cheques in specified range",
+                            {"cat": ["Fraud case reference: ", {"var": "fraud_case_id"}]}
+                        ]
+                    }
+                ],
+                "AccptncDtTm": {"fake": ["iso8601_datetime", "-5m", "-2m"]},
+                "AcctSvcrRef": {"cat": ["STOP-FRAUD-", {"fake": ["i64", 1000000, 9999999]}]},
+                "OrgnlTxRef": {
+                    "ReqdExctnDt": {
+                        "Dt": {"fake": ["date", "%Y-%m-%d", "+0d", "+0d"]}
+                    },
+                    "PmtTpInf": {
+                        "InstrPrty": "URGT",
+                        "SvcLvl": [
+                            {"Cd": "URGP"}
+                        ],
+                        "LclInstrm": {
+                            "Prtry": "STOP_CHQ_RANGE"
+                        },
+                        "CtgyPurp": {
+                            "Prtry": "FRAUD_PREVENTION"
+                        }
+                    },
+                    "PmtMtd": "CHK",
+                    "RmtInf": {
+                        "Strd": [
+                            {
+                                "RfrdDocInf": [
+                                    {
+                                        "Tp": {
+                                            "CdOrPrtry": {
+                                                "Prtry": "CHEQUE_RANGE"
+                                            }
+                                        },
+                                        "Nb": {"cat": [{"var": "cheque_start"}, " - ", {"var": "cheque_end"}]},
+                                        "RltdDt": {"fake": ["date", "%Y-%m-%d", "+0d", "+0d"]}
+                                    }
+                                ],
+                                "RfrdDocAmt": {
+                                    "RmtdAmt": {
+                                        "@Ccy": "USD",
+                                        "$value": {"cat": [{"var": "amount_range_min"}, " - ", {"var": "amount_range_max"}]}
+                                    }
+                                },
+                                "AddtlRmtInf": [
+                                    "URGENT: Stop payment on cheque range",
+                                    "Suspected fraudulent activity",
+                                    "All cheques in range to be rejected",
+                                    "Contact fraud department immediately"
+                                ]
+                            }
+                        ]
+                    },
+                    "Dbtr": {
+                        "Nm": {"var": "drawer_name"},
+                        "PstlAdr": {
+                            "Ctry": {"fake": ["country_code"]}
+                        },
+                        "Id": {
+                            "PrvtId": {
+                                "Othr": [
+                                    {
+                                        "Id": {"fake": ["regex", "[0-9]{9}"]},
+                                        "SchmeNm": {
+                                            "Cd": "TXID"
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "DbtrAcct": {
+                        "Id": {
+                            "IBAN": {"var": "drawer_account"}
+                        }
+                    },
+                    "DbtrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {"var": "drawer_bic"}
+                        }
+                    }
+                },
+                "SplmtryData": [
+                    {
+                        "PlcAndNm": "FraudAlert",
+                        "Envlp": {
+                            "Document": {
+                                "Prtry": {
+                                    "Tp": "FRAUD_DETAILS",
+                                    "Id": {"var": "fraud_case_id"},
+                                    "Issr": "FRAUD_DEPT"
+                                }
+                            }
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+}

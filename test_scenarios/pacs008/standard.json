@@ -1,0 +1,112 @@
+{
+    "variables": {
+        "msg_id": {"cat": ["MSG", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "sender_bic": {"fake": ["bic"]},
+        "receiver_bic": {"fake": ["bic"]},
+        "transaction_ref": {"cat": ["TXN", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "instruction_id": {"cat": ["INSTR", {"fake": ["i64", 10000000, 99999999]}]},
+        "end_to_end_id": {"cat": ["E2E", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "uetr": {"fake": ["uuid"]},
+        "currency": {"fake": ["currency_code"]},
+        "amount": {"fake": ["f64", 10000.0, 500000.0]},
+        "value_date": "2024-01-15",
+        "charges": "SHAR",
+        "debtor_iban": {"fake": ["iban", "DE"]},
+        "creditor_iban": {"fake": ["iban", "FR"]},
+        "purpose_code": "SUPP"
+    },
+    "schema": {
+        "GrpHdr": {
+            "MsgId": {"var": "msg_id"},
+            "CreDtTm": {"var": "creation_datetime"},
+            "NbOfTxs": "1",
+            "SttlmInf": {
+                "SttlmMtd": "INDA"
+            }
+        },
+        "CdtTrfTxInf": {
+            "PmtId": {
+                "InstrId": {"var": "instruction_id"},
+                "EndToEndId": {"var": "end_to_end_id"},
+                "TxId": {"var": "transaction_ref"},
+                "UETR": {"var": "uetr"}
+            },
+            "IntrBkSttlmAmt": {
+                "@Ccy": {"var": "currency"},
+                "$value": {"var": "amount"}
+            },
+            "IntrBkSttlmDt": {"var": "value_date"},
+            "SttlmPrty": "NORM",
+            "InstdAmt": {
+                "@Ccy": {"var": "currency"},  
+                "$value": {"var": "amount"}
+            },
+            "ChrgBr": {"var": "charges"},
+            "InstgAgt": {
+                "FinInstnId": {
+                    "BICFI": {"var": "sender_bic"}
+                }
+            },
+            "InstdAgt": {
+                "FinInstnId": {
+                    "BICFI": {"var": "receiver_bic"}
+                }
+            },
+            "Dbtr": {
+                "Nm": {"fake": ["company_name"]},
+                "PstlAdr": {
+                    "StrtNm": {"fake": ["street_name"]},
+                    "BldgNb": {"cat": [{"fake": ["i64", 1, 999]}]},
+                    "PstCd": {"fake": ["postcode"]},
+                    "TwnNm": {"fake": ["city_name"]},
+                    "Ctry": "DE"
+                },
+                "CtryOfRes": "DE"
+            },
+            "DbtrAcct": {
+                "Id": {
+                    "IBAN": {"var": "debtor_iban"}
+                },
+                "Ccy": {"var": "currency"},
+                "Nm": {"fake": ["words", 2, 3]}
+            },
+            "DbtrAgt": {
+                "FinInstnId": {
+                    "BICFI": {"var": "sender_bic"},
+                    "Nm": {"fake": ["company_name"]}
+                }
+            },
+            "CdtrAgt": {
+                "FinInstnId": {
+                    "BICFI": {"var": "receiver_bic"},
+                    "Nm": {"fake": ["company_name"]}
+                }
+            },
+            "Cdtr": {
+                "Nm": {"fake": ["company_name"]},
+                "PstlAdr": {
+                    "StrtNm": {"fake": ["street_name"]},
+                    "BldgNb": {"cat": [{"fake": ["i64", 1, 999]}]},
+                    "PstCd": {"fake": ["postcode"]},
+                    "TwnNm": {"fake": ["city_name"]},
+                    "Ctry": "FR"
+                },
+                "CtryOfRes": "FR"
+            },
+            "CdtrAcct": {
+                "Id": {
+                    "IBAN": {"var": "creditor_iban"}
+                },
+                "Ccy": {"var": "currency"},
+                "Nm": {"fake": ["words", 2, 3]}
+            },
+            "Purp": {
+                "Cd": {"var": "purpose_code"}
+            },
+            "RmtInf": {
+                "Ustrd": {"cat": ["Payment for Invoice ", {"fake": ["word"]}, "-2024-", {"fake": ["i64", 1, 999]}]}
+            }
+        }
+    }
+}

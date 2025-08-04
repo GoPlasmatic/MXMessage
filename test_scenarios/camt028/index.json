@@ -1,0 +1,22 @@
+{
+    "message_type": "camt.028",
+    "description": "Additional Payment Information",
+    "scenarios": [
+        {
+            "file": "cbpr_payment_response.json",
+            "description": "CBPR+ payment response from MT299"
+        },
+        {
+            "file": "regulatory_notification.json",
+            "description": "Regulatory notification for payment from MT299"
+        },
+        {
+            "file": "settlement_instructions_update.json",
+            "description": "Update to settlement instructions from MT299"
+        },
+        {
+            "file": "system_maintenance_notice.json",
+            "description": "System maintenance notification from MT299"
+        }
+    ]
+}

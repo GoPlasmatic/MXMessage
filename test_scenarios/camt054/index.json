@@ -1,0 +1,54 @@
+{
+    "message_type": "camt.054",
+    "description": "Bank to Customer Debit/Credit Notification",
+    "scenarios": [
+        {
+            "file": "basic_debit_confirmation.json",
+            "description": "Basic debit confirmation from MT900"
+        },
+        {
+            "file": "cbpr_debit_confirmation.json",
+            "description": "CBPR+ compliant debit confirmation from MT900"
+        },
+        {
+            "file": "direct_debit_confirmation.json",
+            "description": "Direct debit collection confirmation from MT900"
+        },
+        {
+            "file": "fee_debit_confirmation.json",
+            "description": "Bank fee debit confirmation from MT900"
+        },
+        {
+            "file": "fx_transaction_debit.json",
+            "description": "Foreign exchange transaction debit from MT900"
+        },
+        {
+            "file": "standing_order_debit.json",
+            "description": "Standing order debit confirmation from MT900"
+        },
+        {
+            "file": "basic_credit_confirmation.json",
+            "description": "Basic credit confirmation from MT910"
+        },
+        {
+            "file": "cbpr_credit_confirmation.json",
+            "description": "CBPR+ compliant credit confirmation from MT910"
+        },
+        {
+            "file": "dividend_payment.json",
+            "description": "Dividend payment credit notification from MT910"
+        },
+        {
+            "file": "incoming_wire_transfer.json",
+            "description": "Incoming wire transfer notification from MT910"
+        },
+        {
+            "file": "interest_credit.json",
+            "description": "Interest credit notification from MT910"
+        },
+        {
+            "file": "refund_credit.json",
+            "description": "Refund credit notification from MT910"
+        }
+    ]
+}

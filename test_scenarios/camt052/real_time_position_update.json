@@ -1,0 +1,265 @@
+{
+    "variables": {
+        "msg_id": {"cat": ["MSG", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "report_id": {"cat": ["RT-POS-", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "account_id": {"fake": ["iban"]},
+        "account_owner": {"fake": ["company_name"]},
+        "account_owner_lei": {"fake": ["lei"]},
+        "servicer_bic": {"fake": ["bic"]},
+        "servicer_lei": {"fake": ["lei"]},
+        "real_time_balance": {"fake": ["f64", 250000.0, 5000000.0]},
+        "available_balance": {"fake": ["f64", 200000.0, 4500000.0]},
+        "pending_credits": {"fake": ["f64", 50000.0, 500000.0]},
+        "pending_debits": {"fake": ["f64", 25000.0, 250000.0]}
+    },
+    "schema": {
+        "GrpHdr": {
+            "MsgId": {"var": "msg_id"},
+            "CreDtTm": {"var": "creation_datetime"},
+            "MsgRcpt": {
+                "Pty": {
+                    "Nm": {"var": "account_owner"},
+                    "Id": {
+                        "OrgId": {
+                            "LEI": {"var": "account_owner_lei"}
+                        }
+                    }
+                }
+            }
+        },
+        "Rpt": [
+            {
+                "Id": {"var": "report_id"},
+                "CreDtTm": {"var": "creation_datetime"},
+                "RptgSrc": {
+                    "Prtry": "REAL_TIME_POSITION"
+                },
+                "Acct": {
+                    "Id": {
+                        "IBAN": {"var": "account_id"}
+                    },
+                    "Tp": {
+                        "Cd": "CACC"
+                    },
+                    "Ccy": "USD",
+                    "Nm": "Real-Time Cash Management Account",
+                    "Ownr": {
+                        "Nm": {"var": "account_owner"},
+                        "Id": {
+                            "OrgId": {
+                                "LEI": {"var": "account_owner_lei"}
+                            }
+                        }
+                    },
+                    "Svcr": {
+                        "FinInstnId": {
+                            "BICFI": {"var": "servicer_bic"},
+                            "LEI": {"var": "servicer_lei"}
+                        }
+                    }
+                },
+                "Bal": [
+                    {
+                        "Tp": {
+                            "CdOrPrtry": {
+                                "Cd": "INFO"
+                            },
+                            "SubTp": {
+                                "Prtry": "REAL_TIME_LEDGER"
+                            }
+                        },
+                        "Amt": {
+                            "@Ccy": "USD",
+                            "$value": {"var": "real_time_balance"}
+                        },
+                        "CdtDbtInd": "CRDT",
+                        "Dt": {
+                            "DtTm": {"var": "creation_datetime"}
+                        }
+                    },
+                    {
+                        "Tp": {
+                            "CdOrPrtry": {
+                                "Cd": "CLAV"
+                            }
+                        },
+                        "Amt": {
+                            "@Ccy": "USD",
+                            "$value": {"var": "available_balance"}
+                        },
+                        "CdtDbtInd": "CRDT",
+                        "Dt": {
+                            "DtTm": {"var": "creation_datetime"}
+                        }
+                    },
+                    {
+                        "Tp": {
+                            "CdOrPrtry": {
+                                "Prtry": "PENDING_INCOMING"
+                            }
+                        },
+                        "Amt": {
+                            "@Ccy": "USD",
+                            "$value": {"var": "pending_credits"}
+                        },
+                        "CdtDbtInd": "CRDT",
+                        "Dt": {
+                            "DtTm": {"var": "creation_datetime"}
+                        }
+                    },
+                    {
+                        "Tp": {
+                            "CdOrPrtry": {
+                                "Prtry": "PENDING_OUTGOING"
+                            }
+                        },
+                        "Amt": {
+                            "@Ccy": "USD",
+                            "$value": {"var": "pending_debits"}
+                        },
+                        "CdtDbtInd": "DBIT",
+                        "Dt": {
+                            "DtTm": {"var": "creation_datetime"}
+                        }
+                    }
+                ],
+                "Ntry": [
+                    {
+                        "NtryRef": {"cat": ["RT-", {"fake": ["i64", 1000000, 9999999]}]},
+                        "Amt": {
+                            "@Ccy": "USD",
+                            "$value": {"fake": ["f64", 10000.0, 100000.0]}
+                        },
+                        "CdtDbtInd": "CRDT",
+                        "Sts": {
+                            "Cd": "PDNG"
+                        },
+                        "BookgDt": {
+                            "DtTm": {"fake": ["iso8601_datetime", "+1h", "+2h"]}
+                        },
+                        "ValDt": {
+                            "DtTm": {"fake": ["iso8601_datetime", "+1h", "+2h"]}
+                        },
+                        "BkTxCd": {
+                            "Domn": {
+                                "Cd": "PMNT",
+                                "Fmly": {
+                                    "Cd": "RCDT",
+                                    "SubFmlyCd": "XBCT"
+                                }
+                            },
+                            "Prtry": {
+                                "Cd": "REAL_TIME_PAYMENT",
+                                "Issr": "TCH"
+                            }
+                        },
+                        "NtryDtls": [
+                            {
+                                "TxDtls": [
+                                    {
+                                        "Refs": {
+                                            "AcctSvcrRef": {"cat": ["RTP-", {"fake": ["i64", 10000000, 99999999]}]},
+                                            "EndToEndId": {"cat": ["E2E-", {"fake": ["i64", 100000000000, 999999999999]}]},
+                                            "ClrSysRef": {"cat": ["TCH-", {"fake": ["i64", 100000000, 999999999]}]}
+                                        },
+                                        "Amt": {
+                                            "@Ccy": "USD",
+                                            "$value": {"fake": ["f64", 10000.0, 100000.0]}
+                                        },
+                                        "CdtDbtInd": "CRDT",
+                                        "RltdPties": {
+                                            "Dbtr": {
+                                                "Nm": {"fake": ["full_name"]}
+                                            },
+                                            "DbtrAcct": {
+                                                "Id": {
+                                                    "Othr": {
+                                                        "Id": {"fake": ["regex", "[0-9]{10}"]},
+                                                        "SchmeNm": {
+                                                            "Cd": "BBAN"
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "RmtInf": {
+                                            "Ustrd": ["Incoming RTP payment - pending settlement"]
+                                        },
+                                        "RltdDts": {
+                                            "AccptncDtTm": {"fake": ["iso8601_datetime", "-5m", "-2m"]}
+                                        }
+                                    }
+                                ]
+                            }
+                        ],
+                        "AddtlNtryInf": "Real-time payment awaiting final settlement"
+                    },
+                    {
+                        "NtryRef": {"cat": ["BOOK-", {"fake": ["i64", 1000000, 9999999]}]},
+                        "Amt": {
+                            "@Ccy": "USD",
+                            "$value": {"fake": ["f64", 5000.0, 50000.0]}
+                        },
+                        "CdtDbtInd": "DBIT",
+                        "Sts": {
+                            "Cd": "BOOK"
+                        },
+                        "BookgDt": {
+                            "DtTm": {"fake": ["iso8601_datetime", "-10m", "-5m"]}
+                        },
+                        "ValDt": {
+                            "DtTm": {"fake": ["iso8601_datetime", "-10m", "-5m"]}
+                        },
+                        "BkTxCd": {
+                            "Domn": {
+                                "Cd": "PMNT",
+                                "Fmly": {
+                                    "Cd": "ICDT",
+                                    "SubFmlyCd": "DMCT"
+                                }
+                            }
+                        },
+                        "NtryDtls": [
+                            {
+                                "TxDtls": [
+                                    {
+                                        "Refs": {
+                                            "AcctSvcrRef": {"cat": ["ACH-", {"fake": ["i64", 10000000, 99999999]}]},
+                                            "EndToEndId": {"cat": ["E2E-", {"fake": ["i64", 100000000000, 999999999999]}]}
+                                        },
+                                        "Amt": {
+                                            "@Ccy": "USD",
+                                            "$value": {"fake": ["f64", 5000.0, 50000.0]}
+                                        },
+                                        "CdtDbtInd": "DBIT",
+                                        "RltdPties": {
+                                            "Cdtr": {
+                                                "Nm": {"fake": ["company_name"]}
+                                            },
+                                            "CdtrAcct": {
+                                                "Id": {
+                                                    "Othr": {
+                                                        "Id": {"fake": ["regex", "[0-9]{10}"]},
+                                                        "SchmeNm": {
+                                                            "Cd": "BBAN"
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "RmtInf": {
+                                            "Ustrd": ["ACH payment - completed"]
+                                        }
+                                    }
+                                ]
+                            }
+                        ],
+                        "AddtlNtryInf": "Position updated in real-time"
+                    }
+                ],
+                "AddtlRptInf": "Real-time cash position - updated every 60 seconds"
+            }
+        ]
+    }
+}

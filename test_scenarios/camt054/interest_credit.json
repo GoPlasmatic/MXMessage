@@ -1,0 +1,138 @@
+{
+    "variables": {
+        "msg_id": {"cat": ["INT-", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "ntfctn_id": {"cat": ["INT-NTFCTN-", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_time": {"fake": ["iso8601_datetime"]},
+        "account_id": {"fake": ["iban"]},
+        "account_owner": {"fake": ["full_name"]},
+        "servicer_bic": {"fake": ["bic"]},
+        "entry_ref": {"cat": ["INT-ENT-", {"fake": ["i64", 1000000, 9999999]}]},
+        "interest_amount": {"fake": ["f64", 10.0, 1000.0]},
+        "booking_date": {"fake": ["date", "%Y-%m-%d", "-1d", "-1d"]},
+        "value_date": {"fake": ["date", "%Y-%m-%d", "-1d", "-1d"]},
+        "transaction_ref": {"cat": ["INT-TXN-", {"fake": ["i64", 10000000, 99999999]}]},
+        "interest_rate": {"fake": ["f64", 0.5, 3.5]},
+        "principal_amount": {"fake": ["f64", 10000.0, 500000.0]},
+        "period_start": {"fake": ["date", "%Y-%m-%d", "-31d", "-31d"]},
+        "period_end": {"fake": ["date", "%Y-%m-%d", "-1d", "-1d"]}
+    },
+    "schema": {
+        "GrpHdr": {
+            "MsgId": {"var": "msg_id"},
+            "CreDtTm": {"var": "creation_datetime"}
+        },
+        "Ntfctn": [
+            {
+                "Id": {"var": "ntfctn_id"},
+                "CreDtTm": {"var": "creation_time"},
+                "Acct": {
+                    "Id": {
+                        "IBAN": {"var": "account_id"}
+                    },
+                    "Ownr": {
+                        "Nm": {"var": "account_owner"}
+                    },
+                    "Svcr": {
+                        "FinInstnId": {
+                            "BICFI": {"var": "servicer_bic"}
+                        }
+                    }
+                },
+                "Ntry": [
+                    {
+                        "NtryRef": {"var": "entry_ref"},
+                        "Amt": {
+                            "@Ccy": "USD",
+                            "$value": {"var": "interest_amount"}
+                        },
+                        "CdtDbtInd": "CRDT",
+                        "Sts": {
+                            "Cd": "BOOK"
+                        },
+                        "BookgDt": {
+                            "Dt": {"var": "booking_date"}
+                        },
+                        "ValDt": {
+                            "Dt": {"var": "value_date"}
+                        },
+                        "BkTxCd": {
+                            "Domn": {
+                                "Cd": "ACMT",
+                                "Fmly": {
+                                    "Cd": "CINT",
+                                    "SubFmlyCd": "INTR"
+                                }
+                            }
+                        },
+                        "NtryDtls": [
+                            {
+                                "TxDtls": [
+                                    {
+                                        "Refs": {
+                                            "AcctSvcrRef": {"var": "transaction_ref"}
+                                        },
+                                        "Amt": {
+                                            "@Ccy": "USD",
+                                            "$value": {"var": "interest_amount"}
+                                        },
+                                        "CdtDbtInd": "CRDT",
+                                        "Intrst": [
+                                            {
+                                                "Tp": {
+                                                    "Cd": "INDY"
+                                                },
+                                                "Rate": [
+                                                    {
+                                                        "Tp": {
+                                                            "Pctg": {"var": "interest_rate"}
+                                                        },
+                                                        "VldtyRg": {
+                                                            "FrDt": {"var": "period_start"},
+                                                            "ToDt": {"var": "period_end"}
+                                                        }
+                                                    }
+                                                ],
+                                                "Amt": {
+                                                    "@Ccy": "USD",
+                                                    "$value": {"var": "interest_amount"}
+                                                },
+                                                "FrToDt": {
+                                                    "FrDt": {"var": "period_start"},
+                                                    "ToDt": {"var": "period_end"}
+                                                }
+                                            }
+                                        ],
+                                        "RltdPties": {
+                                            "Cdtr": {
+                                                "Nm": {"var": "account_owner"}
+                                            }
+                                        },
+                                        "Tax": [
+                                            {
+                                                "Tp": {
+                                                    "Cd": "WITL"
+                                                },
+                                                "Amt": {
+                                                    "@Ccy": "USD",
+                                                    "$value": 0.0
+                                                },
+                                                "Rate": 0.0,
+                                                "TaxblBaseAmt": {
+                                                    "@Ccy": "USD",
+                                                    "$value": {"var": "interest_amount"}
+                                                }
+                                            }
+                                        ],
+                                        "AddtlTxInf": {"cat": ["Monthly interest on average balance of $", {"var": "principal_amount"}, " at ", {"var": "interest_rate"}, "% p.a."]}
+                                    }
+                                ]
+                            }
+                        ],
+                        "AddtlNtryInf": "Monthly interest credit"
+                    }
+                ]
+            }
+        ]
+    }
+}

@@ -20,3 +20,5 @@
 pub mod document;
 pub mod error;
 pub mod header;
+pub mod sample;
+pub mod scenario_config;

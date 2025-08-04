@@ -1,0 +1,288 @@
+{
+    "variables": {
+        "msg_id": {
+            "cat": [
+                "CBPR-UTIL-XB-",
+                {
+                    "fake": [
+                        "i64",
+                        100000000000,
+                        999999999999
+                    ]
+                }
+            ]
+        },
+        "creation_datetime": {
+            "fake": [
+                "iso8601_datetime"
+            ]
+        },
+        "payment_id": {
+            "cat": [
+                "UTIL-XB-",
+                {
+                    "fake": [
+                        "i64",
+                        100000,
+                        999999
+                    ]
+                }
+            ]
+        },
+        "uetr": {
+            "fake": [
+                "uuid"
+            ]
+        },
+        "amount": {
+            "fake": [
+                "f64",
+                100.0,
+                5000.0
+            ]
+        },
+        "currency": {
+            "fake": [
+                "enum",
+                "USD",
+                "EUR",
+                "GBP"
+            ]
+        },
+        "sender_bic": {
+            "fake": [
+                "bic"
+            ]
+        },
+        "receiver_bic": {
+            "fake": [
+                "bic"
+            ]
+        },
+        "customer_name": {
+            "fake": [
+                "full_name"
+            ]
+        },
+        "customer_country": {
+            "fake": [
+                "country_code"
+            ]
+        },
+        "customer_account": {
+            "fake": [
+                "iban"
+            ]
+        },
+        "utility_company": {
+            "cat": [
+                {
+                    "fake": [
+                        "city"
+                    ]
+                },
+                " Power & Gas Ltd"
+            ]
+        },
+        "utility_country": {
+            "fake": [
+                "country_code"
+            ]
+        },
+        "utility_account": {
+            "fake": [
+                "iban"
+            ]
+        },
+        "account_number": {
+            "cat": [
+                "ACC-",
+                {
+                    "fake": [
+                        "i64",
+                        10000000,
+                        99999999
+                    ]
+                }
+            ]
+        },
+        "billing_period": {
+            "fake": [
+                "date",
+                "%Y-%m",
+                "-1M",
+                "-1M"
+            ]
+        },
+        "meter_reading": {
+            "fake": [
+                "i64",
+                1000,
+                9999
+            ]
+        }
+    },
+    "schema": {
+        "GrpHdr": {
+            "MsgId": {
+                "var": "msg_id"
+            },
+            "CreDtTm": {
+                "var": "creation_datetime"
+            },
+            "NbOfTxs": "1",
+            "SttlmInf": {
+                "SttlmMtd": "INDA"
+            }
+        },
+        "CdtTrfTxInf": {
+            "PmtId": {
+                "InstrId": {
+                    "var": "payment_id"
+                },
+                "EndToEndId": {
+                    "var": "account_number"
+                },
+                "UETR": {
+                    "var": "uetr"
+                }
+            },
+            "PmtTpInf": {
+                "InstrPrty": "NORM",
+                "SvcLvl": [
+                    {
+                        "Cd": "G001"
+                    }
+                ],
+                "CtgyPurp": {
+                    "Cd": "UTIP"
+                }
+            },
+            "IntrBkSttlmAmt": {
+                "@Ccy": {
+                    "var": "currency"
+                },
+                "$value": {
+                    "var": "amount"
+                }
+            },
+            "IntrBkSttlmDt": {
+                "fake": [
+                    "date",
+                    "%Y-%m-%d",
+                    "+1d",
+                    "+3d"
+                ]
+            },
+            "InstdAmt": {
+                "@Ccy": {
+                    "var": "currency"
+                },
+                "$value": {
+                    "var": "amount"
+                }
+            },
+            "ChrgBr": "SHAR",
+            "Dbtr": {
+                "Nm": {
+                    "var": "customer_name"
+                },
+                "PstlAdr": {
+                    "Ctry": {
+                        "var": "customer_country"
+                    }
+                }
+            },
+            "DbtrAcct": {
+                "Id": {
+                    "IBAN": {
+                        "var": "customer_account"
+                    }
+                }
+            },
+            "DbtrAgt": {
+                "FinInstnId": {
+                    "BICFI": {
+                        "var": "sender_bic"
+                    }
+                }
+            },
+            "CdtrAgt": {
+                "FinInstnId": {
+                    "BICFI": {
+                        "var": "receiver_bic"
+                    }
+                }
+            },
+            "Cdtr": {
+                "Nm": {
+                    "var": "utility_company"
+                },
+                "PstlAdr": {
+                    "Ctry": {
+                        "var": "utility_country"
+                    }
+                }
+            },
+            "CdtrAcct": {
+                "Id": {
+                    "IBAN": {
+                        "var": "utility_account"
+                    }
+                }
+            },
+            "Purp": {
+                "Cd": "UTIP"
+            },
+            "RmtInf": {
+                "Strd": [
+                    {
+                        "RfrdDocInf": [
+                            {
+                                "Tp": {
+                                    "CdOrPrtry": {
+                                        "Prtry": "UTIL_BILL"
+                                    }
+                                },
+                                "Nb": {
+                                    "var": "account_number"
+                                },
+                                "RltdDt": {
+                                    "fake": [
+                                        "date",
+                                        "%Y-%m-%d",
+                                        "-5d",
+                                        "-1d"
+                                    ]
+                                }
+                            }
+                        ],
+                        "AddtlRmtInf": [
+                            "Generated remittance information",
+                            "Generated remittance information",
+                            "Generated remittance information"
+                        ]
+                    }
+                ]
+            },
+            "InstgAgt": {
+                "FinInstnId": {
+                    "BICFI": {
+                        "fake": [
+                            "bic"
+                        ]
+                    }
+                }
+            },
+            "InstdAgt": {
+                "FinInstnId": {
+                    "BICFI": {
+                        "fake": [
+                            "bic"
+                        ]
+                    }
+                }
+            }
+        }
+    }
+}

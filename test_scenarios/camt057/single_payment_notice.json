@@ -1,0 +1,110 @@
+{
+    "variables": {
+        "msg_id": {"cat": ["PAY-NOTIF-", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "expected_datetime": {"fake": ["iso8601_datetime", "+1h", "+4h"]},
+        "sender_bic": {"fake": ["bic"]},
+        "receiver_bic": {"fake": ["bic"]},
+        "amount": {"fake": ["f64", 1000.00, 100000.00]},
+        "currency": {"fake": ["enum", "USD", "EUR", "GBP", "CHF", "CAD"]},
+        "ordering_name": {"fake": ["full_name"]},
+        "ordering_address": {"fake": ["street_address"]},
+        "ordering_country": {"fake": ["country_code"]},
+        "beneficiary_account": {"fake": ["iban"]},
+        "beneficiary_name": {"fake": ["full_name"]},
+        "payment_reference": {"cat": ["PMT-", {"fake": ["i64", 100000, 999999]}]},
+        "remittance_info": {"fake": ["sentence"]},
+        "sender_reference": {"cat": ["SNDREF-", {"fake": ["i64", 100000, 999999]}]}
+    },
+    "schema": {
+        "Assgnmt": {
+            "Id": {"var": "msg_id"},
+            "Assgnr": {
+                "Agt": {
+                    "FinInstnId": {
+                        "BICFI": {"var": "sender_bic"}
+                    }
+                }
+            },
+            "Assgne": {
+                "Agt": {
+                    "FinInstnId": {
+                        "BICFI": {"var": "receiver_bic"}
+                    }
+                }
+            },
+            "CreDtTm": {"var": "creation_datetime"}
+        },
+        "Ntfctn": {
+            "Id": {"cat": ["NOTIF-", {"fake": ["i64", 100000, 999999]}]},
+            "CreDtTm": {"var": "creation_datetime"},
+            "Acct": {
+                "Id": {
+                    "IBAN": {"var": "beneficiary_account"}
+                },
+                "Nm": {"var": "beneficiary_name"}
+            },
+            "Itm": [
+                {
+                    "Id": {"var": "payment_reference"},
+                    "XpctdValDt": {"var": "expected_datetime"},
+                    "Amt": {
+                        "Amt": {
+                            "Value": {"var": "amount"},
+                            "Ccy": {"var": "currency"}
+                        }
+                    },
+                    "ChrgBr": "SHAR",
+                    "DbtrAcct": {
+                        "Nm": {"var": "ordering_name"}
+                    },
+                    "Dbtr": {
+                        "Nm": {"var": "ordering_name"},
+                        "PstlAdr": {
+                            "StrtNm": {"var": "ordering_address"},
+                            "Ctry": {"var": "ordering_country"}
+                        }
+                    },
+                    "RmtInf": {
+                        "Ustrd": [{"var": "remittance_info"}],
+                        "Strd": [
+                            {
+                                "RfrdDocInf": [
+                                    {
+                                        "Tp": {
+                                            "CdOrPrtry": {
+                                                "Cd": "CINV"
+                                            }
+                                        },
+                                        "Nb": {"var": "sender_reference"}
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        "SplmtryData": [
+            {
+                "Envlp": {
+                    "PaymentNoticeDetails": {
+                        "NoticeType": "SINGLE_PAYMENT",
+                        "Priority": "NORMAL",
+                        "PaymentMethod": "TRF",
+                        "ExpectedClearingSystem": "TARGET2",
+                        "ComplianceInfo": {
+                            "ScreeningStatus": "PENDING",
+                            "RegulatoryReporting": "REQUIRED"
+                        },
+                        "RelatedCorrespondence": {
+                            "SenderReference": {"var": "sender_reference"},
+                            "MessageType": "MT103",
+                            "ExpectedArrival": {"var": "expected_datetime"}
+                        }
+                    }
+                }
+            }
+        ]
+    }
+}

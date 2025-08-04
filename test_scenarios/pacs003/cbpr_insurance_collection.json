@@ -1,0 +1,796 @@
+{
+    "variables": {
+        "msg_id": {"cat": ["MSGINSUR", {"fake": ["uuid"]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "settlement_date": "2025-01-29",
+        "num_txs": 5,
+        "total_amt": {"fake": ["f64", 100000.0, 500000.0]},
+        "instg_lei": {"fake": ["lei"]},
+        "instd_lei": {"fake": ["lei"]},
+        "instg_bic": {"fake": ["bic"]},
+        "instd_bic": {"fake": ["bic"]},
+        "insurance_co_lei": {"fake": ["lei"]},
+        "insurance_co_bic": {"fake": ["bic"]}
+    },
+    "schema": {
+        "GrpHdr": {
+            "MsgId": {"var": "msg_id"},
+            "CreDtTm": {"var": "creation_datetime"},
+            "NbOfTxs": {"cat": [{"var": "num_txs"}]},
+            "TtlIntrBkSttlmAmt": {
+                "@Ccy": "EUR",
+                "$value": {"var": "total_amt"}
+            },
+            "IntrBkSttlmDt": {"var": "settlement_date"},
+            "SttlmInf": {
+                "SttlmMtd": "CLRG",
+                "ClrSys": {
+                    "Cd": "TGT"
+                }
+            },
+            "InstgAgt": {
+                "FinInstnId": {
+                    "BICFI": {"var": "instg_bic"},
+                    "LEI": {"var": "instg_lei"}
+                }
+            },
+            "InstdAgt": {
+                "FinInstnId": {
+                    "BICFI": {"var": "instd_bic"},
+                    "LEI": {"var": "instd_lei"}
+                }
+            }
+        },
+        "DrctDbtTxInf": [
+            {
+                "PmtId": {
+                    "EndToEndId": {"cat": ["E2EINS", {"fake": ["i64", 100000000000, 999999999999]}]},
+                    "TxId": {"cat": ["TXINS", {"fake": ["uuid"]}]},
+                    "UETR": {"fake": ["uuid"]}
+                },
+                "PmtTpInf": {
+                    "InstrPrty": "NORM",
+                    "SvcLvl": [
+                        {
+                            "Cd": "G001"
+                        }
+                    ],
+                    "LclInstrm": {
+                        "Cd": "B2B"
+                    },
+                    "SeqTp": "RCUR",
+                    "CtgyPurp": {
+                        "Cd": "INSU"
+                    }
+                },
+                "IntrBkSttlmAmt": {
+                    "@Ccy": "EUR",
+                    "$value": {"fake": ["f64", 5000.0, 25000.0]}
+                },
+                "IntrBkSttlmDt": {"var": "settlement_date"},
+                "InstdAmt": {
+                    "@Ccy": "EUR",
+                    "$value": {"fake": ["f64", 5000.0, 25000.0]}
+                },
+                "ChrgBr": "DEBT",
+                "DrctDbtTx": {
+                    "MndtRltdInf": {
+                        "MndtId": {"cat": ["MNDTINS", {"fake": ["i64", 1000000, 9999999]}]},
+                        "DtOfSgntr": "2023-01-01",
+                        "AmdmntInd": false,
+                        "ElctrncSgntr": {"cat": ["ESIG-", {"fake": ["uuid"]}]}
+                    },
+                    "CdtrSchmeId": {
+                        "Id": {
+                            "PrvtId": {
+                                "Othr": [
+                                    {
+                                        "Id": {"cat": ["DE", {"fake": ["i64", 10000000, 99999999]}, "ZZZ"]},
+                                        "SchmeNm": {
+                                            "Prtry": "SEPA"
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                "DbtrAgt": {
+                    "FinInstnId": {
+                        "BICFI": {"fake": ["bic"]},
+                        "LEI": {"fake": ["lei"]}
+                    }
+                },
+                "Dbtr": {
+                    "Nm": {"fake": ["company_name"]},
+                    "PstlAdr": {
+                        "Ctry": "DE",
+                        "AdrLine": [
+                            {"fake": ["street_address"]},
+                            {"cat": [{"fake": ["postcode"]}, " ", {"fake": ["city_name"]}]}
+                        ]
+                    },
+                    "Id": {
+                        "OrgId": {
+                            "LEI": {"fake": ["lei"]},
+                            "Othr": [
+                                {
+                                    "Id": {"cat": ["DE", {"fake": ["i64", 100000000, 999999999]}]},
+                                    "SchmeNm": {
+                                        "Cd": "TXID"
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                },
+                "DbtrAcct": {
+                    "Id": {
+                        "IBAN": {"fake": ["iban", "DE"]}
+                    },
+                    "Tp": {
+                        "Cd": "CACC"
+                    }
+                },
+                "CdtrAgt": {
+                    "FinInstnId": {
+                        "BICFI": {"var": "insurance_co_bic"},
+                        "LEI": {"var": "insurance_co_lei"}
+                    }
+                },
+                "Cdtr": {
+                    "Nm": "European Insurance Group AG",
+                    "PstlAdr": {
+                        "Ctry": "DE",
+                        "AdrLine": [
+                            "Insurance Tower",
+                            "60325 Frankfurt"
+                        ]
+                    },
+                    "Id": {
+                        "OrgId": {
+                            "LEI": {"var": "insurance_co_lei"}
+                        }
+                    }
+                },
+                "CdtrAcct": {
+                    "Id": {
+                        "IBAN": {"fake": ["iban", "DE"]}
+                    },
+                    "Tp": {
+                        "Cd": "CACC"
+                    }
+                },
+                "Purp": {
+                    "Cd": "INSU"
+                },
+                "RgltryRptg": [
+                    {
+                        "Dtls": [
+                            {
+                                "Tp": "DEBT",
+                                "Dt": "2025-01-29",
+                                "Ctry": "DE",
+                                "Cd": "150",
+                                "Amt": {
+                                    "@Ccy": "EUR",
+                                    "$value": {"fake": ["f64", 5000.0, 25000.0]}
+                                },
+                                "Inf": ["CBPR+ INSURANCE PREMIUM COLLECTION"]
+                            }
+                        ]
+                    }
+                ],
+                "RmtInf": {
+                    "Strd": [
+                        {
+                            "RfrdDocInf": [
+                                {
+                                    "Tp": {
+                                        "CdOrPrtry": {
+                                            "Prtry": "POLICY"
+                                        }
+                                    },
+                                    "Nb": {"cat": ["POL-", {"fake": ["i64", 1000001, 9999999]}]},
+                                    "RltdDt": "2023-01-01"
+                                }
+                            ],
+                            "AddtlRmtInf": [
+                                "Business liability insurance - Annual premium",
+                                "Coverage: EUR 10,000,000"
+                            ]
+                        }
+                    ]
+                }
+            },
+            {
+                "PmtId": {
+                    "EndToEndId": {"cat": ["E2EINS", {"fake": ["i64", 100000000000, 999999999999]}]},
+                    "TxId": {"cat": ["TXINS", {"fake": ["uuid"]}]},
+                    "UETR": {"fake": ["uuid"]}
+                },
+                "PmtTpInf": {
+                    "InstrPrty": "HIGH",
+                    "SvcLvl": [
+                        {
+                            "Cd": "G001"
+                        }
+                    ],
+                    "LclInstrm": {
+                        "Cd": "B2B"
+                    },
+                    "SeqTp": "RCUR",
+                    "CtgyPurp": {
+                        "Cd": "INSU"
+                    }
+                },
+                "IntrBkSttlmAmt": {
+                    "@Ccy": "EUR",
+                    "$value": {"fake": ["f64", 15000.0, 50000.0]}
+                },
+                "IntrBkSttlmDt": {"var": "settlement_date"},
+                "InstdAmt": {
+                    "@Ccy": "EUR",
+                    "$value": {"fake": ["f64", 15000.0, 50000.0]}
+                },
+                "ChrgBr": "DEBT",
+                "DrctDbtTx": {
+                    "MndtRltdInf": {
+                        "MndtId": {"cat": ["MNDTINS", {"fake": ["i64", 1000000, 9999999]}]},
+                        "DtOfSgntr": "2022-06-15",
+                        "AmdmntInd": true,
+                        "AmdmntInfDtls": {
+                            "OrgnlDbtrAcct": {
+                                "Id": {
+                                    "IBAN": {"fake": ["iban", "DE"]}
+                                }
+                            }
+                        }
+                    },
+                    "CdtrSchmeId": {
+                        "Id": {
+                            "PrvtId": {
+                                "Othr": [
+                                    {
+                                        "Id": {"cat": ["DE", {"fake": ["i64", 10000000, 99999999]}, "ZZZ"]},
+                                        "SchmeNm": {
+                                            "Prtry": "SEPA"
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                "DbtrAgt": {
+                    "FinInstnId": {
+                        "BICFI": {"fake": ["bic"]},
+                        "LEI": {"fake": ["lei"]}
+                    }
+                },
+                "Dbtr": {
+                    "Nm": {"cat": [{"fake": ["company_name"]}, " GmbH"]},
+                    "PstlAdr": {
+                        "Ctry": "DE",
+                        "AdrLine": [
+                            {"fake": ["street_address"]},
+                            {"cat": [{"fake": ["postcode"]}, " ", {"fake": ["city_name"]}]}
+                        ]
+                    },
+                    "Id": {
+                        "OrgId": {
+                            "LEI": {"fake": ["lei"]}
+                        }
+                    }
+                },
+                "DbtrAcct": {
+                    "Id": {
+                        "IBAN": {"fake": ["iban", "DE"]}
+                    },
+                    "Tp": {
+                        "Cd": "CACC"
+                    }
+                },
+                "CdtrAgt": {
+                    "FinInstnId": {
+                        "BICFI": {"var": "insurance_co_bic"},
+                        "LEI": {"var": "insurance_co_lei"}
+                    }
+                },
+                "Cdtr": {
+                    "Nm": "European Insurance Group AG",
+                    "PstlAdr": {
+                        "Ctry": "DE"
+                    },
+                    "Id": {
+                        "OrgId": {
+                            "LEI": {"var": "insurance_co_lei"}
+                        }
+                    }
+                },
+                "CdtrAcct": {
+                    "Id": {
+                        "IBAN": {"fake": ["iban", "DE"]}
+                    }
+                },
+                "Purp": {
+                    "Cd": "INSU"
+                },
+                "RgltryRptg": [
+                    {
+                        "Dtls": [
+                            {
+                                "Tp": "DEBT",
+                                "Dt": "2025-01-29",
+                                "Ctry": "DE",
+                                "Cd": "150",
+                                "Amt": {
+                                    "@Ccy": "EUR",
+                                    "$value": {"fake": ["f64", 15000.0, 50000.0]}
+                                },
+                                "Inf": ["CBPR+ DIRECTORS LIABILITY INSURANCE"]
+                            }
+                        ]
+                    }
+                ],
+                "RmtInf": {
+                    "Strd": [
+                        {
+                            "RfrdDocInf": [
+                                {
+                                    "Tp": {
+                                        "CdOrPrtry": {
+                                            "Prtry": "POLICY"
+                                        }
+                                    },
+                                    "Nb": {"cat": ["D&O-", {"fake": ["i64", 1000001, 9999999]}]},
+                                    "RltdDt": "2022-06-15"
+                                }
+                            ],
+                            "AddtlRmtInf": [
+                                "Directors & Officers liability insurance",
+                                "Annual premium payment"
+                            ]
+                        }
+                    ]
+                }
+            },
+            {
+                "PmtId": {
+                    "EndToEndId": {"cat": ["E2EINS", {"fake": ["i64", 100000000000, 999999999999]}]},
+                    "TxId": {"cat": ["TXINS", {"fake": ["uuid"]}]},
+                    "UETR": {"fake": ["uuid"]}
+                },
+                "PmtTpInf": {
+                    "InstrPrty": "NORM",
+                    "SvcLvl": [
+                        {
+                            "Cd": "G001"
+                        }
+                    ],
+                    "LclInstrm": {
+                        "Cd": "B2B"
+                    },
+                    "SeqTp": "RCUR",
+                    "CtgyPurp": {
+                        "Cd": "INSU"
+                    }
+                },
+                "IntrBkSttlmAmt": {
+                    "@Ccy": "EUR",
+                    "$value": {"fake": ["f64", 20000.0, 60000.0]}
+                },
+                "IntrBkSttlmDt": {"var": "settlement_date"},
+                "InstdAmt": {
+                    "@Ccy": "EUR",
+                    "$value": {"fake": ["f64", 20000.0, 60000.0]}
+                },
+                "ChrgBr": "DEBT",
+                "DrctDbtTx": {
+                    "MndtRltdInf": {
+                        "MndtId": {"cat": ["MNDTINS", {"fake": ["i64", 1000000, 9999999]}]},
+                        "DtOfSgntr": "2024-01-01",
+                        "AmdmntInd": false
+                    },
+                    "CdtrSchmeId": {
+                        "Id": {
+                            "PrvtId": {
+                                "Othr": [
+                                    {
+                                        "Id": {"cat": ["DE", {"fake": ["i64", 10000000, 99999999]}, "ZZZ"]},
+                                        "SchmeNm": {
+                                            "Prtry": "SEPA"
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                "DbtrAgt": {
+                    "FinInstnId": {
+                        "BICFI": {"fake": ["bic"]},
+                        "LEI": {"fake": ["lei"]}
+                    }
+                },
+                "Dbtr": {
+                    "Nm": {"cat": [{"fake": ["company_name"]}, " AG"]},
+                    "PstlAdr": {
+                        "Ctry": "DE",
+                        "AdrLine": [
+                            {"fake": ["street_address"]},
+                            {"fake": ["city_name"]}
+                        ]
+                    },
+                    "Id": {
+                        "OrgId": {
+                            "LEI": {"fake": ["lei"]}
+                        }
+                    }
+                },
+                "DbtrAcct": {
+                    "Id": {
+                        "IBAN": {"fake": ["iban", "DE"]}
+                    }
+                },
+                "CdtrAgt": {
+                    "FinInstnId": {
+                        "BICFI": {"var": "insurance_co_bic"},
+                        "LEI": {"var": "insurance_co_lei"}
+                    }
+                },
+                "Cdtr": {
+                    "Nm": "European Insurance Group AG",
+                    "PstlAdr": {
+                        "Ctry": "DE"
+                    },
+                    "Id": {
+                        "OrgId": {
+                            "LEI": {"var": "insurance_co_lei"}
+                        }
+                    }
+                },
+                "CdtrAcct": {
+                    "Id": {
+                        "IBAN": {"fake": ["iban", "DE"]}
+                    }
+                },
+                "Purp": {
+                    "Cd": "INSU"
+                },
+                "RgltryRptg": [
+                    {
+                        "Dtls": [
+                            {
+                                "Tp": "DEBT",
+                                "Dt": "2025-01-29",
+                                "Ctry": "DE",
+                                "Cd": "150",
+                                "Amt": {
+                                    "@Ccy": "EUR",
+                                    "$value": {"fake": ["f64", 20000.0, 60000.0]}
+                                },
+                                "Inf": ["CBPR+ CYBER INSURANCE PREMIUM"]
+                            }
+                        ]
+                    }
+                ],
+                "RmtInf": {
+                    "Strd": [
+                        {
+                            "RfrdDocInf": [
+                                {
+                                    "Tp": {
+                                        "CdOrPrtry": {
+                                            "Prtry": "POLICY"
+                                        }
+                                    },
+                                    "Nb": {"cat": ["CYBER-", {"fake": ["i64", 1000001, 9999999]}]},
+                                    "RltdDt": "2024-01-01"
+                                }
+                            ],
+                            "AddtlRmtInf": [
+                                "Cyber security insurance",
+                                "Coverage: Data breach, ransomware, business interruption"
+                            ]
+                        }
+                    ]
+                }
+            },
+            {
+                "PmtId": {
+                    "EndToEndId": {"cat": ["E2EINS", {"fake": ["i64", 100000000000, 999999999999]}]},
+                    "TxId": {"cat": ["TXINS", {"fake": ["uuid"]}]},
+                    "UETR": {"fake": ["uuid"]}
+                },
+                "PmtTpInf": {
+                    "InstrPrty": "NORM",
+                    "SvcLvl": [
+                        {
+                            "Cd": "G001"
+                        }
+                    ],
+                    "LclInstrm": {
+                        "Cd": "B2B"
+                    },
+                    "SeqTp": "RCUR",
+                    "CtgyPurp": {
+                        "Cd": "INSU"
+                    }
+                },
+                "IntrBkSttlmAmt": {
+                    "@Ccy": "EUR",
+                    "$value": {"fake": ["f64", 8000.0, 30000.0]}
+                },
+                "IntrBkSttlmDt": {"var": "settlement_date"},
+                "InstdAmt": {
+                    "@Ccy": "EUR",
+                    "$value": {"fake": ["f64", 8000.0, 30000.0]}
+                },
+                "ChrgBr": "DEBT",
+                "DrctDbtTx": {
+                    "MndtRltdInf": {
+                        "MndtId": {"cat": ["MNDTINS", {"fake": ["i64", 1000000, 9999999]}]},
+                        "DtOfSgntr": "2023-07-01",
+                        "AmdmntInd": false
+                    },
+                    "CdtrSchmeId": {
+                        "Id": {
+                            "PrvtId": {
+                                "Othr": [
+                                    {
+                                        "Id": {"cat": ["DE", {"fake": ["i64", 10000000, 99999999]}, "ZZZ"]},
+                                        "SchmeNm": {
+                                            "Prtry": "SEPA"
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                "DbtrAgt": {
+                    "FinInstnId": {
+                        "BICFI": {"fake": ["bic"]},
+                        "LEI": {"fake": ["lei"]}
+                    }
+                },
+                "Dbtr": {
+                    "Nm": {"fake": ["company_name"]},
+                    "PstlAdr": {
+                        "Ctry": "DE"
+                    },
+                    "Id": {
+                        "OrgId": {
+                            "LEI": {"fake": ["lei"]}
+                        }
+                    }
+                },
+                "DbtrAcct": {
+                    "Id": {
+                        "IBAN": {"fake": ["iban", "DE"]}
+                    }
+                },
+                "CdtrAgt": {
+                    "FinInstnId": {
+                        "BICFI": {"var": "insurance_co_bic"},
+                        "LEI": {"var": "insurance_co_lei"}
+                    }
+                },
+                "Cdtr": {
+                    "Nm": "European Insurance Group AG",
+                    "PstlAdr": {
+                        "Ctry": "DE"
+                    },
+                    "Id": {
+                        "OrgId": {
+                            "LEI": {"var": "insurance_co_lei"}
+                        }
+                    }
+                },
+                "CdtrAcct": {
+                    "Id": {
+                        "IBAN": {"fake": ["iban", "DE"]}
+                    }
+                },
+                "Purp": {
+                    "Cd": "INSU"
+                },
+                "RgltryRptg": [
+                    {
+                        "Dtls": [
+                            {
+                                "Tp": "DEBT",
+                                "Dt": "2025-01-29",
+                                "Ctry": "DE",
+                                "Cd": "150",
+                                "Amt": {
+                                    "@Ccy": "EUR",
+                                    "$value": {"fake": ["f64", 8000.0, 30000.0]}
+                                },
+                                "Inf": ["CBPR+ PROPERTY INSURANCE"]
+                            }
+                        ]
+                    }
+                ],
+                "RmtInf": {
+                    "Strd": [
+                        {
+                            "RfrdDocInf": [
+                                {
+                                    "Tp": {
+                                        "CdOrPrtry": {
+                                            "Prtry": "POLICY"
+                                        }
+                                    },
+                                    "Nb": {"cat": ["PROP-", {"fake": ["i64", 1000001, 9999999]}]},
+                                    "RltdDt": "2023-07-01"
+                                }
+                            ],
+                            "AddtlRmtInf": [
+                                "Commercial property insurance",
+                                "Building and contents coverage"
+                            ]
+                        }
+                    ]
+                }
+            },
+            {
+                "PmtId": {
+                    "EndToEndId": {"cat": ["E2EINS", {"fake": ["i64", 100000000000, 999999999999]}]},
+                    "TxId": {"cat": ["TXINS", {"fake": ["uuid"]}]},
+                    "UETR": {"fake": ["uuid"]}
+                },
+                "PmtTpInf": {
+                    "InstrPrty": "NORM",
+                    "SvcLvl": [
+                        {
+                            "Cd": "G001"
+                        }
+                    ],
+                    "LclInstrm": {
+                        "Cd": "B2B"
+                    },
+                    "SeqTp": "RCUR",
+                    "CtgyPurp": {
+                        "Cd": "INSU"
+                    }
+                },
+                "IntrBkSttlmAmt": {
+                    "@Ccy": "EUR",
+                    "$value": {"fake": ["f64", 12000.0, 40000.0]}
+                },
+                "IntrBkSttlmDt": {"var": "settlement_date"},
+                "InstdAmt": {
+                    "@Ccy": "EUR",
+                    "$value": {"fake": ["f64", 12000.0, 40000.0]}
+                },
+                "ChrgBr": "DEBT",
+                "DrctDbtTx": {
+                    "MndtRltdInf": {
+                        "MndtId": {"cat": ["MNDTINS", {"fake": ["i64", 1000000, 9999999]}]},
+                        "DtOfSgntr": "2023-03-15",
+                        "AmdmntInd": false
+                    },
+                    "CdtrSchmeId": {
+                        "Id": {
+                            "PrvtId": {
+                                "Othr": [
+                                    {
+                                        "Id": {"cat": ["DE", {"fake": ["i64", 10000000, 99999999]}, "ZZZ"]},
+                                        "SchmeNm": {
+                                            "Prtry": "SEPA"
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                "DbtrAgt": {
+                    "FinInstnId": {
+                        "BICFI": {"fake": ["bic"]},
+                        "LEI": {"fake": ["lei"]}
+                    }
+                },
+                "Dbtr": {
+                    "Nm": {"cat": [{"fake": ["company_name"]}, " Transport"]},
+                    "PstlAdr": {
+                        "Ctry": "DE"
+                    },
+                    "Id": {
+                        "OrgId": {
+                            "LEI": {"fake": ["lei"]}
+                        }
+                    }
+                },
+                "DbtrAcct": {
+                    "Id": {
+                        "IBAN": {"fake": ["iban", "DE"]}
+                    }
+                },
+                "CdtrAgt": {
+                    "FinInstnId": {
+                        "BICFI": {"var": "insurance_co_bic"},
+                        "LEI": {"var": "insurance_co_lei"}
+                    }
+                },
+                "Cdtr": {
+                    "Nm": "European Insurance Group AG",
+                    "PstlAdr": {
+                        "Ctry": "DE"
+                    },
+                    "Id": {
+                        "OrgId": {
+                            "LEI": {"var": "insurance_co_lei"}
+                        }
+                    }
+                },
+                "CdtrAcct": {
+                    "Id": {
+                        "IBAN": {"fake": ["iban", "DE"]}
+                    }
+                },
+                "Purp": {
+                    "Cd": "INSU"
+                },
+                "RgltryRptg": [
+                    {
+                        "Dtls": [
+                            {
+                                "Tp": "DEBT",
+                                "Dt": "2025-01-29",
+                                "Ctry": "DE",
+                                "Cd": "150",
+                                "Amt": {
+                                    "@Ccy": "EUR",
+                                    "$value": {"fake": ["f64", 12000.0, 40000.0]}
+                                },
+                                "Inf": ["CBPR+ FLEET INSURANCE"]
+                            }
+                        ]
+                    }
+                ],
+                "RmtInf": {
+                    "Strd": [
+                        {
+                            "RfrdDocInf": [
+                                {
+                                    "Tp": {
+                                        "CdOrPrtry": {
+                                            "Prtry": "POLICY"
+                                        }
+                                    },
+                                    "Nb": {"cat": ["FLEET-", {"fake": ["i64", 1000001, 9999999]}]},
+                                    "RltdDt": "2023-03-15"
+                                }
+                            ],
+                            "AddtlRmtInf": [
+                                "Commercial fleet insurance",
+                                "50 vehicles covered"
+                            ]
+                        }
+                    ]
+                }
+            }
+        ],
+        "SplmtryData": [
+            {
+                "Envlp": {
+                    "CBPRPlusData": {
+                        "MessageVersion": "1.0",
+                        "ComplianceLevel": "FULL",
+                        "ProcessingPriority": "NORMAL",
+                        "DirectDebitType": "B2B",
+                        "BatchProcessing": true,
+                        "InsuranceCollection": {
+                            "CollectionType": "PREMIUM",
+                            "PolicyCount": 5,
+                            "TotalInsuredValue": {"fake": ["f64", 50000000.0, 200000000.0]}
+                        }
+                    }
+                }
+            }
+        ]
+    }
+}

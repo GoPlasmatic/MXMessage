@@ -1,0 +1,34 @@
+{
+    "message_type": "camt.053.001.08",
+    "description": "Bank to Customer Statement - Account statements for period end reporting",
+    "scenarios": [
+        {
+            "file": "daily_account_statement.json",
+            "description": "Standard daily closing statement with transactions and balances"
+        },
+        {
+            "file": "interim_statement_intraday.json",
+            "description": "Intraday statement with real-time balance updates"
+        },
+        {
+            "file": "repeated_sequence_issues.json",
+            "description": "Statement with sequence number handling and pagination"
+        },
+        {
+            "file": "year_end_statement.json",
+            "description": "Annual closing statement with interest calculations"
+        },
+        {
+            "file": "correspondent_banking.json",
+            "description": "Nostro account statement for correspondent banking"
+        },
+        {
+            "file": "high_volume_batch.json",
+            "description": "Statement with large number of batch transactions"
+        },
+        {
+            "file": "simplified_statement.json",
+            "description": "Basic statement with minimal transaction details"
+        }
+    ]
+}

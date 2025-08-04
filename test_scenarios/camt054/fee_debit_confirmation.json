@@ -1,0 +1,111 @@
+{
+    "variables": {
+        "msg_id": {"cat": ["FEE-", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "ntfctn_id": {"cat": ["FEE-NTFCTN-", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_time": {"fake": ["iso8601_datetime"]},
+        "account_id": {"fake": ["iban"]},
+        "account_owner": {"fake": ["full_name"]},
+        "servicer_bic": {"fake": ["bic"]},
+        "entry_ref": {"cat": ["FEE-ENT-", {"fake": ["i64", 1000000, 9999999]}]},
+        "fee_amount": {"fake": ["f64", 5.0, 100.0]},
+        "booking_date": {"fake": ["date", "%Y-%m-%d", "-1d", "-1d"]},
+        "value_date": {"fake": ["date", "%Y-%m-%d", "-1d", "-1d"]},
+        "transaction_ref": {"cat": ["FEE-TXN-", {"fake": ["i64", 10000000, 99999999]}]}
+    },
+    "schema": {
+        "GrpHdr": {
+            "MsgId": {"var": "msg_id"},
+            "CreDtTm": {"var": "creation_datetime"}
+        },
+        "Ntfctn": [
+            {
+                "Id": {"var": "ntfctn_id"},
+                "CreDtTm": {"var": "creation_time"},
+                "Acct": {
+                    "Id": {
+                        "IBAN": {"var": "account_id"}
+                    },
+                    "Ownr": {
+                        "Nm": {"var": "account_owner"}
+                    },
+                    "Svcr": {
+                        "FinInstnId": {
+                            "BICFI": {"var": "servicer_bic"}
+                        }
+                    }
+                },
+                "Ntry": [
+                    {
+                        "NtryRef": {"var": "entry_ref"},
+                        "Amt": {
+                            "@Ccy": "USD",
+                            "$value": {"var": "fee_amount"}
+                        },
+                        "CdtDbtInd": "DBIT",
+                        "Sts": {
+                            "Cd": "BOOK"
+                        },
+                        "BookgDt": {
+                            "Dt": {"var": "booking_date"}
+                        },
+                        "ValDt": {
+                            "Dt": {"var": "value_date"}
+                        },
+                        "BkTxCd": {
+                            "Domn": {
+                                "Cd": "ACMT",
+                                "Fmly": {
+                                    "Cd": "CCHG",
+                                    "SubFmlyCd": "CHRG"
+                                }
+                            }
+                        },
+                        "NtryDtls": [
+                            {
+                                "TxDtls": [
+                                    {
+                                        "Refs": {
+                                            "AcctSvcrRef": {"var": "transaction_ref"}
+                                        },
+                                        "Amt": {
+                                            "@Ccy": "USD",
+                                            "$value": {"var": "fee_amount"}
+                                        },
+                                        "CdtDbtInd": "DBIT",
+                                        "Chrgs": [
+                                            {
+                                                "Amt": {
+                                                    "@Ccy": "USD",
+                                                    "$value": {"var": "fee_amount"}
+                                                },
+                                                "Agt": {
+                                                    "FinInstnId": {
+                                                        "BICFI": {"var": "servicer_bic"}
+                                                    }
+                                                },
+                                                "Tp": {
+                                                    "Prtry": {
+                                                        "Id": "MONTHLY_MAINTENANCE",
+                                                        "Issr": "BANK"
+                                                    }
+                                                }
+                                            }
+                                        ],
+                                        "RltdPties": {
+                                            "Cdtr": {
+                                                "Nm": {"cat": [{"var": "servicer_bic"}, " - Bank Fees Account"]}
+                                            }
+                                        },
+                                        "AddtlTxInf": "Monthly account maintenance fee"
+                                    }
+                                ]
+                            }
+                        ],
+                        "AddtlNtryInf": "Monthly account maintenance fee"
+                    }
+                ]
+            }
+        ]
+    }
+}

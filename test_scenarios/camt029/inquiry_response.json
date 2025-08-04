@@ -1,0 +1,169 @@
+{
+    "variables": {
+        "msg_id": {"cat": ["INQ-RESP-", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "original_msg_id": {"cat": ["INQ-", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "investigation_id": {"cat": ["INV-", {"fake": ["i64", 1000000000, 9999999999]}]},
+        "original_payment_id": {"cat": ["PMT-", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "original_uetr": {"fake": ["uuid_v4"]},
+        "payment_amount": {"fake": ["f64", 15000.0, 750000.0]},
+        "original_date": {"fake": ["date", "%Y-%m-%d", "-10d", "-5d"]},
+        "value_date": {"fake": ["date", "%Y-%m-%d", "-8d", "-3d"]},
+        "responder_bic": {"fake": ["bic"]},
+        "originator_bic": {"fake": ["bic"]},
+        "beneficiary_account": {"fake": ["iban"]},
+        "beneficiary_name": {"fake": ["company_name"]},
+        "payment_status": {"rand": ["ACSC", "ACCC", "PDNG", "RJCT"]}
+    },
+    "schema": {
+        "Assgnmt": {
+            "Id": {"var": "msg_id"},
+            "Assgnr": {
+                "Agt": {
+                    "FinInstnId": {
+                        "BICFI": {"var": "responder_bic"}
+                    }
+                }
+            },
+            "Assgne": {
+                "Agt": {
+                    "FinInstnId": {
+                        "BICFI": {"var": "originator_bic"}
+                    }
+                }
+            },
+            "CreDtTm": {"var": "creation_datetime"}
+        },
+        "RsltnOfInvstgtn": {
+            "Sts": {
+                "Conf": "PECR"
+            },
+            "CxlDtls": [
+                {
+                    "TxInfAndSts": [
+                        {
+                            "CxlStsId": {"var": "investigation_id"},
+                            "OrgnlGrpInf": {
+                                "OrgnlMsgId": {"var": "original_payment_id"},
+                                "OrgnlMsgNmId": "pacs.008"
+                            },
+                            "OrgnlInstrId": {"var": "original_payment_id"},
+                            "OrgnlEndToEndId": {"cat": ["E2E-", {"var": "original_payment_id"}]},
+                            "OrgnlUETR": {"var": "original_uetr"},
+                            "TxCxlSts": "NCAN",
+                            "CxlStsRsnInf": [
+                                {
+                                    "Orgtr": {
+                                        "Id": {
+                                            "OrgId": {
+                                                "AnyBIC": {"var": "responder_bic"}
+                                            }
+                                        }
+                                    },
+                                    "Rsn": {
+                                        "Prtry": "PAYMENT_STATUS_PROVIDED"
+                                    },
+                                    "AddtlInf": [
+                                        {"cat": ["Current payment status: ", {
+                                            "ACSC": "Settlement completed successfully",
+                                            "ACCC": "Settlement completed with conditions",
+                                            "PDNG": "Payment pending - awaiting processing",
+                                            "RJCT": "Payment rejected by beneficiary bank"
+                                        }]},
+                                        {"cat": ["Value date: ", {"var": "value_date"}]},
+                                        {"cat": ["Beneficiary: ", {"var": "beneficiary_name"}]}
+                                    ]
+                                }
+                            ],
+                            "OrgnlTxRef": {
+                                "IntrBkSttlmAmt": {
+                                    "@Ccy": "USD",
+                                    "$value": {"var": "payment_amount"}
+                                },
+                                "IntrBkSttlmDt": {"var": "original_date"},
+                                "ValDt": {"var": "value_date"},
+                                "SttlmInf": {
+                                    "SttlmMtd": "INDA"
+                                },
+                                "PmtMtd": "TRF",
+                                "Dbtr": {
+                                    "Nm": {"fake": ["company_name"]}
+                                },
+                                "DbtrAcct": {
+                                    "Id": {
+                                        "IBAN": {"fake": ["iban"]}
+                                    }
+                                },
+                                "DbtrAgt": {
+                                    "FinInstnId": {
+                                        "BICFI": {"var": "originator_bic"}
+                                    }
+                                },
+                                "CdtrAgt": {
+                                    "FinInstnId": {
+                                        "BICFI": {"var": "responder_bic"}
+                                    }
+                                },
+                                "Cdtr": {
+                                    "Nm": {"var": "beneficiary_name"}
+                                },
+                                "CdtrAcct": {
+                                    "Id": {
+                                        "IBAN": {"var": "beneficiary_account"}
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                }
+            ],
+            "ModDtls": {
+                "InvstgtnSts": {
+                    "Sts": "FULF",
+                    "DtTm": {"var": "creation_datetime"},
+                    "Rsn": {
+                        "Prtry": "INQUIRY_RESOLVED"
+                    }
+                }
+            }
+        },
+        "SplmtryData": [
+            {
+                "Envlp": {
+                    "PaymentStatusDetails": {
+                        "StatusCode": {"var": "payment_status"},
+                        "StatusDescription": {
+                            "ACSC": "Payment settled successfully to beneficiary account",
+                            "ACCC": "Payment settled with conditions - please check with beneficiary",
+                            "PDNG": "Payment is being processed - expected completion within 24 hours",
+                            "RJCT": "Payment was rejected - funds returned to originator"
+                        },
+                        "ProcessingTimeline": [
+                            {
+                                "Event": "Payment Received",
+                                "Timestamp": {"cat": [{"var": "original_date"}, "T10:00:00Z"]},
+                                "Status": "COMPLETED"
+                            },
+                            {
+                                "Event": "Compliance Check",
+                                "Timestamp": {"cat": [{"var": "original_date"}, "T11:30:00Z"]},
+                                "Status": "COMPLETED"
+                            },
+                            {
+                                "Event": "Settlement Processing",
+                                "Timestamp": {"cat": [{"var": "value_date"}, "T09:00:00Z"]},
+                                "Status": {"var": "payment_status"}
+                            }
+                        ],
+                        "BeneficiaryNotification": {
+                            "ACSC": "Beneficiary has been notified of credit",
+                            "ACCC": "Beneficiary notified with conditions",
+                            "PDNG": "Beneficiary will be notified upon completion",
+                            "RJCT": "Rejection notice sent to beneficiary"
+                        }
+                    }
+                }
+            }
+        ]
+    }
+}

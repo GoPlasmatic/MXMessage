@@ -1,0 +1,685 @@
+{
+    "variables": {
+        "msg_id": {"cat": ["MSGSCHED", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "company_name": {"fake": ["company_name"]},
+        "company_lei": {"fake": ["lei"]},
+        "pmt_inf_id": {"cat": ["SCHED", {"fake": ["i64", 10000000, 99999999]}]},
+        "debtor_name": {"fake": ["company_name"]},
+        "debtor_iban": {"fake": ["iban", "DE"]},
+        "debtor_bic": {"fake": ["bic"]}
+    },
+    "schema": {
+        "GrpHdr": {
+            "MsgId": {"var": "msg_id"},
+            "CreDtTm": {"var": "creation_datetime"},
+            "NbOfTxs": "12",
+            "InitgPty": {
+                "Nm": {"var": "company_name"},
+                "Id": {
+                    "OrgId": {
+                        "LEI": {"var": "company_lei"}
+                    }
+                }
+            }
+        },
+        "PmtInf": {
+            "PmtInfId": {"var": "pmt_inf_id"},
+            "PmtMtd": "TRF",
+            "BtchBookg": false,
+            "NbOfTxs": "12",
+            "PmtTpInf": {
+                "InstrPrty": "NORM",
+                "SvcLvl": [
+                    {
+                        "Cd": "NORM"
+                    }
+                ]
+            },
+            "ReqdExctnDt": {
+                "Dt": "2025-01-01"
+            },
+            "Dbtr": {
+                "Nm": {"var": "debtor_name"},
+                "PstlAdr": {
+                    "Ctry": "DE"
+                },
+                "Id": {
+                    "OrgId": {
+                        "LEI": {"var": "company_lei"}
+                    }
+                }
+            },
+            "DbtrAcct": {
+                "Id": {
+                    "IBAN": {"var": "debtor_iban"}
+                },
+                "Tp": {
+                    "Cd": "CACC"
+                },
+                "Ccy": "EUR"
+            },
+            "DbtrAgt": {
+                "FinInstnId": {
+                    "BICFI": {"var": "debtor_bic"}
+                }
+            },
+            "CdtTrfTxInf": [
+                {
+                    "PmtId": {
+                        "InstrId": {"cat": ["SCHEDJAN", {"fake": ["i64", 100001, 999999]}]},
+                        "EndToEndId": {"cat": ["E2ESCHED2025-01-", {"fake": ["i64", 10001, 99999]}]}
+                    },
+                    "PmtTpInf": {
+                        "LclInstrm": {
+                            "Cd": "INST"
+                        },
+                        "CtgyPurp": {
+                            "Cd": "LOAN"
+                        }
+                    },
+                    "Amt": {
+                        "InstdAmt": {
+                            "@Ccy": "EUR",
+                            "$value": {"fake": ["f64", 25000.0, 50000.0]}
+                        }
+                    },
+                    "CdtrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {"fake": ["bic"]}
+                        }
+                    },
+                    "Cdtr": {
+                        "Nm": {"cat": [{"fake": ["company_name"]}, " Bank"]},
+                        "PstlAdr": {
+                            "Ctry": "DE"
+                        }
+                    },
+                    "CdtrAcct": {
+                        "Id": {
+                            "IBAN": {"fake": ["iban", "DE"]}
+                        }
+                    },
+                    "Purp": {
+                        "Cd": "LOAN"
+                    },
+                    "RmtInf": {
+                        "Ustrd": "Monthly Loan Repayment - January 2025",
+                        "Strd": [
+                            {
+                                "RfrdDocInf": [
+                                    {
+                                        "Tp": {
+                                            "CdOrPrtry": {
+                                                "Prtry": "LOAN_CONTRACT"
+                                            }
+                                        },
+                                        "Nb": {"cat": ["LOAN-", {"fake": ["i64", 2020001, 2023999]}]},
+                                        "RltdDt": "2023-01-15"
+                                    }
+                                ],
+                                "AddtlRmtInf": [
+                                    "Principal: EUR 20,000.00",
+                                    "Interest: EUR 5,000.00",
+                                    "Payment 25 of 60"
+                                ]
+                            }
+                        ]
+                    }
+                },
+                {
+                    "PmtId": {
+                        "InstrId": {"cat": ["SCHEDJAN", {"fake": ["i64", 100001, 999999]}]},
+                        "EndToEndId": {"cat": ["E2ESCHED2025-01-", {"fake": ["i64", 10001, 99999]}]}
+                    },
+                    "PmtTpInf": {
+                        "CtgyPurp": {
+                            "Cd": "RENT"
+                        }
+                    },
+                    "Amt": {
+                        "InstdAmt": {
+                            "@Ccy": "EUR",
+                            "$value": {"fake": ["f64", 8000.0, 15000.0]}
+                        }
+                    },
+                    "CdtrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {"fake": ["bic"]}
+                        }
+                    },
+                    "Cdtr": {
+                        "Nm": {"cat": [{"fake": ["company_name"]}, " Real Estate"]},
+                        "PstlAdr": {
+                            "Ctry": "DE"
+                        }
+                    },
+                    "CdtrAcct": {
+                        "Id": {
+                            "IBAN": {"fake": ["iban", "DE"]}
+                        }
+                    },
+                    "Purp": {
+                        "Cd": "RENT"
+                    },
+                    "RmtInf": {
+                        "Ustrd": "Office Rent - January 2025"
+                    }
+                },
+                {
+                    "PmtId": {
+                        "InstrId": {"cat": ["SCHEDFEB", {"fake": ["i64", 100001, 999999]}]},
+                        "EndToEndId": {"cat": ["E2ESCHED2025-02-", {"fake": ["i64", 10001, 99999]}]}
+                    },
+                    "PmtTpInf": {
+                        "LclInstrm": {
+                            "Cd": "INST"
+                        },
+                        "CtgyPurp": {
+                            "Cd": "LOAN"
+                        }
+                    },
+                    "Amt": {
+                        "InstdAmt": {
+                            "@Ccy": "EUR",
+                            "$value": {"fake": ["f64", 25000.0, 50000.0]}
+                        }
+                    },
+                    "CdtrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {"fake": ["bic"]}
+                        }
+                    },
+                    "Cdtr": {
+                        "Nm": {"cat": [{"fake": ["company_name"]}, " Bank"]},
+                        "PstlAdr": {
+                            "Ctry": "DE"
+                        }
+                    },
+                    "CdtrAcct": {
+                        "Id": {
+                            "IBAN": {"fake": ["iban", "DE"]}
+                        }
+                    },
+                    "Purp": {
+                        "Cd": "LOAN"
+                    },
+                    "RmtInf": {
+                        "Ustrd": "Monthly Loan Repayment - February 2025",
+                        "Strd": [
+                            {
+                                "RfrdDocInf": [
+                                    {
+                                        "Tp": {
+                                            "CdOrPrtry": {
+                                                "Prtry": "LOAN_CONTRACT"
+                                            }
+                                        },
+                                        "Nb": {"cat": ["LOAN-", {"fake": ["i64", 2020001, 2023999]}]},
+                                        "RltdDt": "2023-01-15"
+                                    }
+                                ],
+                                "AddtlRmtInf": [
+                                    "Payment 26 of 60"
+                                ]
+                            }
+                        ]
+                    }
+                },
+                {
+                    "PmtId": {
+                        "InstrId": {"cat": ["SCHEDFEB", {"fake": ["i64", 100001, 999999]}]},
+                        "EndToEndId": {"cat": ["E2ESCHED2025-02-", {"fake": ["i64", 10001, 99999]}]}
+                    },
+                    "PmtTpInf": {
+                        "CtgyPurp": {
+                            "Cd": "RENT"
+                        }
+                    },
+                    "Amt": {
+                        "InstdAmt": {
+                            "@Ccy": "EUR",
+                            "$value": {"fake": ["f64", 8000.0, 15000.0]}
+                        }
+                    },
+                    "CdtrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {"fake": ["bic"]}
+                        }
+                    },
+                    "Cdtr": {
+                        "Nm": {"cat": [{"fake": ["company_name"]}, " Real Estate"]},
+                        "PstlAdr": {
+                            "Ctry": "DE"
+                        }
+                    },
+                    "CdtrAcct": {
+                        "Id": {
+                            "IBAN": {"fake": ["iban", "DE"]}
+                        }
+                    },
+                    "Purp": {
+                        "Cd": "RENT"
+                    },
+                    "RmtInf": {
+                        "Ustrd": "Office Rent - February 2025"
+                    }
+                },
+                {
+                    "PmtId": {
+                        "InstrId": {"cat": ["SCHEDQ1", {"fake": ["i64", 100001, 999999]}]},
+                        "EndToEndId": {"cat": ["E2ESCHED2025-Q1-", {"fake": ["i64", 10001, 99999]}]}
+                    },
+                    "PmtTpInf": {
+                        "CtgyPurp": {
+                            "Cd": "INSM"
+                        }
+                    },
+                    "Amt": {
+                        "InstdAmt": {
+                            "@Ccy": "EUR",
+                            "$value": {"fake": ["f64", 5000.0, 15000.0]}
+                        }
+                    },
+                    "CdtrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {"fake": ["bic"]}
+                        }
+                    },
+                    "Cdtr": {
+                        "Nm": {"cat": [{"fake": ["company_name"]}, " Insurance"]},
+                        "PstlAdr": {
+                            "Ctry": "DE"
+                        }
+                    },
+                    "CdtrAcct": {
+                        "Id": {
+                            "IBAN": {"fake": ["iban", "DE"]}
+                        }
+                    },
+                    "Purp": {
+                        "Cd": "INSM"
+                    },
+                    "RmtInf": {
+                        "Ustrd": "Quarterly Insurance Premium - Q1 2025",
+                        "Strd": [
+                            {
+                                "RfrdDocInf": [
+                                    {
+                                        "Tp": {
+                                            "CdOrPrtry": {
+                                                "Prtry": "INSURANCE_POLICY"
+                                            }
+                                        },
+                                        "Nb": {"cat": ["POL-", {"fake": ["i64", 1000001, 9999999]}]}
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                },
+                {
+                    "PmtId": {
+                        "InstrId": {"cat": ["SCHEDMAR", {"fake": ["i64", 100001, 999999]}]},
+                        "EndToEndId": {"cat": ["E2ESCHED2025-03-", {"fake": ["i64", 10001, 99999]}]}
+                    },
+                    "PmtTpInf": {
+                        "LclInstrm": {
+                            "Cd": "INST"
+                        },
+                        "CtgyPurp": {
+                            "Cd": "LOAN"
+                        }
+                    },
+                    "Amt": {
+                        "InstdAmt": {
+                            "@Ccy": "EUR",
+                            "$value": {"fake": ["f64", 25000.0, 50000.0]}
+                        }
+                    },
+                    "CdtrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {"fake": ["bic"]}
+                        }
+                    },
+                    "Cdtr": {
+                        "Nm": {"cat": [{"fake": ["company_name"]}, " Bank"]},
+                        "PstlAdr": {
+                            "Ctry": "DE"
+                        }
+                    },
+                    "CdtrAcct": {
+                        "Id": {
+                            "IBAN": {"fake": ["iban", "DE"]}
+                        }
+                    },
+                    "Purp": {
+                        "Cd": "LOAN"
+                    },
+                    "RmtInf": {
+                        "Ustrd": "Monthly Loan Repayment - March 2025",
+                        "Strd": [
+                            {
+                                "RfrdDocInf": [
+                                    {
+                                        "Tp": {
+                                            "CdOrPrtry": {
+                                                "Prtry": "LOAN_CONTRACT"
+                                            }
+                                        },
+                                        "Nb": {"cat": ["LOAN-", {"fake": ["i64", 2020001, 2023999]}]},
+                                        "RltdDt": "2023-01-15"
+                                    }
+                                ],
+                                "AddtlRmtInf": [
+                                    "Payment 27 of 60"
+                                ]
+                            }
+                        ]
+                    }
+                },
+                {
+                    "PmtId": {
+                        "InstrId": {"cat": ["SCHEDMAR", {"fake": ["i64", 100001, 999999]}]},
+                        "EndToEndId": {"cat": ["E2ESCHED2025-03-", {"fake": ["i64", 10001, 99999]}]}
+                    },
+                    "PmtTpInf": {
+                        "CtgyPurp": {
+                            "Cd": "RENT"
+                        }
+                    },
+                    "Amt": {
+                        "InstdAmt": {
+                            "@Ccy": "EUR",
+                            "$value": {"fake": ["f64", 8000.0, 15000.0]}
+                        }
+                    },
+                    "CdtrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {"fake": ["bic"]}
+                        }
+                    },
+                    "Cdtr": {
+                        "Nm": {"cat": [{"fake": ["company_name"]}, " Real Estate"]},
+                        "PstlAdr": {
+                            "Ctry": "DE"
+                        }
+                    },
+                    "CdtrAcct": {
+                        "Id": {
+                            "IBAN": {"fake": ["iban", "DE"]}
+                        }
+                    },
+                    "Purp": {
+                        "Cd": "RENT"
+                    },
+                    "RmtInf": {
+                        "Ustrd": "Office Rent - March 2025"
+                    }
+                },
+                {
+                    "PmtId": {
+                        "InstrId": {"cat": ["SCHEDANN", {"fake": ["i64", 100001, 999999]}]},
+                        "EndToEndId": {"cat": ["E2ESCHED2025-ANN-", {"fake": ["i64", 10001, 99999]}]}
+                    },
+                    "PmtTpInf": {
+                        "CtgyPurp": {
+                            "Cd": "LICF"
+                        }
+                    },
+                    "Amt": {
+                        "InstdAmt": {
+                            "@Ccy": "EUR",
+                            "$value": {"fake": ["f64", 20000.0, 50000.0]}
+                        }
+                    },
+                    "CdtrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {"fake": ["bic"]}
+                        }
+                    },
+                    "Cdtr": {
+                        "Nm": {"cat": [{"fake": ["company_name"]}, " Software"]},
+                        "PstlAdr": {
+                            "Ctry": "US",
+                            "AdrLine": [
+                                {"fake": ["street_address"]},
+                                {"cat": [{"fake": ["city_name"]}, ", ", {"fake": ["state_abbr"]}, " ", {"fake": ["postcode"]}]}
+                            ]
+                        }
+                    },
+                    "CdtrAcct": {
+                        "Id": {
+                            "Othr": {
+                                "Id": {"cat": [{"fake": ["i64", 1000000000, 9999999999]}]},
+                                "SchmeNm": {
+                                    "Cd": "BBAN"
+                                }
+                            }
+                        }
+                    },
+                    "Purp": {
+                        "Cd": "LICF"
+                    },
+                    "RmtInf": {
+                        "Ustrd": "Annual Software License Renewal 2025",
+                        "Strd": [
+                            {
+                                "RfrdDocInf": [
+                                    {
+                                        "Tp": {
+                                            "CdOrPrtry": {
+                                                "Prtry": "LICENSE"
+                                            }
+                                        },
+                                        "Nb": {"cat": ["LIC-ENT-", {"fake": ["i64", 100001, 999999]}]},
+                                        "RltdDt": "2024-01-01"
+                                    }
+                                ],
+                                "AddtlRmtInf": [
+                                    "Enterprise License - 500 users",
+                                    "Valid: 01/01/2025 - 31/12/2025"
+                                ]
+                            }
+                        ]
+                    }
+                },
+                {
+                    "PmtId": {
+                        "InstrId": {"cat": ["SCHEDMON", {"fake": ["i64", 100001, 999999]}]},
+                        "EndToEndId": {"cat": ["E2ESCHED2025-MON-", {"fake": ["i64", 10001, 99999]}]}
+                    },
+                    "PmtTpInf": {
+                        "CtgyPurp": {
+                            "Cd": "PHON"
+                        }
+                    },
+                    "Amt": {
+                        "InstdAmt": {
+                            "@Ccy": "EUR",
+                            "$value": {"fake": ["f64", 1000.0, 3000.0]}
+                        }
+                    },
+                    "CdtrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {"fake": ["bic"]}
+                        }
+                    },
+                    "Cdtr": {
+                        "Nm": {"cat": [{"fake": ["company_name"]}, " Telecom"]},
+                        "PstlAdr": {
+                            "Ctry": "DE"
+                        }
+                    },
+                    "CdtrAcct": {
+                        "Id": {
+                            "IBAN": {"fake": ["iban", "DE"]}
+                        }
+                    },
+                    "Purp": {
+                        "Cd": "PHON"
+                    },
+                    "RmtInf": {
+                        "Ustrd": "Monthly Telecom Services - Recurring",
+                        "Strd": [
+                            {
+                                "AddtlRmtInf": [
+                                    {"cat": ["Account: ", {"fake": ["i64", 1000001, 9999999]}]},
+                                    "50 Business Lines + Data Package"
+                                ]
+                            }
+                        ]
+                    }
+                },
+                {
+                    "PmtId": {
+                        "InstrId": {"cat": ["SCHEDMON", {"fake": ["i64", 100001, 999999]}]},
+                        "EndToEndId": {"cat": ["E2ESCHED2025-MON-", {"fake": ["i64", 10001, 99999]}]}
+                    },
+                    "PmtTpInf": {
+                        "CtgyPurp": {
+                            "Cd": "OTHR"
+                        }
+                    },
+                    "Amt": {
+                        "InstdAmt": {
+                            "@Ccy": "EUR",
+                            "$value": {"fake": ["f64", 500.0, 2000.0]}
+                        }
+                    },
+                    "CdtrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {"fake": ["bic"]}
+                        }
+                    },
+                    "Cdtr": {
+                        "Nm": {"cat": [{"fake": ["company_name"]}, " Cloud Services"]},
+                        "PstlAdr": {
+                            "Ctry": "IE"
+                        }
+                    },
+                    "CdtrAcct": {
+                        "Id": {
+                            "IBAN": {"fake": ["iban", "IE"]}
+                        }
+                    },
+                    "Purp": {
+                        "Cd": "OTHR"
+                    },
+                    "RmtInf": {
+                        "Ustrd": "Monthly Cloud Infrastructure - Recurring"
+                    }
+                },
+                {
+                    "PmtId": {
+                        "InstrId": {"cat": ["SCHEDWK", {"fake": ["i64", 100001, 999999]}]},
+                        "EndToEndId": {"cat": ["E2ESCHED2025-WK-", {"fake": ["i64", 10001, 99999]}]}
+                    },
+                    "PmtTpInf": {
+                        "CtgyPurp": {
+                            "Cd": "OTHR"
+                        }
+                    },
+                    "Amt": {
+                        "InstdAmt": {
+                            "@Ccy": "EUR",
+                            "$value": {"fake": ["f64", 1500.0, 3500.0]}
+                        }
+                    },
+                    "CdtrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {"fake": ["bic"]}
+                        }
+                    },
+                    "Cdtr": {
+                        "Nm": {"cat": [{"fake": ["company_name"]}, " Cleaning Services"]},
+                        "PstlAdr": {
+                            "Ctry": "DE"
+                        }
+                    },
+                    "CdtrAcct": {
+                        "Id": {
+                            "IBAN": {"fake": ["iban", "DE"]}
+                        }
+                    },
+                    "Purp": {
+                        "Cd": "OTHR"
+                    },
+                    "RmtInf": {
+                        "Ustrd": "Weekly Office Cleaning Services - Recurring",
+                        "Strd": [
+                            {
+                                "RfrdDocInf": [
+                                    {
+                                        "Tp": {
+                                            "CdOrPrtry": {
+                                                "Prtry": "SERVICE_CONTRACT"
+                                            }
+                                        },
+                                        "Nb": {"cat": ["SVC-CLEAN-", {"fake": ["i64", 2024001, 2024999]}]}
+                                    }
+                                ],
+                                "AddtlRmtInf": [
+                                    "Schedule: Every Monday & Thursday",
+                                    "3 Floors, 2500 sqm total"
+                                ]
+                            }
+                        ]
+                    }
+                },
+                {
+                    "PmtId": {
+                        "InstrId": {"cat": ["SCHEDDLY", {"fake": ["i64", 100001, 999999]}]},
+                        "EndToEndId": {"cat": ["E2ESCHED2025-DLY-", {"fake": ["i64", 10001, 99999]}]}
+                    },
+                    "PmtTpInf": {
+                        "CtgyPurp": {
+                            "Cd": "CASH"
+                        }
+                    },
+                    "Amt": {
+                        "InstdAmt": {
+                            "@Ccy": "EUR",
+                            "$value": {"fake": ["f64", 50000.0, 100000.0]}
+                        }
+                    },
+                    "CdtrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {"fake": ["bic"]}
+                        }
+                    },
+                    "Cdtr": {
+                        "Nm": {"cat": [{"var": "company_name"}, " - Subsidiary"]},
+                        "PstlAdr": {
+                            "Ctry": "FR"
+                        },
+                        "Id": {
+                            "OrgId": {
+                                "LEI": {"fake": ["lei"]}
+                            }
+                        }
+                    },
+                    "CdtrAcct": {
+                        "Id": {
+                            "IBAN": {"fake": ["iban", "FR"]}
+                        }
+                    },
+                    "Purp": {
+                        "Cd": "CASH"
+                    },
+                    "RmtInf": {
+                        "Ustrd": "Daily Cash Sweep to Subsidiary - Automated",
+                        "Strd": [
+                            {
+                                "AddtlRmtInf": [
+                                    "Cash Management Agreement dated 2024-01-01",
+                                    "Daily sweep at 18:00 CET"
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    }
+}

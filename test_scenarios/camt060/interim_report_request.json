@@ -1,0 +1,83 @@
+{
+    "variables": {
+        "msg_id": {"cat": ["RPTREQ-", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "sender_bic": {"fake": ["bic"]},
+        "receiver_bic": {"fake": ["bic"]},
+        "account_number": {"fake": ["iban"]},
+        "account_currency": {"fake": ["enum", "USD", "EUR", "GBP", "CHF"]},
+        "account_owner": {"fake": ["company_name"]},
+        "from_date": {"fake": ["date", "%Y-%m-%d", "-7d", "-7d"]},
+        "to_date": {"fake": ["date", "%Y-%m-%d", "-1d", "-1d"]},
+        "request_type": "INTF",
+        "frequency": "DAIL"
+    },
+    "schema": {
+        "GrpHdr": {
+            "MsgId": {"var": "msg_id"},
+            "CreDtTm": {"var": "creation_datetime"},
+            "MsgSndr": {
+                "Agt": {
+                    "FinInstnId": {
+                        "BICFI": {"var": "sender_bic"}
+                    }
+                }
+            },
+            "MsgRcpt": {
+                "Agt": {
+                    "FinInstnId": {
+                        "BICFI": {"var": "receiver_bic"}
+                    }
+                }
+            }
+        },
+        "AcctRptgReq": {
+            "RptgReq": {
+                "Id": {"cat": ["REQ-", {"fake": ["i64", 100000, 999999]}]},
+                "ReqdMsgNmId": "camt.052.001.08",
+                "Acct": {
+                    "Id": {
+                        "IBAN": {"var": "account_number"}
+                    },
+                    "Ccy": {"var": "account_currency"},
+                    "Nm": {"var": "account_owner"}
+                },
+                "AcctOwnr": {
+                    "Nm": {"var": "account_owner"}
+                },
+                "RptgPrd": {
+                    "FrToDt": {
+                        "FrDt": {"var": "from_date"},
+                        "ToDt": {"var": "to_date"}
+                    },
+                    "Tp": {"var": "request_type"}
+                }
+            }
+        },
+        "SplmtryData": [
+            {
+                "Envlp": {
+                    "InterimReportDetails": {
+                        "ReportType": "INTERIM_ACCOUNT_REPORT",
+                        "Frequency": {"var": "frequency"},
+                        "IncludeTransactions": true,
+                        "IncludeBalances": true,
+                        "TransactionCriteria": {
+                            "MinAmount": 1000.00,
+                            "IncludePending": true
+                        },
+                        "DeliveryChannel": {
+                            "Type": "SWIFT",
+                            "Priority": "NORMAL"
+                        },
+                        "ReportingOptions": {
+                            "GroupByValueDate": true,
+                            "IncludeRelatedReferences": true,
+                            "ConsolidateByCounterparty": false
+                        }
+                    }
+                }
+            }
+        ]
+    }
+}

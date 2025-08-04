@@ -1,0 +1,83 @@
+{
+    "variables": {
+        "msg_id": {"cat": ["CB-RATE-", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "related_msg_id": {"cat": ["CB-NOTIF-", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "related_account": {"cat": ["CB-ACC-", {"fake": ["i64", 100000, 999999]}]},
+        "sender_bic": {"fake": ["bic"]},
+        "receiver_bic": {"fake": ["bic"]},
+        "base_rate": {"fake": ["f64", 2.5, 5.5]},
+        "discount_rate": {"fake": ["f64", 2.0, 5.0]},
+        "lombard_rate": {"fake": ["f64", 3.0, 6.0]},
+        "effective_date": {"fake": ["date", "%Y-%m-%d", "+1d", "+1d"]},
+        "announcement_date": {"fake": ["date", "%Y-%m-%d", "0d", "0d"]},
+        "currency": "USD"
+    },
+    "schema": {
+        "Assgnmt": {
+            "Id": {"var": "msg_id"},
+            "Assgnr": {
+                "Agt": {
+                    "FinInstnId": {
+                        "BICFI": {"var": "sender_bic"}
+                    }
+                }
+            },
+            "Assgne": {
+                "Agt": {
+                    "FinInstnId": {
+                        "BICFI": {"var": "receiver_bic"}
+                    }
+                }
+            },
+            "CreDtTm": {"var": "creation_datetime"}
+        },
+        "Rct": {
+            "RltdMsgRcpt": {
+                "RcptId": {"var": "related_msg_id"},
+                "RcptDtTm": {"var": "creation_datetime"},
+                "RltdRef": {
+                    "Ref": {"var": "related_account"}
+                }
+            }
+        },
+        "SplmtryData": [
+            {
+                "Envlp": {
+                    "CentralBankRates": {
+                        "RateType": "POLICY_RATES",
+                        "Currency": {"var": "currency"},
+                        "AnnouncementDate": {"var": "announcement_date"},
+                        "EffectiveDate": {"var": "effective_date"},
+                        "Rates": [
+                            {
+                                "Type": "BASE_RATE",
+                                "Rate": {"var": "base_rate"},
+                                "Description": "Central Bank Base Rate"
+                            },
+                            {
+                                "Type": "DISCOUNT_RATE",
+                                "Rate": {"var": "discount_rate"},
+                                "Description": "Discount Window Rate"
+                            },
+                            {
+                                "Type": "LOMBARD_RATE",
+                                "Rate": {"var": "lombard_rate"},
+                                "Description": "Lombard Facility Rate"
+                            }
+                        ],
+                        "PolicyContext": {
+                            "Decision": "MONETARY_POLICY_COMMITTEE",
+                            "Rationale": "Inflation targeting and economic stability",
+                            "NextReviewDate": {"fake": ["date", "%Y-%m-%d", "+30d", "+45d"]}
+                        },
+                        "MarketImpact": {
+                            "ExpectedEffect": "Moderate tightening of monetary conditions",
+                            "SectorImpact": ["Banking", "Real Estate", "Consumer Credit"]
+                        }
+                    }
+                }
+            }
+        ]
+    }
+}

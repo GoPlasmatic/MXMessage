@@ -1,0 +1,780 @@
+{
+    "variables": {
+        "msg_id": {"cat": ["MSGUTIL", {"fake": ["uuid"]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "settlement_date": "2025-01-31",
+        "num_txs": 5,
+        "total_amt": {"fake": ["f64", 10000.0, 50000.0]},
+        "instg_lei": {"fake": ["lei"]},
+        "instd_lei": {"fake": ["lei"]},
+        "instg_bic": {"fake": ["bic"]},
+        "instd_bic": {"fake": ["bic"]}
+    },
+    "schema": {
+        "GrpHdr": {
+            "MsgId": {"var": "msg_id"},
+            "CreDtTm": {"var": "creation_datetime"},
+            "NbOfTxs": {"cat": [{"var": "num_txs"}]},
+            "TtlIntrBkSttlmAmt": {
+                "@Ccy": "EUR",
+                "$value": {"var": "total_amt"}
+            },
+            "IntrBkSttlmDt": {"var": "settlement_date"},
+            "SttlmInf": {
+                "SttlmMtd": "CLRG",
+                "ClrSys": {
+                    "Cd": "TGT"
+                }
+            },
+            "InstgAgt": {
+                "FinInstnId": {
+                    "BICFI": {"var": "instg_bic"},
+                    "LEI": {"var": "instg_lei"}
+                }
+            },
+            "InstdAgt": {
+                "FinInstnId": {
+                    "BICFI": {"var": "instd_bic"},
+                    "LEI": {"var": "instd_lei"}
+                }
+            }
+        },
+        "DrctDbtTxInf": [
+            {
+                "PmtId": {
+                    "EndToEndId": {"cat": ["E2EUTIL", {"fake": ["i64", 100000000000, 999999999999]}]},
+                    "TxId": {"cat": ["TXUTIL", {"fake": ["uuid"]}]},
+                    "UETR": {"fake": ["uuid"]}
+                },
+                "PmtTpInf": {
+                    "InstrPrty": "HIGH",
+                    "SvcLvl": [
+                        {
+                            "Cd": "G001"
+                        }
+                    ],
+                    "LclInstrm": {
+                        "Cd": "B2B"
+                    },
+                    "SeqTp": "RCUR",
+                    "CtgyPurp": {
+                        "Cd": "ELEC"
+                    }
+                },
+                "IntrBkSttlmAmt": {
+                    "@Ccy": "EUR",
+                    "$value": {"fake": ["f64", 1000.0, 5000.0]}
+                },
+                "IntrBkSttlmDt": {"var": "settlement_date"},
+                "InstdAmt": {
+                    "@Ccy": "EUR",
+                    "$value": {"fake": ["f64", 1000.0, 5000.0]}
+                },
+                "ChrgBr": "DEBT",
+                "DrctDbtTx": {
+                    "MndtRltdInf": {
+                        "MndtId": {"cat": ["MNDTELEC", {"fake": ["i64", 1000000, 9999999]}]},
+                        "DtOfSgntr": "2022-01-01",
+                        "AmdmntInd": false,
+                        "ElctrncSgntr": {"cat": ["ESIG-", {"fake": ["uuid"]}]}
+                    },
+                    "CdtrSchmeId": {
+                        "Id": {
+                            "PrvtId": {
+                                "Othr": [
+                                    {
+                                        "Id": {"cat": ["DE", {"fake": ["i64", 10000000, 99999999]}, "ZZZ"]},
+                                        "SchmeNm": {
+                                            "Prtry": "SEPA"
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "PreNtfctnId": {"cat": ["NOTIF", {"fake": ["i64", 100001, 999999]}]},
+                    "PreNtfctnDt": "2025-01-24"
+                },
+                "DbtrAgt": {
+                    "FinInstnId": {
+                        "BICFI": {"fake": ["bic"]},
+                        "LEI": {"fake": ["lei"]}
+                    }
+                },
+                "Dbtr": {
+                    "Nm": {"fake": ["company_name"]},
+                    "PstlAdr": {
+                        "Ctry": "DE",
+                        "AdrLine": [
+                            {"fake": ["street_address"]},
+                            {"cat": [{"fake": ["postcode"]}, " ", {"fake": ["city_name"]}]}
+                        ]
+                    },
+                    "Id": {
+                        "OrgId": {
+                            "LEI": {"fake": ["lei"]},
+                            "Othr": [
+                                {
+                                    "Id": {"cat": ["CUST-", {"fake": ["i64", 100000001, 999999999]}]},
+                                    "SchmeNm": {
+                                        "Prtry": "CUSTOMER_NUMBER"
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                },
+                "DbtrAcct": {
+                    "Id": {
+                        "IBAN": {"fake": ["iban", "DE"]}
+                    },
+                    "Tp": {
+                        "Cd": "CACC"
+                    }
+                },
+                "CdtrAgt": {
+                    "FinInstnId": {
+                        "BICFI": {"fake": ["bic"]},
+                        "LEI": {"fake": ["lei"]}
+                    }
+                },
+                "Cdtr": {
+                    "Nm": "European Power Grid AG",
+                    "PstlAdr": {
+                        "Ctry": "DE",
+                        "AdrLine": [
+                            "Energy Plaza 1",
+                            "80331 Munich"
+                        ]
+                    },
+                    "Id": {
+                        "OrgId": {
+                            "LEI": {"fake": ["lei"]}
+                        }
+                    }
+                },
+                "CdtrAcct": {
+                    "Id": {
+                        "IBAN": {"fake": ["iban", "DE"]}
+                    },
+                    "Tp": {
+                        "Cd": "CACC"
+                    }
+                },
+                "Purp": {
+                    "Cd": "ELEC"
+                },
+                "RgltryRptg": [
+                    {
+                        "Dtls": [
+                            {
+                                "Tp": "DEBT",
+                                "Dt": "2025-01-31",
+                                "Ctry": "DE",
+                                "Cd": "150",
+                                "Amt": {
+                                    "@Ccy": "EUR",
+                                    "$value": {"fake": ["f64", 1000.0, 5000.0]}
+                                },
+                                "Inf": ["CBPR+ ELECTRICITY UTILITY"]
+                            }
+                        ]
+                    }
+                ],
+                "RmtInf": {
+                    "Strd": [
+                        {
+                            "RfrdDocInf": [
+                                {
+                                    "Tp": {
+                                        "CdOrPrtry": {
+                                            "Cd": "RADM"
+                                        }
+                                    },
+                                    "Nb": {"cat": ["ELEC-", {"fake": ["i64", 202501001, 202501999]}]},
+                                    "RltdDt": "2025-01-15"
+                                }
+                            ],
+                            "AddtlRmtInf": [
+                                "Electricity bill - January 2025",
+                                {"cat": ["Consumption: ", {"fake": ["i64", 1000, 5000]}, " kWh"]},
+                                {"cat": ["Meter reading: ", {"fake": ["i64", 10000, 99999]}]}
+                            ]
+                        }
+                    ]
+                }
+            },
+            {
+                "PmtId": {
+                    "EndToEndId": {"cat": ["E2EUTIL", {"fake": ["i64", 100000000000, 999999999999]}]},
+                    "TxId": {"cat": ["TXUTIL", {"fake": ["uuid"]}]},
+                    "UETR": {"fake": ["uuid"]}
+                },
+                "PmtTpInf": {
+                    "InstrPrty": "NORM",
+                    "SvcLvl": [
+                        {
+                            "Cd": "G001"
+                        }
+                    ],
+                    "LclInstrm": {
+                        "Cd": "B2B"
+                    },
+                    "SeqTp": "RCUR",
+                    "CtgyPurp": {
+                        "Cd": "GASB"
+                    }
+                },
+                "IntrBkSttlmAmt": {
+                    "@Ccy": "EUR",
+                    "$value": {"fake": ["f64", 800.0, 3000.0]}
+                },
+                "IntrBkSttlmDt": {"var": "settlement_date"},
+                "InstdAmt": {
+                    "@Ccy": "EUR",
+                    "$value": {"fake": ["f64", 800.0, 3000.0]}
+                },
+                "ChrgBr": "DEBT",
+                "DrctDbtTx": {
+                    "MndtRltdInf": {
+                        "MndtId": {"cat": ["MNDTGAS", {"fake": ["i64", 1000000, 9999999]}]},
+                        "DtOfSgntr": "2021-06-15",
+                        "AmdmntInd": false
+                    },
+                    "CdtrSchmeId": {
+                        "Id": {
+                            "PrvtId": {
+                                "Othr": [
+                                    {
+                                        "Id": {"cat": ["DE", {"fake": ["i64", 10000000, 99999999]}, "ZZZ"]},
+                                        "SchmeNm": {
+                                            "Prtry": "SEPA"
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                "DbtrAgt": {
+                    "FinInstnId": {
+                        "BICFI": {"fake": ["bic"]},
+                        "LEI": {"fake": ["lei"]}
+                    }
+                },
+                "Dbtr": {
+                    "Nm": {"fake": ["company_name"]},
+                    "PstlAdr": {
+                        "Ctry": "DE"
+                    },
+                    "Id": {
+                        "OrgId": {
+                            "LEI": {"fake": ["lei"]}
+                        }
+                    }
+                },
+                "DbtrAcct": {
+                    "Id": {
+                        "IBAN": {"fake": ["iban", "DE"]}
+                    }
+                },
+                "CdtrAgt": {
+                    "FinInstnId": {
+                        "BICFI": {"fake": ["bic"]},
+                        "LEI": {"fake": ["lei"]}
+                    }
+                },
+                "Cdtr": {
+                    "Nm": "Natural Gas Europe GmbH",
+                    "PstlAdr": {
+                        "Ctry": "DE"
+                    },
+                    "Id": {
+                        "OrgId": {
+                            "LEI": {"fake": ["lei"]}
+                        }
+                    }
+                },
+                "CdtrAcct": {
+                    "Id": {
+                        "IBAN": {"fake": ["iban", "DE"]}
+                    }
+                },
+                "Purp": {
+                    "Cd": "GASB"
+                },
+                "RgltryRptg": [
+                    {
+                        "Dtls": [
+                            {
+                                "Tp": "DEBT",
+                                "Dt": "2025-01-31",
+                                "Ctry": "DE",
+                                "Cd": "150",
+                                "Amt": {
+                                    "@Ccy": "EUR",
+                                    "$value": {"fake": ["f64", 800.0, 3000.0]}
+                                },
+                                "Inf": ["CBPR+ GAS UTILITY"]
+                            }
+                        ]
+                    }
+                ],
+                "RmtInf": {
+                    "Strd": [
+                        {
+                            "RfrdDocInf": [
+                                {
+                                    "Tp": {
+                                        "CdOrPrtry": {
+                                            "Cd": "RADM"
+                                        }
+                                    },
+                                    "Nb": {"cat": ["GAS-", {"fake": ["i64", 202501001, 202501999]}]},
+                                    "RltdDt": "2025-01-15"
+                                }
+                            ],
+                            "AddtlRmtInf": [
+                                "Natural gas bill - January 2025",
+                                {"cat": ["Consumption: ", {"fake": ["i64", 100, 500]}, " m³"]}
+                            ]
+                        }
+                    ]
+                }
+            },
+            {
+                "PmtId": {
+                    "EndToEndId": {"cat": ["E2EUTIL", {"fake": ["i64", 100000000000, 999999999999]}]},
+                    "TxId": {"cat": ["TXUTIL", {"fake": ["uuid"]}]},
+                    "UETR": {"fake": ["uuid"]}
+                },
+                "PmtTpInf": {
+                    "InstrPrty": "NORM",
+                    "SvcLvl": [
+                        {
+                            "Cd": "G001"
+                        }
+                    ],
+                    "LclInstrm": {
+                        "Cd": "CORE"
+                    },
+                    "SeqTp": "RCUR",
+                    "CtgyPurp": {
+                        "Cd": "WTER"
+                    }
+                },
+                "IntrBkSttlmAmt": {
+                    "@Ccy": "EUR",
+                    "$value": {"fake": ["f64", 150.0, 500.0]}
+                },
+                "IntrBkSttlmDt": {"var": "settlement_date"},
+                "InstdAmt": {
+                    "@Ccy": "EUR",
+                    "$value": {"fake": ["f64", 150.0, 500.0]}
+                },
+                "ChrgBr": "SLEV",
+                "DrctDbtTx": {
+                    "MndtRltdInf": {
+                        "MndtId": {"cat": ["MNDTWTR", {"fake": ["i64", 1000000, 9999999]}]},
+                        "DtOfSgntr": "2020-01-01",
+                        "AmdmntInd": false
+                    },
+                    "CdtrSchmeId": {
+                        "Id": {
+                            "PrvtId": {
+                                "Othr": [
+                                    {
+                                        "Id": {"cat": ["DE", {"fake": ["i64", 10000000, 99999999]}, "ZZZ"]},
+                                        "SchmeNm": {
+                                            "Prtry": "SEPA"
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                "DbtrAgt": {
+                    "FinInstnId": {
+                        "BICFI": {"fake": ["bic"]}
+                    }
+                },
+                "Dbtr": {
+                    "Nm": {"fake": ["name"]},
+                    "PstlAdr": {
+                        "Ctry": {"fake": ["country_code"]},
+                        "AdrLine": [
+                            {"fake": ["street_address"]},
+                            {"fake": ["city_name"]}
+                        ]
+                    }
+                },
+                "DbtrAcct": {
+                    "Id": {
+                        "IBAN": {"fake": ["iban"]}
+                    }
+                },
+                "CdtrAgt": {
+                    "FinInstnId": {
+                        "BICFI": {"fake": ["bic"]}
+                    }
+                },
+                "Cdtr": {
+                    "Nm": "Municipal Water Services",
+                    "PstlAdr": {
+                        "Ctry": "DE"
+                    }
+                },
+                "CdtrAcct": {
+                    "Id": {
+                        "IBAN": {"fake": ["iban", "DE"]}
+                    }
+                },
+                "Purp": {
+                    "Cd": "WTER"
+                },
+                "RgltryRptg": [
+                    {
+                        "Dtls": [
+                            {
+                                "Tp": "DEBT",
+                                "Dt": "2025-01-31",
+                                "Ctry": "DE",
+                                "Cd": "150",
+                                "Amt": {
+                                    "@Ccy": "EUR",
+                                    "$value": {"fake": ["f64", 150.0, 500.0]}
+                                },
+                                "Inf": ["CBPR+ WATER UTILITY"]
+                            }
+                        ]
+                    }
+                ],
+                "RmtInf": {
+                    "Ustrd": "Water services - Q1 2025",
+                    "Strd": [
+                        {
+                            "RfrdDocInf": [
+                                {
+                                    "Tp": {
+                                        "CdOrPrtry": {
+                                            "Cd": "RADM"
+                                        }
+                                    },
+                                    "Nb": {"cat": ["WTR-", {"fake": ["i64", 202501, 202599]}]}
+                                }
+                            ],
+                            "AddtlRmtInf": [
+                                {"cat": ["Consumption: ", {"fake": ["i64", 10, 50]}, " m³"]}
+                            ]
+                        }
+                    ]
+                }
+            },
+            {
+                "PmtId": {
+                    "EndToEndId": {"cat": ["E2EUTIL", {"fake": ["i64", 100000000000, 999999999999]}]},
+                    "TxId": {"cat": ["TXUTIL", {"fake": ["uuid"]}]},
+                    "UETR": {"fake": ["uuid"]}
+                },
+                "PmtTpInf": {
+                    "InstrPrty": "NORM",
+                    "SvcLvl": [
+                        {
+                            "Cd": "G001"
+                        }
+                    ],
+                    "LclInstrm": {
+                        "Cd": "B2B"
+                    },
+                    "SeqTp": "RCUR",
+                    "CtgyPurp": {
+                        "Cd": "PHON"
+                    }
+                },
+                "IntrBkSttlmAmt": {
+                    "@Ccy": "EUR",
+                    "$value": {"fake": ["f64", 500.0, 2000.0]}
+                },
+                "IntrBkSttlmDt": {"var": "settlement_date"},
+                "InstdAmt": {
+                    "@Ccy": "EUR",
+                    "$value": {"fake": ["f64", 500.0, 2000.0]}
+                },
+                "ChrgBr": "DEBT",
+                "DrctDbtTx": {
+                    "MndtRltdInf": {
+                        "MndtId": {"cat": ["MNDTTEL", {"fake": ["i64", 1000000, 9999999]}]},
+                        "DtOfSgntr": "2023-03-01",
+                        "AmdmntInd": true,
+                        "AmdmntInfDtls": {
+                            "OrgnlDbtrAgt": {
+                                "FinInstnId": {
+                                    "BICFI": {"fake": ["bic"]}
+                                }
+                            }
+                        }
+                    },
+                    "CdtrSchmeId": {
+                        "Id": {
+                            "PrvtId": {
+                                "Othr": [
+                                    {
+                                        "Id": {"cat": ["DE", {"fake": ["i64", 10000000, 99999999]}, "ZZZ"]},
+                                        "SchmeNm": {
+                                            "Prtry": "SEPA"
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                "DbtrAgt": {
+                    "FinInstnId": {
+                        "BICFI": {"fake": ["bic"]},
+                        "LEI": {"fake": ["lei"]}
+                    }
+                },
+                "Dbtr": {
+                    "Nm": {"fake": ["company_name"]},
+                    "PstlAdr": {
+                        "Ctry": "DE"
+                    },
+                    "Id": {
+                        "OrgId": {
+                            "LEI": {"fake": ["lei"]}
+                        }
+                    }
+                },
+                "DbtrAcct": {
+                    "Id": {
+                        "IBAN": {"fake": ["iban", "DE"]}
+                    },
+                    "Tp": {
+                        "Cd": "CACC"
+                    }
+                },
+                "CdtrAgt": {
+                    "FinInstnId": {
+                        "BICFI": {"fake": ["bic"]},
+                        "LEI": {"fake": ["lei"]}
+                    }
+                },
+                "Cdtr": {
+                    "Nm": "European Telecom Group",
+                    "PstlAdr": {
+                        "Ctry": "DE"
+                    },
+                    "Id": {
+                        "OrgId": {
+                            "LEI": {"fake": ["lei"]}
+                        }
+                    }
+                },
+                "CdtrAcct": {
+                    "Id": {
+                        "IBAN": {"fake": ["iban", "DE"]}
+                    }
+                },
+                "Purp": {
+                    "Cd": "PHON"
+                },
+                "RgltryRptg": [
+                    {
+                        "Dtls": [
+                            {
+                                "Tp": "DEBT",
+                                "Dt": "2025-01-31",
+                                "Ctry": "DE",
+                                "Cd": "150",
+                                "Amt": {
+                                    "@Ccy": "EUR",
+                                    "$value": {"fake": ["f64", 500.0, 2000.0]}
+                                },
+                                "Inf": ["CBPR+ TELECOM SERVICES"]
+                            }
+                        ]
+                    }
+                ],
+                "RmtInf": {
+                    "Strd": [
+                        {
+                            "RfrdDocInf": [
+                                {
+                                    "Tp": {
+                                        "CdOrPrtry": {
+                                            "Cd": "RADM"
+                                        }
+                                    },
+                                    "Nb": {"cat": ["TEL-", {"fake": ["i64", 202501001, 202501999]}]},
+                                    "RltdDt": "2025-01-20"
+                                }
+                            ],
+                            "AddtlRmtInf": [
+                                "Business telecom package",
+                                "Internet, phone lines, mobile"
+                            ]
+                        }
+                    ]
+                }
+            },
+            {
+                "PmtId": {
+                    "EndToEndId": {"cat": ["E2EUTIL", {"fake": ["i64", 100000000000, 999999999999]}]},
+                    "TxId": {"cat": ["TXUTIL", {"fake": ["uuid"]}]},
+                    "UETR": {"fake": ["uuid"]}
+                },
+                "PmtTpInf": {
+                    "InstrPrty": "NORM",
+                    "SvcLvl": [
+                        {
+                            "Cd": "G001"
+                        }
+                    ],
+                    "LclInstrm": {
+                        "Cd": "B2B"
+                    },
+                    "SeqTp": "RCUR",
+                    "CtgyPurp": {
+                        "Cd": "OTHR"
+                    }
+                },
+                "IntrBkSttlmAmt": {
+                    "@Ccy": "EUR",
+                    "$value": {"fake": ["f64", 300.0, 800.0]}
+                },
+                "IntrBkSttlmDt": {"var": "settlement_date"},
+                "InstdAmt": {
+                    "@Ccy": "EUR",
+                    "$value": {"fake": ["f64", 300.0, 800.0]}
+                },
+                "ChrgBr": "DEBT",
+                "DrctDbtTx": {
+                    "MndtRltdInf": {
+                        "MndtId": {"cat": ["MNDTWST", {"fake": ["i64", 1000000, 9999999]}]},
+                        "DtOfSgntr": "2022-09-01",
+                        "AmdmntInd": false
+                    },
+                    "CdtrSchmeId": {
+                        "Id": {
+                            "PrvtId": {
+                                "Othr": [
+                                    {
+                                        "Id": {"cat": ["DE", {"fake": ["i64", 10000000, 99999999]}, "ZZZ"]},
+                                        "SchmeNm": {
+                                            "Prtry": "SEPA"
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                "DbtrAgt": {
+                    "FinInstnId": {
+                        "BICFI": {"fake": ["bic"]},
+                        "LEI": {"fake": ["lei"]}
+                    }
+                },
+                "Dbtr": {
+                    "Nm": {"fake": ["company_name"]},
+                    "PstlAdr": {
+                        "Ctry": "DE"
+                    },
+                    "Id": {
+                        "OrgId": {
+                            "LEI": {"fake": ["lei"]}
+                        }
+                    }
+                },
+                "DbtrAcct": {
+                    "Id": {
+                        "IBAN": {"fake": ["iban", "DE"]}
+                    }
+                },
+                "CdtrAgt": {
+                    "FinInstnId": {
+                        "BICFI": {"fake": ["bic"]},
+                        "LEI": {"fake": ["lei"]}
+                    }
+                },
+                "Cdtr": {
+                    "Nm": "Waste Management Services AG",
+                    "PstlAdr": {
+                        "Ctry": "DE"
+                    },
+                    "Id": {
+                        "OrgId": {
+                            "LEI": {"fake": ["lei"]}
+                        }
+                    }
+                },
+                "CdtrAcct": {
+                    "Id": {
+                        "IBAN": {"fake": ["iban", "DE"]}
+                    }
+                },
+                "Purp": {
+                    "Cd": "OTHR"
+                },
+                "RgltryRptg": [
+                    {
+                        "Dtls": [
+                            {
+                                "Tp": "DEBT",
+                                "Dt": "2025-01-31",
+                                "Ctry": "DE",
+                                "Cd": "150",
+                                "Amt": {
+                                    "@Ccy": "EUR",
+                                    "$value": {"fake": ["f64", 300.0, 800.0]}
+                                },
+                                "Inf": ["CBPR+ WASTE MANAGEMENT"]
+                            }
+                        ]
+                    }
+                ],
+                "RmtInf": {
+                    "Ustrd": "Commercial waste disposal - Monthly",
+                    "Strd": [
+                        {
+                            "RfrdDocInf": [
+                                {
+                                    "Tp": {
+                                        "CdOrPrtry": {
+                                            "Prtry": "SERVICE_CONTRACT"
+                                        }
+                                    },
+                                    "Nb": {"cat": ["WASTE-", {"fake": ["i64", 100001, 999999]}]}
+                                }
+                            ],
+                            "AddtlRmtInf": [
+                                "Industrial waste collection",
+                                "Recycling services included"
+                            ]
+                        }
+                    ]
+                }
+            }
+        ],
+        "SplmtryData": [
+            {
+                "Envlp": {
+                    "CBPRPlusData": {
+                        "MessageVersion": "1.0",
+                        "ComplianceLevel": "FULL",
+                        "ProcessingPriority": "MIXED",
+                        "DirectDebitType": "MIXED",
+                        "BatchProcessing": true,
+                        "UtilityCollection": {
+                            "CollectionType": "MONTHLY",
+                            "UtilityTypes": ["ELECTRICITY", "GAS", "WATER", "TELECOM", "WASTE"],
+                            "PreNotificationSent": true
+                        }
+                    }
+                }
+            }
+        ]
+    }
+}

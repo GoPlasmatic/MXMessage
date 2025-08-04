@@ -1,0 +1,395 @@
+{
+    "variables": {
+        "msg_id": {"cat": ["MSGDDRET", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "company_name": {"fake": ["company_name"]},
+        "company_lei": {"fake": ["lei"]},
+        "pmt_inf_id": {"cat": ["DDRETURN", {"fake": ["i64", 10000000, 99999999]}]},
+        "collection_date": "2025-01-18",
+        "creditor_iban": {"fake": ["iban", "DE"]},
+        "creditor_bic": {"fake": ["bic"]},
+        "creditor_scheme_id": {"cat": ["DE", {"fake": ["i64", 10000000, 99999999]}, "ZZZ"]},
+        "num_returns": 5
+    },
+    "schema": {
+        "GrpHdr": {
+            "MsgId": {"var": "msg_id"},
+            "CreDtTm": {"var": "creation_datetime"},
+            "NbOfTxs": {"cat": [{"var": "num_returns"}]},
+            "InitgPty": {
+                "Nm": {"var": "company_name"},
+                "Id": {
+                    "OrgId": {
+                        "LEI": {"var": "company_lei"}
+                    }
+                },
+                "CtctDtls": {
+                    "Nm": "Returns Department",
+                    "EmailAdr": {"cat": ["returns@", {"fake": ["domain_name"]}]},
+                    "PhneNb": {"cat": ["+49", {"fake": ["i64", 1000000000, 9999999999]}]}
+                }
+            }
+        },
+        "PmtInf": {
+            "PmtInfId": {"var": "pmt_inf_id"},
+            "PmtMtd": "DD",
+            "PmtTpInf": {
+                "SvcLvl": [
+                    {
+                        "Cd": "SEPA"
+                    }
+                ],
+                "LclInstrm": {
+                    "Cd": "CORE"
+                },
+                "SeqTp": "OOFF"
+            },
+            "ReqdColltnDt": {"var": "collection_date"},
+            "Cdtr": {
+                "Nm": {"var": "company_name"},
+                "PstlAdr": {
+                    "Ctry": "DE",
+                    "AdrLine": [
+                        {"fake": ["street_address"]},
+                        {"cat": [{"fake": ["postcode"]}, " ", {"fake": ["city_name"]}]}
+                    ]
+                },
+                "Id": {
+                    "OrgId": {
+                        "LEI": {"var": "company_lei"}
+                    }
+                }
+            },
+            "CdtrAcct": {
+                "Id": {
+                    "IBAN": {"var": "creditor_iban"}
+                },
+                "Tp": {
+                    "Cd": "CACC"
+                },
+                "Ccy": "EUR"
+            },
+            "CdtrAgt": {
+                "FinInstnId": {
+                    "BICFI": {"var": "creditor_bic"}
+                }
+            },
+            "CdtrSchmeId": {
+                "Id": {
+                    "PrvtId": {
+                        "Othr": [
+                            {
+                                "Id": {"var": "creditor_scheme_id"},
+                                "SchmeNm": {
+                                    "Prtry": "SEPA"
+                                }
+                            }
+                        ]
+                    }
+                }
+            },
+            "ChrgBr": "SLEV",
+            "DrctDbtTxInf": [
+                {
+                    "PmtId": {
+                        "InstrId": {"cat": ["RETDD", {"fake": ["i64", 100001, 999999]}]},
+                        "EndToEndId": {"cat": ["E2ERET", {"fake": ["i64", 100000000000, 999999999999]}]}
+                    },
+                    "InstdAmt": {
+                        "@Ccy": "EUR",
+                        "$value": {"fake": ["f64", 100.0, 500.0]}
+                    },
+                    "DrctDbtTx": {
+                        "MndtRltdInf": {
+                            "MndtId": {"cat": ["MNDT", {"fake": ["i64", 2023001, 2024999]}]},
+                            "DtOfSgntr": "2024-01-10",
+                            "AmdmntInd": false
+                        },
+                        "PreNtfctnId": {"cat": ["RETNOTIF", {"fake": ["i64", 100001, 999999]}]},
+                        "PreNtfctnDt": "2025-01-10"
+                    },
+                    "DbtrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {"fake": ["bic"]}
+                        }
+                    },
+                    "Dbtr": {
+                        "Nm": {"fake": ["name"]},
+                        "PstlAdr": {
+                            "Ctry": {"fake": ["country_code"]}
+                        },
+                        "Id": {
+                            "PrvtId": {
+                                "Othr": [
+                                    {
+                                        "Id": {"cat": ["RETCUST", {"fake": ["i64", 100001, 999999]}]},
+                                        "SchmeNm": {
+                                            "Prtry": "RETURN_CUSTOMER"
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "DbtrAcct": {
+                        "Id": {
+                            "IBAN": {"fake": ["iban"]}
+                        }
+                    },
+                    "Purp": {
+                        "Cd": "OTHR"
+                    },
+                    "RmtInf": {
+                        "Ustrd": "Return processing - Account closed",
+                        "Strd": [
+                            {
+                                "RfrdDocInf": [
+                                    {
+                                        "Tp": {
+                                            "CdOrPrtry": {
+                                                "Prtry": "RETURN_REASON"
+                                            }
+                                        },
+                                        "Nb": "AC04"
+                                    }
+                                ],
+                                "AddtlRmtInf": [
+                                    "Original collection date: 2025-01-15",
+                                    "Return reason: Account closed"
+                                ]
+                            }
+                        ]
+                    }
+                },
+                {
+                    "PmtId": {
+                        "InstrId": {"cat": ["RETDD", {"fake": ["i64", 100001, 999999]}]},
+                        "EndToEndId": {"cat": ["E2ERET", {"fake": ["i64", 100000000000, 999999999999]}]}
+                    },
+                    "InstdAmt": {
+                        "@Ccy": "EUR",
+                        "$value": {"fake": ["f64", 200.0, 1000.0]}
+                    },
+                    "DrctDbtTx": {
+                        "MndtRltdInf": {
+                            "MndtId": {"cat": ["MNDT", {"fake": ["i64", 2022001, 2023999]}]},
+                            "DtOfSgntr": "2022-05-20",
+                            "AmdmntInd": false
+                        }
+                    },
+                    "DbtrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {"fake": ["bic"]}
+                        }
+                    },
+                    "Dbtr": {
+                        "Nm": {"fake": ["company_name"]},
+                        "PstlAdr": {
+                            "Ctry": {"fake": ["country_code"]}
+                        }
+                    },
+                    "DbtrAcct": {
+                        "Id": {
+                            "IBAN": {"fake": ["iban"]}
+                        }
+                    },
+                    "Purp": {
+                        "Cd": "SUPP"
+                    },
+                    "RmtInf": {
+                        "Ustrd": "Return processing - Insufficient funds",
+                        "Strd": [
+                            {
+                                "RfrdDocInf": [
+                                    {
+                                        "Tp": {
+                                            "CdOrPrtry": {
+                                                "Prtry": "RETURN_REASON"
+                                            }
+                                        },
+                                        "Nb": "AM04"
+                                    }
+                                ],
+                                "AddtlRmtInf": [
+                                    "Original amount: EUR 850.00",
+                                    "NSF - Retry scheduled"
+                                ]
+                            }
+                        ]
+                    }
+                },
+                {
+                    "PmtId": {
+                        "InstrId": {"cat": ["RETDD", {"fake": ["i64", 100001, 999999]}]},
+                        "EndToEndId": {"cat": ["E2ERET", {"fake": ["i64", 100000000000, 999999999999]}]}
+                    },
+                    "InstdAmt": {
+                        "@Ccy": "EUR",
+                        "$value": {"fake": ["f64", 50.0, 250.0]}
+                    },
+                    "DrctDbtTx": {
+                        "MndtRltdInf": {
+                            "MndtId": {"cat": ["MNDT", {"fake": ["i64", 2024001, 2024999]}]},
+                            "DtOfSgntr": "2024-08-15",
+                            "AmdmntInd": false
+                        }
+                    },
+                    "DbtrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {"fake": ["bic"]}
+                        }
+                    },
+                    "Dbtr": {
+                        "Nm": {"fake": ["name"]},
+                        "PstlAdr": {
+                            "Ctry": {"fake": ["country_code"]}
+                        }
+                    },
+                    "DbtrAcct": {
+                        "Id": {
+                            "IBAN": {"fake": ["iban"]}
+                        }
+                    },
+                    "Purp": {
+                        "Cd": "OTHR"
+                    },
+                    "RmtInf": {
+                        "Ustrd": "Return processing - No mandate",
+                        "Strd": [
+                            {
+                                "RfrdDocInf": [
+                                    {
+                                        "Tp": {
+                                            "CdOrPrtry": {
+                                                "Prtry": "RETURN_REASON"
+                                            }
+                                        },
+                                        "Nb": "MD01"
+                                    }
+                                ],
+                                "AddtlRmtInf": [
+                                    "No valid mandate on file",
+                                    "Customer dispute - Contact required"
+                                ]
+                            }
+                        ]
+                    }
+                },
+                {
+                    "PmtId": {
+                        "InstrId": {"cat": ["RETDD", {"fake": ["i64", 100001, 999999]}]},
+                        "EndToEndId": {"cat": ["E2ERET", {"fake": ["i64", 100000000000, 999999999999]}]}
+                    },
+                    "InstdAmt": {
+                        "@Ccy": "EUR",
+                        "$value": {"fake": ["f64", 300.0, 800.0]}
+                    },
+                    "DrctDbtTx": {
+                        "MndtRltdInf": {
+                            "MndtId": {"cat": ["MNDT", {"fake": ["i64", 2021001, 2023999]}]},
+                            "DtOfSgntr": "2021-12-01",
+                            "AmdmntInd": false
+                        }
+                    },
+                    "DbtrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {"fake": ["bic"]}
+                        }
+                    },
+                    "Dbtr": {
+                        "Nm": {"fake": ["company_name"]},
+                        "PstlAdr": {
+                            "Ctry": {"fake": ["country_code"]}
+                        }
+                    },
+                    "DbtrAcct": {
+                        "Id": {
+                            "IBAN": {"fake": ["iban"]}
+                        }
+                    },
+                    "Purp": {
+                        "Cd": "INST"
+                    },
+                    "RmtInf": {
+                        "Ustrd": "Return processing - Customer refusal",
+                        "Strd": [
+                            {
+                                "RfrdDocInf": [
+                                    {
+                                        "Tp": {
+                                            "CdOrPrtry": {
+                                                "Prtry": "RETURN_REASON"
+                                            }
+                                        },
+                                        "Nb": "MS02"
+                                    }
+                                ],
+                                "AddtlRmtInf": [
+                                    "Customer refused debit",
+                                    "Reason: Service cancelled"
+                                ]
+                            }
+                        ]
+                    }
+                },
+                {
+                    "PmtId": {
+                        "InstrId": {"cat": ["RETDD", {"fake": ["i64", 100001, 999999]}]},
+                        "EndToEndId": {"cat": ["E2ERET", {"fake": ["i64", 100000000000, 999999999999]}]}
+                    },
+                    "InstdAmt": {
+                        "@Ccy": "EUR",
+                        "$value": {"fake": ["f64", 150.0, 450.0]}
+                    },
+                    "DrctDbtTx": {
+                        "MndtRltdInf": {
+                            "MndtId": {"cat": ["MNDT", {"fake": ["i64", 2023001, 2024999]}]},
+                            "DtOfSgntr": "2023-03-10",
+                            "AmdmntInd": false
+                        }
+                    },
+                    "DbtrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {"fake": ["bic"]}
+                        }
+                    },
+                    "Dbtr": {
+                        "Nm": {"fake": ["name"]},
+                        "PstlAdr": {
+                            "Ctry": {"fake": ["country_code"]}
+                        }
+                    },
+                    "DbtrAcct": {
+                        "Id": {
+                            "IBAN": {"fake": ["iban"]}
+                        }
+                    },
+                    "Purp": {
+                        "Cd": "OTHR"
+                    },
+                    "RmtInf": {
+                        "Ustrd": "Return processing - Technical problem",
+                        "Strd": [
+                            {
+                                "RfrdDocInf": [
+                                    {
+                                        "Tp": {
+                                            "CdOrPrtry": {
+                                                "Prtry": "RETURN_REASON"
+                                            }
+                                        },
+                                        "Nb": "TECH"
+                                    }
+                                ],
+                                "AddtlRmtInf": [
+                                    "Bank processing error",
+                                    "Will be resubmitted"
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    }
+}
