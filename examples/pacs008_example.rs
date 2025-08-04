@@ -3,6 +3,8 @@
 // a pacs.008 (FI to FI Customer Credit Transfer) message
 
 use mx_message::document::pacs_008_001_08::*;
+use mx_message::parse_result::{ErrorCollector, ParserConfig};
+use mx_message::validation::Validate;
 use std::error::Error;
 
 fn main() -> Result<(), Box<dyn Error>> {
@@ -13,18 +15,21 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     // Validate the message
     println!("1. Validating the message...");
-    match document.validate() {
-        Ok(()) => println!("✓ Message validation successful\n"),
-        Err(e) => {
-            println!(
-                "✗ Message validation failed: {} (code: {})\n",
-                e.message, e.code
-            );
-            return Err(Box::new(std::io::Error::new(
-                std::io::ErrorKind::InvalidData,
-                e.message,
-            )));
+    let config = ParserConfig::default();
+    let mut collector = ErrorCollector::new();
+    document.validate("", &config, &mut collector);
+    
+    if collector.has_errors() {
+        println!("✗ Message validation failed with {} errors:", collector.error_count());
+        for error in collector.errors() {
+            println!("  - {} (code: {})", error.message, error.code);
         }
+        return Err(Box::new(std::io::Error::new(
+            std::io::ErrorKind::InvalidData,
+            "Validation failed",
+        )));
+    } else {
+        println!("✓ Message validation successful\n");
     }
 
     // Serialize to JSON
@@ -47,18 +52,23 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     // Validate the deserialized message
     println!("4. Validating deserialized message...");
-    match deserialized_document.validate() {
-        Ok(()) => println!("✓ Deserialized message validation successful\n"),
-        Err(e) => {
-            println!(
-                "✗ Deserialized message validation failed: {} (code: {})\n",
-                e.message, e.code
-            );
-            return Err(Box::new(std::io::Error::new(
-                std::io::ErrorKind::InvalidData,
-                e.message,
-            )));
+    let mut collector2 = ErrorCollector::new();
+    deserialized_document.validate("", &config, &mut collector2);
+    
+    if collector2.has_errors() {
+        println!(
+            "✗ Deserialized message validation failed with {} errors:",
+            collector2.error_count()
+        );
+        for error in collector2.errors() {
+            println!("  - {} (code: {})", error.message, error.code);
         }
+        return Err(Box::new(std::io::Error::new(
+            std::io::ErrorKind::InvalidData,
+            "Validation failed",
+        )));
+    } else {
+        println!("✓ Deserialized message validation successful\n");
     }
 
     // Compare original and deserialized

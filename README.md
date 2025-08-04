@@ -190,6 +190,46 @@ match document.validate() {
 }
 ```
 
+### Error Collection (Comprehensive Validation)
+
+MXMessage supports collecting all validation errors instead of stopping at the first error:
+
+```rust
+use mx_message::validation::Validate;
+use mx_message::parse_result::{ParserConfig, ErrorCollector};
+use mx_message::pacs_008_001_08::FIToFICustomerCreditTransferV08;
+
+// Create a message with multiple validation issues
+let payment = FIToFICustomerCreditTransferV08 {
+    grp_hdr: GroupHeader93 {
+        msg_id: "ID",  // Too short (min 5 chars)
+        cre_dt_tm: "invalid-date",  // Wrong format
+        nb_of_txs: "ABC",  // Should be numeric
+        // ... other fields
+    },
+    // ... other fields
+};
+
+// Collect all validation errors
+let config = ParserConfig::default();
+let mut collector = ErrorCollector::new();
+payment.validate("", &config, &mut collector);
+
+// Process all errors at once
+if collector.has_errors() {
+    println!("Found {} validation errors:", collector.errors().len());
+    for error in collector.errors() {
+        println!("  - {}: {} (code: {})", 
+            error.path.as_ref().unwrap_or(&"root".to_string()),
+            error.message, 
+            error.code
+        );
+    }
+} else {
+    println!("✓ Message is valid");
+}
+```
+
 ## 🧪 Testing Strategy
 
 MXMessage uses comprehensive testing with 168 real-world scenarios migrated from MT messages, covering cross-border payments, securities, cash management, and more.

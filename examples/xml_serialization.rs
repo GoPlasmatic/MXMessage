@@ -2,6 +2,8 @@
 // This example demonstrates XML serialization and deserialization of pacs.008 messages
 
 use mx_message::document::pacs_008_001_08::*;
+use mx_message::parse_result::{ErrorCollector, ParserConfig};
+use mx_message::validation::Validate;
 use quick_xml::de::from_str as xml_from_str;
 use quick_xml::se::to_string as xml_to_string;
 use std::error::Error;
@@ -14,8 +16,15 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     // Validate the message
     println!("1. Validating the message...");
-    if let Err(e) = document.validate() {
-        println!("✗ Message validation failed: {:?}", e);
+    let config = ParserConfig::default();
+    let mut collector = ErrorCollector::new();
+    document.validate("", &config, &mut collector);
+    
+    if collector.has_errors() {
+        println!("✗ Message validation failed with {} errors:", collector.error_count());
+        for error in collector.errors() {
+            println!("  - {} (code: {})", error.message, error.code);
+        }
     } else {
         println!("✓ Message validation successful\n");
     }
@@ -42,8 +51,17 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     // Validate the deserialized message
     println!("5. Validating deserialized message...");
-    if let Err(e) = deserialized_document.validate() {
-        println!("✗ Deserialized message validation failed: {:?}", e);
+    let mut collector2 = ErrorCollector::new();
+    deserialized_document.validate("", &config, &mut collector2);
+    
+    if collector2.has_errors() {
+        println!(
+            "✗ Deserialized message validation failed with {} errors:",
+            collector2.error_count()
+        );
+        for error in collector2.errors() {
+            println!("  - {} (code: {})", error.message, error.code);
+        }
     } else {
         println!("✓ Deserialized message validation successful\n");
     }

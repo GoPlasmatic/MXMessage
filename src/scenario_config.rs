@@ -26,15 +26,11 @@ type Result<T> = std::result::Result<T, ValidationError>;
 
 /// Load a scenario configuration from a JSON file
 pub fn load_scenario_json<P: AsRef<Path>>(path: P) -> Result<Value> {
-    let content = fs::read_to_string(path).map_err(|e| ValidationError {
-        code: 9998,
-        message: format!("Failed to read scenario file: {e}"),
-    })?;
+    let content = fs::read_to_string(path)
+        .map_err(|e| ValidationError::new(9998, format!("Failed to read scenario file: {e}")))?;
 
-    serde_json::from_str(&content).map_err(|e| ValidationError {
-        code: 9998,
-        message: format!("Failed to parse scenario JSON: {e}"),
-    })
+    serde_json::from_str(&content)
+        .map_err(|e| ValidationError::new(9998, format!("Failed to parse scenario JSON: {e}")))
 }
 
 /// Find and load a scenario for a specific message type
@@ -82,13 +78,13 @@ pub fn find_scenario_for_message_type(message_type: &str) -> Result<Value> {
         }
     }
 
-    Err(ValidationError {
-        code: 9998,
-        message: format!(
-            "No test scenarios found for message type: {}. Searched in: test_scenarios/{0} and ../test_scenarios/{0}", 
+    Err(ValidationError::new(
+        9998,
+        format!(
+            "No test scenarios found for message type: {}. Searched in: test_scenarios/{0} and ../test_scenarios/{0}",
             message_type.to_lowercase()
-        )
-    })
+        ),
+    ))
 }
 
 /// Find and load a specific scenario by name
@@ -113,10 +109,8 @@ pub fn find_scenario_by_name(message_type: &str, scenario_name: &str) -> Result<
         }
     }
 
-    Err(ValidationError {
-        code: 9998,
-        message: format!(
-            "Scenario '{scenario_name}' not found for {message_type}. Tried paths: {paths:?}"
-        ),
-    })
+    Err(ValidationError::new(
+        9998,
+        format!("Scenario '{scenario_name}' not found for {message_type}. Tried paths: {paths:?}"),
+    ))
 }

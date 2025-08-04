@@ -21,7 +21,7 @@ use crate::error::ValidationError;
 use crate::scenario_config::{find_scenario_by_name, find_scenario_for_message_type};
 use fake::Fake;
 use rand::Rng;
-use serde_json::{json, Value};
+use serde_json::{Value, json};
 use uuid::Uuid;
 
 type Result<T> = std::result::Result<T, ValidationError>;
@@ -47,15 +47,12 @@ type Result<T> = std::result::Result<T, ValidationError>;
 /// # use mx_message::document::pacs_008_001_08::FIToFICustomerCreditTransferV08;
 /// // Generate a standard pacs.008 message
 /// let pacs008_msg: FIToFICustomerCreditTransferV08 = generate_sample("pacs008", None).unwrap();
-/// 
+///
 /// // Generate a specific scenario
-/// let pacs008_high_value: FIToFICustomerCreditTransferV08 = 
+/// let pacs008_high_value: FIToFICustomerCreditTransferV08 =
 ///     generate_sample("pacs008", Some("high_value")).unwrap();
 /// ```
-pub fn generate_sample<T>(
-    message_type: &str,
-    scenario_name: Option<&str>,
-) -> Result<T>
+pub fn generate_sample<T>(message_type: &str, scenario_name: Option<&str>) -> Result<T>
 where
     T: serde::de::DeserializeOwned,
 {
@@ -71,34 +68,31 @@ where
 
     // Convert generated data to string for parsing
     let generated_json = serde_json::to_string_pretty(&generated_data).map_err(|e| {
-        ValidationError {
-            code: 9997,
-            message: format!("Failed to serialize generated data: {e}"),
-        }
+        ValidationError::new(9997, format!("Failed to serialize generated data: {e}"))
     })?;
 
     // Parse the generated JSON into the message type
-    serde_json::from_str(&generated_json).map_err(|e| ValidationError {
-        code: 9997,
-        message: format!("Failed to parse generated JSON into {message_type}: {e}"),
+    serde_json::from_str(&generated_json).map_err(|e| {
+        ValidationError::new(
+            9997,
+            format!("Failed to parse generated JSON into {message_type}: {e}"),
+        )
     })
 }
 
 /// Process scenario JSON and generate fake data
 fn process_scenario(scenario: &Value) -> Result<Value> {
     let mut rng = rand::thread_rng();
-    
+
     // Extract variables and schema
-    let variables = scenario.get("variables").ok_or_else(|| ValidationError {
-        code: 9997,
-        message: "Scenario missing 'variables' section".to_string(),
+    let variables = scenario.get("variables").ok_or_else(|| {
+        ValidationError::new(9997, "Scenario missing 'variables' section".to_string())
     })?;
-    
-    let schema = scenario.get("schema").ok_or_else(|| ValidationError {
-        code: 9997,
-        message: "Scenario missing 'schema' section".to_string(),
+
+    let schema = scenario.get("schema").ok_or_else(|| {
+        ValidationError::new(9997, "Scenario missing 'schema' section".to_string())
     })?;
-    
+
     // Generate variables
     let mut generated_vars = serde_json::Map::new();
     if let Value::Object(vars) = variables {
@@ -107,7 +101,7 @@ fn process_scenario(scenario: &Value) -> Result<Value> {
             generated_vars.insert(key.clone(), value);
         }
     }
-    
+
     // Process schema with generated variables
     process_schema_value(schema, &generated_vars)
 }
@@ -135,7 +129,7 @@ fn generate_value(spec: &Value, rng: &mut impl Rng) -> Result<Value> {
                             return Ok(generated);
                         }
                     }
-                    
+
                     let mut result = String::new();
                     for part in parts {
                         match part {
@@ -164,28 +158,31 @@ fn generate_value(spec: &Value, rng: &mut impl Rng) -> Result<Value> {
         }
         _ => return Ok(spec.clone()),
     }
-    
+
     Ok(spec.clone())
 }
 
 /// Generate fake values based on type
 fn generate_fake_value(fake_type: &str, args: &[Value], rng: &mut impl Rng) -> Result<Value> {
+    use fake::faker::address::en::{CityName, CountryName, PostCode, StreetName};
     use fake::faker::company::en::CompanyName;
-    use fake::faker::address::en::{StreetName, CityName, PostCode, CountryName};
     use fake::faker::lorem::en::Word;
-    
+
     match fake_type {
         "bic" => {
             // Generate a realistic BIC code
             let letters: String = (0..4).map(|_| rng.gen_range(b'A'..=b'Z') as char).collect();
             let country: String = (0..2).map(|_| rng.gen_range(b'A'..=b'Z') as char).collect();
             let location: String = (0..2).map(|_| rng.gen_range(b'A'..=b'Z') as char).collect();
-            let branch = if rng.gen_bool(0.5) { 
+            let branch = if rng.gen_bool(0.5) {
                 "XXX".to_string()
-            } else { 
+            } else {
                 (0..3).map(|_| rng.gen_range(b'0'..=b'9') as char).collect()
             };
-            Ok(Value::String(format!("{}{}{}{}", letters, country, location, branch)))
+            Ok(Value::String(format!(
+                "{}{}{}{}",
+                letters, country, location, branch
+            )))
         }
         "uuid" => Ok(Value::String(Uuid::new_v4().to_string())),
         "i64" => {
@@ -203,7 +200,9 @@ fn generate_fake_value(fake_type: &str, args: &[Value], rng: &mut impl Rng) -> R
         }
         "currency_code" => {
             let codes = ["EUR", "USD", "GBP", "CHF", "JPY", "CAD", "AUD"];
-            Ok(Value::String(codes[rng.gen_range(0..codes.len())].to_string()))
+            Ok(Value::String(
+                codes[rng.gen_range(0..codes.len())].to_string(),
+            ))
         }
         "iso8601_datetime" => {
             let now = chrono::Utc::now();
@@ -229,26 +228,38 @@ fn generate_fake_value(fake_type: &str, args: &[Value], rng: &mut impl Rng) -> R
         "lei" => {
             // Generate a realistic LEI (18 uppercase alphanumeric + 2 check digits)
             let chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-            let lei: String = (0..18).map(|_| {
-                chars.chars().nth(rng.gen_range(0..chars.len())).unwrap()
-            }).collect();
+            let lei: String = (0..18)
+                .map(|_| chars.chars().nth(rng.gen_range(0..chars.len())).unwrap())
+                .collect();
             let check = format!("{:02}", rng.gen_range(10..99));
             Ok(Value::String(format!("{}{}", lei, check)))
         }
         "alphanumeric" => {
             // Generate alphanumeric string of specified length
             let min_len = args.get(0).and_then(|v| v.as_u64()).unwrap_or(10) as usize;
-            let max_len = args.get(1).and_then(|v| v.as_u64()).unwrap_or(min_len as u64) as usize;
-            let len = if min_len == max_len { min_len } else { rng.gen_range(min_len..=max_len) };
+            let max_len = args
+                .get(1)
+                .and_then(|v| v.as_u64())
+                .unwrap_or(min_len as u64) as usize;
+            let len = if min_len == max_len {
+                min_len
+            } else {
+                rng.gen_range(min_len..=max_len)
+            };
             let chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-            let result: String = (0..len).map(|_| {
-                chars.chars().nth(rng.gen_range(0..chars.len())).unwrap()
-            }).collect();
+            let result: String = (0..len)
+                .map(|_| chars.chars().nth(rng.gen_range(0..chars.len())).unwrap())
+                .collect();
             Ok(Value::String(result))
         }
         "country_code" => {
-            let codes = ["US", "GB", "DE", "FR", "IT", "ES", "NL", "BE", "CH", "AT", "SE", "NO", "DK", "FI", "IE", "PT", "GR", "PL", "CZ", "HU"];
-            Ok(Value::String(codes[rng.gen_range(0..codes.len())].to_string()))
+            let codes = [
+                "US", "GB", "DE", "FR", "IT", "ES", "NL", "BE", "CH", "AT", "SE", "NO", "DK", "FI",
+                "IE", "PT", "GR", "PL", "CZ", "HU",
+            ];
+            Ok(Value::String(
+                codes[rng.gen_range(0..codes.len())].to_string(),
+            ))
         }
         "postal_code" => Ok(Value::String(PostCode().fake())),
         "postcode" => Ok(Value::String(PostCode().fake())),
@@ -261,7 +272,7 @@ fn generate_fake_value(fake_type: &str, args: &[Value], rng: &mut impl Rng) -> R
             let format = args.get(0).and_then(|v| v.as_str()).unwrap_or("%Y-%m-%d");
             let _start_offset = args.get(1).and_then(|v| v.as_str()).unwrap_or("0d");
             let _end_offset = args.get(2).and_then(|v| v.as_str()).unwrap_or("0d");
-            
+
             // For simplicity, generate today's date
             let now = chrono::Utc::now();
             Ok(Value::String(now.format(format).to_string()))
@@ -282,7 +293,7 @@ fn generate_fake_value(fake_type: &str, args: &[Value], rng: &mut impl Rng) -> R
                     // Simple handling for common patterns
                     if pattern.starts_with('(') && pattern.ends_with(')') {
                         // Extract options from pattern like "(GB|DE|FR|SG|HK)"
-                        let inner = &pattern[1..pattern.len()-1];
+                        let inner = &pattern[1..pattern.len() - 1];
                         let options: Vec<&str> = inner.split('|').collect();
                         if !options.is_empty() {
                             let idx = rng.gen_range(0..options.len());
@@ -295,7 +306,15 @@ fn generate_fake_value(fake_type: &str, args: &[Value], rng: &mut impl Rng) -> R
         }
         "email" => {
             // Generate a realistic email address
-            let first_names = ["john", "jane", "admin", "info", "support", "treasury", "compliance"];
+            let first_names = [
+                "john",
+                "jane",
+                "admin",
+                "info",
+                "support",
+                "treasury",
+                "compliance",
+            ];
             let domains = ["example.com", "company.com", "corp.com", "bank.com"];
             let first = first_names[rng.gen_range(0..first_names.len())];
             let domain = domains[rng.gen_range(0..domains.len())];
@@ -311,16 +330,21 @@ fn generate_fake_value(fake_type: &str, args: &[Value], rng: &mut impl Rng) -> R
         "state_abbr" => {
             // US state abbreviations
             let states = ["CA", "NY", "TX", "FL", "IL", "PA", "OH", "GA", "NC", "MI"];
-            Ok(Value::String(states[rng.gen_range(0..states.len())].to_string()))
+            Ok(Value::String(
+                states[rng.gen_range(0..states.len())].to_string(),
+            ))
         }
         "time" => {
             // Generate time in HH:MM:SS format
             let hour = rng.gen_range(0..24);
             let minute = rng.gen_range(0..60);
             let second = rng.gen_range(0..60);
-            Ok(Value::String(format!("{:02}:{:02}:{:02}", hour, minute, second)))
+            Ok(Value::String(format!(
+                "{:02}:{:02}:{:02}",
+                hour, minute, second
+            )))
         }
-        _ => Ok(Value::String(format!("FAKE_{}", fake_type.to_uppercase())))
+        _ => Ok(Value::String(format!("FAKE_{}", fake_type.to_uppercase()))),
     }
 }
 
@@ -336,12 +360,13 @@ fn process_schema_value(value: &Value, vars: &serde_json::Map<String, Value>) ->
                     }
                 }
             }
-            
+
             // Handle cat spec with variable resolution
             if let Some(cat_spec) = obj.get("cat") {
                 if let Value::Array(parts) = cat_spec {
                     // Process each part to resolve variables
-                    let resolved_parts: Vec<Value> = parts.iter()
+                    let resolved_parts: Vec<Value> = parts
+                        .iter()
                         .map(|part| process_schema_value(part, vars))
                         .collect::<Result<Vec<_>>>()?;
                     let resolved_obj = json!({"cat": resolved_parts});
@@ -349,16 +374,16 @@ fn process_schema_value(value: &Value, vars: &serde_json::Map<String, Value>) ->
                     return generate_value(&resolved_obj, &mut rng);
                 }
             }
-            
+
             // Check if this object itself is a fake/pick spec
             if obj.contains_key("fake") || obj.contains_key("pick") {
                 // This is a generator spec, generate it
                 let mut rng = rand::thread_rng();
                 return generate_value(value, &mut rng);
             }
-            
+
             let mut result = serde_json::Map::new();
-            
+
             // Otherwise process each field
             for (key, val) in obj {
                 if key != "var" {

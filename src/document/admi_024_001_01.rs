@@ -16,9 +16,8 @@
 //
 // You may obtain a copy of this library at
 // https://github.com/GoPlasmatic/MXMessage
-
-use crate::error::*;
-use regex::Regex;
+use crate::parse_result::{ErrorCollector, ParserConfig};
+use crate::validation::{Validate, helpers};
 use serde::{Deserialize, Serialize};
 
 // BranchAndFinancialInstitutionIdentification81: Unique and unambiguous identification of a financial institution, as assigned under an internationally recognised or proprietary identification scheme.
@@ -28,10 +27,10 @@ pub struct BranchAndFinancialInstitutionIdentification81 {
     pub fin_instn_id: FinancialInstitutionIdentification231,
 }
 
-impl BranchAndFinancialInstitutionIdentification81 {
-    pub fn validate(&self) -> Result<(), ValidationError> {
-        self.fin_instn_id.validate()?;
-        Ok(())
+impl Validate for BranchAndFinancialInstitutionIdentification81 {
+    fn validate(&self, path: &str, config: &ParserConfig, collector: &mut ErrorCollector) {
+        self.fin_instn_id
+            .validate(&helpers::child_path(path, "FinInstnId"), config, collector);
     }
 }
 
@@ -46,53 +45,48 @@ pub struct CorrespondenceNotification11 {
     pub ntfctn_nrrtv: Vec<String>,
 }
 
-impl CorrespondenceNotification11 {
-    pub fn validate(&self) -> Result<(), ValidationError> {
-        if self.sndr_ntfctn_id.chars().count() < 1 {
-            return Err(ValidationError::new(
-                1001,
-                "sndr_ntfctn_id is shorter than the minimum length of 1".to_string(),
-            ));
-        }
-        if self.sndr_ntfctn_id.chars().count() > 35 {
-            return Err(ValidationError::new(
-                1002,
-                "sndr_ntfctn_id exceeds the maximum length of 35".to_string(),
-            ));
-        }
-        let pattern = Regex::new("[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+").unwrap();
-        if !pattern.is_match(&self.sndr_ntfctn_id) {
-            return Err(ValidationError::new(
-                1005,
-                "sndr_ntfctn_id does not match the required pattern".to_string(),
-            ));
-        }
-        self.ntfctn_tp.validate()?;
+impl Validate for CorrespondenceNotification11 {
+    fn validate(&self, path: &str, config: &ParserConfig, collector: &mut ErrorCollector) {
+        helpers::validate_length(
+            &self.sndr_ntfctn_id,
+            "SndrNtfctnId",
+            Some(1),
+            Some(35),
+            &helpers::child_path(path, "SndrNtfctnId"),
+            config,
+            collector,
+        );
+        helpers::validate_pattern(
+            &self.sndr_ntfctn_id,
+            "SndrNtfctnId",
+            "[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+",
+            &helpers::child_path(path, "SndrNtfctnId"),
+            config,
+            collector,
+        );
+        self.ntfctn_tp
+            .validate(&helpers::child_path(path, "NtfctnTp"), config, collector);
         for item in &self.ntfctn_nrrtv {
-            if item.chars().count() < 1 {
-                return Err(ValidationError::new(
-                    1001,
-                    "ntfctn_nrrtv is shorter than the minimum length of 1".to_string(),
-                ));
-            }
-            if item.chars().count() > 2000 {
-                return Err(ValidationError::new(
-                    1002,
-                    "ntfctn_nrrtv exceeds the maximum length of 2000".to_string(),
-                ));
-            }
-            let pattern = Regex::new(
-                "[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]+",
-            )
-            .unwrap();
-            if !pattern.is_match(&item) {
-                return Err(ValidationError::new(
-                    1005,
-                    "ntfctn_nrrtv does not match the required pattern".to_string(),
-                ));
-            }
+            helpers::validate_length(
+                item,
+                "NtfctnNrrtv",
+                Some(1),
+                Some(2000),
+                &helpers::child_path(path, "NtfctnNrrtv"),
+                config,
+                collector,
+            );
         }
-        Ok(())
+        for item in &self.ntfctn_nrrtv {
+            helpers::validate_pattern(
+                item,
+                "NtfctnNrrtv",
+                "[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]+",
+                &helpers::child_path(path, "NtfctnNrrtv"),
+                config,
+                collector,
+            );
+        }
     }
 }
 
@@ -103,17 +97,16 @@ pub struct FinancialInstitutionIdentification231 {
     pub bicfi: String,
 }
 
-impl FinancialInstitutionIdentification231 {
-    pub fn validate(&self) -> Result<(), ValidationError> {
-        let pattern =
-            Regex::new("[A-Z0-9]{4,4}[A-Z]{2,2}[A-Z0-9]{2,2}([A-Z0-9]{3,3}){0,1}").unwrap();
-        if !pattern.is_match(&self.bicfi) {
-            return Err(ValidationError::new(
-                1005,
-                "bicfi does not match the required pattern".to_string(),
-            ));
-        }
-        Ok(())
+impl Validate for FinancialInstitutionIdentification231 {
+    fn validate(&self, path: &str, config: &ParserConfig, collector: &mut ErrorCollector) {
+        helpers::validate_pattern(
+            &self.bicfi,
+            "BICFI",
+            "[A-Z0-9]{4,4}[A-Z]{2,2}[A-Z0-9]{2,2}([A-Z0-9]{3,3}){0,1}",
+            &helpers::child_path(path, "BICFI"),
+            config,
+            collector,
+        );
     }
 }
 
@@ -130,37 +123,37 @@ pub struct GroupHeader1291 {
     pub rcvr: Party50Choice1,
 }
 
-impl GroupHeader1291 {
-    pub fn validate(&self) -> Result<(), ValidationError> {
-        if self.msg_id.chars().count() < 1 {
-            return Err(ValidationError::new(
-                1001,
-                "msg_id is shorter than the minimum length of 1".to_string(),
-            ));
-        }
-        if self.msg_id.chars().count() > 35 {
-            return Err(ValidationError::new(
-                1002,
-                "msg_id exceeds the maximum length of 35".to_string(),
-            ));
-        }
-        let pattern = Regex::new("[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+").unwrap();
-        if !pattern.is_match(&self.msg_id) {
-            return Err(ValidationError::new(
-                1005,
-                "msg_id does not match the required pattern".to_string(),
-            ));
-        }
-        let pattern = Regex::new(".*(\\+|-)((0[0-9])|(1[0-4])):[0-5][0-9]").unwrap();
-        if !pattern.is_match(&self.cre_dt_tm) {
-            return Err(ValidationError::new(
-                1005,
-                "cre_dt_tm does not match the required pattern".to_string(),
-            ));
-        }
-        self.sndr.validate()?;
-        self.rcvr.validate()?;
-        Ok(())
+impl Validate for GroupHeader1291 {
+    fn validate(&self, path: &str, config: &ParserConfig, collector: &mut ErrorCollector) {
+        helpers::validate_length(
+            &self.msg_id,
+            "MsgId",
+            Some(1),
+            Some(35),
+            &helpers::child_path(path, "MsgId"),
+            config,
+            collector,
+        );
+        helpers::validate_pattern(
+            &self.msg_id,
+            "MsgId",
+            "[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+",
+            &helpers::child_path(path, "MsgId"),
+            config,
+            collector,
+        );
+        helpers::validate_pattern(
+            &self.cre_dt_tm,
+            "CreDtTm",
+            ".*(\\+|-)((0[0-9])|(1[0-4])):[0-5][0-9]",
+            &helpers::child_path(path, "CreDtTm"),
+            config,
+            collector,
+        );
+        self.sndr
+            .validate(&helpers::child_path(path, "Sndr"), config, collector);
+        self.rcvr
+            .validate(&helpers::child_path(path, "Rcvr"), config, collector);
     }
 }
 
@@ -173,11 +166,12 @@ pub struct NotificationOfCorrespondenceV01 {
     pub ntfctn_data: CorrespondenceNotification11,
 }
 
-impl NotificationOfCorrespondenceV01 {
-    pub fn validate(&self) -> Result<(), ValidationError> {
-        self.grp_hdr.validate()?;
-        self.ntfctn_data.validate()?;
-        Ok(())
+impl Validate for NotificationOfCorrespondenceV01 {
+    fn validate(&self, path: &str, config: &ParserConfig, collector: &mut ErrorCollector) {
+        self.grp_hdr
+            .validate(&helpers::child_path(path, "GrpHdr"), config, collector);
+        self.ntfctn_data
+            .validate(&helpers::child_path(path, "NtfctnData"), config, collector);
     }
 }
 
@@ -188,23 +182,19 @@ pub struct NotificationType1Choice1 {
     pub cd: Option<String>,
 }
 
-impl NotificationType1Choice1 {
-    pub fn validate(&self) -> Result<(), ValidationError> {
+impl Validate for NotificationType1Choice1 {
+    fn validate(&self, path: &str, config: &ParserConfig, collector: &mut ErrorCollector) {
         if let Some(ref val) = self.cd {
-            if val.chars().count() < 1 {
-                return Err(ValidationError::new(
-                    1001,
-                    "cd is shorter than the minimum length of 1".to_string(),
-                ));
-            }
-            if val.chars().count() > 4 {
-                return Err(ValidationError::new(
-                    1002,
-                    "cd exceeds the maximum length of 4".to_string(),
-                ));
-            }
+            helpers::validate_length(
+                val,
+                "Cd",
+                Some(1),
+                Some(4),
+                &helpers::child_path(path, "Cd"),
+                config,
+                collector,
+            );
         }
-        Ok(())
     }
 }
 
@@ -215,11 +205,12 @@ pub struct Party50Choice1 {
     pub agt: Option<BranchAndFinancialInstitutionIdentification81>,
 }
 
-impl Party50Choice1 {
-    pub fn validate(&self) -> Result<(), ValidationError> {
+impl Validate for Party50Choice1 {
+    fn validate(&self, path: &str, config: &ParserConfig, collector: &mut ErrorCollector) {
         if let Some(ref val) = self.agt {
-            val.validate()?
+            if config.validate_optional_fields {
+                val.validate(&helpers::child_path(path, "Agt"), config, collector);
+            }
         }
-        Ok(())
     }
 }
