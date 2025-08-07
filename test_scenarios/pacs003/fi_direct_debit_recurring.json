@@ -1,526 +1,288 @@
 {
     "variables": {
-        "msg_id": {"cat": ["MSGRECUR", {"fake": ["uuid"]}]},
-        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "msg_id": {
+            "cat": [
+                "MSG",
+                {
+                    "fake": [
+                        "i64",
+                        100000000000,
+                        999999999999
+                    ]
+                }
+            ]
+        },
+        "creation_datetime": {
+            "fake": [
+                "iso8601_datetime"
+            ]
+        },
         "settlement_date": "2025-01-28",
         "num_txs": 4,
-        "total_amt": {"fake": ["f64", 5000.0, 15000.0]},
-        "instg_bic": {"fake": ["bic"]},
-        "instd_bic": {"fake": ["bic"]},
-        "instg_lei": {"fake": ["lei"]},
-        "instd_lei": {"fake": ["lei"]}
+        "total_amt": {
+            "fake": [
+                "f64",
+                5000.0,
+                15000.0
+            ]
+        },
+        "instg_bic": {
+            "fake": [
+                "bic"
+            ]
+        },
+        "instd_bic": {
+            "fake": [
+                "bic"
+            ]
+        },
+        "instg_lei": {
+            "fake": [
+                "lei"
+            ]
+        },
+        "instd_lei": {
+            "fake": [
+                "lei"
+            ]
+        },
+        "instruction_id": {
+            "cat": [
+                "INSTR",
+                {
+                    "fake": [
+                        "i64",
+                        10000000,
+                        99999999
+                    ]
+                }
+            ]
+        },
+        "uetr": {
+            "fake": [
+                "uuid"
+            ]
+        },
+        "collection_date": "2025-01-28",
+        "end_to_end_id": {
+            "cat": [
+                "E2E",
+                {
+                    "fake": [
+                        "i64",
+                        100000000000,
+                        999999999999
+                    ]
+                }
+            ]
+        },
+        "tx_id": {
+            "cat": [
+                "TX",
+                {
+                    "fake": [
+                        "i64",
+                        100000000000,
+                        999999999999
+                    ]
+                }
+            ]
+        },
+        "debtor_bic": {
+            "fake": [
+                "bic"
+            ]
+        },
+        "debtor_iban": {
+            "fake": [
+                "iban",
+                "DE"
+            ]
+        },
+        "creditor_bic": {
+            "fake": [
+                "bic"
+            ]
+        },
+        "creditor_iban": {
+            "fake": [
+                "iban",
+                "FR"
+            ]
+        }
     },
     "schema": {
         "GrpHdr": {
-            "MsgId": {"var": "msg_id"},
-            "CreDtTm": {"var": "creation_datetime"},
-            "NbOfTxs": {"cat": [{"var": "num_txs"}]},
-            "TtlIntrBkSttlmAmt": {
-                "@Ccy": "EUR",
-                "$value": {"var": "total_amt"}
+            "MsgId": {
+                "var": "msg_id"
             },
-            "IntrBkSttlmDt": {"var": "settlement_date"},
+            "CreDtTm": {
+                "var": "creation_datetime"
+            },
+            "NbOfTxs": "1",
             "SttlmInf": {
-                "SttlmMtd": "CLRG",
-                "ClrSys": {
-                    "Cd": "STG"
-                }
-            },
-            "InstgAgt": {
-                "FinInstnId": {
-                    "BICFI": {"var": "instg_bic"},
-                    "LEI": {"var": "instg_lei"}
-                }
-            },
-            "InstdAgt": {
-                "FinInstnId": {
-                    "BICFI": {"var": "instd_bic"},
-                    "LEI": {"var": "instd_lei"}
-                }
+                "SttlmMtd": "INDA"
             }
         },
-        "DrctDbtTxInf": [
-            {
-                "PmtId": {
-                    "EndToEndId": {"cat": ["E2ERECUR", {"fake": ["i64", 100000000000, 999999999999]}]},
-                    "TxId": {"cat": ["TXRECUR", {"fake": ["uuid"]}]}
+        "DrctDbtTxInf": {
+            "PmtId": {
+                "InstrId": {
+                    "var": "instruction_id"
                 },
-                "PmtTpInf": {
-                    "SvcLvl": [
-                        {
-                            "Cd": "SEPA"
-                        }
-                    ],
-                    "LclInstrm": {
-                        "Cd": "CORE"
-                    },
-                    "SeqTp": "RCUR",
-                    "CtgyPurp": {
-                        "Cd": "LOAN"
+                "EndToEndId": {
+                    "var": "end_to_end_id"
+                },
+                "TxId": {
+                    "var": "tx_id"
+                },
+                "UETR": {
+                    "var": "uetr"
+                }
+            },
+            "PmtTpInf": {
+                "SvcLvl": [
+                    {
+                        "Cd": "SEPA"
                     }
+                ],
+                "LclInstrm": {
+                    "Cd": "CORE"
                 },
-                "IntrBkSttlmAmt": {
-                    "@Ccy": "EUR",
-                    "$value": {"fake": ["f64", 1000.0, 3000.0]}
-                },
-                "IntrBkSttlmDt": {"var": "settlement_date"},
-                "InstdAmt": {
-                    "@Ccy": "EUR",
-                    "$value": {"fake": ["f64", 1000.0, 3000.0]}
-                },
-                "ChrgBr": "SLEV",
-                "DrctDbtTx": {
-                    "MndtRltdInf": {
-                        "MndtId": {"cat": ["MNDTLOAN", {"fake": ["i64", 1000000, 9999999]}]},
-                        "DtOfSgntr": "2022-06-01",
-                        "AmdmntInd": false
-                    },
-                    "CdtrSchmeId": {
-                        "Id": {
-                            "PrvtId": {
-                                "Othr": [
-                                    {
-                                        "Id": {"cat": ["DE", {"fake": ["i64", 10000000, 99999999]}, "ZZZ"]},
-                                        "SchmeNm": {
-                                            "Prtry": "SEPA"
-                                        }
-                                    }
-                                ]
-                            }
-                        }
-                    },
-                    "PreNtfctnId": {"cat": ["NOTIF", {"fake": ["i64", 100001, 999999]}]},
-                    "PreNtfctnDt": "2025-01-20"
-                },
-                "DbtrAgt": {
-                    "FinInstnId": {
-                        "BICFI": {"fake": ["bic"]}
-                    }
-                },
-                "Dbtr": {
-                    "Nm": {"fake": ["name"]},
-                    "PstlAdr": {
-                        "Ctry": {"fake": ["country_code"]},
-                        "AdrLine": [
-                            {"fake": ["street_address"]},
-                            {"fake": ["city_name"]}
-                        ]
-                    },
-                    "Id": {
-                        "PrvtId": {
-                            "DtAndPlcOfBirth": {
-                                "BirthDt": {"fake": ["date", "%Y-%m-%d", "-60y", "-25y"]},
-                                "CityOfBirth": {"fake": ["city_name"]},
-                                "CtryOfBirth": {"fake": ["country_code"]}
-                            }
-                        }
-                    }
-                },
-                "DbtrAcct": {
-                    "Id": {
-                        "IBAN": {"fake": ["iban"]}
-                    }
-                },
-                "CdtrAgt": {
-                    "FinInstnId": {
-                        "BICFI": {"fake": ["bic"]}
-                    }
-                },
-                "Cdtr": {
-                    "Nm": {"cat": [{"fake": ["company_name"]}, " Bank"]},
-                    "PstlAdr": {
-                        "Ctry": "DE"
-                    }
-                },
-                "CdtrAcct": {
-                    "Id": {
-                        "IBAN": {"fake": ["iban", "DE"]}
-                    }
-                },
-                "Purp": {
+                "SeqTp": "RCUR",
+                "CtgyPurp": {
                     "Cd": "LOAN"
-                },
-                "RmtInf": {
-                    "Strd": [
-                        {
-                            "RfrdDocInf": [
-                                {
-                                    "Tp": {
-                                        "CdOrPrtry": {
-                                            "Prtry": "LOAN_CONTRACT"
-                                        }
-                                    },
-                                    "Nb": {"cat": ["LOAN-", {"fake": ["i64", 2022001, 2023999]}]},
-                                    "RltdDt": "2022-06-01"
-                                }
-                            ],
-                            "AddtlRmtInf": [
-                                "Personal loan - Monthly payment",
-                                "Payment 32 of 60",
-                                "Interest rate: 4.5% p.a."
-                            ]
-                        }
-                    ]
                 }
             },
-            {
-                "PmtId": {
-                    "EndToEndId": {"cat": ["E2ERECUR", {"fake": ["i64", 100000000000, 999999999999]}]},
-                    "TxId": {"cat": ["TXRECUR", {"fake": ["uuid"]}]}
-                },
-                "PmtTpInf": {
-                    "SvcLvl": [
-                        {
-                            "Cd": "SEPA"
-                        }
-                    ],
-                    "LclInstrm": {
-                        "Cd": "CORE"
-                    },
-                    "SeqTp": "RCUR",
-                    "CtgyPurp": {
-                        "Cd": "RENT"
-                    }
-                },
-                "IntrBkSttlmAmt": {
-                    "@Ccy": "EUR",
-                    "$value": {"fake": ["f64", 800.0, 2500.0]}
-                },
-                "IntrBkSttlmDt": {"var": "settlement_date"},
-                "InstdAmt": {
-                    "@Ccy": "EUR",
-                    "$value": {"fake": ["f64", 800.0, 2500.0]}
-                },
-                "ChrgBr": "SLEV",
-                "DrctDbtTx": {
-                    "MndtRltdInf": {
-                        "MndtId": {"cat": ["MNDTRENT", {"fake": ["i64", 1000000, 9999999]}]},
-                        "DtOfSgntr": "2023-12-01",
-                        "AmdmntInd": true,
-                        "AmdmntInfDtls": {
-                            "OrgnlCdtrSchmeId": {
-                                "Id": {
-                                    "PrvtId": {
-                                        "Othr": [
-                                            {
-                                                "Id": "DE98ZZZ09999999998",
-                                                "SchmeNm": {
-                                                    "Prtry": "SEPA"
-                                                }
-                                            }
-                                        ]
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "CdtrSchmeId": {
-                        "Id": {
-                            "PrvtId": {
-                                "Othr": [
-                                    {
-                                        "Id": {"cat": ["DE", {"fake": ["i64", 10000000, 99999999]}, "ZZZ"]},
-                                        "SchmeNm": {
-                                            "Prtry": "SEPA"
-                                        }
-                                    }
-                                ]
-                            }
-                        }
-                    }
-                },
-                "DbtrAgt": {
-                    "FinInstnId": {
-                        "BICFI": {"fake": ["bic"]}
-                    }
-                },
-                "Dbtr": {
-                    "Nm": {"fake": ["name"]},
-                    "PstlAdr": {
-                        "Ctry": {"fake": ["country_code"]},
-                        "AdrLine": [
-                            {"fake": ["street_address"]},
-                            {"cat": [{"fake": ["postcode"]}, " ", {"fake": ["city_name"]}]}
-                        ]
-                    }
-                },
-                "DbtrAcct": {
-                    "Id": {
-                        "IBAN": {"fake": ["iban"]}
-                    }
-                },
-                "CdtrAgt": {
-                    "FinInstnId": {
-                        "BICFI": {"fake": ["bic"]}
-                    }
-                },
-                "Cdtr": {
-                    "Nm": {"cat": [{"fake": ["company_name"]}, " Real Estate"]},
-                    "PstlAdr": {
-                        "Ctry": "DE"
-                    }
-                },
-                "CdtrAcct": {
-                    "Id": {
-                        "IBAN": {"fake": ["iban", "DE"]}
-                    }
-                },
-                "Purp": {
-                    "Cd": "RENT"
-                },
-                "RmtInf": {
-                    "Ustrd": "Monthly rent - February 2025",
-                    "Strd": [
-                        {
-                            "RfrdDocInf": [
-                                {
-                                    "Tp": {
-                                        "CdOrPrtry": {
-                                            "Prtry": "LEASE"
-                                        }
-                                    },
-                                    "Nb": {"cat": ["LEASE-", {"fake": ["i64", 2023001, 2024999]}]},
-                                    "RltdDt": "2023-12-01"
-                                }
-                            ],
-                            "AddtlRmtInf": [
-                                {"cat": ["Unit: ", {"fake": ["building_number"]}, "-", {"fake": ["i64", 1, 50]}]},
-                                "Including utilities advance payment"
-                            ]
-                        }
-                    ]
-                }
+            "IntrBkSttlmAmt": {
+                "@Ccy": "EUR",
+                "$value": 1000.0
             },
-            {
-                "PmtId": {
-                    "EndToEndId": {"cat": ["E2ERECUR", {"fake": ["i64", 100000000000, 999999999999]}]},
-                    "TxId": {"cat": ["TXRECUR", {"fake": ["uuid"]}]}
+            "IntrBkSttlmDt": {
+                "var": "settlement_date"
+            },
+            "InstdAmt": {
+                "@Ccy": "EUR",
+                "$value": 1000.0
+            },
+            "ChrgBr": "SHAR",
+            "DrctDbtTx": {
+                "MndtRltdInf": {
+                    "MndtId": "ABC0000000000000",
+                    "DtOfSgntr": "2022-06-01",
+                    "AmdmntInd": false
                 },
-                "PmtTpInf": {
-                    "SvcLvl": [
-                        {
-                            "Cd": "SEPA"
-                        }
-                    ],
-                    "LclInstrm": {
-                        "Cd": "CORE"
-                    },
-                    "SeqTp": "RCUR",
-                    "CtgyPurp": {
-                        "Cd": "OTHR"
-                    }
-                },
-                "IntrBkSttlmAmt": {
-                    "@Ccy": "EUR",
-                    "$value": {"fake": ["f64", 50.0, 200.0]}
-                },
-                "IntrBkSttlmDt": {"var": "settlement_date"},
-                "InstdAmt": {
-                    "@Ccy": "EUR",
-                    "$value": {"fake": ["f64", 50.0, 200.0]}
-                },
-                "ChrgBr": "SLEV",
-                "DrctDbtTx": {
-                    "MndtRltdInf": {
-                        "MndtId": {"cat": ["MNDTGYM", {"fake": ["i64", 1000000, 9999999]}]},
-                        "DtOfSgntr": "2024-01-15",
-                        "AmdmntInd": false
-                    },
-                    "CdtrSchmeId": {
-                        "Id": {
-                            "PrvtId": {
-                                "Othr": [
-                                    {
-                                        "Id": {"cat": ["DE", {"fake": ["i64", 10000000, 99999999]}, "ZZZ"]},
-                                        "SchmeNm": {
-                                            "Prtry": "SEPA"
-                                        }
-                                    }
-                                ]
-                            }
-                        }
-                    }
-                },
-                "DbtrAgt": {
-                    "FinInstnId": {
-                        "BICFI": {"fake": ["bic"]}
-                    }
-                },
-                "Dbtr": {
-                    "Nm": {"fake": ["name"]},
-                    "PstlAdr": {
-                        "Ctry": {"fake": ["country_code"]}
-                    },
+                "CdtrSchmeId": {
                     "Id": {
                         "PrvtId": {
                             "Othr": [
                                 {
-                                    "Id": {"cat": ["MEM", {"fake": ["i64", 100001, 999999]}]},
+                                    "Id": "ABC0000000000000",
                                     "SchmeNm": {
-                                        "Prtry": "MEMBERSHIP_ID"
+                                        "Prtry": "SEPA"
                                     }
                                 }
                             ]
                         }
                     }
                 },
-                "DbtrAcct": {
-                    "Id": {
-                        "IBAN": {"fake": ["iban"]}
+                "PreNtfctnId": "ABC0000000000000",
+                "PreNtfctnDt": "2025-01-20"
+            },
+            "DbtrAgt": {
+                "FinInstnId": {
+                    "BICFI": {
+                        "var": "debtor_bic"
                     }
-                },
-                "CdtrAgt": {
-                    "FinInstnId": {
-                        "BICFI": {"fake": ["bic"]}
-                    }
-                },
-                "Cdtr": {
-                    "Nm": "FitLife Gym GmbH",
-                    "PstlAdr": {
-                        "Ctry": "DE"
-                    }
-                },
-                "CdtrAcct": {
-                    "Id": {
-                        "IBAN": {"fake": ["iban", "DE"]}
-                    }
-                },
-                "Purp": {
-                    "Cd": "OTHR"
-                },
-                "RmtInf": {
-                    "Ustrd": "Gym membership - Premium plan",
-                    "Strd": [
-                        {
-                            "AddtlRmtInf": [
-                                "Monthly recurring payment",
-                                "All facilities access"
-                            ]
-                        }
-                    ]
                 }
             },
-            {
-                "PmtId": {
-                    "EndToEndId": {"cat": ["E2ERECUR", {"fake": ["i64", 100000000000, 999999999999]}]},
-                    "TxId": {"cat": ["TXRECUR", {"fake": ["uuid"]}]}
-                },
-                "PmtTpInf": {
-                    "SvcLvl": [
-                        {
-                            "Cd": "SEPA"
-                        }
-                    ],
-                    "LclInstrm": {
-                        "Cd": "B2B"
-                    },
-                    "SeqTp": "RCUR",
-                    "CtgyPurp": {
-                        "Cd": "OTHR"
-                    }
-                },
-                "IntrBkSttlmAmt": {
-                    "@Ccy": "EUR",
-                    "$value": {"fake": ["f64", 500.0, 2000.0]}
-                },
-                "IntrBkSttlmDt": {"var": "settlement_date"},
-                "InstdAmt": {
-                    "@Ccy": "EUR",
-                    "$value": {"fake": ["f64", 500.0, 2000.0]}
-                },
-                "ChrgBr": "DEBT",
-                "DrctDbtTx": {
-                    "MndtRltdInf": {
-                        "MndtId": {"cat": ["MNDTB2B", {"fake": ["i64", 1000000, 9999999]}]},
-                        "DtOfSgntr": "2024-06-01",
-                        "AmdmntInd": false,
-                        "ElctrncSgntr": {"cat": ["ESIG-", {"fake": ["uuid"]}]}
-                    },
-                    "CdtrSchmeId": {
-                        "Id": {
-                            "PrvtId": {
-                                "Othr": [
-                                    {
-                                        "Id": {"cat": ["DE", {"fake": ["i64", 10000000, 99999999]}, "ZZZ"]},
-                                        "SchmeNm": {
-                                            "Prtry": "SEPA"
-                                        }
-                                    }
-                                ]
-                            }
-                        }
-                    }
-                },
-                "DbtrAgt": {
-                    "FinInstnId": {
-                        "BICFI": {"fake": ["bic"]},
-                        "LEI": {"fake": ["lei"]}
-                    }
-                },
-                "Dbtr": {
-                    "Nm": {"fake": ["company_name"]},
-                    "PstlAdr": {
-                        "Ctry": {"fake": ["country_code"]}
-                    },
-                    "Id": {
-                        "OrgId": {
-                            "LEI": {"fake": ["lei"]}
-                        }
-                    }
-                },
-                "DbtrAcct": {
-                    "Id": {
-                        "IBAN": {"fake": ["iban"]}
-                    }
-                },
-                "CdtrAgt": {
-                    "FinInstnId": {
-                        "BICFI": {"fake": ["bic"]},
-                        "LEI": {"fake": ["lei"]}
-                    }
-                },
-                "Cdtr": {
-                    "Nm": {"cat": [{"fake": ["company_name"]}, " Software"]},
-                    "PstlAdr": {
-                        "Ctry": "DE"
-                    },
-                    "Id": {
-                        "OrgId": {
-                            "LEI": {"fake": ["lei"]}
-                        }
-                    }
-                },
-                "CdtrAcct": {
-                    "Id": {
-                        "IBAN": {"fake": ["iban", "DE"]}
-                    }
-                },
-                "Purp": {
-                    "Cd": "OTHR"
-                },
-                "RmtInf": {
-                    "Ustrd": "Software subscription - Enterprise license",
-                    "Strd": [
-                        {
-                            "RfrdDocInf": [
-                                {
-                                    "Tp": {
-                                        "CdOrPrtry": {
-                                            "Prtry": "LICENSE"
-                                        }
-                                    },
-                                    "Nb": {"cat": ["LIC-", {"fake": ["i64", 100001, 999999]}]},
-                                    "RltdDt": "2024-06-01"
-                                }
-                            ],
-                            "AddtlRmtInf": [
-                                "Monthly recurring charge",
-                                "Unlimited users"
-                            ]
-                        }
+            "Dbtr": {
+                "Nm": "John Doe",
+                "PstlAdr": {
+                    "Ctry": "DE",
+                    "AdrLine": [
+                        "Debtor Street 123",
+                        "City, State 12345"
                     ]
+                },
+                "Id": {
+                    "PrvtId": {
+                        "DtAndPlcOfBirth": {
+                            "BirthDt": "1980-01-15",
+                            "CityOfBirth": "Berlin",
+                            "CtryOfBirth": "DE"
+                        }
+                    }
+                }
+            },
+            "DbtrAcct": {
+                "Id": {
+                    "IBAN": {
+                        "var": "debtor_iban"
+                    }
+                }
+            },
+            "CdtrAgt": {
+                "FinInstnId": {
+                    "BICFI": {
+                        "var": "creditor_bic"
+                    }
+                }
+            },
+            "Cdtr": {
+                "Nm": "Sample Company",
+                "PstlAdr": {
+                    "Ctry": "DE"
+                }
+            },
+            "CdtrAcct": {
+                "Id": {
+                    "IBAN": {
+                        "var": "creditor_iban"
+                    }
+                }
+            },
+            "Purp": {
+                "Cd": "LOAN"
+            },
+            "RmtInf": {
+                "Strd": [
+                    {
+                        "RfrdDocInf": [
+                            {
+                                "Tp": {
+                                    "CdOrPrtry": {
+                                        "Prtry": "LOAN_CONTRACT"
+                                    }
+                                },
+                                "Nb": "ABC0000000",
+                                "RltdDt": "2022-06-01"
+                            }
+                        ],
+                        "AddtlRmtInf": [
+                            "Personal loan - Monthly payment",
+                            "Payment 32 of 60",
+                            "Interest rate: 4.5% p.a."
+                        ]
+                    }
+                ]
+            },
+            "ReqdColltnDt": {
+                "var": "collection_date"
+            },
+            "InstgAgt": {
+                "FinInstnId": {
+                    "BICFI": {
+                        "var": "creditor_bic"
+                    }
+                }
+            },
+            "InstdAgt": {
+                "FinInstnId": {
+                    "BICFI": {
+                        "var": "debtor_bic"
+                    }
                 }
             }
-        ]
+        }
     }
 }

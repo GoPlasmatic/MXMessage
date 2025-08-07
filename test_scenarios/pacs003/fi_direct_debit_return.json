@@ -1,388 +1,260 @@
 {
     "variables": {
-        "msg_id": {"cat": ["MSGRETURN", {"fake": ["uuid"]}]},
-        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "msg_id": {
+            "cat": [
+                "MSG",
+                {
+                    "fake": [
+                        "i64",
+                        100000000000,
+                        999999999999
+                    ]
+                }
+            ]
+        },
+        "creation_datetime": {
+            "fake": [
+                "iso8601_datetime"
+            ]
+        },
         "settlement_date": "2025-01-30",
         "num_returns": 3,
-        "total_return_amt": {"fake": ["f64", 2000.0, 10000.0]},
-        "instg_bic": {"fake": ["bic"]},
-        "instd_bic": {"fake": ["bic"]}
+        "total_return_amt": {
+            "fake": [
+                "f64",
+                2000.0,
+                10000.0
+            ]
+        },
+        "instg_bic": {
+            "fake": [
+                "bic"
+            ]
+        },
+        "instd_bic": {
+            "fake": [
+                "bic"
+            ]
+        },
+        "instruction_id": {
+            "cat": [
+                "INSTR",
+                {
+                    "fake": [
+                        "i64",
+                        10000000,
+                        99999999
+                    ]
+                }
+            ]
+        },
+        "uetr": {
+            "fake": [
+                "uuid"
+            ]
+        },
+        "collection_date": "2025-01-30",
+        "end_to_end_id": {
+            "cat": [
+                "E2E",
+                {
+                    "fake": [
+                        "i64",
+                        100000000000,
+                        999999999999
+                    ]
+                }
+            ]
+        },
+        "tx_id": {
+            "cat": [
+                "TX",
+                {
+                    "fake": [
+                        "i64",
+                        100000000000,
+                        999999999999
+                    ]
+                }
+            ]
+        },
+        "debtor_bic": {
+            "fake": [
+                "bic"
+            ]
+        },
+        "debtor_iban": {
+            "fake": [
+                "iban",
+                "DE"
+            ]
+        },
+        "creditor_bic": {
+            "fake": [
+                "bic"
+            ]
+        },
+        "creditor_iban": {
+            "fake": [
+                "iban",
+                "FR"
+            ]
+        }
     },
     "schema": {
         "GrpHdr": {
-            "MsgId": {"var": "msg_id"},
-            "CreDtTm": {"var": "creation_datetime"},
-            "NbOfTxs": {"cat": [{"var": "num_returns"}]},
-            "TtlIntrBkSttlmAmt": {
-                "@Ccy": "EUR",
-                "$value": {"var": "total_return_amt"}
+            "MsgId": {
+                "var": "msg_id"
             },
-            "IntrBkSttlmDt": {"var": "settlement_date"},
+            "CreDtTm": {
+                "var": "creation_datetime"
+            },
+            "NbOfTxs": "1",
             "SttlmInf": {
-                "SttlmMtd": "CLRG"
+                "SttlmMtd": "INDA"
+            }
+        },
+        "DrctDbtTxInf": {
+            "PmtId": {
+                "InstrId": {
+                    "var": "instruction_id"
+                },
+                "EndToEndId": {
+                    "var": "end_to_end_id"
+                },
+                "TxId": {
+                    "var": "tx_id"
+                },
+                "UETR": {
+                    "var": "uetr"
+                }
+            },
+            "PmtTpInf": {
+                "SvcLvl": [
+                    {
+                        "Cd": "SEPA"
+                    }
+                ],
+                "LclInstrm": {
+                    "Cd": "CORE"
+                },
+                "SeqTp": "OOFF"
+            },
+            "IntrBkSttlmAmt": {
+                "@Ccy": "EUR",
+                "$value": 1000.0
+            },
+            "IntrBkSttlmDt": {
+                "var": "settlement_date"
+            },
+            "InstdAmt": {
+                "@Ccy": "EUR",
+                "$value": 1000.0
+            },
+            "ChrgBr": "SHAR",
+            "DrctDbtTx": {
+                "MndtRltdInf": {
+                    "MndtId": "ABC0000000000000",
+                    "DtOfSgntr": "2024-01-01"
+                },
+                "CdtrSchmeId": {
+                    "Id": {
+                        "PrvtId": {
+                            "Othr": [
+                                {
+                                    "Id": "ABC0000000000000",
+                                    "SchmeNm": {
+                                        "Prtry": "SEPA"
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "RtrInf": {
+                "OrgnlBkTxCd": {
+                    "Prtry": {
+                        "Cd": "DDEB"
+                    }
+                },
+                "Orgtr": {
+                    "Id": {
+                        "OrgId": {
+                            "BICOrBEI": {
+                                "var": "instd_bic"
+                            }
+                        }
+                    }
+                },
+                "Rsn": {
+                    "Cd": "AC04"
+                },
+                "AddtlInf": [
+                    "Account closed",
+                    "Original DD date: 2025-01-28"
+                ]
+            },
+            "DbtrAgt": {
+                "FinInstnId": {
+                    "BICFI": {
+                        "var": "debtor_bic"
+                    }
+                }
+            },
+            "Dbtr": {
+                "Nm": "John Doe",
+                "PstlAdr": {
+                    "Ctry": "DE"
+                }
+            },
+            "DbtrAcct": {
+                "Id": {
+                    "IBAN": {
+                        "var": "debtor_iban"
+                    }
+                }
+            },
+            "CdtrAgt": {
+                "FinInstnId": {
+                    "BICFI": {
+                        "var": "creditor_bic"
+                    }
+                }
+            },
+            "Cdtr": {
+                "Nm": "Sample Company",
+                "PstlAdr": {
+                    "Ctry": "DE"
+                }
+            },
+            "CdtrAcct": {
+                "Id": {
+                    "IBAN": {
+                        "var": "creditor_iban"
+                    }
+                }
+            },
+            "RmtInf": {
+                "Ustrd": "RETURN: Account closed - Original payment returned"
+            },
+            "ReqdColltnDt": {
+                "var": "collection_date"
             },
             "InstgAgt": {
                 "FinInstnId": {
-                    "BICFI": {"var": "instg_bic"}
+                    "BICFI": {
+                        "var": "creditor_bic"
+                    }
                 }
             },
             "InstdAgt": {
                 "FinInstnId": {
-                    "BICFI": {"var": "instd_bic"}
+                    "BICFI": {
+                        "var": "debtor_bic"
+                    }
                 }
             }
-        },
-        "DrctDbtTxInf": [
-            {
-                "PmtId": {
-                    "EndToEndId": {"cat": ["E2ERET", {"fake": ["i64", 100000000000, 999999999999]}]},
-                    "TxId": {"cat": ["TXRET", {"fake": ["uuid"]}]}
-                },
-                "PmtTpInf": {
-                    "SvcLvl": [
-                        {
-                            "Cd": "SEPA"
-                        }
-                    ],
-                    "LclInstrm": {
-                        "Cd": "CORE"
-                    },
-                    "SeqTp": "OOFF"
-                },
-                "IntrBkSttlmAmt": {
-                    "@Ccy": "EUR",
-                    "$value": {"fake": ["f64", 500.0, 2000.0]}
-                },
-                "IntrBkSttlmDt": {"var": "settlement_date"},
-                "InstdAmt": {
-                    "@Ccy": "EUR",
-                    "$value": {"fake": ["f64", 500.0, 2000.0]}
-                },
-                "ChrgBr": "SLEV",
-                "DrctDbtTx": {
-                    "MndtRltdInf": {
-                        "MndtId": {"cat": ["MNDT", {"fake": ["i64", 1000000, 9999999]}]},
-                        "DtOfSgntr": "2024-01-01"
-                    },
-                    "CdtrSchmeId": {
-                        "Id": {
-                            "PrvtId": {
-                                "Othr": [
-                                    {
-                                        "Id": {"cat": ["DE", {"fake": ["i64", 10000000, 99999999]}, "ZZZ"]},
-                                        "SchmeNm": {
-                                            "Prtry": "SEPA"
-                                        }
-                                    }
-                                ]
-                            }
-                        }
-                    }
-                },
-                "RtrInf": {
-                    "OrgnlBkTxCd": {
-                        "Prtry": {
-                            "Cd": "DDEB"
-                        }
-                    },
-                    "Orgtr": {
-                        "Id": {
-                            "OrgId": {
-                                "BICOrBEI": {"var": "instd_bic"}
-                            }
-                        }
-                    },
-                    "Rsn": {
-                        "Cd": "AC04"
-                    },
-                    "AddtlInf": [
-                        "Account closed",
-                        "Original DD date: 2025-01-28"
-                    ]
-                },
-                "DbtrAgt": {
-                    "FinInstnId": {
-                        "BICFI": {"fake": ["bic"]}
-                    }
-                },
-                "Dbtr": {
-                    "Nm": {"fake": ["name"]},
-                    "PstlAdr": {
-                        "Ctry": {"fake": ["country_code"]}
-                    }
-                },
-                "DbtrAcct": {
-                    "Id": {
-                        "IBAN": {"fake": ["iban"]}
-                    }
-                },
-                "CdtrAgt": {
-                    "FinInstnId": {
-                        "BICFI": {"fake": ["bic"]}
-                    }
-                },
-                "Cdtr": {
-                    "Nm": {"fake": ["company_name"]},
-                    "PstlAdr": {
-                        "Ctry": "DE"
-                    }
-                },
-                "CdtrAcct": {
-                    "Id": {
-                        "IBAN": {"fake": ["iban", "DE"]}
-                    }
-                },
-                "RmtInf": {
-                    "Ustrd": "RETURN: Account closed - Original payment returned"
-                }
-            },
-            {
-                "PmtId": {
-                    "EndToEndId": {"cat": ["E2ERET", {"fake": ["i64", 100000000000, 999999999999]}]},
-                    "TxId": {"cat": ["TXRET", {"fake": ["uuid"]}]}
-                },
-                "PmtTpInf": {
-                    "SvcLvl": [
-                        {
-                            "Cd": "SEPA"
-                        }
-                    ],
-                    "LclInstrm": {
-                        "Cd": "CORE"
-                    },
-                    "SeqTp": "RCUR"
-                },
-                "IntrBkSttlmAmt": {
-                    "@Ccy": "EUR",
-                    "$value": {"fake": ["f64", 1000.0, 5000.0]}
-                },
-                "IntrBkSttlmDt": {"var": "settlement_date"},
-                "InstdAmt": {
-                    "@Ccy": "EUR",
-                    "$value": {"fake": ["f64", 1000.0, 5000.0]}
-                },
-                "ChrgBr": "SLEV",
-                "DrctDbtTx": {
-                    "MndtRltdInf": {
-                        "MndtId": {"cat": ["MNDT", {"fake": ["i64", 1000000, 9999999]}]},
-                        "DtOfSgntr": "2023-06-15"
-                    },
-                    "CdtrSchmeId": {
-                        "Id": {
-                            "PrvtId": {
-                                "Othr": [
-                                    {
-                                        "Id": {"cat": ["DE", {"fake": ["i64", 10000000, 99999999]}, "ZZZ"]},
-                                        "SchmeNm": {
-                                            "Prtry": "SEPA"
-                                        }
-                                    }
-                                ]
-                            }
-                        }
-                    }
-                },
-                "RtrInf": {
-                    "OrgnlBkTxCd": {
-                        "Prtry": {
-                            "Cd": "DDEB"
-                        }
-                    },
-                    "Orgtr": {
-                        "Id": {
-                            "OrgId": {
-                                "BICOrBEI": {"var": "instd_bic"}
-                            }
-                        }
-                    },
-                    "Rsn": {
-                        "Cd": "AM04"
-                    },
-                    "AddtlInf": [
-                        "Insufficient funds",
-                        "Account balance: EUR 45.23",
-                        "Required: EUR 2,850.00"
-                    ]
-                },
-                "DbtrAgt": {
-                    "FinInstnId": {
-                        "BICFI": {"fake": ["bic"]}
-                    }
-                },
-                "Dbtr": {
-                    "Nm": {"fake": ["company_name"]},
-                    "PstlAdr": {
-                        "Ctry": {"fake": ["country_code"]}
-                    }
-                },
-                "DbtrAcct": {
-                    "Id": {
-                        "IBAN": {"fake": ["iban"]}
-                    }
-                },
-                "CdtrAgt": {
-                    "FinInstnId": {
-                        "BICFI": {"fake": ["bic"]}
-                    }
-                },
-                "Cdtr": {
-                    "Nm": {"fake": ["company_name"]},
-                    "PstlAdr": {
-                        "Ctry": "DE"
-                    }
-                },
-                "CdtrAcct": {
-                    "Id": {
-                        "IBAN": {"fake": ["iban", "DE"]}
-                    }
-                },
-                "RmtInf": {
-                    "Ustrd": "RETURN: NSF - Insufficient funds",
-                    "Strd": [
-                        {
-                            "AddtlRmtInf": [
-                                "Will retry on next collection date",
-                                "Contact customer"
-                            ]
-                        }
-                    ]
-                }
-            },
-            {
-                "PmtId": {
-                    "EndToEndId": {"cat": ["E2ERET", {"fake": ["i64", 100000000000, 999999999999]}]},
-                    "TxId": {"cat": ["TXRET", {"fake": ["uuid"]}]}
-                },
-                "PmtTpInf": {
-                    "SvcLvl": [
-                        {
-                            "Cd": "SEPA"
-                        }
-                    ],
-                    "LclInstrm": {
-                        "Cd": "B2B"
-                    },
-                    "SeqTp": "RCUR"
-                },
-                "IntrBkSttlmAmt": {
-                    "@Ccy": "EUR",
-                    "$value": {"fake": ["f64", 500.0, 3000.0]}
-                },
-                "IntrBkSttlmDt": {"var": "settlement_date"},
-                "InstdAmt": {
-                    "@Ccy": "EUR",
-                    "$value": {"fake": ["f64", 500.0, 3000.0]}
-                },
-                "ChrgBr": "DEBT",
-                "DrctDbtTx": {
-                    "MndtRltdInf": {
-                        "MndtId": {"cat": ["MNDT", {"fake": ["i64", 1000000, 9999999]}]},
-                        "DtOfSgntr": "2024-03-01"
-                    },
-                    "CdtrSchmeId": {
-                        "Id": {
-                            "PrvtId": {
-                                "Othr": [
-                                    {
-                                        "Id": {"cat": ["DE", {"fake": ["i64", 10000000, 99999999]}, "ZZZ"]},
-                                        "SchmeNm": {
-                                            "Prtry": "SEPA"
-                                        }
-                                    }
-                                ]
-                            }
-                        }
-                    }
-                },
-                "RtrInf": {
-                    "OrgnlBkTxCd": {
-                        "Prtry": {
-                            "Cd": "DDEB"
-                        }
-                    },
-                    "Orgtr": {
-                        "Id": {
-                            "OrgId": {
-                                "BICOrBEI": {"var": "instd_bic"}
-                            }
-                        }
-                    },
-                    "Rsn": {
-                        "Cd": "MD01"
-                    },
-                    "AddtlInf": [
-                        "No mandate",
-                        "B2B mandate verification failed",
-                        "Customer disputes authorization"
-                    ]
-                },
-                "DbtrAgt": {
-                    "FinInstnId": {
-                        "BICFI": {"fake": ["bic"]},
-                        "LEI": {"fake": ["lei"]}
-                    }
-                },
-                "Dbtr": {
-                    "Nm": {"fake": ["company_name"]},
-                    "PstlAdr": {
-                        "Ctry": {"fake": ["country_code"]}
-                    },
-                    "Id": {
-                        "OrgId": {
-                            "LEI": {"fake": ["lei"]}
-                        }
-                    }
-                },
-                "DbtrAcct": {
-                    "Id": {
-                        "IBAN": {"fake": ["iban"]}
-                    }
-                },
-                "CdtrAgt": {
-                    "FinInstnId": {
-                        "BICFI": {"fake": ["bic"]},
-                        "LEI": {"fake": ["lei"]}
-                    }
-                },
-                "Cdtr": {
-                    "Nm": {"fake": ["company_name"]},
-                    "PstlAdr": {
-                        "Ctry": "DE"
-                    },
-                    "Id": {
-                        "OrgId": {
-                            "LEI": {"fake": ["lei"]}
-                        }
-                    }
-                },
-                "CdtrAcct": {
-                    "Id": {
-                        "IBAN": {"fake": ["iban", "DE"]}
-                    }
-                },
-                "RmtInf": {
-                    "Ustrd": "RETURN: No valid B2B mandate",
-                    "Strd": [
-                        {
-                            "RfrdDocInf": [
-                                {
-                                    "Tp": {
-                                        "CdOrPrtry": {
-                                            "Prtry": "DISPUTE_REF"
-                                        }
-                                    },
-                                    "Nb": {"cat": ["DISP-", {"fake": ["i64", 2025001, 2025999]}]},
-                                    "RltdDt": "2025-01-29"
-                                }
-                            ],
-                            "AddtlRmtInf": [
-                                "Customer claims no mandate given",
-                                "Legal dept notified"
-                            ]
-                        }
-                    ]
-                }
-            }
-        ]
+        }
     }
 }

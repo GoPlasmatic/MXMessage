@@ -199,10 +199,6 @@
             "description": "CBPR+ compliant cross-border utility payment"
         },
         {
-            "file": "cbpr_validation_failure.json",
-            "description": "CBPR+ payment with validation failures"
-        },
-        {
             "file": "duplicate_uetr.json",
             "description": "Payment with duplicate UETR detection"
         },

@@ -1,27 +1,102 @@
 {
     "variables": {
-        "msg_id": {"cat": ["MSGDD", {"fake": ["i64", 1000000, 9999999]}]},
-        "creation_datetime": {"fake": ["iso8601_datetime"]},
-        "pmt_inf_id": {"cat": ["DD", {"fake": ["i64", 100000, 999999]}]},
+        "msg_id": {
+            "cat": [
+                "MSGDD",
+                {
+                    "fake": [
+                        "i64",
+                        1000000,
+                        9999999
+                    ]
+                }
+            ]
+        },
+        "creation_datetime": {
+            "fake": [
+                "iso8601_datetime"
+            ]
+        },
+        "pmt_inf_id": {
+            "cat": [
+                "DD",
+                {
+                    "fake": [
+                        "i64",
+                        100000,
+                        999999
+                    ]
+                }
+            ]
+        },
         "collection_date": "2025-01-20",
-        "end_to_end_id": {"cat": ["E2E", {"fake": ["i64", 1000000, 9999999]}]},
-        "amount": {"fake": ["f64", 100.0, 1000.0]},
-        "creditor_iban": {"fake": ["iban", "DE"]},
-        "debtor_iban": {"fake": ["iban", "FR"]},
-        "mandate_id": {"cat": ["MNDT", {"fake": ["i64", 1000000, 9999999]}]},
+        "end_to_end_id": {
+            "cat": [
+                "E2E",
+                {
+                    "fake": [
+                        "i64",
+                        1000000,
+                        9999999
+                    ]
+                }
+            ]
+        },
+        "amount": {
+            "fake": [
+                "f64",
+                100.0,
+                1000.0
+            ]
+        },
+        "creditor_iban": {
+            "fake": [
+                "iban",
+                "DE"
+            ]
+        },
+        "debtor_iban": {
+            "fake": [
+                "iban",
+                "FR"
+            ]
+        },
+        "mandate_id": {
+            "cat": [
+                "MNDT",
+                {
+                    "fake": [
+                        "i64",
+                        1000000,
+                        9999999
+                    ]
+                }
+            ]
+        },
         "mandate_date": "2024-06-15"
     },
     "schema": {
         "GrpHdr": {
-            "MsgId": {"var": "msg_id"},
-            "CreDtTm": {"var": "creation_datetime"},
+            "MsgId": {
+                "var": "msg_id"
+            },
+            "CreDtTm": {
+                "var": "creation_datetime"
+            },
             "NbOfTxs": "1",
             "InitgPty": {
                 "Nm": "Basic Collections Ltd"
+            },
+            "FwdgAgt": {
+                "FinInstnId": {
+                    "BICFI": "DEUTDEFFXXX"
+                }
             }
         },
         "PmtInf": {
-            "PmtInfId": {"var": "pmt_inf_id"},
+            "PmtInfId": {
+                "var": "pmt_inf_id"
+            },
             "PmtMtd": "DD",
             "PmtTpInf": {
                 "SvcLvl": [
@@ -34,13 +109,17 @@
                 },
                 "SeqTp": "FRST"
             },
-            "ReqdColltnDt": {"var": "collection_date"},
+            "ReqdColltnDt": {
+                "var": "collection_date"
+            },
             "Cdtr": {
                 "Nm": "Service Provider GmbH"
             },
             "CdtrAcct": {
                 "Id": {
-                    "IBAN": {"var": "creditor_iban"}
+                    "IBAN": {
+                        "var": "creditor_iban"
+                    }
                 }
             },
             "CdtrAgt": {
@@ -65,16 +144,24 @@
             "DrctDbtTxInf": [
                 {
                     "PmtId": {
-                        "EndToEndId": {"var": "end_to_end_id"}
+                        "EndToEndId": {
+                            "var": "end_to_end_id"
+                        }
                     },
                     "InstdAmt": {
                         "@Ccy": "EUR",
-                        "$value": {"var": "amount"}
+                        "$value": {
+                            "var": "amount"
+                        }
                     },
                     "DrctDbtTx": {
                         "MndtRltdInf": {
-                            "MndtId": {"var": "mandate_id"},
-                            "DtOfSgntr": {"var": "mandate_date"}
+                            "MndtId": {
+                                "var": "mandate_id"
+                            },
+                            "DtOfSgntr": {
+                                "var": "mandate_date"
+                            }
                         }
                     },
                     "DbtrAgt": {
@@ -87,14 +174,17 @@
                     },
                     "DbtrAcct": {
                         "Id": {
-                            "IBAN": {"var": "debtor_iban"}
+                            "IBAN": {
+                                "var": "debtor_iban"
+                            }
                         }
                     },
                     "RmtInf": {
                         "Ustrd": "Monthly service fee - January 2025"
                     }
                 }
-            ]
+            ],
+            "NbOfTxs": "1"
         }
     }
 }

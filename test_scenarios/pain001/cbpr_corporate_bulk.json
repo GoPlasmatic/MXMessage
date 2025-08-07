@@ -1,45 +1,121 @@
 {
     "variables": {
-        "msg_id": {"cat": ["CBPRCORP", {"fake": ["i64", 100000000000, 999999999999]}]},
-        "creation_datetime": {"fake": ["iso8601_datetime"]},
-        "company_name": {"fake": ["company_name"]},
-        "company_lei": {"fake": ["lei"]},
-        "company_bic": {"fake": ["bic"]},
-        "pmt_inf_id": {"cat": ["CORPBULK", {"fake": ["i64", 10000000, 99999999]}]},
+        "msg_id": {
+            "cat": [
+                "CBPRCORP",
+                {
+                    "fake": [
+                        "i64",
+                        100000000000,
+                        999999999999
+                    ]
+                }
+            ]
+        },
+        "creation_datetime": {
+            "fake": [
+                "iso8601_datetime"
+            ]
+        },
+        "company_name": {
+            "fake": [
+                "company_name"
+            ]
+        },
+        "company_lei": {
+            "fake": [
+                "lei"
+            ]
+        },
+        "company_bic": {
+            "fake": [
+                "bic"
+            ]
+        },
+        "pmt_inf_id": {
+            "cat": [
+                "CORPBULK",
+                {
+                    "fake": [
+                        "i64",
+                        10000000,
+                        99999999
+                    ]
+                }
+            ]
+        },
         "execution_date": "2024-12-30",
-        "debtor_iban": {"fake": ["iban", "DE"]},
-        "debtor_bic": {"fake": ["bic"]},
+        "debtor_iban": {
+            "fake": [
+                "iban",
+                "DE"
+            ]
+        },
+        "debtor_bic": {
+            "fake": [
+                "bic"
+            ]
+        },
         "num_payments": 20,
-        "total_bulk": {"fake": ["f64", 1000000.0, 2500000.0]}
+        "total_bulk": {
+            "fake": [
+                "f64",
+                1000000.0,
+                2500000.0
+            ]
+        }
     },
     "schema": {
         "GrpHdr": {
-            "MsgId": {"var": "msg_id"},
-            "CreDtTm": {"var": "creation_datetime"},
-            "NbOfTxs": {"cat": [{"var": "num_payments"}]},
-            "CtrlSum": {"var": "total_bulk"},
+            "MsgId": {
+                "var": "msg_id"
+            },
+            "CreDtTm": {
+                "var": "creation_datetime"
+            },
+            "NbOfTxs": "1",
+            "CtrlSum": {
+                "var": "total_bulk"
+            },
             "InitgPty": {
-                "Nm": {"var": "company_name"},
+                "Nm": {
+                    "var": "company_name"
+                },
                 "Id": {
                     "OrgId": {
-                        "LEI": {"var": "company_lei"},
-                        "AnyBIC": {"var": "company_bic"}
+                        "LEI": {
+                            "var": "company_lei"
+                        },
+                        "AnyBIC": {
+                            "var": "company_bic"
+                        }
                     }
                 },
                 "CtctDtls": {
                     "Nm": "Corporate Treasury",
-                    "EmailAdr": {"cat": ["treasury@", {"fake": ["domain_name"]}]},
-                    "PhneNb": {"cat": ["+49", {"fake": ["i64", 1000000000, 9999999999]}]},
-                    "MobNb": {"cat": ["+49", {"fake": ["i64", 1500000000, 1999999999]}]}
+                    "EmailAdr": {
+                        "cat": [
+                            "treasury@",
+                            {
+                                "fake": [
+                                    "domain_name"
+                                ]
+                            }
+                        ]
+                    }
                 }
             }
         },
         "PmtInf": {
-            "PmtInfId": {"var": "pmt_inf_id"},
+            "PmtInfId": {
+                "var": "pmt_inf_id"
+            },
             "PmtMtd": "TRF",
             "BtchBookg": true,
-            "NbOfTxs": {"cat": [{"var": "num_payments"}]},
-            "CtrlSum": {"var": "total_bulk"},
+            "NbOfTxs": "1",
+            "CtrlSum": {
+                "var": "total_bulk"
+            },
             "PmtTpInf": {
                 "InstrPrty": "NORM",
                 "SvcLvl": [
@@ -55,30 +131,78 @@
                 }
             },
             "ReqdExctnDt": {
-                "Dt": {"var": "execution_date"}
+                "Dt": {
+                    "var": "execution_date"
+                }
             },
             "Dbtr": {
-                "Nm": {"var": "company_name"},
+                "Nm": {
+                    "var": "company_name"
+                },
                 "PstlAdr": {
                     "Ctry": "DE",
                     "AdrLine": [
-                        {"fake": ["street_address"]},
-                        {"cat": [{"fake": ["postcode"]}, " ", {"fake": ["city_name"]}]}
+                        {
+                            "fake": [
+                                "street_address"
+                            ]
+                        },
+                        {
+                            "cat": [
+                                {
+                                    "fake": [
+                                        "postcode"
+                                    ]
+                                },
+                                " ",
+                                {
+                                    "fake": [
+                                        "city_name"
+                                    ]
+                                }
+                            ]
+                        }
                     ]
                 },
                 "Id": {
                     "OrgId": {
-                        "LEI": {"var": "company_lei"},
-                        "AnyBIC": {"var": "company_bic"},
+                        "LEI": {
+                            "var": "company_lei"
+                        },
+                        "AnyBIC": {
+                            "var": "company_bic"
+                        },
                         "Othr": [
                             {
-                                "Id": {"cat": ["DE", {"fake": ["i64", 100000000, 999999999]}]},
+                                "Id": {
+                                    "cat": [
+                                        "DE",
+                                        {
+                                            "fake": [
+                                                "i64",
+                                                100000000,
+                                                999999999
+                                            ]
+                                        }
+                                    ]
+                                },
                                 "SchmeNm": {
                                     "Cd": "TXID"
                                 }
                             },
                             {
-                                "Id": {"cat": ["HRB", {"fake": ["i64", 10000, 99999]}]},
+                                "Id": {
+                                    "cat": [
+                                        "HRB",
+                                        {
+                                            "fake": [
+                                                "i64",
+                                                10000,
+                                                99999
+                                            ]
+                                        }
+                                    ]
+                                },
                                 "SchmeNm": {
                                     "Prtry": "TRADE_REGISTER"
                                 }
@@ -89,7 +213,9 @@
             },
             "DbtrAcct": {
                 "Id": {
-                    "IBAN": {"var": "debtor_iban"}
+                    "IBAN": {
+                        "var": "debtor_iban"
+                    }
                 },
                 "Tp": {
                     "Cd": "CACC"
@@ -99,420 +225,281 @@
             },
             "DbtrAgt": {
                 "FinInstnId": {
-                    "BICFI": {"var": "debtor_bic"},
-                    "LEI": {"fake": ["lei"]},
-                    "Nm": {"fake": ["company_name"]},
+                    "BICFI": {
+                        "var": "debtor_bic"
+                    },
+                    "LEI": {
+                        "fake": [
+                            "lei"
+                        ]
+                    },
+                    "Nm": {
+                        "fake": [
+                            "company_name"
+                        ]
+                    },
                     "PstlAdr": {
                         "Ctry": "DE"
                     }
                 }
             },
             "UltmtDbtr": {
-                "Nm": {"cat": [{"var": "company_name"}, " Holdings AG"]},
+                "Nm": {
+                    "cat": [
+                        {
+                            "var": "company_name"
+                        },
+                        " Holdings AG"
+                    ]
+                },
                 "Id": {
                     "OrgId": {
-                        "LEI": {"fake": ["lei"]}
+                        "LEI": {
+                            "fake": [
+                                "lei"
+                            ]
+                        }
                     }
                 }
             },
-            "ChrgBr": "SLEV",
-            "CdtTrfTxInf": [
-                {
-                    "PmtId": {
-                        "InstrId": {"cat": ["CBPRCORP", {"fake": ["i64", 100000001, 999999999]}]},
-                        "EndToEndId": {"cat": ["E2ECORP", {"fake": ["i64", 100000000000, 999999999999]}]}
-                    },
-                    "PmtTpInf": {
-                        "InstrPrty": "HIGH",
-                        "CtgyPurp": {
-                            "Cd": "TREA"
-                        }
-                    },
-                    "Amt": {
-                        "InstdAmt": {
-                            "@Ccy": "EUR",
-                            "$value": {"fake": ["f64", 100000.0, 500000.0]}
-                        }
-                    },
-                    "ChrgBr": "SLEV",
-                    "CdtrAgt": {
-                        "FinInstnId": {
-                            "BICFI": {"fake": ["bic"]},
-                            "LEI": {"fake": ["lei"]}
-                        }
-                    },
-                    "Cdtr": {
-                        "Nm": {"cat": [{"fake": ["company_name"]}, " International"]},
-                        "PstlAdr": {
-                            "Ctry": "US",
-                            "AdrLine": [
-                                {"fake": ["street_address"]},
-                                {"cat": [{"fake": ["city_name"]}, ", ", {"fake": ["state_abbr"]}, " ", {"fake": ["postcode"]}]}
-                            ]
-                        },
-                        "Id": {
-                            "OrgId": {
-                                "LEI": {"fake": ["lei"]},
-                                "Othr": [
-                                    {
-                                        "Id": {"cat": ["US", {"fake": ["i64", 10000000, 99999999]}]},
-                                        "SchmeNm": {
-                                            "Cd": "TXID"
-                                        }
-                                    }
+            "ChrgBr": "SHAR",
+            "CdtTrfTxInf": {
+                "PmtId": {
+                    "InstrId": {
+                        "cat": [
+                            "CBPRCORP",
+                            {
+                                "fake": [
+                                    "i64",
+                                    100000001,
+                                    999999999
                                 ]
                             }
-                        }
+                        ]
                     },
-                    "CdtrAcct": {
-                        "Id": {
-                            "Othr": {
-                                "Id": {"cat": [{"fake": ["i64", 1000000000, 9999999999]}]},
-                                "SchmeNm": {
-                                    "Cd": "BBAN"
-                                }
+                    "EndToEndId": {
+                        "cat": [
+                            "E2ECORP",
+                            {
+                                "fake": [
+                                    "i64",
+                                    100000000000,
+                                    999999999999
+                                ]
                             }
-                        },
-                        "Nm": {"cat": [{"fake": ["company_name"]}, " - USD Operations"]}
+                        ]
                     },
-                    "InstrForCdtrAgt": [
-                        {
-                            "Cd": "PHOA"
-                        },
-                        {
-                            "InstrInf": "URGENT - Contact Treasury before processing"
-                        }
-                    ],
-                    "Purp": {
+                    "UETR": {
+                        "fake": [
+                            "uuid"
+                        ]
+                    }
+                },
+                "PmtTpInf": {
+                    "InstrPrty": "HIGH",
+                    "CtgyPurp": {
                         "Cd": "TREA"
-                    },
-                    "RgltryRptg": [
-                        {
-                            "Dtls": [
-                                {
-                                    "Tp": "CRED",
-                                    "Dt": "2024-12-30",
-                                    "Ctry": "DE",
-                                    "Cd": "150",
-                                    "Amt": {
-                                        "@Ccy": "EUR",
-                                        "$value": {"fake": ["f64", 100000.0, 500000.0]}
-                                    },
-                                    "Inf": ["CBPR+ CORPORATE TREASURY TRANSFER - HIGH VALUE"]
-                                }
+                    }
+                },
+                "Amt": {
+                    "InstdAmt": {
+                        "@Ccy": "EUR",
+                        "$value": {
+                            "fake": [
+                                "f64",
+                                100000.0,
+                                500000.0
                             ]
                         }
-                    ],
-                    "RmtInf": {
-                        "Ustrd": "Corporate Treasury Transfer - Liquidity Management",
-                        "Strd": [
+                    }
+                },
+                "ChrgBr": "SHAR",
+                "CdtrAgt": {
+                    "FinInstnId": {
+                        "BICFI": {
+                            "fake": [
+                                "bic"
+                            ]
+                        },
+                        "LEI": {
+                            "fake": [
+                                "lei"
+                            ]
+                        }
+                    }
+                },
+                "Cdtr": {
+                    "Nm": {
+                        "cat": [
                             {
-                                "RfrdDocInf": [
+                                "fake": [
+                                    "company_name"
+                                ]
+                            },
+                            " International"
+                        ]
+                    },
+                    "PstlAdr": {
+                        "Ctry": "US",
+                        "AdrLine": [
+                            {
+                                "fake": [
+                                    "street_address"
+                                ]
+                            },
+                            {
+                                "cat": [
                                     {
-                                        "Tp": {
-                                            "CdOrPrtry": {
-                                                "Prtry": "TREASURY_ORDER"
-                                            }
-                                        },
-                                        "Nb": {"cat": ["TRO-", {"fake": ["i64", 2024001, 2024999]}]},
-                                        "RltdDt": "2024-12-29"
+                                        "fake": [
+                                            "city_name"
+                                        ]
+                                    },
+                                    ", ",
+                                    {
+                                        "fake": [
+                                            "state_abbr"
+                                        ]
+                                    },
+                                    " ",
+                                    {
+                                        "fake": [
+                                            "postcode"
+                                        ]
                                     }
-                                ],
-                                "AddtlRmtInf": [
-                                    "Approved by CFO",
-                                    "FX Rate: 1.0850 EUR/USD",
-                                    "Value Date: 2024-12-30"
                                 ]
                             }
                         ]
-                    }
-                },
-                {
-                    "PmtId": {
-                        "InstrId": {"cat": ["CBPRCORP", {"fake": ["i64", 100000001, 999999999]}]},
-                        "EndToEndId": {"cat": ["E2ECORP", {"fake": ["i64", 100000000000, 999999999999]}]}
                     },
-                    "PmtTpInf": {
-                        "CtgyPurp": {
-                            "Cd": "INTC"
-                        }
-                    },
-                    "Amt": {
-                        "InstdAmt": {
-                            "@Ccy": "EUR",
-                            "$value": {"fake": ["f64", 50000.0, 250000.0]}
-                        }
-                    },
-                    "CdtrAgt": {
-                        "FinInstnId": {
-                            "BICFI": {"fake": ["bic"]},
-                            "LEI": {"fake": ["lei"]}
-                        }
-                    },
-                    "Cdtr": {
-                        "Nm": {"cat": [{"var": "company_name"}, " Asia Pacific Ltd"]},
-                        "PstlAdr": {
-                            "Ctry": "SG",
-                            "AdrLine": [
-                                {"fake": ["street_address"]},
-                                {"cat": ["Singapore ", {"fake": ["postcode"]}]}
-                            ]
-                        },
-                        "Id": {
-                            "OrgId": {
-                                "LEI": {"fake": ["lei"]}
-                            }
-                        }
-                    },
-                    "CdtrAcct": {
-                        "Id": {
-                            "Othr": {
-                                "Id": {"cat": [{"fake": ["i64", 100000000, 999999999]}]},
-                                "SchmeNm": {
-                                    "Prtry": "SGD_ACCOUNT"
-                                }
-                            }
-                        }
-                    },
-                    "Purp": {
-                        "Cd": "INTC"
-                    },
-                    "RgltryRptg": [
-                        {
-                            "Dtls": [
-                                {
-                                    "Tp": "CRED",
-                                    "Dt": "2024-12-30",
-                                    "Ctry": "DE",
-                                    "Cd": "150",
-                                    "Amt": {
-                                        "@Ccy": "EUR",
-                                        "$value": {"fake": ["f64", 50000.0, 250000.0]}
-                                    },
-                                    "Inf": ["CBPR+ INTERCOMPANY TRANSFER"]
-                                }
-                            ]
-                        }
-                    ],
-                    "RmtInf": {
-                        "Ustrd": "Intercompany funding - APAC expansion"
-                    }
-                },
-                {
-                    "PmtId": {
-                        "InstrId": {"cat": ["CBPRCORP", {"fake": ["i64", 100000001, 999999999]}]},
-                        "EndToEndId": {"cat": ["E2ECORP", {"fake": ["i64", 100000000000, 999999999999]}]}
-                    },
-                    "PmtTpInf": {
-                        "CtgyPurp": {
-                            "Cd": "DIVI"
-                        }
-                    },
-                    "Amt": {
-                        "InstdAmt": {
-                            "@Ccy": "EUR",
-                            "$value": {"fake": ["f64", 25000.0, 100000.0]}
-                        }
-                    },
-                    "CdtrAgt": {
-                        "FinInstnId": {
-                            "BICFI": {"fake": ["bic"]}
-                        }
-                    },
-                    "Cdtr": {
-                        "Nm": {"cat": [{"fake": ["company_name"]}, " Investment Fund"]},
-                        "PstlAdr": {
-                            "Ctry": "LU"
-                        },
-                        "Id": {
-                            "OrgId": {
-                                "LEI": {"fake": ["lei"]}
-                            }
-                        }
-                    },
-                    "CdtrAcct": {
-                        "Id": {
-                            "IBAN": {"fake": ["iban", "LU"]}
-                        }
-                    },
-                    "Purp": {
-                        "Cd": "DIVI"
-                    },
-                    "RmtInf": {
-                        "Ustrd": "Quarterly dividend payment - Q4 2024",
-                        "Strd": [
-                            {
-                                "AddtlRmtInf": [
-                                    "Shares: 1,000,000",
-                                    "Rate: EUR 0.10 per share"
+                    "Id": {
+                        "OrgId": {
+                            "LEI": {
+                                "fake": [
+                                    "lei"
                                 ]
+                            },
+                            "Othr": [
+                                {
+                                    "Id": {
+                                        "cat": [
+                                            "US",
+                                            {
+                                                "fake": [
+                                                    "i64",
+                                                    10000000,
+                                                    99999999
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    "SchmeNm": {
+                                        "Cd": "TXID"
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                },
+                "CdtrAcct": {
+                    "Id": {
+                        "Othr": {
+                            "Id": {
+                                "cat": [
+                                    {
+                                        "fake": [
+                                            "i64",
+                                            1000000000,
+                                            9999999999
+                                        ]
+                                    }
+                                ]
+                            },
+                            "SchmeNm": {
+                                "Cd": "BBAN"
                             }
+                        }
+                    },
+                    "Nm": {
+                        "cat": [
+                            {
+                                "fake": [
+                                    "company_name"
+                                ]
+                            },
+                            " - USD Operations"
                         ]
                     }
                 },
-                {
-                    "PmtId": {
-                        "InstrId": {"cat": ["CBPRCORP", {"fake": ["i64", 100000001, 999999999]}]},
-                        "EndToEndId": {"cat": ["E2ECORP", {"fake": ["i64", 100000000000, 999999999999]}]}
+                "InstrForCdtrAgt": [
+                    {
+                        "Cd": "PHOB"
                     },
-                    "PmtTpInf": {
-                        "CtgyPurp": {
-                            "Cd": "TAXS"
-                        }
-                    },
-                    "Amt": {
-                        "InstdAmt": {
-                            "@Ccy": "EUR",
-                            "$value": {"fake": ["f64", 75000.0, 200000.0]}
-                        }
-                    },
-                    "CdtrAgt": {
-                        "FinInstnId": {
-                            "BICFI": "MARKDEFF",
-                            "Nm": "Bundesbank"
-                        }
-                    },
-                    "Cdtr": {
-                        "Nm": "Finanzamt Frankfurt am Main",
-                        "PstlAdr": {
-                            "Ctry": "DE",
-                            "AdrLine": [
-                                "Gutleutstraße 124",
-                                "60327 Frankfurt am Main"
-                            ]
-                        },
-                        "Id": {
-                            "OrgId": {
-                                "Othr": [
-                                    {
-                                        "Id": "2815012345",
-                                        "SchmeNm": {
-                                            "Prtry": "TAX_OFFICE_ID"
-                                        }
-                                    }
-                                ]
-                            }
-                        }
-                    },
-                    "CdtrAcct": {
-                        "Id": {
-                            "IBAN": "DE89370400440532013000"
-                        }
-                    },
-                    "Purp": {
-                        "Cd": "TAXS"
-                    },
-                    "RmtInf": {
-                        "Strd": [
-                            {
-                                "RfrdDocInf": [
-                                    {
-                                        "Tp": {
-                                            "CdOrPrtry": {
-                                                "Prtry": "TAX_ASSESSMENT"
-                                            }
-                                        },
-                                        "Nb": {"cat": ["ST-", {"fake": ["i64", 2024000001, 2024999999]}]},
-                                        "RltdDt": "2024-12-15"
-                                    }
-                                ],
-                                "AddtlRmtInf": [
-                                    {"cat": ["Tax ID: DE", {"var": "company_lei"}]},
-                                    "Corporate Tax Q4 2024",
-                                    "Reference Period: Oct-Dec 2024"
-                                ]
-                            }
-                        ]
+                    {
+                        "InstrInf": "URGENT - Contact Treasury before processing"
                     }
+                ],
+                "Purp": {
+                    "Cd": "TREA"
                 },
-                {
-                    "PmtId": {
-                        "InstrId": {"cat": ["CBPRCORP", {"fake": ["i64", 100000001, 999999999]}]},
-                        "EndToEndId": {"cat": ["E2ECORP", {"fake": ["i64", 100000000000, 999999999999]}]}
-                    },
-                    "PmtTpInf": {
-                        "CtgyPurp": {
-                            "Cd": "LOAN"
-                        }
-                    },
-                    "Amt": {
-                        "InstdAmt": {
-                            "@Ccy": "EUR",
-                            "$value": {"fake": ["f64", 150000.0, 300000.0]}
-                        }
-                    },
-                    "CdtrAgt": {
-                        "FinInstnId": {
-                            "BICFI": {"fake": ["bic"]},
-                            "LEI": {"fake": ["lei"]}
-                        }
-                    },
-                    "Cdtr": {
-                        "Nm": {"cat": [{"fake": ["company_name"]}, " Bank AG"]},
-                        "PstlAdr": {
-                            "Ctry": "DE"
-                        },
-                        "Id": {
-                            "OrgId": {
-                                "LEI": {"fake": ["lei"]}
-                            }
-                        }
-                    },
-                    "CdtrAcct": {
-                        "Id": {
-                            "IBAN": {"fake": ["iban", "DE"]}
-                        }
-                    },
-                    "Purp": {
-                        "Cd": "LOAN"
-                    },
-                    "RgltryRptg": [
-                        {
-                            "Dtls": [
-                                {
-                                    "Tp": "CRED",
-                                    "Dt": "2024-12-30",
-                                    "Ctry": "DE",
-                                    "Cd": "150",
-                                    "Amt": {
-                                        "@Ccy": "EUR",
-                                        "$value": {"fake": ["f64", 150000.0, 300000.0]}
-                                    },
-                                    "Inf": ["CBPR+ SYNDICATED LOAN REPAYMENT"]
-                                }
-                            ]
-                        }
-                    ],
-                    "RmtInf": {
-                        "Strd": [
+                "RgltryRptg": [
+                    {
+                        "Dtls": [
                             {
-                                "RfrdDocInf": [
-                                    {
-                                        "Tp": {
-                                            "CdOrPrtry": {
-                                                "Prtry": "LOAN_AGREEMENT"
-                                            }
-                                        },
-                                        "Nb": {"cat": ["SYN-LOAN-", {"fake": ["i64", 2022001, 2023999]}]},
-                                        "RltdDt": "2023-06-30"
-                                    }
-                                ],
-                                "RfrdDocAmt": {
-                                    "DuePyblAmt": {
-                                        "@Ccy": "EUR",
-                                        "$value": {"fake": ["f64", 150000.0, 300000.0]}
+                                "Tp": "CRED",
+                                "Dt": "2024-12-30",
+                                "Ctry": "DE",
+                                "Cd": "150",
+                                "Amt": {
+                                    "@Ccy": "EUR",
+                                    "$value": {
+                                        "fake": [
+                                            "f64",
+                                            100000.0,
+                                            500000.0
+                                        ]
                                     }
                                 },
-                                "AddtlRmtInf": [
-                                    "Tranche B - Principal Repayment",
-                                    "Interest Rate: EURIBOR + 1.75%",
-                                    "Payment 8 of 24"
+                                "Inf": [
+                                    "CBPR+ CORPORATE TREASURY TRANSFER -"
                                 ]
                             }
                         ]
                     }
+                ],
+                "RmtInf": {
+                    "Ustrd": "Corporate Treasury Transfer - Liquidity Management",
+                    "Strd": [
+                        {
+                            "RfrdDocInf": [
+                                {
+                                    "Tp": {
+                                        "CdOrPrtry": {
+                                            "Prtry": "TREASURY_ORDER"
+                                        }
+                                    },
+                                    "Nb": {
+                                        "cat": [
+                                            "TRO-",
+                                            {
+                                                "fake": [
+                                                    "i64",
+                                                    2024001,
+                                                    2024999
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    "RltdDt": "2024-12-29"
+                                }
+                            ],
+                            "AddtlRmtInf": [
+                                "Approved by CFO",
+                                "FX Rate: 1.0850 EUR/USD",
+                                "Value Date: 2024-12-30"
+                            ]
+                        }
+                    ]
                 }
-            ]
+            }
         },
         "SplmtryData": [
             {
@@ -530,7 +517,18 @@
                             "SanctionsScreening": "PASSED"
                         },
                         "TreasuryManagement": {
-                            "LiquidityPoolID": {"cat": ["POOL-", {"fake": ["i64", 100001, 999999]}]},
+                            "LiquidityPoolID": {
+                                "cat": [
+                                    "POOL-",
+                                    {
+                                        "fake": [
+                                            "i64",
+                                            100001,
+                                            999999
+                                        ]
+                                    }
+                                ]
+                            },
                             "NetPositionCalculation": true,
                             "CashConcentration": "ENABLED"
                         }

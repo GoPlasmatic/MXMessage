@@ -20,8 +20,7 @@
                 "SttlmMtd": "INDA"
             }
         },
-        "CdtTrfTxInf": [
-            {
+        "CdtTrfTxInf": {
                 "PmtId": {
                     "InstrId": {"var": "payment_id"},
                     "EndToEndId": {"var": "original_id"},
@@ -39,10 +38,8 @@
                     }
                 },
                 "IntrBkSttlmAmt": {
-                    "Amt": {
-                        "Value": {"var": "amount"},
-                        "Ccy": {"var": "currency"}
-                    }
+                    "@Ccy": {"var": "currency"},
+                    "$value": {"var": "amount"}
                 },
                 "IntrBkSttlmDt": {"fake": ["date", "%Y-%m-%d", "0d", "0d"]},
                 "ChrgBr": "SHAR",
@@ -56,22 +53,15 @@
                         "BICFI": {"var": "sender_bic"}
                     }
                 },
-                "RtrInf": {
-                    "OrgnlTxRef": {
-                        "IntrBkSttlmAmt": {
-                            "Amt": {
-                                "Value": {"var": "amount"},
-                                "Ccy": {"var": "currency"}
-                            }
-                        },
-                        "PmtId": {
-                            "EndToEndId": {"var": "original_id"}
-                        }
-                    },
-                    "Rsn": {
-                        "Cd": {"var": "return_reason"}
-                    },
-                    "AddtlInf": ["Account closed"]
+                "Dbtr": {
+                    "FinInstnId": {
+                        "BICFI": {"var": "receiver_bic"}
+                    }
+                },
+                "Cdtr": {
+                    "FinInstnId": {
+                        "BICFI": {"var": "sender_bic"}
+                    }
                 },
                 "SplmtryData": [
                     {
@@ -87,6 +77,5 @@
                     }
                 ]
             }
-        ]
     }
 }

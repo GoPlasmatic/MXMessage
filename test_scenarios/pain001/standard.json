@@ -1,122 +1,221 @@
 {
     "variables": {
-        "msg_id": {"cat": ["MSGPAIN", {"fake": ["i64", 100000000000, 999999999999]}]},
-        "creation_datetime": {"fake": ["iso8601_datetime"]},
-        "initiator_name": {"fake": ["company_name"]},
-        "pmt_inf_id": {"cat": ["PMTINF", {"fake": ["i64", 10000000, 99999999]}]},
+        "msg_id": {
+            "cat": [
+                "MSGPAIN",
+                {
+                    "fake": [
+                        "i64",
+                        100000000000,
+                        999999999999
+                    ]
+                }
+            ]
+        },
+        "creation_datetime": {
+            "fake": [
+                "iso8601_datetime"
+            ]
+        },
+        "initiator_name": {
+            "fake": [
+                "company_name"
+            ]
+        },
+        "pmt_inf_id": {
+            "cat": [
+                "PMTINF",
+                {
+                    "fake": [
+                        "i64",
+                        10000000,
+                        99999999
+                    ]
+                }
+            ]
+        },
         "execution_date": "2024-12-20",
-        "debtor_name": {"fake": ["company_name"]},
-        "debtor_iban": {"fake": ["iban", "DE"]},
-        "debtor_bic": {"fake": ["bic"]},
-        "end_to_end_1": {"cat": ["E2E", {"fake": ["i64", 100000000000, 999999999999]}]},
-        "end_to_end_2": {"cat": ["E2E", {"fake": ["i64", 100000000000, 999999999999]}]},
-        "currency": {"fake": ["currency_code"]},
-        "amount_1": {"fake": ["f64", 10000.0, 50000.0]},
-        "amount_2": {"fake": ["f64", 15000.0, 75000.0]},
-        "creditor_bic_1": {"fake": ["bic"]},
-        "creditor_bic_2": {"fake": ["bic"]},
-        "creditor_iban_1": {"fake": ["iban", "FR"]},
-        "creditor_iban_2": {"fake": ["iban", "ES"]}
+        "debtor_name": {
+            "fake": [
+                "company_name"
+            ]
+        },
+        "debtor_iban": {
+            "fake": [
+                "iban",
+                "DE"
+            ]
+        },
+        "debtor_bic": {
+            "fake": [
+                "bic"
+            ]
+        },
+        "end_to_end_1": {
+            "cat": [
+                "E2E",
+                {
+                    "fake": [
+                        "i64",
+                        100000000000,
+                        999999999999
+                    ]
+                }
+            ]
+        },
+        "end_to_end_2": {
+            "cat": [
+                "E2E",
+                {
+                    "fake": [
+                        "i64",
+                        100000000000,
+                        999999999999
+                    ]
+                }
+            ]
+        },
+        "currency": {
+            "fake": [
+                "currency_code"
+            ]
+        },
+        "amount_1": {
+            "fake": [
+                "f64",
+                10000.0,
+                50000.0
+            ]
+        },
+        "amount_2": {
+            "fake": [
+                "f64",
+                15000.0,
+                75000.0
+            ]
+        },
+        "creditor_bic_1": {
+            "fake": [
+                "bic"
+            ]
+        },
+        "creditor_bic_2": {
+            "fake": [
+                "bic"
+            ]
+        },
+        "creditor_iban_1": {
+            "fake": [
+                "iban",
+                "FR"
+            ]
+        },
+        "creditor_iban_2": {
+            "fake": [
+                "iban",
+                "ES"
+            ]
+        }
     },
     "schema": {
         "GrpHdr": {
-            "MsgId": {"var": "msg_id"},
-            "CreDtTm": {"var": "creation_datetime"},
-            "NbOfTxs": "2",
+            "MsgId": {
+                "var": "msg_id"
+            },
+            "CreDtTm": {
+                "var": "creation_datetime"
+            },
+            "NbOfTxs": "1",
             "InitgPty": {
-                "Nm": {"var": "initiator_name"}
+                "Nm": {
+                    "var": "initiator_name"
+                }
             }
         },
         "PmtInf": {
-            "PmtInfId": {"var": "pmt_inf_id"},
+            "PmtInfId": {
+                "var": "pmt_inf_id"
+            },
             "PmtMtd": "TRF",
             "ReqdExctnDt": {
-                "Dt": {"var": "execution_date"}
+                "Dt": {
+                    "var": "execution_date"
+                }
             },
             "Dbtr": {
-                "Nm": {"var": "debtor_name"},
+                "Nm": {
+                    "var": "debtor_name"
+                },
                 "PstlAdr": {
                     "Ctry": "DE"
                 }
             },
             "DbtrAcct": {
                 "Id": {
-                    "IBAN": {"var": "debtor_iban"}
+                    "IBAN": {
+                        "var": "debtor_iban"
+                    }
                 }
             },
             "DbtrAgt": {
                 "FinInstnId": {
-                    "BICFI": {"var": "debtor_bic"}
+                    "BICFI": {
+                        "var": "debtor_bic"
+                    }
                 }
             },
-            "CdtTrfTxInf": [
-                {
-                    "PmtId": {
-                        "EndToEndId": {"var": "end_to_end_1"}
+            "CdtTrfTxInf": {
+                "PmtId": {
+                    "EndToEndId": {
+                        "var": "end_to_end_1"
                     },
-                    "Amt": {
-                        "InstdAmt": {
-                            "@Ccy": {"var": "currency"},
-                            "$value": {"var": "amount_1"}
-                        }
-                    },
-                    "CdtrAgt": {
-                        "FinInstnId": {
-                            "BICFI": {"var": "creditor_bic_1"}
-                        }
-                    },
-                    "Cdtr": {
-                        "Nm": {"fake": ["company_name"]},
-                        "PstlAdr": {
-                            "Ctry": "FR"
-                        }
-                    },
-                    "CdtrAcct": {
-                        "Id": {
-                            "IBAN": {"var": "creditor_iban_1"}
-                        }
-                    },
-                    "Purp": {
-                        "Cd": "SUPP"
-                    },
-                    "RmtInf": {
-                        "Ustrd": "PAYMENT FOR SERVICES - INVOICE REF 2024-001"
+                    "UETR": {
+                        "fake": [
+                            "uuid"
+                        ]
                     }
                 },
-                {
-                    "PmtId": {
-                        "EndToEndId": {"var": "end_to_end_2"}
-                    },
-                    "Amt": {
-                        "InstdAmt": {
-                            "@Ccy": {"var": "currency"},
-                            "$value": {"var": "amount_2"}
+                "Amt": {
+                    "InstdAmt": {
+                        "@Ccy": {
+                            "var": "currency"
+                        },
+                        "$value": {
+                            "var": "amount_1"
                         }
-                    },
-                    "CdtrAgt": {
-                        "FinInstnId": {
-                            "BICFI": {"var": "creditor_bic_2"}
-                        }
-                    },
-                    "Cdtr": {
-                        "Nm": {"fake": ["company_name"]},
-                        "PstlAdr": {
-                            "Ctry": "ES"
-                        }
-                    },
-                    "CdtrAcct": {
-                        "Id": {
-                            "IBAN": {"var": "creditor_iban_2"}
-                        }
-                    },
-                    "Purp": {
-                        "Cd": "SUPP"
-                    },
-                    "RmtInf": {
-                        "Ustrd": "SUPPLIER PAYMENT - PO NUMBER 2024-456"
                     }
+                },
+                "CdtrAgt": {
+                    "FinInstnId": {
+                        "BICFI": {
+                            "var": "creditor_bic_1"
+                        }
+                    }
+                },
+                "Cdtr": {
+                    "Nm": {
+                        "fake": [
+                            "company_name"
+                        ]
+                    },
+                    "PstlAdr": {
+                        "Ctry": "FR"
+                    }
+                },
+                "CdtrAcct": {
+                    "Id": {
+                        "IBAN": {
+                            "var": "creditor_iban_1"
+                        }
+                    }
+                },
+                "Purp": {
+                    "Cd": "SUPP"
+                },
+                "RmtInf": {
+                    "Ustrd": "PAYMENT FOR SERVICES - INVOICE REF 2024-001"
                 }
-            ]
+            }
         }
     }
 }

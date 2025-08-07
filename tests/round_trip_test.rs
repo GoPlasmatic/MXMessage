@@ -728,6 +728,17 @@ fn parse_and_validate_mx_message(
             ) {
                 Ok(mx_msg) => {
                     if let Err(errors) = validate_message(&mx_msg) {
+                        if debug_mode {
+                            eprintln!("\n[Test {test_index}] MX structure validation failed:");
+                            eprintln!("Errors: {:?}", errors);
+                            eprintln!("MX structure that failed validation:");
+                            eprintln!(
+                                "{}",
+                                serde_json::to_string_pretty(&mx_msg).unwrap_or_else(|_| {
+                                    "Failed to serialize MX structure".to_string()
+                                })
+                            );
+                        }
                         return Err(ValidationOrSerializationError::Validation(errors));
                     }
 
@@ -790,6 +801,17 @@ fn parse_and_validate_mx_message(
             ) {
                 Ok(mx_msg) => {
                     if let Err(errors) = validate_message(&mx_msg) {
+                        if debug_mode {
+                            eprintln!("\n[Test {test_index}] MX structure validation failed:");
+                            eprintln!("Errors: {:?}", errors);
+                            eprintln!("MX structure that failed validation:");
+                            eprintln!(
+                                "{}",
+                                serde_json::to_string_pretty(&mx_msg).unwrap_or_else(|_| {
+                                    "Failed to serialize MX structure".to_string()
+                                })
+                            );
+                        }
                         return Err(ValidationOrSerializationError::Validation(errors));
                     }
 
@@ -807,6 +829,12 @@ fn parse_and_validate_mx_message(
                 Err(e) => {
                     if debug_mode {
                         eprintln!("\n[Test {test_index}] Failed to parse pain.001: {:?}", e);
+                        eprintln!("Generated JSON that failed to parse:");
+                        eprintln!(
+                            "{}",
+                            serde_json::to_string_pretty(json_value)
+                                .unwrap_or_else(|_| "Failed to serialize JSON".to_string())
+                        );
                     }
                     Err(ValidationOrSerializationError::Validation(vec![format!(
                         "Parse error: {:?}",

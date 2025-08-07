@@ -25,8 +25,7 @@
                 }
             }
         },
-        "CdtTrfTxInf": [
-            {
+        "CdtTrfTxInf": {
                 "PmtId": {
                     "InstrId": {"var": "payment_id"},
                     "EndToEndId": {"var": "original_id"},
@@ -44,10 +43,8 @@
                     }
                 },
                 "IntrBkSttlmAmt": {
-                    "Amt": {
-                        "Value": {"var": "amount"},
-                        "Ccy": {"var": "currency"}
-                    }
+                    "@Ccy": {"var": "currency"},
+                    "$value": {"var": "amount"}
                 },
                 "IntrBkSttlmDt": {"fake": ["date", "%Y-%m-%d", "0d", "+1d"]},
                 "ChrgBr": "DEBT",
@@ -66,35 +63,18 @@
                         "BICFI": {"var": "correspondent_bic"}
                     }
                 },
-                "RtrInf": {
-                    "OrgnlTxRef": {
-                        "IntrBkSttlmAmt": {
-                            "Amt": {
-                                "Value": {"var": "amount"},
-                                "Ccy": {"var": "currency"}
-                            }
-                        },
-                        "PmtId": {
-                            "EndToEndId": {"var": "original_id"}
-                        },
-                        "IntrBkSttlmDt": {"var": "original_date"}
-                    },
-                    "Rsn": {
-                        "Cd": {"var": "return_reason"}
-                    },
-                    "AddtlInf": ["Account closed - unable to apply funds"]
+                "Dbtr": {
+                    "FinInstnId": {
+                        "BICFI": {"var": "receiver_bic"}
+                    }
+                },
+                "Cdtr": {
+                    "FinInstnId": {
+                        "BICFI": {"var": "sender_bic"}
+                    }
                 },
                 "RmtInf": {
-                    "Ustrd": [{"cat": ["Return of payment - Original ref: ", {"var": "original_id"}]}],
-                    "Strd": [
-                        {
-                            "AddtlRmtInf": [
-                                {"cat": ["Return reason: ", {"var": "return_reason"}]},
-                                "Account closed - unable to apply funds",
-                                {"cat": ["Original payment date: ", {"var": "original_date"}]}
-                            ]
-                        }
-                    ]
+                    "Ustrd": {"cat": ["Return of payment - Original ref: ", {"var": "original_id"}]}
                 },
                 "SplmtryData": [
                     {
@@ -123,6 +103,5 @@
                     }
                 ]
             }
-        ]
     }
 }

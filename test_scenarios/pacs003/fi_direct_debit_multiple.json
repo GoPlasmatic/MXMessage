@@ -1,537 +1,256 @@
 {
     "variables": {
-        "msg_id": {"cat": ["MSGMULTI", {"fake": ["uuid"]}]},
-        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "msg_id": {
+            "cat": [
+                "MSG",
+                {
+                    "fake": [
+                        "i64",
+                        100000000000,
+                        999999999999
+                    ]
+                }
+            ]
+        },
+        "creation_datetime": {
+            "fake": [
+                "iso8601_datetime"
+            ]
+        },
         "settlement_date": "2025-01-25",
         "num_txs": 5,
-        "total_amt": {"fake": ["f64", 25000.0, 75000.0]},
-        "instg_bic": {"fake": ["bic"]},
-        "instd_bic": {"fake": ["bic"]},
-        "creditor_scheme_id": {"cat": ["DE", {"fake": ["i64", 10000000, 99999999]}, "ZZZ"]}
+        "total_amt": {
+            "fake": [
+                "f64",
+                25000.0,
+                75000.0
+            ]
+        },
+        "instg_bic": {
+            "fake": [
+                "bic"
+            ]
+        },
+        "instd_bic": {
+            "fake": [
+                "bic"
+            ]
+        },
+        "creditor_scheme_id": {
+            "cat": [
+                "DE",
+                {
+                    "fake": [
+                        "i64",
+                        10000000,
+                        99999999
+                    ]
+                },
+                "ZZZ"
+            ]
+        },
+        "instruction_id": {
+            "cat": [
+                "INSTR",
+                {
+                    "fake": [
+                        "i64",
+                        10000000,
+                        99999999
+                    ]
+                }
+            ]
+        },
+        "uetr": {
+            "fake": [
+                "uuid"
+            ]
+        },
+        "collection_date": "2025-01-25",
+        "end_to_end_id": {
+            "cat": [
+                "E2E",
+                {
+                    "fake": [
+                        "i64",
+                        100000000000,
+                        999999999999
+                    ]
+                }
+            ]
+        },
+        "tx_id": {
+            "cat": [
+                "TX",
+                {
+                    "fake": [
+                        "i64",
+                        100000000000,
+                        999999999999
+                    ]
+                }
+            ]
+        },
+        "debtor_bic": {
+            "fake": [
+                "bic"
+            ]
+        },
+        "debtor_iban": {
+            "fake": [
+                "iban",
+                "DE"
+            ]
+        },
+        "creditor_bic": {
+            "fake": [
+                "bic"
+            ]
+        },
+        "creditor_iban": {
+            "fake": [
+                "iban",
+                "FR"
+            ]
+        }
     },
     "schema": {
         "GrpHdr": {
-            "MsgId": {"var": "msg_id"},
-            "CreDtTm": {"var": "creation_datetime"},
-            "NbOfTxs": {"cat": [{"var": "num_txs"}]},
-            "TtlIntrBkSttlmAmt": {
-                "@Ccy": "EUR",
-                "$value": {"var": "total_amt"}
+            "MsgId": {
+                "var": "msg_id"
             },
-            "IntrBkSttlmDt": {"var": "settlement_date"},
+            "CreDtTm": {
+                "var": "creation_datetime"
+            },
+            "NbOfTxs": "1",
             "SttlmInf": {
-                "SttlmMtd": "CLRG",
-                "ClrSys": {
-                    "Cd": "RTG"
+                "SttlmMtd": "INDA"
+            }
+        },
+        "DrctDbtTxInf": {
+            "PmtId": {
+                "InstrId": {
+                    "var": "instruction_id"
+                },
+                "EndToEndId": {
+                    "var": "end_to_end_id"
+                },
+                "TxId": {
+                    "var": "tx_id"
+                },
+                "UETR": {
+                    "var": "uetr"
                 }
+            },
+            "PmtTpInf": {
+                "SvcLvl": [
+                    {
+                        "Cd": "SEPA"
+                    }
+                ],
+                "LclInstrm": {
+                    "Cd": "CORE"
+                },
+                "SeqTp": "RCUR",
+                "CtgyPurp": {
+                    "Cd": "PHON"
+                }
+            },
+            "IntrBkSttlmAmt": {
+                "@Ccy": "EUR",
+                "$value": 1000.0
+            },
+            "IntrBkSttlmDt": {
+                "var": "settlement_date"
+            },
+            "InstdAmt": {
+                "@Ccy": "EUR",
+                "$value": 1000.0
+            },
+            "ChrgBr": "SHAR",
+            "DrctDbtTx": {
+                "MndtRltdInf": {
+                    "MndtId": "ABC0000000000000",
+                    "DtOfSgntr": "2023-05-15"
+                },
+                "CdtrSchmeId": {
+                    "Id": {
+                        "PrvtId": {
+                            "Othr": [
+                                {
+                                    "Id": "DE12345678ZZZ",
+                                    "SchmeNm": {
+                                        "Prtry": "SEPA"
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "DbtrAgt": {
+                "FinInstnId": {
+                    "BICFI": {
+                        "var": "debtor_bic"
+                    }
+                }
+            },
+            "Dbtr": {
+                "Nm": "John Doe",
+                "PstlAdr": {
+                    "Ctry": "DE"
+                }
+            },
+            "DbtrAcct": {
+                "Id": {
+                    "IBAN": {
+                        "var": "debtor_iban"
+                    }
+                }
+            },
+            "CdtrAgt": {
+                "FinInstnId": {
+                    "BICFI": {
+                        "var": "creditor_bic"
+                    }
+                }
+            },
+            "Cdtr": {
+                "Nm": "Telecom Services GmbH",
+                "PstlAdr": {
+                    "Ctry": "DE"
+                }
+            },
+            "CdtrAcct": {
+                "Id": {
+                    "IBAN": {
+                        "var": "creditor_iban"
+                    }
+                }
+            },
+            "Purp": {
+                "Cd": "PHON"
+            },
+            "RmtInf": {
+                "Ustrd": "Sample Text"
+            },
+            "ReqdColltnDt": {
+                "var": "collection_date"
             },
             "InstgAgt": {
                 "FinInstnId": {
-                    "BICFI": {"var": "instg_bic"}
+                    "BICFI": {
+                        "var": "creditor_bic"
+                    }
                 }
             },
             "InstdAgt": {
                 "FinInstnId": {
-                    "BICFI": {"var": "instd_bic"}
+                    "BICFI": {
+                        "var": "debtor_bic"
+                    }
                 }
             }
-        },
-        "DrctDbtTxInf": [
-            {
-                "PmtId": {
-                    "EndToEndId": {"cat": ["E2EMULTI", {"fake": ["i64", 100000000000, 999999999999]}]},
-                    "TxId": {"cat": ["TX", {"fake": ["uuid"]}]}
-                },
-                "PmtTpInf": {
-                    "SvcLvl": [
-                        {
-                            "Cd": "SEPA"
-                        }
-                    ],
-                    "LclInstrm": {
-                        "Cd": "CORE"
-                    },
-                    "SeqTp": "RCUR",
-                    "CtgyPurp": {
-                        "Cd": "PHON"
-                    }
-                },
-                "IntrBkSttlmAmt": {
-                    "@Ccy": "EUR",
-                    "$value": {"fake": ["f64", 50.0, 250.0]}
-                },
-                "IntrBkSttlmDt": {"var": "settlement_date"},
-                "InstdAmt": {
-                    "@Ccy": "EUR",
-                    "$value": {"fake": ["f64", 50.0, 250.0]}
-                },
-                "ChrgBr": "SLEV",
-                "DrctDbtTx": {
-                    "MndtRltdInf": {
-                        "MndtId": {"cat": ["MNDT", {"fake": ["i64", 1000000, 9999999]}]},
-                        "DtOfSgntr": "2023-05-15"
-                    },
-                    "CdtrSchmeId": {
-                        "Id": {
-                            "PrvtId": {
-                                "Othr": [
-                                    {
-                                        "Id": {"var": "creditor_scheme_id"},
-                                        "SchmeNm": {
-                                            "Prtry": "SEPA"
-                                        }
-                                    }
-                                ]
-                            }
-                        }
-                    }
-                },
-                "DbtrAgt": {
-                    "FinInstnId": {
-                        "BICFI": {"fake": ["bic"]}
-                    }
-                },
-                "Dbtr": {
-                    "Nm": {"fake": ["name"]},
-                    "PstlAdr": {
-                        "Ctry": {"fake": ["country_code"]}
-                    }
-                },
-                "DbtrAcct": {
-                    "Id": {
-                        "IBAN": {"fake": ["iban"]}
-                    }
-                },
-                "CdtrAgt": {
-                    "FinInstnId": {
-                        "BICFI": {"fake": ["bic"]}
-                    }
-                },
-                "Cdtr": {
-                    "Nm": "Telecom Services GmbH",
-                    "PstlAdr": {
-                        "Ctry": "DE"
-                    }
-                },
-                "CdtrAcct": {
-                    "Id": {
-                        "IBAN": {"fake": ["iban", "DE"]}
-                    }
-                },
-                "Purp": {
-                    "Cd": "PHON"
-                },
-                "RmtInf": {
-                    "Ustrd": {"cat": ["Mobile plan - ", {"fake": ["month_name"]}, " 2025"]}
-                }
-            },
-            {
-                "PmtId": {
-                    "EndToEndId": {"cat": ["E2EMULTI", {"fake": ["i64", 100000000000, 999999999999]}]},
-                    "TxId": {"cat": ["TX", {"fake": ["uuid"]}]}
-                },
-                "PmtTpInf": {
-                    "SvcLvl": [
-                        {
-                            "Cd": "SEPA"
-                        }
-                    ],
-                    "LclInstrm": {
-                        "Cd": "CORE"
-                    },
-                    "SeqTp": "RCUR",
-                    "CtgyPurp": {
-                        "Cd": "ELEC"
-                    }
-                },
-                "IntrBkSttlmAmt": {
-                    "@Ccy": "EUR",
-                    "$value": {"fake": ["f64", 100.0, 500.0]}
-                },
-                "IntrBkSttlmDt": {"var": "settlement_date"},
-                "InstdAmt": {
-                    "@Ccy": "EUR",
-                    "$value": {"fake": ["f64", 100.0, 500.0]}
-                },
-                "ChrgBr": "SLEV",
-                "DrctDbtTx": {
-                    "MndtRltdInf": {
-                        "MndtId": {"cat": ["MNDT", {"fake": ["i64", 1000000, 9999999]}]},
-                        "DtOfSgntr": "2022-11-20"
-                    },
-                    "CdtrSchmeId": {
-                        "Id": {
-                            "PrvtId": {
-                                "Othr": [
-                                    {
-                                        "Id": {"var": "creditor_scheme_id"},
-                                        "SchmeNm": {
-                                            "Prtry": "SEPA"
-                                        }
-                                    }
-                                ]
-                            }
-                        }
-                    }
-                },
-                "DbtrAgt": {
-                    "FinInstnId": {
-                        "BICFI": {"fake": ["bic"]}
-                    }
-                },
-                "Dbtr": {
-                    "Nm": {"fake": ["company_name"]},
-                    "PstlAdr": {
-                        "Ctry": {"fake": ["country_code"]}
-                    }
-                },
-                "DbtrAcct": {
-                    "Id": {
-                        "IBAN": {"fake": ["iban"]}
-                    }
-                },
-                "CdtrAgt": {
-                    "FinInstnId": {
-                        "BICFI": {"fake": ["bic"]}
-                    }
-                },
-                "Cdtr": {
-                    "Nm": "Energy Provider AG",
-                    "PstlAdr": {
-                        "Ctry": "DE"
-                    }
-                },
-                "CdtrAcct": {
-                    "Id": {
-                        "IBAN": {"fake": ["iban", "DE"]}
-                    }
-                },
-                "Purp": {
-                    "Cd": "ELEC"
-                },
-                "RmtInf": {
-                    "Ustrd": {"cat": ["Electricity bill - ", {"fake": ["month_name"]}, " 2025"]},
-                    "Strd": [
-                        {
-                            "RfrdDocInf": [
-                                {
-                                    "Tp": {
-                                        "CdOrPrtry": {
-                                            "Cd": "RADM"
-                                        }
-                                    },
-                                    "Nb": {"cat": ["ELEC-", {"fake": ["i64", 202501, 202512]}]}
-                                }
-                            ]
-                        }
-                    ]
-                }
-            },
-            {
-                "PmtId": {
-                    "EndToEndId": {"cat": ["E2EMULTI", {"fake": ["i64", 100000000000, 999999999999]}]},
-                    "TxId": {"cat": ["TX", {"fake": ["uuid"]}]}
-                },
-                "PmtTpInf": {
-                    "SvcLvl": [
-                        {
-                            "Cd": "SEPA"
-                        }
-                    ],
-                    "LclInstrm": {
-                        "Cd": "CORE"
-                    },
-                    "SeqTp": "RCUR",
-                    "CtgyPurp": {
-                        "Cd": "INSM"
-                    }
-                },
-                "IntrBkSttlmAmt": {
-                    "@Ccy": "EUR",
-                    "$value": {"fake": ["f64", 200.0, 1000.0]}
-                },
-                "IntrBkSttlmDt": {"var": "settlement_date"},
-                "InstdAmt": {
-                    "@Ccy": "EUR",
-                    "$value": {"fake": ["f64", 200.0, 1000.0]}
-                },
-                "ChrgBr": "SLEV",
-                "DrctDbtTx": {
-                    "MndtRltdInf": {
-                        "MndtId": {"cat": ["MNDT", {"fake": ["i64", 1000000, 9999999]}]},
-                        "DtOfSgntr": "2024-01-01",
-                        "AmdmntInd": true,
-                        "AmdmntInfDtls": {
-                            "OrgnlDbtrAgt": {
-                                "FinInstnId": {
-                                    "BICFI": {"fake": ["bic"]}
-                                }
-                            }
-                        }
-                    },
-                    "CdtrSchmeId": {
-                        "Id": {
-                            "PrvtId": {
-                                "Othr": [
-                                    {
-                                        "Id": {"var": "creditor_scheme_id"},
-                                        "SchmeNm": {
-                                            "Prtry": "SEPA"
-                                        }
-                                    }
-                                ]
-                            }
-                        }
-                    }
-                },
-                "DbtrAgt": {
-                    "FinInstnId": {
-                        "BICFI": {"fake": ["bic"]}
-                    }
-                },
-                "Dbtr": {
-                    "Nm": {"fake": ["name"]},
-                    "PstlAdr": {
-                        "Ctry": {"fake": ["country_code"]}
-                    }
-                },
-                "DbtrAcct": {
-                    "Id": {
-                        "IBAN": {"fake": ["iban"]}
-                    }
-                },
-                "CdtrAgt": {
-                    "FinInstnId": {
-                        "BICFI": {"fake": ["bic"]}
-                    }
-                },
-                "Cdtr": {
-                    "Nm": "Insurance Company Ltd",
-                    "PstlAdr": {
-                        "Ctry": "DE"
-                    }
-                },
-                "CdtrAcct": {
-                    "Id": {
-                        "IBAN": {"fake": ["iban", "DE"]}
-                    }
-                },
-                "Purp": {
-                    "Cd": "INSM"
-                },
-                "RmtInf": {
-                    "Ustrd": "Car insurance premium - January 2025",
-                    "Strd": [
-                        {
-                            "RfrdDocInf": [
-                                {
-                                    "Tp": {
-                                        "CdOrPrtry": {
-                                            "Prtry": "POLICY"
-                                        }
-                                    },
-                                    "Nb": {"cat": ["POL-", {"fake": ["i64", 1000001, 9999999]}]}
-                                }
-                            ]
-                        }
-                    ]
-                }
-            },
-            {
-                "PmtId": {
-                    "EndToEndId": {"cat": ["E2EMULTI", {"fake": ["i64", 100000000000, 999999999999]}]},
-                    "TxId": {"cat": ["TX", {"fake": ["uuid"]}]}
-                },
-                "PmtTpInf": {
-                    "SvcLvl": [
-                        {
-                            "Cd": "SEPA"
-                        }
-                    ],
-                    "LclInstrm": {
-                        "Cd": "CORE"
-                    },
-                    "SeqTp": "FRST",
-                    "CtgyPurp": {
-                        "Cd": "OTHR"
-                    }
-                },
-                "IntrBkSttlmAmt": {
-                    "@Ccy": "EUR",
-                    "$value": {"fake": ["f64", 30.0, 150.0]}
-                },
-                "IntrBkSttlmDt": {"var": "settlement_date"},
-                "InstdAmt": {
-                    "@Ccy": "EUR",
-                    "$value": {"fake": ["f64", 30.0, 150.0]}
-                },
-                "ChrgBr": "SLEV",
-                "DrctDbtTx": {
-                    "MndtRltdInf": {
-                        "MndtId": {"cat": ["MNDT", {"fake": ["i64", 1000000, 9999999]}]},
-                        "DtOfSgntr": "2025-01-10",
-                        "ElctrncSgntr": {"cat": ["ESIG-", {"fake": ["uuid"]}]}
-                    },
-                    "CdtrSchmeId": {
-                        "Id": {
-                            "PrvtId": {
-                                "Othr": [
-                                    {
-                                        "Id": {"var": "creditor_scheme_id"},
-                                        "SchmeNm": {
-                                            "Prtry": "SEPA"
-                                        }
-                                    }
-                                ]
-                            }
-                        }
-                    }
-                },
-                "DbtrAgt": {
-                    "FinInstnId": {
-                        "BICFI": {"fake": ["bic"]}
-                    }
-                },
-                "Dbtr": {
-                    "Nm": {"fake": ["name"]},
-                    "PstlAdr": {
-                        "Ctry": {"fake": ["country_code"]}
-                    }
-                },
-                "DbtrAcct": {
-                    "Id": {
-                        "IBAN": {"fake": ["iban"]}
-                    }
-                },
-                "CdtrAgt": {
-                    "FinInstnId": {
-                        "BICFI": {"fake": ["bic"]}
-                    }
-                },
-                "Cdtr": {
-                    "Nm": "Streaming Services GmbH",
-                    "PstlAdr": {
-                        "Ctry": "DE"
-                    }
-                },
-                "CdtrAcct": {
-                    "Id": {
-                        "IBAN": {"fake": ["iban", "DE"]}
-                    }
-                },
-                "Purp": {
-                    "Cd": "OTHR"
-                },
-                "RmtInf": {
-                    "Ustrd": "Streaming subscription - Premium plan"
-                }
-            },
-            {
-                "PmtId": {
-                    "EndToEndId": {"cat": ["E2EMULTI", {"fake": ["i64", 100000000000, 999999999999]}]},
-                    "TxId": {"cat": ["TX", {"fake": ["uuid"]}]}
-                },
-                "PmtTpInf": {
-                    "SvcLvl": [
-                        {
-                            "Cd": "SEPA"
-                        }
-                    ],
-                    "LclInstrm": {
-                        "Cd": "CORE"
-                    },
-                    "SeqTp": "RCUR",
-                    "CtgyPurp": {
-                        "Cd": "GASB"
-                    }
-                },
-                "IntrBkSttlmAmt": {
-                    "@Ccy": "EUR",
-                    "$value": {"fake": ["f64", 80.0, 300.0]}
-                },
-                "IntrBkSttlmDt": {"var": "settlement_date"},
-                "InstdAmt": {
-                    "@Ccy": "EUR",
-                    "$value": {"fake": ["f64", 80.0, 300.0]}
-                },
-                "ChrgBr": "SLEV",
-                "DrctDbtTx": {
-                    "MndtRltdInf": {
-                        "MndtId": {"cat": ["MNDT", {"fake": ["i64", 1000000, 9999999]}]},
-                        "DtOfSgntr": "2021-07-15"
-                    },
-                    "CdtrSchmeId": {
-                        "Id": {
-                            "PrvtId": {
-                                "Othr": [
-                                    {
-                                        "Id": {"var": "creditor_scheme_id"},
-                                        "SchmeNm": {
-                                            "Prtry": "SEPA"
-                                        }
-                                    }
-                                ]
-                            }
-                        }
-                    }
-                },
-                "DbtrAgt": {
-                    "FinInstnId": {
-                        "BICFI": {"fake": ["bic"]}
-                    }
-                },
-                "Dbtr": {
-                    "Nm": {"fake": ["company_name"]},
-                    "PstlAdr": {
-                        "Ctry": {"fake": ["country_code"]}
-                    }
-                },
-                "DbtrAcct": {
-                    "Id": {
-                        "IBAN": {"fake": ["iban"]}
-                    }
-                },
-                "CdtrAgt": {
-                    "FinInstnId": {
-                        "BICFI": {"fake": ["bic"]}
-                    }
-                },
-                "Cdtr": {
-                    "Nm": "Gas Supply Company",
-                    "PstlAdr": {
-                        "Ctry": "DE"
-                    }
-                },
-                "CdtrAcct": {
-                    "Id": {
-                        "IBAN": {"fake": ["iban", "DE"]}
-                    }
-                },
-                "Purp": {
-                    "Cd": "GASB"
-                },
-                "RmtInf": {
-                    "Ustrd": {"cat": ["Gas bill - ", {"fake": ["month_name"]}, " 2025"]},
-                    "Strd": [
-                        {
-                            "RfrdDocInf": [
-                                {
-                                    "Tp": {
-                                        "CdOrPrtry": {
-                                            "Cd": "RADM"
-                                        }
-                                    },
-                                    "Nb": {"cat": ["GAS-", {"fake": ["i64", 202501, 202512]}]}
-                                }
-                            ],
-                            "AddtlRmtInf": [
-                                {"cat": ["Customer: ", {"fake": ["i64", 100001, 999999]}]},
-                                {"cat": ["Consumption: ", {"fake": ["i64", 50, 500]}, " m³"]}
-                            ]
-                        }
-                    ]
-                }
-            }
-        ]
+        }
     }
 }

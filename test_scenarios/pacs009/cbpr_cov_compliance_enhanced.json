@@ -1,44 +1,163 @@
 {
     "variables": {
-        "msg_id": {"cat": ["MSG", {"fake": ["i64", 100000000000, 999999999999]}]},
-        "creation_datetime": {"fake": ["iso8601_datetime"]},
-        "sender_bic": {"fake": ["bic"]},
-        "receiver_bic": {"fake": ["bic"]},
-        "transaction_ref": {"cat": ["TXN", {"fake": ["i64", 100000000000, 999999999999]}]},
-        "instruction_id": {"cat": ["INSTR", {"fake": ["i64", 10000000, 99999999]}]},
-        "end_to_end_id": {"cat": ["E2E", {"fake": ["i64", 100000000000, 999999999999]}]},
-        "uetr": {"fake": ["uuid"]},
-        "amount": {"fake": ["f64", 250000.0, 10000000.0]},
-        "sender_lei": {"fake": ["lei"]},
-        "receiver_lei": {"fake": ["lei"]},
-        "compliance_ref": {"cat": ["COMPL-", {"fake": ["i64", 2024000000, 2024999999]}]},
-        "screening_ref": {"cat": ["SCREEN-", {"fake": ["i64", 2024000000, 2024999999]}]}
+        "msg_id": {
+            "cat": [
+                "MSG",
+                {
+                    "fake": [
+                        "i64",
+                        100000000000,
+                        999999999999
+                    ]
+                }
+            ]
+        },
+        "creation_datetime": {
+            "fake": [
+                "iso8601_datetime"
+            ]
+        },
+        "sender_bic": {
+            "fake": [
+                "bic"
+            ]
+        },
+        "receiver_bic": {
+            "fake": [
+                "bic"
+            ]
+        },
+        "transaction_ref": {
+            "cat": [
+                "TXN",
+                {
+                    "fake": [
+                        "i64",
+                        100000000000,
+                        999999999999
+                    ]
+                }
+            ]
+        },
+        "instruction_id": {
+            "cat": [
+                "INSTR",
+                {
+                    "fake": [
+                        "i64",
+                        10000000,
+                        99999999
+                    ]
+                }
+            ]
+        },
+        "end_to_end_id": {
+            "cat": [
+                "E2E",
+                {
+                    "fake": [
+                        "i64",
+                        100000000000,
+                        999999999999
+                    ]
+                }
+            ]
+        },
+        "uetr": {
+            "fake": [
+                "uuid"
+            ]
+        },
+        "amount": {
+            "fake": [
+                "f64",
+                250000.0,
+                10000000.0
+            ]
+        },
+        "sender_lei": {
+            "fake": [
+                "lei"
+            ]
+        },
+        "receiver_lei": {
+            "fake": [
+                "lei"
+            ]
+        },
+        "compliance_ref": {
+            "cat": [
+                "COMPL-",
+                {
+                    "fake": [
+                        "i64",
+                        2024000000,
+                        2024999999
+                    ]
+                }
+            ]
+        },
+        "screening_ref": {
+            "cat": [
+                "SCREEN-",
+                {
+                    "fake": [
+                        "i64",
+                        2024000000,
+                        2024999999
+                    ]
+                }
+            ]
+        }
     },
     "schema": {
         "GrpHdr": {
-            "MsgId": {"var": "msg_id"},
-            "CreDtTm": {"var": "creation_datetime"},
+            "MsgId": {
+                "var": "msg_id"
+            },
+            "CreDtTm": {
+                "var": "creation_datetime"
+            },
             "NbOfTxs": "1",
             "TtlIntrBkSttlmAmt": {
                 "@Ccy": "USD",
-                "$value": {"var": "amount"}
+                "$value": {
+                    "var": "amount"
+                }
             },
-            "IntrBkSttlmDt": {"fake": ["date", "%Y-%m-%d", "+0d", "+0d"]},
+            "IntrBkSttlmDt": {
+                "fake": [
+                    "date",
+                    "%Y-%m-%d",
+                    "+0d",
+                    "+0d"
+                ]
+            },
             "SttlmInf": {
                 "SttlmMtd": "INDA"
             }
         },
         "CdtTrfTxInf": {
             "PmtId": {
-                "InstrId": {"var": "instruction_id"},
-                "EndToEndId": {"var": "end_to_end_id"},
-                "TxId": {"var": "transaction_ref"},
-                "UETR": {"var": "uetr"}
+                "InstrId": {
+                    "var": "instruction_id"
+                },
+                "EndToEndId": {
+                    "var": "end_to_end_id"
+                },
+                "TxId": {
+                    "var": "transaction_ref"
+                },
+                "UETR": {
+                    "var": "uetr"
+                }
             },
             "PmtTpInf": {
                 "InstrPrty": "HIGH",
                 "SvcLvl": [
-                    {"Cd": "G001"}
+                    {
+                        "Cd": "G001"
+                    }
                 ],
                 "CtgyPurp": {
                     "Cd": "INTC"
@@ -49,16 +168,37 @@
             },
             "IntrBkSttlmAmt": {
                 "@Ccy": "USD",
-                "$value": {"var": "amount"}
+                "$value": {
+                    "var": "amount"
+                }
             },
-            "IntrBkSttlmDt": {"fake": ["date", "%Y-%m-%d", "+0d", "+0d"]},
+            "IntrBkSttlmDt": {
+                "fake": [
+                    "date",
+                    "%Y-%m-%d",
+                    "+0d",
+                    "+0d"
+                ]
+            },
             "SttlmPrty": "HIGH",
-            "AccptncDtTm": {"fake": ["iso8601_datetime"]},
+            "AccptncDtTm": {
+                "fake": [
+                    "iso8601_datetime"
+                ]
+            },
             "InstgAgt": {
                 "FinInstnId": {
-                    "BICFI": {"var": "sender_bic"},
-                    "LEI": {"var": "sender_lei"},
-                    "Nm": {"fake": ["company_name"]},
+                    "BICFI": {
+                        "var": "sender_bic"
+                    },
+                    "LEI": {
+                        "var": "sender_lei"
+                    },
+                    "Nm": {
+                        "fake": [
+                            "company_name"
+                        ]
+                    },
                     "PstlAdr": {
                         "Ctry": "US"
                     }
@@ -66,24 +206,67 @@
             },
             "InstdAgt": {
                 "FinInstnId": {
-                    "BICFI": {"var": "receiver_bic"},
-                    "LEI": {"var": "receiver_lei"},
-                    "Nm": {"fake": ["company_name"]},
+                    "BICFI": {
+                        "var": "receiver_bic"
+                    },
+                    "LEI": {
+                        "var": "receiver_lei"
+                    },
+                    "Nm": {
+                        "fake": [
+                            "company_name"
+                        ]
+                    },
                     "PstlAdr": {
-                        "Ctry": {"fake": ["regex", "(GB|DE|FR)"]}
+                        "Ctry": {
+                            "fake": [
+                                "regex",
+                                "(GB|DE|FR)"
+                            ]
+                        }
                     }
                 }
             },
             "Dbtr": {
                 "FinInstnId": {
-                    "BICFI": {"var": "sender_bic"},
-                    "LEI": {"var": "sender_lei"},
-                    "Nm": {"fake": ["company_name"]},
+                    "BICFI": {
+                        "var": "sender_bic"
+                    },
+                    "LEI": {
+                        "var": "sender_lei"
+                    },
+                    "Nm": {
+                        "fake": [
+                            "company_name"
+                        ]
+                    },
                     "PstlAdr": {
-                        "StrtNm": {"fake": ["street_name"]},
-                        "BldgNb": {"cat": [{"fake": ["i64", 1, 999]}]},
-                        "PstCd": {"fake": ["postcode"]},
-                        "TwnNm": {"fake": ["city_name"]},
+                        "StrtNm": {
+                            "fake": [
+                                "street_name"
+                            ]
+                        },
+                        "BldgNb": {
+                            "cat": [
+                                {
+                                    "fake": [
+                                        "i64",
+                                        1,
+                                        999
+                                    ]
+                                }
+                            ]
+                        },
+                        "PstCd": {
+                            "fake": [
+                                "postcode"
+                            ]
+                        },
+                        "TwnNm": {
+                            "fake": [
+                                "city_name"
+                            ]
+                        },
                         "Ctry": "US"
                     }
                 }
@@ -91,7 +274,18 @@
             "DbtrAcct": {
                 "Id": {
                     "Othr": {
-                        "Id": {"cat": ["NOSTRO-", {"fake": ["i64", 100000, 999999]}]},
+                        "Id": {
+                            "cat": [
+                                "NOSTRO-",
+                                {
+                                    "fake": [
+                                        "i64",
+                                        100000,
+                                        999999
+                                    ]
+                                }
+                            ]
+                        },
                         "SchmeNm": {
                             "Prtry": "NOSTRO_ACCOUNT"
                         }
@@ -104,34 +298,88 @@
             },
             "DbtrAgt": {
                 "FinInstnId": {
-                    "BICFI": {"var": "sender_bic"},
-                    "LEI": {"var": "sender_lei"}
+                    "BICFI": {
+                        "var": "sender_bic"
+                    },
+                    "LEI": {
+                        "var": "sender_lei"
+                    }
                 }
             },
             "CdtrAgt": {
                 "FinInstnId": {
-                    "BICFI": {"var": "receiver_bic"},
-                    "LEI": {"var": "receiver_lei"}
+                    "BICFI": {
+                        "var": "receiver_bic"
+                    },
+                    "LEI": {
+                        "var": "receiver_lei"
+                    }
                 }
             },
             "Cdtr": {
                 "FinInstnId": {
-                    "BICFI": {"var": "receiver_bic"},
-                    "LEI": {"var": "receiver_lei"},
-                    "Nm": {"fake": ["company_name"]},
+                    "BICFI": {
+                        "var": "receiver_bic"
+                    },
+                    "LEI": {
+                        "var": "receiver_lei"
+                    },
+                    "Nm": {
+                        "fake": [
+                            "company_name"
+                        ]
+                    },
                     "PstlAdr": {
-                        "StrtNm": {"fake": ["street_name"]},
-                        "BldgNb": {"cat": [{"fake": ["i64", 1, 999]}]},
-                        "PstCd": {"fake": ["postcode"]},
-                        "TwnNm": {"fake": ["city_name"]},
-                        "Ctry": {"fake": ["regex", "(GB|DE|FR)"]}
+                        "StrtNm": {
+                            "fake": [
+                                "street_name"
+                            ]
+                        },
+                        "BldgNb": {
+                            "cat": [
+                                {
+                                    "fake": [
+                                        "i64",
+                                        1,
+                                        999
+                                    ]
+                                }
+                            ]
+                        },
+                        "PstCd": {
+                            "fake": [
+                                "postcode"
+                            ]
+                        },
+                        "TwnNm": {
+                            "fake": [
+                                "city_name"
+                            ]
+                        },
+                        "Ctry": {
+                            "fake": [
+                                "regex",
+                                "(GB|DE|FR)"
+                            ]
+                        }
                     }
                 }
             },
             "CdtrAcct": {
                 "Id": {
                     "Othr": {
-                        "Id": {"cat": ["VOSTRO-", {"fake": ["i64", 100000, 999999]}]},
+                        "Id": {
+                            "cat": [
+                                "VOSTRO-",
+                                {
+                                    "fake": [
+                                        "i64",
+                                        100000,
+                                        999999
+                                    ]
+                                }
+                            ]
+                        },
                         "SchmeNm": {
                             "Prtry": "VOSTRO_ACCOUNT"
                         }
@@ -144,7 +392,7 @@
             },
             "InstrForCdtrAgt": [
                 {
-                    "Cd": "CHQB",
+                    "Cd": "PHOB",
                     "InstrInf": "ENHANCED DUE DILIGENCE COMPLETED"
                 }
             ],
@@ -161,14 +409,26 @@
                     "Dtls": [
                         {
                             "Tp": "BOTH",
-                            "Dt": {"fake": ["date", "%Y-%m-%d", "+0d", "+0d"]},
+                            "Dt": {
+                                "fake": [
+                                    "date",
+                                    "%Y-%m-%d",
+                                    "+0d",
+                                    "+0d"
+                                ]
+                            },
                             "Ctry": "US",
                             "Cd": "CTR",
                             "Amt": {
                                 "@Ccy": "USD",
-                                "$value": {"var": "amount"}
+                                "$value": {
+                                    "var": "amount"
+                                }
                             },
-                            "Inf": ["CURRENCY TRANSACTION REPORT", "CBPR+ ENHANCED COMPLIANCE"]
+                            "Inf": [
+                                "CURRENCY TRANSACTION REPORT",
+                                "CBPR+ ENHANCED COMPLIANCE"
+                            ]
                         }
                     ]
                 },
@@ -180,10 +440,22 @@
                     "Dtls": [
                         {
                             "Tp": "BOTH",
-                            "Dt": {"fake": ["date", "%Y-%m-%d", "+0d", "+0d"]},
+                            "Dt": {
+                                "fake": [
+                                    "date",
+                                    "%Y-%m-%d",
+                                    "+0d",
+                                    "+0d"
+                                ]
+                            },
                             "Ctry": "US",
                             "Cd": "OFAC",
-                            "Inf": ["SANCTIONS SCREENING PASSED", {"var": "screening_ref"}]
+                            "Inf": [
+                                "SANCTIONS SCREENING PASSED",
+                                {
+                                    "var": "screening_ref"
+                                }
+                            ]
                         }
                     ]
                 }
@@ -192,8 +464,22 @@
                 "Strd": [
                     {
                         "AddtlRmtInf": [
-                            {"cat": ["Compliance Reference: ", {"var": "compliance_ref"}]},
-                            {"cat": ["Screening Reference: ", {"var": "screening_ref"}]},
+                            {
+                                "cat": [
+                                    "Compliance Reference: ",
+                                    {
+                                        "var": "compliance_ref"
+                                    }
+                                ]
+                            },
+                            {
+                                "cat": [
+                                    "Screening Reference: ",
+                                    {
+                                        "var": "screening_ref"
+                                    }
+                                ]
+                            },
                             "Enhanced due diligence documentation available",
                             "All regulatory requirements satisfied"
                         ]

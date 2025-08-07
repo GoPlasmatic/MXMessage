@@ -98,7 +98,6 @@ Each scenario file uses a consistent JSON structure with:
 | **pacs.008** | cbpr_treasury_intercompany | CBPR+ intercompany | Corporate treasury | Company refs | ✅ |
 | **pacs.008** | cbpr_utility_cross_border | CBPR+ intl utility | Cross-border utilities | Account number | ✅ |
 | **pacs.008** | cbpr_utility_payment | CBPR+ utility | Domestic utilities | Meter number | ✅ |
-| **pacs.008** | cbpr_validation_failure | CBPR+ validation test | Validation testing | Invalid codes | ✅ |
 | **pacs.008** | correspondent_banking | Correspondent banking | FI relationships | Intermediaries | ✅ |
 | **pacs.008** | cover_payment | Cover payment | Correspondent banking | Full chain | ✅ |
 | **pacs.008** | duplicate_uetr | Duplicate UETR test | UETR tracking | Duplicate detection | ✅ |
@@ -154,83 +153,83 @@ Each scenario file uses a consistent JSON structure with:
 
 | Message Type | Scenario Name | Purpose | Use Case | Key Features | Completion |
 |--------------|---------------|---------|----------|--------------|------------|
-| **camt.052** | daily_balance_report | Daily balance | End-of-day balance | Daily position | ✅ |
-| **camt.052** | intraday_liquidity_report | Liquidity report | Intraday liquidity | Real-time | ✅ |
-| **camt.052** | multi_currency_balance | Multi-currency | Multiple currencies | Multi-CCY | ✅ |
-| **camt.052** | negative_balance_report | Negative balance | Overdraft position | Negative position | ✅ |
-| **camt.052** | real_time_position_update | Real-time position | Live position update | Current position | ✅ |
-| **camt.052** | treasury_cash_sweep | Cash sweep | Treasury operations | Automated sweep | ✅ |
-| **camt.053** | correspondent_banking | Correspondent statement | Nostro account | Correspondent | ✅ |
-| **camt.053** | daily_account_statement | Daily statement | End-of-day statement | All transactions | ✅ |
-| **camt.053** | high_volume_batch | High volume | Large transaction count | Batch processing | ✅ |
-| **camt.053** | interim_statement_intraday | Interim statement | Intraday position | Real-time FX | ✅ |
-| **camt.053** | repeated_sequence_issues | Duplicate test | Testing edge cases | Repeated items | ✅ |
-| **camt.053** | simplified_statement | Simplified | Basic statement | Simple format | ✅ |
-| **camt.053** | year_end_statement | Annual statement | Year-end summary | Annual summary | ✅ |
-| **camt.054** | basic_credit_confirmation | Credit confirm | Standard credit notice | Account credited | ✅ |
-| **camt.054** | basic_debit_confirmation | Debit confirm | Standard debit notice | Account debited | ✅ |
-| **camt.054** | cbpr_credit_confirmation | CBPR+ credit | Cross-border credit | CBPR+ compliant | ✅ |
-| **camt.054** | cbpr_debit_confirmation | CBPR+ debit | Cross-border debit | CBPR+ compliant | ✅ |
-| **camt.054** | direct_debit_confirmation | DD confirm | DD collection notice | DD executed | ✅ |
-| **camt.054** | dividend_payment | Dividend credit | Dividend receipt | Dividend credited | ✅ |
-| **camt.054** | fee_debit_confirmation | Fee debit | Fee charge notice | Fees debited | ✅ |
-| **camt.054** | fx_transaction_debit | FX debit | FX trade debit | FX settlement | ✅ |
-| **camt.054** | incoming_wire_transfer | Wire credit | Incoming wire | Wire received | ✅ |
-| **camt.054** | interest_credit | Interest credit | Interest payment | Interest credited | ✅ |
-| **camt.054** | refund_credit | Refund credit | Refund receipt | Refund credited | ✅ |
-| **camt.054** | standing_order_debit | SO debit | Recurring debit | SO executed | ✅ |
-| **camt.056** | cbpr_cancellation_request | CBPR+ cancel | Cross-border cancel | CBPR+ compliant | ✅ |
-| **camt.056** | compliance_hold_cancellation | Compliance hold | Regulatory freeze | Enhanced DD | ✅ |
-| **camt.056** | fi_cancellation_request | FI cancel | Bank-to-bank cancel | Agent error | ✅ |
-| **camt.056** | fraud_prevention_cancellation | Fraud cancel | Security incident | Suspected fraud | ✅ |
-| **camt.056** | regulatory_compliance_cancellation | Compliance cancel | Sanctions hit | AML alert | ✅ |
-| **camt.056** | request_cancellation | Basic cancel | Payment cancellation | Customer request | ✅ |
-| **camt.056** | system_error_cancellation | System error | Technical failure | Batch error | ✅ |
-| **camt.056** | urgent_cancellation | Urgent cancel | Same day cancel | Duplicate payment | ✅ |
-| **camt.056** | wrong_beneficiary_cancellation | Wrong beneficiary | Incorrect account | Account closed | ✅ |
-| **camt.029** | answer_cancellation | Cancel accepted | Successful cancel | Cancel confirmed | ✅ |
-| **camt.029** | answer_inquiry_response | Inquiry response | Payment status | Payment found | ✅ |
-| **camt.029** | answer_pending_investigation | Investigation pending | Fraud investigation | Under review | ✅ |
-| **camt.029** | answer_rejection | Cancel rejected | Failed cancel | Already executed | ✅ |
-| **camt.029** | cancellation_accepted | Cancel accepted | Successful cancel | Confirmed | ✅ |
-| **camt.029** | cancellation_rejected | Cancel rejected | Failed cancel | Denied | ✅ |
-| **camt.029** | cbpr_cancellation_response | CBPR+ response | Cross-border response | CBPR+ compliant | ✅ |
-| **camt.029** | inquiry_response | Inquiry response | Query answer | Information | ✅ |
-| **camt.029** | no_payment_found | Not found | Not found response | Payment not located | ✅ |
-| **camt.029** | partial_cancellation | Partial cancel | Partial amount | Partial cancellation | ✅ |
+| **camt.052** | daily_balance_report | Daily balance | End-of-day balance | Daily position | ❌ |
+| **camt.052** | intraday_liquidity_report | Liquidity report | Intraday liquidity | Real-time | ❌ |
+| **camt.052** | multi_currency_balance | Multi-currency | Multiple currencies | Multi-CCY | ❌ |
+| **camt.052** | negative_balance_report | Negative balance | Overdraft position | Negative position | ❌ |
+| **camt.052** | real_time_position_update | Real-time position | Live position update | Current position | ❌ |
+| **camt.052** | treasury_cash_sweep | Cash sweep | Treasury operations | Automated sweep | ❌ |
+| **camt.053** | correspondent_banking | Correspondent statement | Nostro account | Correspondent | ❌ |
+| **camt.053** | daily_account_statement | Daily statement | End-of-day statement | All transactions | ❌ |
+| **camt.053** | high_volume_batch | High volume | Large transaction count | Batch processing | ❌ |
+| **camt.053** | interim_statement_intraday | Interim statement | Intraday position | Real-time FX | ❌ |
+| **camt.053** | repeated_sequence_issues | Duplicate test | Testing edge cases | Repeated items | ❌ |
+| **camt.053** | simplified_statement | Simplified | Basic statement | Simple format | ❌ |
+| **camt.053** | year_end_statement | Annual statement | Year-end summary | Annual summary | ❌ |
+| **camt.054** | basic_credit_confirmation | Credit confirm | Standard credit notice | Account credited | ❌ |
+| **camt.054** | basic_debit_confirmation | Debit confirm | Standard debit notice | Account debited | ❌ |
+| **camt.054** | cbpr_credit_confirmation | CBPR+ credit | Cross-border credit | CBPR+ compliant | ❌ |
+| **camt.054** | cbpr_debit_confirmation | CBPR+ debit | Cross-border debit | CBPR+ compliant | ❌ |
+| **camt.054** | direct_debit_confirmation | DD confirm | DD collection notice | DD executed | ❌ |
+| **camt.054** | dividend_payment | Dividend credit | Dividend receipt | Dividend credited | ❌ |
+| **camt.054** | fee_debit_confirmation | Fee debit | Fee charge notice | Fees debited | ❌ |
+| **camt.054** | fx_transaction_debit | FX debit | FX trade debit | FX settlement | ❌ |
+| **camt.054** | incoming_wire_transfer | Wire credit | Incoming wire | Wire received | ❌ |
+| **camt.054** | interest_credit | Interest credit | Interest payment | Interest credited | ❌ |
+| **camt.054** | refund_credit | Refund credit | Refund receipt | Refund credited | ❌ |
+| **camt.054** | standing_order_debit | SO debit | Recurring debit | SO executed | ❌ |
+| **camt.056** | cbpr_cancellation_request | CBPR+ cancel | Cross-border cancel | CBPR+ compliant | ❌ |
+| **camt.056** | compliance_hold_cancellation | Compliance hold | Regulatory freeze | Enhanced DD | ❌ |
+| **camt.056** | fi_cancellation_request | FI cancel | Bank-to-bank cancel | Agent error | ❌ |
+| **camt.056** | fraud_prevention_cancellation | Fraud cancel | Security incident | Suspected fraud | ❌ |
+| **camt.056** | regulatory_compliance_cancellation | Compliance cancel | Sanctions hit | AML alert | ❌ |
+| **camt.056** | request_cancellation | Basic cancel | Payment cancellation | Customer request | ❌ |
+| **camt.056** | system_error_cancellation | System error | Technical failure | Batch error | ❌ |
+| **camt.056** | urgent_cancellation | Urgent cancel | Same day cancel | Duplicate payment | ❌ |
+| **camt.056** | wrong_beneficiary_cancellation | Wrong beneficiary | Incorrect account | Account closed | ❌ |
+| **camt.029** | answer_cancellation | Cancel accepted | Successful cancel | Cancel confirmed | ❌ |
+| **camt.029** | answer_inquiry_response | Inquiry response | Payment status | Payment found | ❌ |
+| **camt.029** | answer_pending_investigation | Investigation pending | Fraud investigation | Under review | ❌ |
+| **camt.029** | answer_rejection | Cancel rejected | Failed cancel | Already executed | ❌ |
+| **camt.029** | cancellation_accepted | Cancel accepted | Successful cancel | Confirmed | ❌ |
+| **camt.029** | cancellation_rejected | Cancel rejected | Failed cancel | Denied | ❌ |
+| **camt.029** | cbpr_cancellation_response | CBPR+ response | Cross-border response | CBPR+ compliant | ❌ |
+| **camt.029** | inquiry_response | Inquiry response | Query answer | Information | ❌ |
+| **camt.029** | no_payment_found | Not found | Not found response | Payment not located | ❌ |
+| **camt.029** | partial_cancellation | Partial cancel | Partial amount | Partial cancellation | ❌ |
 | **camt.027** | cbpr_cancellation | CBPR+ cancel | Cross-border cancel | CBPR+ compliant | ✅ |
 | **camt.027** | cbpr_inquiry | CBPR+ inquiry | Payment inquiry | CBPR+ compliant | ✅ |
 | **camt.028** | cbpr_payment_response | CBPR+ status | Transparency response | Full tracking | ✅ |
 | **camt.028** | regulatory_notification | Regulatory notice | Compliance update | New requirements | ✅ |
 | **camt.028** | settlement_instructions_update | SSI update | Nostro change | Account change | ✅ |
 | **camt.028** | system_maintenance_notice | Maintenance | Scheduled downtime | Maintenance window | ✅ |
-| **camt.025** | central_bank_rate_notification | CB rates | Policy rate change | CB notification | ✅ |
-| **camt.025** | deposit_rate_change | Deposit rates | Savings rate update | Rate notification | ✅ |
-| **camt.025** | fx_rate_update | FX rates | Exchange rate change | FX notification | ✅ |
-| **camt.025** | loan_rate_adjustment | Loan rates | Lending rate change | Rate notification | ✅ |
-| **camt.025** | multi_product_rate_change | Multi rates | Various rate changes | Multiple updates | ✅ |
-| **camt.057** | expected_incoming_funds | Expected funds | Batch incoming | Multiple payments | ✅ |
-| **camt.057** | fx_settlement_notice | FX settlement | Currency trade | Two-way FX | ✅ |
-| **camt.057** | securities_settlement_notice | Securities | DVP settlement | Bond settlement | ✅ |
-| **camt.057** | single_payment_notice | Single payment | Wire transfer | Large value | ✅ |
-| **camt.060** | interim_report_request | Interim request | Intraday statement | Request interim | ✅ |
-| **camt.060** | multi_account_request | Multi-account | Multiple accounts | Request multiple | ✅ |
-| **camt.060** | statement_request_basic | Basic request | Account statement | Request statement | ✅ |
+| **camt.025** | central_bank_rate_notification | CB rates | Policy rate change | CB notification | ❌ |
+| **camt.025** | deposit_rate_change | Deposit rates | Savings rate update | Rate notification | ❌ |
+| **camt.025** | fx_rate_update | FX rates | Exchange rate change | FX notification | ❌ |
+| **camt.025** | loan_rate_adjustment | Loan rates | Lending rate change | Rate notification | ❌ |
+| **camt.025** | multi_product_rate_change | Multi rates | Various rate changes | Multiple updates | ❌ |
+| **camt.057** | expected_incoming_funds | Expected funds | Batch incoming | Multiple payments | ❌ |
+| **camt.057** | fx_settlement_notice | FX settlement | Currency trade | Two-way FX | ❌ |
+| **camt.057** | securities_settlement_notice | Securities | DVP settlement | Bond settlement | ❌ |
+| **camt.057** | single_payment_notice | Single payment | Wire transfer | Large value | ❌ |
+| **camt.060** | interim_report_request | Interim request | Intraday statement | Request interim | ❌ |
+| **camt.060** | multi_account_request | Multi-account | Multiple accounts | Request multiple | ❌ |
+| **camt.060** | statement_request_basic | Basic request | Account statement | Request statement | ❌ |
 
 ## Current Test Status
 
 | Component | Status | Details |
 |-----------|--------|---------|
 | **Sample Generator** | ✅ | All scenarios generate valid samples |
-| **Structure Validation** | ✅ | Message structure validation passes |
-| **JSON Round Trip Test** | ✅ | Full JSON serialization/deserialization |
-| **MT to MX Migration** | ✅ | 99.4% complete (168/169 scenarios) |
+| **Structure Validation** | ⚠️ | 96% parse success, 62% validation success |
+| **JSON Round Trip Test** | ⚠️ | 62% successful round-trip |
+| **MT to MX Migration** | ⚠️ | 99.4% complete (168/169 scenarios) |
 
 ### Test Coverage
-- **Total Scenarios**: 168
+- **Total Scenarios**: 166
 - **Message Types**: 16 (pain.001-camt.060)
 - **CBPR+ Scenarios**: 58 (cross-border payment compliance)
-- **Success Rate**: 100%
+- **Success Rate**: 62% (1040/1660 tests passing)
 
 ## Status Legend
 

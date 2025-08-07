@@ -1,44 +1,121 @@
 {
     "variables": {
-        "msg_id": {"cat": ["CBPRSUP", {"fake": ["i64", 100000000000, 999999999999]}]},
-        "creation_datetime": {"fake": ["iso8601_datetime"]},
-        "company_name": {"fake": ["company_name"]},
-        "company_lei": {"fake": ["lei"]},
-        "company_bic": {"fake": ["bic"]},
-        "pmt_inf_id": {"cat": ["SUPPBATCH", {"fake": ["i64", 10000000, 99999999]}]},
+        "msg_id": {
+            "cat": [
+                "CBPRSUP",
+                {
+                    "fake": [
+                        "i64",
+                        100000000000,
+                        999999999999
+                    ]
+                }
+            ]
+        },
+        "creation_datetime": {
+            "fake": [
+                "iso8601_datetime"
+            ]
+        },
+        "company_name": {
+            "fake": [
+                "company_name"
+            ]
+        },
+        "company_lei": {
+            "fake": [
+                "lei"
+            ]
+        },
+        "company_bic": {
+            "fake": [
+                "bic"
+            ]
+        },
+        "pmt_inf_id": {
+            "cat": [
+                "SUPPBATCH",
+                {
+                    "fake": [
+                        "i64",
+                        10000000,
+                        99999999
+                    ]
+                }
+            ]
+        },
         "execution_date": "2024-12-23",
-        "debtor_iban": {"fake": ["iban", "DE"]},
-        "debtor_bic": {"fake": ["bic"]},
+        "debtor_iban": {
+            "fake": [
+                "iban",
+                "DE"
+            ]
+        },
+        "debtor_bic": {
+            "fake": [
+                "bic"
+            ]
+        },
         "num_suppliers": 15,
-        "total_batch": {"fake": ["f64", 250000.0, 500000.0]}
+        "total_batch": {
+            "fake": [
+                "f64",
+                250000.0,
+                500000.0
+            ]
+        }
     },
     "schema": {
         "GrpHdr": {
-            "MsgId": {"var": "msg_id"},
-            "CreDtTm": {"var": "creation_datetime"},
-            "NbOfTxs": {"cat": [{"var": "num_suppliers"}]},
-            "CtrlSum": {"var": "total_batch"},
+            "MsgId": {
+                "var": "msg_id"
+            },
+            "CreDtTm": {
+                "var": "creation_datetime"
+            },
+            "NbOfTxs": "1",
+            "CtrlSum": {
+                "var": "total_batch"
+            },
             "InitgPty": {
-                "Nm": {"var": "company_name"},
+                "Nm": {
+                    "var": "company_name"
+                },
                 "Id": {
                     "OrgId": {
-                        "LEI": {"var": "company_lei"},
-                        "AnyBIC": {"var": "company_bic"}
+                        "LEI": {
+                            "var": "company_lei"
+                        },
+                        "AnyBIC": {
+                            "var": "company_bic"
+                        }
                     }
                 },
                 "CtctDtls": {
                     "Nm": "Accounts Payable Department",
-                    "EmailAdr": {"cat": ["ap@", {"fake": ["domain_name"]}]},
-                    "PhneNb": {"cat": ["+49", {"fake": ["i64", 1000000000, 9999999999]}]}
+                    "EmailAdr": {
+                        "cat": [
+                            "ap@",
+                            {
+                                "fake": [
+                                    "domain_name"
+                                ]
+                            }
+                        ]
+                    }
                 }
             }
         },
         "PmtInf": {
-            "PmtInfId": {"var": "pmt_inf_id"},
+            "PmtInfId": {
+                "var": "pmt_inf_id"
+            },
             "PmtMtd": "TRF",
             "BtchBookg": true,
-            "NbOfTxs": {"cat": [{"var": "num_suppliers"}]},
-            "CtrlSum": {"var": "total_batch"},
+            "NbOfTxs": "1",
+            "CtrlSum": {
+                "var": "total_batch"
+            },
             "PmtTpInf": {
                 "InstrPrty": "NORM",
                 "SvcLvl": [
@@ -54,29 +131,75 @@
                 }
             },
             "ReqdExctnDt": {
-                "Dt": {"var": "execution_date"}
+                "Dt": {
+                    "var": "execution_date"
+                }
             },
             "Dbtr": {
-                "Nm": {"var": "company_name"},
+                "Nm": {
+                    "var": "company_name"
+                },
                 "PstlAdr": {
                     "Ctry": "DE",
                     "AdrLine": [
-                        {"fake": ["street_address"]},
-                        {"cat": [{"fake": ["postcode"]}, " ", {"fake": ["city_name"]}]}
+                        {
+                            "fake": [
+                                "street_address"
+                            ]
+                        },
+                        {
+                            "cat": [
+                                {
+                                    "fake": [
+                                        "postcode"
+                                    ]
+                                },
+                                " ",
+                                {
+                                    "fake": [
+                                        "city_name"
+                                    ]
+                                }
+                            ]
+                        }
                     ]
                 },
                 "Id": {
                     "OrgId": {
-                        "LEI": {"var": "company_lei"},
+                        "LEI": {
+                            "var": "company_lei"
+                        },
                         "Othr": [
                             {
-                                "Id": {"cat": ["DE", {"fake": ["i64", 100000000, 999999999]}]},
+                                "Id": {
+                                    "cat": [
+                                        "DE",
+                                        {
+                                            "fake": [
+                                                "i64",
+                                                100000000,
+                                                999999999
+                                            ]
+                                        }
+                                    ]
+                                },
                                 "SchmeNm": {
                                     "Cd": "TXID"
                                 }
                             },
                             {
-                                "Id": {"cat": ["HRB", {"fake": ["i64", 10000, 99999]}]},
+                                "Id": {
+                                    "cat": [
+                                        "HRB",
+                                        {
+                                            "fake": [
+                                                "i64",
+                                                10000,
+                                                99999
+                                            ]
+                                        }
+                                    ]
+                                },
                                 "SchmeNm": {
                                     "Prtry": "TRADE_REGISTER"
                                 }
@@ -87,7 +210,9 @@
             },
             "DbtrAcct": {
                 "Id": {
-                    "IBAN": {"var": "debtor_iban"}
+                    "IBAN": {
+                        "var": "debtor_iban"
+                    }
                 },
                 "Tp": {
                     "Cd": "CACC"
@@ -97,294 +222,302 @@
             },
             "DbtrAgt": {
                 "FinInstnId": {
-                    "BICFI": {"var": "debtor_bic"},
-                    "LEI": {"fake": ["lei"]},
-                    "Nm": {"fake": ["company_name"]},
+                    "BICFI": {
+                        "var": "debtor_bic"
+                    },
+                    "LEI": {
+                        "fake": [
+                            "lei"
+                        ]
+                    },
+                    "Nm": {
+                        "fake": [
+                            "company_name"
+                        ]
+                    },
                     "PstlAdr": {
                         "Ctry": "DE"
                     }
                 }
             },
             "UltmtDbtr": {
-                "Nm": {"cat": [{"var": "company_name"}, " Group"]},
+                "Nm": {
+                    "cat": [
+                        {
+                            "var": "company_name"
+                        },
+                        " Group"
+                    ]
+                },
                 "Id": {
                     "OrgId": {
-                        "LEI": {"fake": ["lei"]}
+                        "LEI": {
+                            "fake": [
+                                "lei"
+                            ]
+                        }
                     }
                 }
             },
-            "ChrgBr": "SLEV",
-            "CdtTrfTxInf": [
-                {
-                    "PmtId": {
-                        "InstrId": {"cat": ["SUPINV", {"fake": ["i64", 2024001, 2024999]}]},
-                        "EndToEndId": {"cat": ["E2ESUP", {"fake": ["i64", 100000000000, 999999999999]}]}
-                    },
-                    "PmtTpInf": {
-                        "CtgyPurp": {
-                            "Cd": "SUPP"
-                        }
-                    },
-                    "Amt": {
-                        "InstdAmt": {
-                            "@Ccy": "EUR",
-                            "$value": {"fake": ["f64", 5000.0, 50000.0]}
-                        }
-                    },
-                    "ChrgBr": "SLEV",
-                    "CdtrAgt": {
-                        "FinInstnId": {
-                            "BICFI": {"fake": ["bic"]},
-                            "LEI": {"fake": ["lei"]}
-                        }
-                    },
-                    "Cdtr": {
-                        "Nm": {"fake": ["company_name"]},
-                        "PstlAdr": {
-                            "Ctry": {"fake": ["country_code"]},
-                            "AdrLine": [
-                                {"fake": ["street_address"]},
-                                {"fake": ["city_name"]}
-                            ]
-                        },
-                        "Id": {
-                            "OrgId": {
-                                "LEI": {"fake": ["lei"]},
-                                "Othr": [
-                                    {
-                                        "Id": {"cat": ["SUP", {"fake": ["i64", 100001, 999999]}]},
-                                        "SchmeNm": {
-                                            "Prtry": "SUPPLIER_ID"
-                                        }
-                                    }
+            "ChrgBr": "SHAR",
+            "CdtTrfTxInf": {
+                "PmtId": {
+                    "InstrId": {
+                        "cat": [
+                            "SUPINV",
+                            {
+                                "fake": [
+                                    "i64",
+                                    2024001,
+                                    2024999
                                 ]
                             }
+                        ]
+                    },
+                    "EndToEndId": {
+                        "cat": [
+                            "E2ESUP",
+                            {
+                                "fake": [
+                                    "i64",
+                                    100000000000,
+                                    999999999999
+                                ]
+                            }
+                        ]
+                    },
+                    "UETR": {
+                        "fake": [
+                            "uuid"
+                        ]
+                    }
+                },
+                "PmtTpInf": {
+                    "CtgyPurp": {
+                        "Cd": "SUPP"
+                    }
+                },
+                "Amt": {
+                    "InstdAmt": {
+                        "@Ccy": "EUR",
+                        "$value": {
+                            "fake": [
+                                "f64",
+                                5000.0,
+                                50000.0
+                            ]
                         }
-                    },
-                    "CdtrAcct": {
-                        "Id": {
-                            "IBAN": {"fake": ["iban"]}
+                    }
+                },
+                "ChrgBr": "SHAR",
+                "CdtrAgt": {
+                    "FinInstnId": {
+                        "BICFI": {
+                            "fake": [
+                                "bic"
+                            ]
                         },
-                        "Nm": {"cat": [{"fake": ["company_name"]}, " - Receivables"]}
+                        "LEI": {
+                            "fake": [
+                                "lei"
+                            ]
+                        }
+                    }
+                },
+                "Cdtr": {
+                    "Nm": {
+                        "fake": [
+                            "company_name"
+                        ]
                     },
-                    "Purp": {
-                        "Cd": "GDDS"
+                    "PstlAdr": {
+                        "Ctry": {
+                            "fake": [
+                                "country_code"
+                            ]
+                        },
+                        "AdrLine": [
+                            {
+                                "fake": [
+                                    "street_address"
+                                ]
+                            },
+                            {
+                                "fake": [
+                                    "city_name"
+                                ]
+                            }
+                        ]
                     },
-                    "RgltryRptg": [
-                        {
-                            "Dtls": [
+                    "Id": {
+                        "OrgId": {
+                            "LEI": {
+                                "fake": [
+                                    "lei"
+                                ]
+                            },
+                            "Othr": [
                                 {
-                                    "Tp": "CRED",
-                                    "Dt": "2024-12-23",
-                                    "Ctry": "DE",
-                                    "Cd": "150",
-                                    "Amt": {
-                                        "@Ccy": "EUR",
-                                        "$value": {"fake": ["f64", 5000.0, 50000.0]}
+                                    "Id": {
+                                        "cat": [
+                                            "SUP",
+                                            {
+                                                "fake": [
+                                                    "i64",
+                                                    100001,
+                                                    999999
+                                                ]
+                                            }
+                                        ]
                                     },
-                                    "Inf": ["CBPR+ SUPPLIER PAYMENT BATCH"]
+                                    "SchmeNm": {
+                                        "Prtry": "SUPPLIER_ID"
+                                    }
                                 }
                             ]
                         }
-                    ],
-                    "RmtInf": {
-                        "Strd": [
+                    }
+                },
+                "CdtrAcct": {
+                    "Id": {
+                        "IBAN": {
+                            "fake": [
+                                "iban"
+                            ]
+                        }
+                    },
+                    "Nm": {
+                        "cat": [
                             {
-                                "RfrdDocInf": [
-                                    {
-                                        "Tp": {
-                                            "CdOrPrtry": {
-                                                "Cd": "CINV"
-                                            }
-                                        },
-                                        "Nb": {"cat": ["INV-", {"fake": ["i64", 2024001, 2024999]}]},
-                                        "RltdDt": "2024-11-15"
-                                    },
-                                    {
-                                        "Tp": {
-                                            "CdOrPrtry": {
-                                                "Cd": "PUOR"
-                                            }
-                                        },
-                                        "Nb": {"cat": ["PO-", {"fake": ["i64", 2024001, 2024999]}]},
-                                        "RltdDt": "2024-10-20"
+                                "fake": [
+                                    "company_name"
+                                ]
+                            },
+                            " - Receivables"
+                        ]
+                    }
+                },
+                "Purp": {
+                    "Cd": "GDDS"
+                },
+                "RgltryRptg": [
+                    {
+                        "Dtls": [
+                            {
+                                "Tp": "CRED",
+                                "Dt": "2024-12-23",
+                                "Ctry": "DE",
+                                "Cd": "150",
+                                "Amt": {
+                                    "@Ccy": "EUR",
+                                    "$value": {
+                                        "fake": [
+                                            "f64",
+                                            5000.0,
+                                            50000.0
+                                        ]
                                     }
-                                ],
-                                "RfrdDocAmt": {
-                                    "DuePyblAmt": {
-                                        "@Ccy": "EUR",
-                                        "$value": {"fake": ["f64", 5000.0, 50000.0]}
-                                    },
-                                    "DscntApldAmt": [
-                                        {
-                                            "@Ccy": "EUR",
-                                            "$value": {"fake": ["f64", 50.0, 500.0]}
-                                        }
-                                    ],
-                                    "TaxAmt": [
-                                        {
-                                            "@Ccy": "EUR",
-                                            "$value": {"fake": ["f64", 950.0, 9500.0]}
-                                        }
-                                    ]
                                 },
-                                "AddtlRmtInf": [
-                                    "2% early payment discount applied",
-                                    "VAT Registration: DE123456789"
+                                "Inf": [
+                                    "CBPR+ SUPPLIER PAYMENT BATCH"
                                 ]
                             }
                         ]
                     }
-                },
-                {
-                    "PmtId": {
-                        "InstrId": {"cat": ["SUPINV", {"fake": ["i64", 2024001, 2024999]}]},
-                        "EndToEndId": {"cat": ["E2ESUP", {"fake": ["i64", 100000000000, 999999999999]}]}
-                    },
-                    "PmtTpInf": {
-                        "CtgyPurp": {
-                            "Cd": "SUPP"
-                        }
-                    },
-                    "Amt": {
-                        "InstdAmt": {
-                            "@Ccy": "EUR",
-                            "$value": {"fake": ["f64", 10000.0, 75000.0]}
-                        }
-                    },
-                    "ChrgBr": "SLEV",
-                    "CdtrAgt": {
-                        "FinInstnId": {
-                            "BICFI": {"fake": ["bic"]},
-                            "LEI": {"fake": ["lei"]}
-                        }
-                    },
-                    "Cdtr": {
-                        "Nm": {"fake": ["company_name"]},
-                        "PstlAdr": {
-                            "Ctry": {"fake": ["country_code"]},
-                            "AdrLine": [
-                                {"fake": ["street_address"]},
-                                {"fake": ["city_name"]}
-                            ]
-                        },
-                        "Id": {
-                            "OrgId": {
-                                "LEI": {"fake": ["lei"]},
-                                "Othr": [
-                                    {
-                                        "Id": {"cat": ["SUP", {"fake": ["i64", 100001, 999999]}]},
-                                        "SchmeNm": {
-                                            "Prtry": "SUPPLIER_ID"
-                                        }
-                                    }
-                                ]
-                            }
-                        }
-                    },
-                    "CdtrAcct": {
-                        "Id": {
-                            "IBAN": {"fake": ["iban"]}
-                        }
-                    },
-                    "Purp": {
-                        "Cd": "SCVE"
-                    },
-                    "RgltryRptg": [
+                ],
+                "RmtInf": {
+                    "Strd": [
                         {
-                            "Dtls": [
+                            "RfrdDocInf": [
                                 {
-                                    "Tp": "CRED",
-                                    "Dt": "2024-12-23",
-                                    "Ctry": "DE",
-                                    "Cd": "150",
-                                    "Amt": {
-                                        "@Ccy": "EUR",
-                                        "$value": {"fake": ["f64", 10000.0, 75000.0]}
+                                    "Tp": {
+                                        "CdOrPrtry": {
+                                            "Cd": "CINV"
+                                        }
                                     },
-                                    "Inf": ["CBPR+ SERVICE PAYMENT"]
-                                }
-                            ]
-                        }
-                    ],
-                    "RmtInf": {
-                        "Strd": [
-                            {
-                                "RfrdDocInf": [
-                                    {
-                                        "Tp": {
-                                            "CdOrPrtry": {
-                                                "Cd": "CINV"
+                                    "Nb": {
+                                        "cat": [
+                                            "INV-",
+                                            {
+                                                "fake": [
+                                                    "i64",
+                                                    2024001,
+                                                    2024999
+                                                ]
                                             }
-                                        },
-                                        "Nb": {"cat": ["SVC-", {"fake": ["i64", 2024001, 2024999]}]},
-                                        "RltdDt": "2024-11-30"
+                                        ]
+                                    },
+                                    "RltdDt": "2024-11-15"
+                                },
+                                {
+                                    "Tp": {
+                                        "CdOrPrtry": {
+                                            "Cd": "PUOR"
+                                        }
+                                    },
+                                    "Nb": {
+                                        "cat": [
+                                            "PO-",
+                                            {
+                                                "fake": [
+                                                    "i64",
+                                                    2024001,
+                                                    2024999
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    "RltdDt": "2024-10-20"
+                                }
+                            ],
+                            "RfrdDocAmt": {
+                                "DuePyblAmt": {
+                                    "@Ccy": "EUR",
+                                    "$value": {
+                                        "fake": [
+                                            "f64",
+                                            5000.0,
+                                            50000.0
+                                        ]
+                                    }
+                                },
+                                "DscntApldAmt": [
+                                    {
+                                        "Amt": {
+                                            "@Ccy": "EUR",
+                                            "$value": {
+                                                "fake": [
+                                                    "f64",
+                                                    50.0,
+                                                    500.0
+                                                ]
+                                            }
+                                        }
                                     }
                                 ],
-                                "AddtlRmtInf": [
-                                    "Professional services rendered November 2024"
-                                ]
-                            }
-                        ]
-                    }
-                },
-                {
-                    "PmtId": {
-                        "InstrId": {"cat": ["SUPINV", {"fake": ["i64", 2024001, 2024999]}]},
-                        "EndToEndId": {"cat": ["E2ESUP", {"fake": ["i64", 100000000000, 999999999999]}]}
-                    },
-                    "PmtTpInf": {
-                        "CtgyPurp": {
-                            "Cd": "SUPP"
-                        }
-                    },
-                    "Amt": {
-                        "InstdAmt": {
-                            "@Ccy": "EUR",
-                            "$value": {"fake": ["f64", 3000.0, 25000.0]}
-                        }
-                    },
-                    "ChrgBr": "SLEV",
-                    "CdtrAgt": {
-                        "FinInstnId": {
-                            "BICFI": {"fake": ["bic"]}
-                        }
-                    },
-                    "Cdtr": {
-                        "Nm": {"fake": ["company_name"]},
-                        "PstlAdr": {
-                            "Ctry": {"fake": ["country_code"]},
-                            "AdrLine": [
-                                {"fake": ["street_address"]},
-                                {"fake": ["city_name"]}
-                            ]
-                        },
-                        "Id": {
-                            "OrgId": {
-                                "Othr": [
+                                "TaxAmt": [
                                     {
-                                        "Id": {"cat": ["SUP", {"fake": ["i64", 100001, 999999]}]},
-                                        "SchmeNm": {
-                                            "Prtry": "SUPPLIER_ID"
+                                        "Amt": {
+                                            "@Ccy": "EUR",
+                                            "$value": {
+                                                "fake": [
+                                                    "f64",
+                                                    950.0,
+                                                    9500.0
+                                                ]
+                                            }
                                         }
                                     }
                                 ]
-                            }
+                            },
+                            "AddtlRmtInf": [
+                                "2% early payment discount applied",
+                                "VAT Registration: DE123456789"
+                            ]
                         }
-                    },
-                    "CdtrAcct": {
-                        "Id": {
-                            "IBAN": {"fake": ["iban"]}
-                        }
-                    },
-                    "Purp": {
-                        "Cd": "GDDS"
-                    },
-                    "RmtInf": {
-                        "Ustrd": {"cat": ["Raw materials order #", {"fake": ["i64", 10001, 99999]}]}
-                    }
+                    ]
                 }
-            ]
+            }
         },
         "SplmtryData": [
             {

@@ -1,840 +1,312 @@
 {
     "variables": {
-        "msg_id": {"cat": ["MSGSUBS", {"fake": ["uuid"]}]},
-        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "msg_id": {
+            "cat": [
+                "MSG",
+                {
+                    "fake": [
+                        "i64",
+                        100000000000,
+                        999999999999
+                    ]
+                }
+            ]
+        },
+        "creation_datetime": {
+            "fake": [
+                "iso8601_datetime"
+            ]
+        },
         "settlement_date": "2025-01-30",
         "num_txs": 6,
-        "total_amt": {"fake": ["f64", 5000.0, 25000.0]},
-        "instg_lei": {"fake": ["lei"]},
-        "instd_lei": {"fake": ["lei"]},
-        "instg_bic": {"fake": ["bic"]},
-        "instd_bic": {"fake": ["bic"]}
+        "total_amt": {
+            "fake": [
+                "f64",
+                5000.0,
+                25000.0
+            ]
+        },
+        "instg_lei": {
+            "fake": [
+                "lei"
+            ]
+        },
+        "instd_lei": {
+            "fake": [
+                "lei"
+            ]
+        },
+        "instg_bic": {
+            "fake": [
+                "bic"
+            ]
+        },
+        "instd_bic": {
+            "fake": [
+                "bic"
+            ]
+        },
+        "instruction_id": {
+            "cat": [
+                "INSTR",
+                {
+                    "fake": [
+                        "i64",
+                        10000000,
+                        99999999
+                    ]
+                }
+            ]
+        },
+        "uetr": {
+            "fake": [
+                "uuid"
+            ]
+        },
+        "collection_date": "2025-01-30",
+        "end_to_end_id": {
+            "cat": [
+                "E2E",
+                {
+                    "fake": [
+                        "i64",
+                        100000000000,
+                        999999999999
+                    ]
+                }
+            ]
+        },
+        "tx_id": {
+            "cat": [
+                "TX",
+                {
+                    "fake": [
+                        "i64",
+                        100000000000,
+                        999999999999
+                    ]
+                }
+            ]
+        },
+        "debtor_bic": {
+            "fake": [
+                "bic"
+            ]
+        },
+        "debtor_iban": {
+            "fake": [
+                "iban",
+                "DE"
+            ]
+        },
+        "creditor_bic": {
+            "fake": [
+                "bic"
+            ]
+        },
+        "creditor_iban": {
+            "fake": [
+                "iban",
+                "FR"
+            ]
+        }
     },
     "schema": {
         "GrpHdr": {
-            "MsgId": {"var": "msg_id"},
-            "CreDtTm": {"var": "creation_datetime"},
-            "NbOfTxs": {"cat": [{"var": "num_txs"}]},
-            "TtlIntrBkSttlmAmt": {
-                "@Ccy": "EUR",
-                "$value": {"var": "total_amt"}
+            "MsgId": {
+                "var": "msg_id"
             },
-            "IntrBkSttlmDt": {"var": "settlement_date"},
+            "CreDtTm": {
+                "var": "creation_datetime"
+            },
+            "NbOfTxs": "1",
             "SttlmInf": {
-                "SttlmMtd": "CLRG",
-                "ClrSys": {
-                    "Cd": "TGT"
+                "SttlmMtd": "INDA"
+            }
+        },
+        "DrctDbtTxInf": {
+            "PmtId": {
+                "InstrId": {
+                    "var": "instruction_id"
+                },
+                "EndToEndId": {
+                    "var": "end_to_end_id"
+                },
+                "TxId": {
+                    "var": "tx_id"
+                },
+                "UETR": {
+                    "var": "uetr"
                 }
+            },
+            "PmtTpInf": {
+                "InstrPrty": "NORM",
+                "SvcLvl": [
+                    {
+                        "Cd": "G001"
+                    }
+                ],
+                "LclInstrm": {
+                    "Cd": "CORE"
+                },
+                "SeqTp": "RCUR",
+                "CtgyPurp": {
+                    "Cd": "OTHR"
+                }
+            },
+            "IntrBkSttlmAmt": {
+                "@Ccy": "EUR",
+                "$value": 1000.0
+            },
+            "IntrBkSttlmDt": {
+                "var": "settlement_date"
+            },
+            "InstdAmt": {
+                "@Ccy": "EUR",
+                "$value": 1000.0
+            },
+            "ChrgBr": "SHAR",
+            "DrctDbtTx": {
+                "MndtRltdInf": {
+                    "MndtId": "ABC0000000000000",
+                    "DtOfSgntr": "2024-06-01",
+                    "AmdmntInd": false,
+                    "ElctrncSgntr": "ABC0000000000000"
+                },
+                "CdtrSchmeId": {
+                    "Id": {
+                        "PrvtId": {
+                            "Othr": [
+                                {
+                                    "Id": "ABC0000000000000",
+                                    "SchmeNm": {
+                                        "Prtry": "SEPA"
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "DbtrAgt": {
+                "FinInstnId": {
+                    "BICFI": {
+                        "var": "debtor_bic"
+                    }
+                }
+            },
+            "Dbtr": {
+                "Nm": "John Doe",
+                "PstlAdr": {
+                    "Ctry": "DE",
+                    "AdrLine": [
+                        "Debtor Street 123",
+                        "City, State 12345"
+                    ]
+                },
+                "Id": {
+                    "PrvtId": {
+                        "Othr": [
+                            {
+                                "Id": "ABC0000000000000",
+                                "SchmeNm": {
+                                    "Prtry": "CUSTOMER_ID"
+                                }
+                            }
+                        ]
+                    }
+                }
+            },
+            "DbtrAcct": {
+                "Id": {
+                    "IBAN": {
+                        "var": "debtor_iban"
+                    }
+                }
+            },
+            "CdtrAgt": {
+                "FinInstnId": {
+                    "BICFI": {
+                        "var": "creditor_bic"
+                    },
+                    "LEI": "SAMPLELEI123456789012"
+                }
+            },
+            "Cdtr": {
+                "Nm": "StreamFlix Media Services",
+                "PstlAdr": {
+                    "Ctry": "DE",
+                    "AdrLine": [
+                        "Media Tower",
+                        "10115 Berlin"
+                    ]
+                },
+                "Id": {
+                    "OrgId": {
+                        "LEI": "SAMPLELEI123456789012"
+                    }
+                }
+            },
+            "CdtrAcct": {
+                "Id": {
+                    "IBAN": {
+                        "var": "creditor_iban"
+                    }
+                },
+                "Tp": {
+                    "Cd": "CACC"
+                }
+            },
+            "Purp": {
+                "Cd": "OTHR"
+            },
+            "RgltryRptg": [
+                {
+                    "Dtls": [
+                        {
+                            "Tp": "DEBT",
+                            "Dt": "2025-01-30",
+                            "Ctry": "DE",
+                            "Cd": "150",
+                            "Amt": {
+                                "@Ccy": "EUR",
+                                "$value": 1000.0
+                            },
+                            "Inf": [
+                                "CBPR+ STREAMING SUBSCRIPTION"
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "RmtInf": {
+                "Ustrd": "Monthly streaming subscription - Premium",
+                "Strd": [
+                    {
+                        "AddtlRmtInf": [
+                            "4K/UHD streaming",
+                            "4 simultaneous screens"
+                        ]
+                    }
+                ]
+            },
+            "ReqdColltnDt": {
+                "var": "collection_date"
             },
             "InstgAgt": {
                 "FinInstnId": {
-                    "BICFI": {"var": "instg_bic"},
-                    "LEI": {"var": "instg_lei"}
+                    "BICFI": {
+                        "var": "creditor_bic"
+                    }
                 }
             },
             "InstdAgt": {
                 "FinInstnId": {
-                    "BICFI": {"var": "instd_bic"},
-                    "LEI": {"var": "instd_lei"}
-                }
-            }
-        },
-        "DrctDbtTxInf": [
-            {
-                "PmtId": {
-                    "EndToEndId": {"cat": ["E2ESUBS", {"fake": ["i64", 100000000000, 999999999999]}]},
-                    "TxId": {"cat": ["TXSUBS", {"fake": ["uuid"]}]},
-                    "UETR": {"fake": ["uuid"]}
-                },
-                "PmtTpInf": {
-                    "InstrPrty": "NORM",
-                    "SvcLvl": [
-                        {
-                            "Cd": "G001"
-                        }
-                    ],
-                    "LclInstrm": {
-                        "Cd": "CORE"
-                    },
-                    "SeqTp": "RCUR",
-                    "CtgyPurp": {
-                        "Cd": "OTHR"
-                    }
-                },
-                "IntrBkSttlmAmt": {
-                    "@Ccy": "EUR",
-                    "$value": {"fake": ["f64", 9.99, 29.99]}
-                },
-                "IntrBkSttlmDt": {"var": "settlement_date"},
-                "InstdAmt": {
-                    "@Ccy": "EUR",
-                    "$value": {"fake": ["f64", 9.99, 29.99]}
-                },
-                "ChrgBr": "SLEV",
-                "DrctDbtTx": {
-                    "MndtRltdInf": {
-                        "MndtId": {"cat": ["MNDTSUB", {"fake": ["i64", 1000000, 9999999]}]},
-                        "DtOfSgntr": "2024-06-01",
-                        "AmdmntInd": false,
-                        "ElctrncSgntr": {"cat": ["ESIG-", {"fake": ["uuid"]}]}
-                    },
-                    "CdtrSchmeId": {
-                        "Id": {
-                            "PrvtId": {
-                                "Othr": [
-                                    {
-                                        "Id": {"cat": ["DE", {"fake": ["i64", 10000000, 99999999]}, "ZZZ"]},
-                                        "SchmeNm": {
-                                            "Prtry": "SEPA"
-                                        }
-                                    }
-                                ]
-                            }
-                        }
-                    }
-                },
-                "DbtrAgt": {
-                    "FinInstnId": {
-                        "BICFI": {"fake": ["bic"]}
-                    }
-                },
-                "Dbtr": {
-                    "Nm": {"fake": ["name"]},
-                    "PstlAdr": {
-                        "Ctry": {"fake": ["country_code"]},
-                        "AdrLine": [
-                            {"fake": ["street_address"]},
-                            {"fake": ["city_name"]}
-                        ]
-                    },
-                    "Id": {
-                        "PrvtId": {
-                            "Othr": [
-                                {
-                                    "Id": {"cat": ["CUST-", {"fake": ["i64", 100001, 999999]}]},
-                                    "SchmeNm": {
-                                        "Prtry": "CUSTOMER_ID"
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                },
-                "DbtrAcct": {
-                    "Id": {
-                        "IBAN": {"fake": ["iban"]}
-                    }
-                },
-                "CdtrAgt": {
-                    "FinInstnId": {
-                        "BICFI": {"fake": ["bic"]},
-                        "LEI": {"fake": ["lei"]}
-                    }
-                },
-                "Cdtr": {
-                    "Nm": "StreamFlix Media Services",
-                    "PstlAdr": {
-                        "Ctry": "DE",
-                        "AdrLine": [
-                            "Media Tower",
-                            "10115 Berlin"
-                        ]
-                    },
-                    "Id": {
-                        "OrgId": {
-                            "LEI": {"fake": ["lei"]}
-                        }
-                    }
-                },
-                "CdtrAcct": {
-                    "Id": {
-                        "IBAN": {"fake": ["iban", "DE"]}
-                    },
-                    "Tp": {
-                        "Cd": "CACC"
-                    }
-                },
-                "Purp": {
-                    "Cd": "OTHR"
-                },
-                "RgltryRptg": [
-                    {
-                        "Dtls": [
-                            {
-                                "Tp": "DEBT",
-                                "Dt": "2025-01-30",
-                                "Ctry": "DE",
-                                "Cd": "150",
-                                "Amt": {
-                                    "@Ccy": "EUR",
-                                    "$value": {"fake": ["f64", 9.99, 29.99]}
-                                },
-                                "Inf": ["CBPR+ STREAMING SUBSCRIPTION"]
-                            }
-                        ]
-                    }
-                ],
-                "RmtInf": {
-                    "Ustrd": "Monthly streaming subscription - Premium",
-                    "Strd": [
-                        {
-                            "AddtlRmtInf": [
-                                "4K/UHD streaming",
-                                "4 simultaneous screens"
-                            ]
-                        }
-                    ]
-                }
-            },
-            {
-                "PmtId": {
-                    "EndToEndId": {"cat": ["E2ESUBS", {"fake": ["i64", 100000000000, 999999999999]}]},
-                    "TxId": {"cat": ["TXSUBS", {"fake": ["uuid"]}]},
-                    "UETR": {"fake": ["uuid"]}
-                },
-                "PmtTpInf": {
-                    "InstrPrty": "NORM",
-                    "SvcLvl": [
-                        {
-                            "Cd": "G001"
-                        }
-                    ],
-                    "LclInstrm": {
-                        "Cd": "B2B"
-                    },
-                    "SeqTp": "RCUR",
-                    "CtgyPurp": {
-                        "Cd": "OTHR"
-                    }
-                },
-                "IntrBkSttlmAmt": {
-                    "@Ccy": "EUR",
-                    "$value": {"fake": ["f64", 99.00, 999.00]}
-                },
-                "IntrBkSttlmDt": {"var": "settlement_date"},
-                "InstdAmt": {
-                    "@Ccy": "EUR",
-                    "$value": {"fake": ["f64", 99.00, 999.00]}
-                },
-                "ChrgBr": "DEBT",
-                "DrctDbtTx": {
-                    "MndtRltdInf": {
-                        "MndtId": {"cat": ["MNDTSUB", {"fake": ["i64", 1000000, 9999999]}]},
-                        "DtOfSgntr": "2023-01-15",
-                        "AmdmntInd": false,
-                        "ElctrncSgntr": {"cat": ["ESIG-", {"fake": ["uuid"]}]}
-                    },
-                    "CdtrSchmeId": {
-                        "Id": {
-                            "PrvtId": {
-                                "Othr": [
-                                    {
-                                        "Id": {"cat": ["DE", {"fake": ["i64", 10000000, 99999999]}, "ZZZ"]},
-                                        "SchmeNm": {
-                                            "Prtry": "SEPA"
-                                        }
-                                    }
-                                ]
-                            }
-                        }
-                    }
-                },
-                "DbtrAgt": {
-                    "FinInstnId": {
-                        "BICFI": {"fake": ["bic"]},
-                        "LEI": {"fake": ["lei"]}
-                    }
-                },
-                "Dbtr": {
-                    "Nm": {"fake": ["company_name"]},
-                    "PstlAdr": {
-                        "Ctry": {"fake": ["country_code"]}
-                    },
-                    "Id": {
-                        "OrgId": {
-                            "LEI": {"fake": ["lei"]}
-                        }
-                    }
-                },
-                "DbtrAcct": {
-                    "Id": {
-                        "IBAN": {"fake": ["iban"]}
-                    },
-                    "Tp": {
-                        "Cd": "CACC"
-                    }
-                },
-                "CdtrAgt": {
-                    "FinInstnId": {
-                        "BICFI": {"fake": ["bic"]},
-                        "LEI": {"fake": ["lei"]}
-                    }
-                },
-                "Cdtr": {
-                    "Nm": "CloudTech Enterprise Solutions",
-                    "PstlAdr": {
-                        "Ctry": "DE"
-                    },
-                    "Id": {
-                        "OrgId": {
-                            "LEI": {"fake": ["lei"]}
-                        }
-                    }
-                },
-                "CdtrAcct": {
-                    "Id": {
-                        "IBAN": {"fake": ["iban", "DE"]}
-                    }
-                },
-                "Purp": {
-                    "Cd": "OTHR"
-                },
-                "RgltryRptg": [
-                    {
-                        "Dtls": [
-                            {
-                                "Tp": "DEBT",
-                                "Dt": "2025-01-30",
-                                "Ctry": "DE",
-                                "Cd": "150",
-                                "Amt": {
-                                    "@Ccy": "EUR",
-                                    "$value": {"fake": ["f64", 99.00, 999.00]}
-                                },
-                                "Inf": ["CBPR+ SOFTWARE SUBSCRIPTION"]
-                            }
-                        ]
-                    }
-                ],
-                "RmtInf": {
-                    "Strd": [
-                        {
-                            "RfrdDocInf": [
-                                {
-                                    "Tp": {
-                                        "CdOrPrtry": {
-                                            "Prtry": "LICENSE"
-                                        }
-                                    },
-                                    "Nb": {"cat": ["LIC-", {"fake": ["i64", 100001, 999999]}]},
-                                    "RltdDt": "2023-01-15"
-                                }
-                            ],
-                            "AddtlRmtInf": [
-                                "Cloud software subscription - Enterprise",
-                                "Unlimited users, 10TB storage"
-                            ]
-                        }
-                    ]
-                }
-            },
-            {
-                "PmtId": {
-                    "EndToEndId": {"cat": ["E2ESUBS", {"fake": ["i64", 100000000000, 999999999999]}]},
-                    "TxId": {"cat": ["TXSUBS", {"fake": ["uuid"]}]},
-                    "UETR": {"fake": ["uuid"]}
-                },
-                "PmtTpInf": {
-                    "InstrPrty": "NORM",
-                    "SvcLvl": [
-                        {
-                            "Cd": "G001"
-                        }
-                    ],
-                    "LclInstrm": {
-                        "Cd": "CORE"
-                    },
-                    "SeqTp": "RCUR",
-                    "CtgyPurp": {
-                        "Cd": "OTHR"
-                    }
-                },
-                "IntrBkSttlmAmt": {
-                    "@Ccy": "EUR",
-                    "$value": {"fake": ["f64", 49.99, 99.99]}
-                },
-                "IntrBkSttlmDt": {"var": "settlement_date"},
-                "InstdAmt": {
-                    "@Ccy": "EUR",
-                    "$value": {"fake": ["f64", 49.99, 99.99]}
-                },
-                "ChrgBr": "SLEV",
-                "DrctDbtTx": {
-                    "MndtRltdInf": {
-                        "MndtId": {"cat": ["MNDTSUB", {"fake": ["i64", 1000000, 9999999]}]},
-                        "DtOfSgntr": "2024-01-01",
-                        "AmdmntInd": false
-                    },
-                    "CdtrSchmeId": {
-                        "Id": {
-                            "PrvtId": {
-                                "Othr": [
-                                    {
-                                        "Id": {"cat": ["DE", {"fake": ["i64", 10000000, 99999999]}, "ZZZ"]},
-                                        "SchmeNm": {
-                                            "Prtry": "SEPA"
-                                        }
-                                    }
-                                ]
-                            }
-                        }
-                    }
-                },
-                "DbtrAgt": {
-                    "FinInstnId": {
-                        "BICFI": {"fake": ["bic"]}
-                    }
-                },
-                "Dbtr": {
-                    "Nm": {"fake": ["name"]},
-                    "PstlAdr": {
-                        "Ctry": {"fake": ["country_code"]}
-                    },
-                    "Id": {
-                        "PrvtId": {
-                            "Othr": [
-                                {
-                                    "Id": {"cat": ["MEM", {"fake": ["i64", 100001, 999999]}]},
-                                    "SchmeNm": {
-                                        "Prtry": "MEMBERSHIP_ID"
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                },
-                "DbtrAcct": {
-                    "Id": {
-                        "IBAN": {"fake": ["iban"]}
-                    }
-                },
-                "CdtrAgt": {
-                    "FinInstnId": {
-                        "BICFI": {"fake": ["bic"]}
-                    }
-                },
-                "Cdtr": {
-                    "Nm": "FitLife Premium Gym",
-                    "PstlAdr": {
-                        "Ctry": "DE"
-                    }
-                },
-                "CdtrAcct": {
-                    "Id": {
-                        "IBAN": {"fake": ["iban", "DE"]}
-                    }
-                },
-                "Purp": {
-                    "Cd": "OTHR"
-                },
-                "RgltryRptg": [
-                    {
-                        "Dtls": [
-                            {
-                                "Tp": "DEBT",
-                                "Dt": "2025-01-30",
-                                "Ctry": "DE",
-                                "Cd": "150",
-                                "Amt": {
-                                    "@Ccy": "EUR",
-                                    "$value": {"fake": ["f64", 49.99, 99.99]}
-                                },
-                                "Inf": ["CBPR+ GYM MEMBERSHIP"]
-                            }
-                        ]
-                    }
-                ],
-                "RmtInf": {
-                    "Ustrd": "Gym membership - Gold plan",
-                    "Strd": [
-                        {
-                            "AddtlRmtInf": [
-                                "All facilities access",
-                                "Personal trainer sessions included"
-                            ]
-                        }
-                    ]
-                }
-            },
-            {
-                "PmtId": {
-                    "EndToEndId": {"cat": ["E2ESUBS", {"fake": ["i64", 100000000000, 999999999999]}]},
-                    "TxId": {"cat": ["TXSUBS", {"fake": ["uuid"]}]},
-                    "UETR": {"fake": ["uuid"]}
-                },
-                "PmtTpInf": {
-                    "InstrPrty": "NORM",
-                    "SvcLvl": [
-                        {
-                            "Cd": "G001"
-                        }
-                    ],
-                    "LclInstrm": {
-                        "Cd": "CORE"
-                    },
-                    "SeqTp": "RCUR",
-                    "CtgyPurp": {
-                        "Cd": "OTHR"
-                    }
-                },
-                "IntrBkSttlmAmt": {
-                    "@Ccy": "EUR",
-                    "$value": {"fake": ["f64", 14.99, 24.99]}
-                },
-                "IntrBkSttlmDt": {"var": "settlement_date"},
-                "InstdAmt": {
-                    "@Ccy": "EUR",
-                    "$value": {"fake": ["f64", 14.99, 24.99]}
-                },
-                "ChrgBr": "SLEV",
-                "DrctDbtTx": {
-                    "MndtRltdInf": {
-                        "MndtId": {"cat": ["MNDTSUB", {"fake": ["i64", 1000000, 9999999]}]},
-                        "DtOfSgntr": "2024-09-01",
-                        "AmdmntInd": false
-                    },
-                    "CdtrSchmeId": {
-                        "Id": {
-                            "PrvtId": {
-                                "Othr": [
-                                    {
-                                        "Id": {"cat": ["DE", {"fake": ["i64", 10000000, 99999999]}, "ZZZ"]},
-                                        "SchmeNm": {
-                                            "Prtry": "SEPA"
-                                        }
-                                    }
-                                ]
-                            }
-                        }
-                    }
-                },
-                "DbtrAgt": {
-                    "FinInstnId": {
-                        "BICFI": {"fake": ["bic"]}
-                    }
-                },
-                "Dbtr": {
-                    "Nm": {"fake": ["name"]},
-                    "PstlAdr": {
-                        "Ctry": {"fake": ["country_code"]}
-                    }
-                },
-                "DbtrAcct": {
-                    "Id": {
-                        "IBAN": {"fake": ["iban"]}
-                    }
-                },
-                "CdtrAgt": {
-                    "FinInstnId": {
-                        "BICFI": {"fake": ["bic"]}
-                    }
-                },
-                "Cdtr": {
-                    "Nm": "Digital News Media Ltd",
-                    "PstlAdr": {
-                        "Ctry": "DE"
-                    }
-                },
-                "CdtrAcct": {
-                    "Id": {
-                        "IBAN": {"fake": ["iban", "DE"]}
-                    }
-                },
-                "Purp": {
-                    "Cd": "OTHR"
-                },
-                "RgltryRptg": [
-                    {
-                        "Dtls": [
-                            {
-                                "Tp": "DEBT",
-                                "Dt": "2025-01-30",
-                                "Ctry": "DE",
-                                "Cd": "150",
-                                "Amt": {
-                                    "@Ccy": "EUR",
-                                    "$value": {"fake": ["f64", 14.99, 24.99]}
-                                },
-                                "Inf": ["CBPR+ NEWS SUBSCRIPTION"]
-                            }
-                        ]
-                    }
-                ],
-                "RmtInf": {
-                    "Ustrd": "Digital news subscription - All access"
-                }
-            },
-            {
-                "PmtId": {
-                    "EndToEndId": {"cat": ["E2ESUBS", {"fake": ["i64", 100000000000, 999999999999]}]},
-                    "TxId": {"cat": ["TXSUBS", {"fake": ["uuid"]}]},
-                    "UETR": {"fake": ["uuid"]}
-                },
-                "PmtTpInf": {
-                    "InstrPrty": "NORM",
-                    "SvcLvl": [
-                        {
-                            "Cd": "G001"
-                        }
-                    ],
-                    "LclInstrm": {
-                        "Cd": "CORE"
-                    },
-                    "SeqTp": "RCUR",
-                    "CtgyPurp": {
-                        "Cd": "OTHR"
-                    }
-                },
-                "IntrBkSttlmAmt": {
-                    "@Ccy": "EUR",
-                    "$value": {"fake": ["f64", 7.99, 15.99]}
-                },
-                "IntrBkSttlmDt": {"var": "settlement_date"},
-                "InstdAmt": {
-                    "@Ccy": "EUR",
-                    "$value": {"fake": ["f64", 7.99, 15.99]}
-                },
-                "ChrgBr": "SLEV",
-                "DrctDbtTx": {
-                    "MndtRltdInf": {
-                        "MndtId": {"cat": ["MNDTSUB", {"fake": ["i64", 1000000, 9999999]}]},
-                        "DtOfSgntr": "2024-11-15",
-                        "AmdmntInd": false
-                    },
-                    "CdtrSchmeId": {
-                        "Id": {
-                            "PrvtId": {
-                                "Othr": [
-                                    {
-                                        "Id": {"cat": ["DE", {"fake": ["i64", 10000000, 99999999]}, "ZZZ"]},
-                                        "SchmeNm": {
-                                            "Prtry": "SEPA"
-                                        }
-                                    }
-                                ]
-                            }
-                        }
-                    }
-                },
-                "DbtrAgt": {
-                    "FinInstnId": {
-                        "BICFI": {"fake": ["bic"]}
-                    }
-                },
-                "Dbtr": {
-                    "Nm": {"fake": ["name"]},
-                    "PstlAdr": {
-                        "Ctry": {"fake": ["country_code"]}
-                    }
-                },
-                "DbtrAcct": {
-                    "Id": {
-                        "IBAN": {"fake": ["iban"]}
-                    }
-                },
-                "CdtrAgt": {
-                    "FinInstnId": {
-                        "BICFI": {"fake": ["bic"]}
-                    }
-                },
-                "Cdtr": {
-                    "Nm": "Music Stream Pro",
-                    "PstlAdr": {
-                        "Ctry": "DE"
-                    }
-                },
-                "CdtrAcct": {
-                    "Id": {
-                        "IBAN": {"fake": ["iban", "DE"]}
-                    }
-                },
-                "Purp": {
-                    "Cd": "OTHR"
-                },
-                "RgltryRptg": [
-                    {
-                        "Dtls": [
-                            {
-                                "Tp": "DEBT",
-                                "Dt": "2025-01-30",
-                                "Ctry": "DE",
-                                "Cd": "150",
-                                "Amt": {
-                                    "@Ccy": "EUR",
-                                    "$value": {"fake": ["f64", 7.99, 15.99]}
-                                },
-                                "Inf": ["CBPR+ MUSIC SUBSCRIPTION"]
-                            }
-                        ]
-                    }
-                ],
-                "RmtInf": {
-                    "Ustrd": "Music streaming - Family plan"
-                }
-            },
-            {
-                "PmtId": {
-                    "EndToEndId": {"cat": ["E2ESUBS", {"fake": ["i64", 100000000000, 999999999999]}]},
-                    "TxId": {"cat": ["TXSUBS", {"fake": ["uuid"]}]},
-                    "UETR": {"fake": ["uuid"]}
-                },
-                "PmtTpInf": {
-                    "InstrPrty": "NORM",
-                    "SvcLvl": [
-                        {
-                            "Cd": "G001"
-                        }
-                    ],
-                    "LclInstrm": {
-                        "Cd": "B2B"
-                    },
-                    "SeqTp": "RCUR",
-                    "CtgyPurp": {
-                        "Cd": "OTHR"
-                    }
-                },
-                "IntrBkSttlmAmt": {
-                    "@Ccy": "EUR",
-                    "$value": {"fake": ["f64", 299.00, 499.00]}
-                },
-                "IntrBkSttlmDt": {"var": "settlement_date"},
-                "InstdAmt": {
-                    "@Ccy": "EUR",
-                    "$value": {"fake": ["f64", 299.00, 499.00]}
-                },
-                "ChrgBr": "DEBT",
-                "DrctDbtTx": {
-                    "MndtRltdInf": {
-                        "MndtId": {"cat": ["MNDTSUB", {"fake": ["i64", 1000000, 9999999]}]},
-                        "DtOfSgntr": "2023-06-01",
-                        "AmdmntInd": true,
-                        "AmdmntInfDtls": {
-                            "OrgnlMndtId": {"cat": ["ORIGMNDT", {"fake": ["i64", 1000000, 9999999]}]}
-                        },
-                        "ElctrncSgntr": {"cat": ["ESIG-", {"fake": ["uuid"]}]}
-                    },
-                    "CdtrSchmeId": {
-                        "Id": {
-                            "PrvtId": {
-                                "Othr": [
-                                    {
-                                        "Id": {"cat": ["DE", {"fake": ["i64", 10000000, 99999999]}, "ZZZ"]},
-                                        "SchmeNm": {
-                                            "Prtry": "SEPA"
-                                        }
-                                    }
-                                ]
-                            }
-                        }
-                    }
-                },
-                "DbtrAgt": {
-                    "FinInstnId": {
-                        "BICFI": {"fake": ["bic"]},
-                        "LEI": {"fake": ["lei"]}
-                    }
-                },
-                "Dbtr": {
-                    "Nm": {"fake": ["company_name"]},
-                    "PstlAdr": {
-                        "Ctry": {"fake": ["country_code"]}
-                    },
-                    "Id": {
-                        "OrgId": {
-                            "LEI": {"fake": ["lei"]}
-                        }
-                    }
-                },
-                "DbtrAcct": {
-                    "Id": {
-                        "IBAN": {"fake": ["iban"]}
-                    },
-                    "Tp": {
-                        "Cd": "CACC"
-                    }
-                },
-                "CdtrAgt": {
-                    "FinInstnId": {
-                        "BICFI": {"fake": ["bic"]},
-                        "LEI": {"fake": ["lei"]}
-                    }
-                },
-                "Cdtr": {
-                    "Nm": "DataAnalytics Pro Services",
-                    "PstlAdr": {
-                        "Ctry": "DE"
-                    },
-                    "Id": {
-                        "OrgId": {
-                            "LEI": {"fake": ["lei"]}
-                        }
-                    }
-                },
-                "CdtrAcct": {
-                    "Id": {
-                        "IBAN": {"fake": ["iban", "DE"]}
-                    }
-                },
-                "Purp": {
-                    "Cd": "OTHR"
-                },
-                "RgltryRptg": [
-                    {
-                        "Dtls": [
-                            {
-                                "Tp": "DEBT",
-                                "Dt": "2025-01-30",
-                                "Ctry": "DE",
-                                "Cd": "150",
-                                "Amt": {
-                                    "@Ccy": "EUR",
-                                    "$value": {"fake": ["f64", 299.00, 499.00]}
-                                },
-                                "Inf": ["CBPR+ ANALYTICS SUBSCRIPTION"]
-                            }
-                        ]
-                    }
-                ],
-                "RmtInf": {
-                    "Strd": [
-                        {
-                            "RfrdDocInf": [
-                                {
-                                    "Tp": {
-                                        "CdOrPrtry": {
-                                            "Prtry": "SERVICE_CONTRACT"
-                                        }
-                                    },
-                                    "Nb": {"cat": ["SVC-", {"fake": ["i64", 100001, 999999]}]},
-                                    "RltdDt": "2023-06-01"
-                                }
-                            ],
-                            "AddtlRmtInf": [
-                                "Data analytics platform - Enterprise",
-                                "Unlimited data processing"
-                            ]
-                        }
-                    ]
-                }
-            }
-        ],
-        "SplmtryData": [
-            {
-                "Envlp": {
-                    "CBPRPlusData": {
-                        "MessageVersion": "1.0",
-                        "ComplianceLevel": "FULL",
-                        "ProcessingPriority": "NORMAL",
-                        "DirectDebitType": "MIXED",
-                        "BatchProcessing": true,
-                        "SubscriptionCollection": {
-                            "CollectionType": "RECURRING",
-                            "SubscriptionCount": 6,
-                            "MixedB2BandCORE": true
-                        }
+                    "BICFI": {
+                        "var": "debtor_bic"
                     }
                 }
             }
-        ]
+        }
     }
 }

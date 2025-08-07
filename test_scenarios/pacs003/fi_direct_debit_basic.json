@@ -1,125 +1,251 @@
 {
     "variables": {
-        "msg_id": {"cat": ["MSGDD", {"fake": ["uuid"]}]},
-        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "msg_id": {
+            "cat": [
+                "MSG",
+                {
+                    "fake": [
+                        "i64",
+                        100000000000,
+                        999999999999
+                    ]
+                }
+            ]
+        },
+        "creation_datetime": {
+            "fake": [
+                "iso8601_datetime"
+            ]
+        },
         "settlement_date": "2025-01-20",
-        "instd_amt": {"fake": ["f64", 1000.0, 10000.0]},
-        "intrbank_amt": {"fake": ["f64", 1000.0, 10000.0]},
-        "end_to_end_id": {"cat": ["E2E", {"fake": ["i64", 100000000000, 999999999999]}]},
-        "tx_id": {"cat": ["TX", {"fake": ["uuid"]}]},
-        "mandate_id": {"cat": ["MNDT", {"fake": ["i64", 1000000, 9999999]}]},
-        "debtor_bic": {"fake": ["bic"]},
-        "debtor_iban": {"fake": ["iban", "DE"]},
-        "creditor_bic": {"fake": ["bic"]},
-        "creditor_iban": {"fake": ["iban", "FR"]}
+        "instd_amt": {
+            "fake": [
+                "f64",
+                1000.0,
+                10000.0
+            ]
+        },
+        "intrbank_amt": {
+            "fake": [
+                "f64",
+                1000.0,
+                10000.0
+            ]
+        },
+        "end_to_end_id": {
+            "cat": [
+                "E2E",
+                {
+                    "fake": [
+                        "i64",
+                        100000000000,
+                        999999999999
+                    ]
+                }
+            ]
+        },
+        "tx_id": {
+            "cat": [
+                "TX",
+                {
+                    "fake": [
+                        "i64",
+                        100000000000,
+                        999999999999
+                    ]
+                }
+            ]
+        },
+        "mandate_id": {
+            "cat": [
+                "MNDT",
+                {
+                    "fake": [
+                        "i64",
+                        1000000,
+                        9999999
+                    ]
+                }
+            ]
+        },
+        "debtor_bic": {
+            "fake": [
+                "bic"
+            ]
+        },
+        "debtor_iban": {
+            "fake": [
+                "iban",
+                "DE"
+            ]
+        },
+        "creditor_bic": {
+            "fake": [
+                "bic"
+            ]
+        },
+        "creditor_iban": {
+            "fake": [
+                "iban",
+                "FR"
+            ]
+        },
+        "instruction_id": {
+            "cat": [
+                "INSTR",
+                {
+                    "fake": [
+                        "i64",
+                        10000000,
+                        99999999
+                    ]
+                }
+            ]
+        },
+        "uetr": {
+            "fake": [
+                "uuid"
+            ]
+        },
+        "collection_date": "2025-01-20"
     },
     "schema": {
         "GrpHdr": {
-            "MsgId": {"var": "msg_id"},
-            "CreDtTm": {"var": "creation_datetime"},
-            "NbOfTxs": "1",
-            "TtlIntrBkSttlmAmt": {
-                "@Ccy": "EUR",
-                "$value": {"var": "intrbank_amt"}
+            "MsgId": {
+                "var": "msg_id"
             },
-            "IntrBkSttlmDt": {"var": "settlement_date"},
+            "CreDtTm": {
+                "var": "creation_datetime"
+            },
+            "NbOfTxs": "1",
             "SttlmInf": {
-                "SttlmMtd": "CLRG"
+                "SttlmMtd": "INDA"
+            }
+        },
+        "DrctDbtTxInf": {
+            "PmtId": {
+                "InstrId": {
+                    "var": "instruction_id"
+                },
+                "EndToEndId": {
+                    "var": "end_to_end_id"
+                },
+                "TxId": {
+                    "var": "tx_id"
+                },
+                "UETR": {
+                    "var": "uetr"
+                }
+            },
+            "PmtTpInf": {
+                "SvcLvl": [
+                    {
+                        "Cd": "SEPA"
+                    }
+                ],
+                "LclInstrm": {
+                    "Cd": "CORE"
+                },
+                "SeqTp": "FRST"
+            },
+            "IntrBkSttlmAmt": {
+                "@Ccy": "EUR",
+                "$value": {
+                    "var": "intrbank_amt"
+                }
+            },
+            "IntrBkSttlmDt": {
+                "var": "settlement_date"
+            },
+            "InstdAmt": {
+                "@Ccy": "EUR",
+                "$value": {
+                    "var": "instd_amt"
+                }
+            },
+            "ChrgBr": "SHAR",
+            "DrctDbtTx": {
+                "MndtRltdInf": {
+                    "MndtId": {
+                        "var": "mandate_id"
+                    },
+                    "DtOfSgntr": "2024-01-15"
+                },
+                "CdtrSchmeId": {
+                    "Id": {
+                        "PrvtId": {
+                            "Othr": [
+                                {
+                                    "Id": "FR13ZZZ123456",
+                                    "SchmeNm": {
+                                        "Prtry": "SEPA"
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "DbtrAgt": {
+                "FinInstnId": {
+                    "BICFI": {
+                        "var": "debtor_bic"
+                    }
+                }
+            },
+            "Dbtr": {
+                "Nm": "Sample Company",
+                "PstlAdr": {
+                    "Ctry": "DE"
+                }
+            },
+            "DbtrAcct": {
+                "Id": {
+                    "IBAN": {
+                        "var": "debtor_iban"
+                    }
+                }
+            },
+            "CdtrAgt": {
+                "FinInstnId": {
+                    "BICFI": {
+                        "var": "creditor_bic"
+                    }
+                }
+            },
+            "Cdtr": {
+                "Nm": "Sample Company",
+                "PstlAdr": {
+                    "Ctry": "FR"
+                }
+            },
+            "CdtrAcct": {
+                "Id": {
+                    "IBAN": {
+                        "var": "creditor_iban"
+                    }
+                }
+            },
+            "RmtInf": {
+                "Ustrd": "Monthly subscription payment"
+            },
+            "ReqdColltnDt": {
+                "var": "collection_date"
             },
             "InstgAgt": {
                 "FinInstnId": {
-                    "BICFI": {"var": "creditor_bic"}
+                    "BICFI": {
+                        "var": "creditor_bic"
+                    }
                 }
             },
             "InstdAgt": {
                 "FinInstnId": {
-                    "BICFI": {"var": "debtor_bic"}
+                    "BICFI": {
+                        "var": "debtor_bic"
+                    }
                 }
             }
-        },
-        "DrctDbtTxInf": [
-            {
-                "PmtId": {
-                    "EndToEndId": {"var": "end_to_end_id"},
-                    "TxId": {"var": "tx_id"}
-                },
-                "PmtTpInf": {
-                    "SvcLvl": [
-                        {
-                            "Cd": "SEPA"
-                        }
-                    ],
-                    "LclInstrm": {
-                        "Cd": "CORE"
-                    },
-                    "SeqTp": "FRST"
-                },
-                "IntrBkSttlmAmt": {
-                    "@Ccy": "EUR",
-                    "$value": {"var": "intrbank_amt"}
-                },
-                "IntrBkSttlmDt": {"var": "settlement_date"},
-                "InstdAmt": {
-                    "@Ccy": "EUR",
-                    "$value": {"var": "instd_amt"}
-                },
-                "ChrgBr": "SLEV",
-                "DrctDbtTx": {
-                    "MndtRltdInf": {
-                        "MndtId": {"var": "mandate_id"},
-                        "DtOfSgntr": "2024-01-15"
-                    },
-                    "CdtrSchmeId": {
-                        "Id": {
-                            "PrvtId": {
-                                "Othr": [
-                                    {
-                                        "Id": "FR13ZZZ123456",
-                                        "SchmeNm": {
-                                            "Prtry": "SEPA"
-                                        }
-                                    }
-                                ]
-                            }
-                        }
-                    }
-                },
-                "DbtrAgt": {
-                    "FinInstnId": {
-                        "BICFI": {"var": "debtor_bic"}
-                    }
-                },
-                "Dbtr": {
-                    "Nm": {"fake": ["company_name"]},
-                    "PstlAdr": {
-                        "Ctry": "DE"
-                    }
-                },
-                "DbtrAcct": {
-                    "Id": {
-                        "IBAN": {"var": "debtor_iban"}
-                    }
-                },
-                "CdtrAgt": {
-                    "FinInstnId": {
-                        "BICFI": {"var": "creditor_bic"}
-                    }
-                },
-                "Cdtr": {
-                    "Nm": {"fake": ["company_name"]},
-                    "PstlAdr": {
-                        "Ctry": "FR"
-                    }
-                },
-                "CdtrAcct": {
-                    "Id": {
-                        "IBAN": {"var": "creditor_iban"}
-                    }
-                },
-                "RmtInf": {
-                    "Ustrd": "Monthly subscription payment"
-                }
-            }
-        ]
+        }
     }
 }

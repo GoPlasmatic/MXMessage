@@ -1,23 +1,117 @@
 {
     "variables": {
-        "msg_id": {"cat": ["MSG", {"fake": ["i64", 100000000000, 999999999999]}]},
-        "creation_datetime": {"fake": ["iso8601_datetime"]},
-        "sender_bic": {"fake": ["bic"]},
-        "receiver_bic": {"fake": ["bic"]},
-        "transaction_ref": {"cat": ["TXN", {"fake": ["i64", 100000000000, 999999999999]}]},
-        "instruction_id": {"cat": ["INSTR", {"fake": ["i64", 10000000, 99999999]}]},
-        "end_to_end_id": {"cat": ["E2E", {"fake": ["i64", 100000000000, 999999999999]}]},
-        "uetr": {"fake": ["uuid"]},
-        "amount": {"fake": ["f64", 10000.0, 1000000.0]},
-        "original_msg_id": {"cat": ["ORIG-MSG", {"fake": ["i64", 100000000000, 999999999999]}]},
-        "rejection_reason": {"fake": ["regex", "(AC01|AC04|AG01|AM04|BE01|MD01|RC01)"]},
-        "sender_lei": {"fake": ["lei"]},
-        "receiver_lei": {"fake": ["lei"]}
+        "msg_id": {
+            "cat": [
+                "MSG",
+                {
+                    "fake": [
+                        "i64",
+                        100000000000,
+                        999999999999
+                    ]
+                }
+            ]
+        },
+        "creation_datetime": {
+            "fake": [
+                "iso8601_datetime"
+            ]
+        },
+        "sender_bic": {
+            "fake": [
+                "bic"
+            ]
+        },
+        "receiver_bic": {
+            "fake": [
+                "bic"
+            ]
+        },
+        "transaction_ref": {
+            "cat": [
+                "TXN",
+                {
+                    "fake": [
+                        "i64",
+                        100000000000,
+                        999999999999
+                    ]
+                }
+            ]
+        },
+        "instruction_id": {
+            "cat": [
+                "INSTR",
+                {
+                    "fake": [
+                        "i64",
+                        10000000,
+                        99999999
+                    ]
+                }
+            ]
+        },
+        "end_to_end_id": {
+            "cat": [
+                "E2E",
+                {
+                    "fake": [
+                        "i64",
+                        100000000000,
+                        999999999999
+                    ]
+                }
+            ]
+        },
+        "uetr": {
+            "fake": [
+                "uuid"
+            ]
+        },
+        "amount": {
+            "fake": [
+                "f64",
+                10000.0,
+                1000000.0
+            ]
+        },
+        "original_msg_id": {
+            "cat": [
+                "ORIG-MSG",
+                {
+                    "fake": [
+                        "i64",
+                        100000000000,
+                        999999999999
+                    ]
+                }
+            ]
+        },
+        "rejection_reason": {
+            "fake": [
+                "regex",
+                "(AC01|AC04|AG01|AM04|BE01|MD01|RC01)"
+            ]
+        },
+        "sender_lei": {
+            "fake": [
+                "lei"
+            ]
+        },
+        "receiver_lei": {
+            "fake": [
+                "lei"
+            ]
+        }
     },
     "schema": {
         "GrpHdr": {
-            "MsgId": {"var": "msg_id"},
-            "CreDtTm": {"var": "creation_datetime"},
+            "MsgId": {
+                "var": "msg_id"
+            },
+            "CreDtTm": {
+                "var": "creation_datetime"
+            },
             "NbOfTxs": "1",
             "SttlmInf": {
                 "SttlmMtd": "INDA"
@@ -25,15 +119,25 @@
         },
         "CdtTrfTxInf": {
             "PmtId": {
-                "InstrId": {"var": "instruction_id"},
-                "EndToEndId": {"var": "end_to_end_id"},
-                "TxId": {"var": "transaction_ref"},
-                "UETR": {"var": "uetr"}
+                "InstrId": {
+                    "var": "instruction_id"
+                },
+                "EndToEndId": {
+                    "var": "end_to_end_id"
+                },
+                "TxId": {
+                    "var": "transaction_ref"
+                },
+                "UETR": {
+                    "var": "uetr"
+                }
             },
             "PmtTpInf": {
                 "InstrPrty": "HIGH",
                 "SvcLvl": [
-                    {"Cd": "G001"}
+                    {
+                        "Cd": "G001"
+                    }
                 ],
                 "LclInstrm": {
                     "Prtry": "REJECTION"
@@ -41,33 +145,69 @@
             },
             "IntrBkSttlmAmt": {
                 "@Ccy": "USD",
-                "$value": {"var": "amount"}
+                "$value": {
+                    "var": "amount"
+                }
             },
-            "IntrBkSttlmDt": {"fake": ["date", "%Y-%m-%d", "+0d", "+0d"]},
+            "IntrBkSttlmDt": {
+                "fake": [
+                    "date",
+                    "%Y-%m-%d",
+                    "+0d",
+                    "+0d"
+                ]
+            },
             "SttlmPrty": "HIGH",
             "InstgAgt": {
                 "FinInstnId": {
-                    "BICFI": {"var": "receiver_bic"},
-                    "LEI": {"var": "receiver_lei"}
+                    "BICFI": {
+                        "var": "receiver_bic"
+                    },
+                    "LEI": {
+                        "var": "receiver_lei"
+                    }
                 }
             },
             "InstdAgt": {
                 "FinInstnId": {
-                    "BICFI": {"var": "sender_bic"},
-                    "LEI": {"var": "sender_lei"}
+                    "BICFI": {
+                        "var": "sender_bic"
+                    },
+                    "LEI": {
+                        "var": "sender_lei"
+                    }
                 }
             },
             "Dbtr": {
                 "FinInstnId": {
-                    "BICFI": {"var": "receiver_bic"},
-                    "LEI": {"var": "receiver_lei"},
-                    "Nm": {"fake": ["company_name"]}
+                    "BICFI": {
+                        "var": "receiver_bic"
+                    },
+                    "LEI": {
+                        "var": "receiver_lei"
+                    },
+                    "Nm": {
+                        "fake": [
+                            "company_name"
+                        ]
+                    }
                 }
             },
             "DbtrAcct": {
                 "Id": {
                     "Othr": {
-                        "Id": {"cat": ["VOSTRO-", {"fake": ["i64", 100000, 999999]}]},
+                        "Id": {
+                            "cat": [
+                                "VOSTRO-",
+                                {
+                                    "fake": [
+                                        "i64",
+                                        100000,
+                                        999999
+                                    ]
+                                }
+                            ]
+                        },
                         "SchmeNm": {
                             "Prtry": "VOSTRO_ACCOUNT"
                         }
@@ -77,27 +217,54 @@
             },
             "DbtrAgt": {
                 "FinInstnId": {
-                    "BICFI": {"var": "receiver_bic"},
-                    "LEI": {"var": "receiver_lei"}
+                    "BICFI": {
+                        "var": "receiver_bic"
+                    },
+                    "LEI": {
+                        "var": "receiver_lei"
+                    }
                 }
             },
             "CdtrAgt": {
                 "FinInstnId": {
-                    "BICFI": {"var": "sender_bic"},
-                    "LEI": {"var": "sender_lei"}
+                    "BICFI": {
+                        "var": "sender_bic"
+                    },
+                    "LEI": {
+                        "var": "sender_lei"
+                    }
                 }
             },
             "Cdtr": {
                 "FinInstnId": {
-                    "BICFI": {"var": "sender_bic"},
-                    "LEI": {"var": "sender_lei"},
-                    "Nm": {"fake": ["company_name"]}
+                    "BICFI": {
+                        "var": "sender_bic"
+                    },
+                    "LEI": {
+                        "var": "sender_lei"
+                    },
+                    "Nm": {
+                        "fake": [
+                            "company_name"
+                        ]
+                    }
                 }
             },
             "CdtrAcct": {
                 "Id": {
                     "Othr": {
-                        "Id": {"cat": ["NOSTRO-", {"fake": ["i64", 100000, 999999]}]},
+                        "Id": {
+                            "cat": [
+                                "NOSTRO-",
+                                {
+                                    "fake": [
+                                        "i64",
+                                        100000,
+                                        999999
+                                    ]
+                                }
+                            ]
+                        },
                         "SchmeNm": {
                             "Prtry": "NOSTRO_ACCOUNT"
                         }
@@ -107,8 +274,15 @@
             },
             "InstrForCdtrAgt": [
                 {
-                    "Cd": "REPA",
-                    "InstrInf": {"cat": ["REJECTION - REASON CODE: ", {"var": "rejection_reason"}]}
+                    "Cd": "PHOB",
+                    "InstrInf": {
+                        "cat": [
+                            "REJECTION - REASON CODE: ",
+                            {
+                                "var": "rejection_reason"
+                            }
+                        ]
+                    }
                 }
             ],
             "Purp": {
@@ -119,14 +293,38 @@
                     "Dtls": [
                         {
                             "Tp": "BOTH",
-                            "Dt": {"fake": ["date", "%Y-%m-%d", "+0d", "+0d"]},
-                            "Ctry": {"fake": ["regex", "(US|GB|EU)"]},
+                            "Dt": {
+                                "fake": [
+                                    "date",
+                                    "%Y-%m-%d",
+                                    "+0d",
+                                    "+0d"
+                                ]
+                            },
+                            "Ctry": {
+                                "fake": [
+                                    "regex",
+                                    "(US|GB|EU)"
+                                ]
+                            },
                             "Cd": "REJ",
                             "Amt": {
                                 "@Ccy": "USD",
-                                "$value": {"var": "amount"}
+                                "$value": {
+                                    "var": "amount"
+                                }
                             },
-                            "Inf": ["CBPR+ COVER REJECTION", {"cat": ["REASON: ", {"var": "rejection_reason"}]}]
+                            "Inf": [
+                                "CBPR+ COVER REJECTION",
+                                {
+                                    "cat": [
+                                        "REASON: ",
+                                        {
+                                            "var": "rejection_reason"
+                                        }
+                                    ]
+                                }
+                            ]
                         }
                     ]
                 }
@@ -141,14 +339,42 @@
                                         "Prtry": "ORIGINAL_PAYMENT"
                                     }
                                 },
-                                "Nb": {"var": "original_msg_id"},
-                                "RltdDt": {"fake": ["date", "%Y-%m-%d", "-3d", "-1d"]}
+                                "Nb": {
+                                    "var": "original_msg_id"
+                                },
+                                "RltdDt": {
+                                    "fake": [
+                                        "date",
+                                        "%Y-%m-%d",
+                                        "-3d",
+                                        "-1d"
+                                    ]
+                                }
                             }
                         ],
                         "AddtlRmtInf": [
-                            {"cat": ["Rejection of original message: ", {"var": "original_msg_id"}]},
-                            {"cat": ["Rejection reason code: ", {"var": "rejection_reason"}]},
-                            {"fake": ["regex", "(Incorrect account number|Insufficient funds|Invalid BIC|Compliance hold|Beneficiary deceased|Account closed|Regulatory restriction)"]}
+                            {
+                                "cat": [
+                                    "Rejection of original message: ",
+                                    {
+                                        "var": "original_msg_id"
+                                    }
+                                ]
+                            },
+                            {
+                                "cat": [
+                                    "Rejection reason code: ",
+                                    {
+                                        "var": "rejection_reason"
+                                    }
+                                ]
+                            },
+                            {
+                                "fake": [
+                                    "regex",
+                                    "(Incorrect account number|Insufficient funds|Invalid BIC|Compliance hold|Beneficiary deceased|Account closed|Regulatory restriction)"
+                                ]
+                            }
                         ]
                     }
                 ]
@@ -161,7 +387,9 @@
                             "Xprtn": "2099-12-31",
                             "Prtry": {
                                 "Tp": "REJECTION_REASON",
-                                "Id": {"var": "rejection_reason"}
+                                "Id": {
+                                    "var": "rejection_reason"
+                                }
                             }
                         }
                     }
