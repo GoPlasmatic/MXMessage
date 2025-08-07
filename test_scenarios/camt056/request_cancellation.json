@@ -1,132 +1,201 @@
 {
     "variables": {
-        "msg_id": {"cat": ["MSG", {"fake": ["i64", 100000000000, 999999999999]}]},
-        "creation_datetime": {"fake": ["iso8601_datetime"]},
-        "original_msg_id": {"cat": ["ORIG-", {"fake": ["i64", 100000000000, 999999999999]}]},
-        "transaction_id": {"cat": ["TXN", {"fake": ["i64", 100000000000, 999999999999]}]},
-        "instruction_id": {"cat": ["INSTR", {"fake": ["i64", 10000000, 99999999]}]},
-        "end_to_end_id": {"cat": ["E2E", {"fake": ["i64", 100000000000, 999999999999]}]},
-        "amount": {"fake": ["f64", 5000.0, 100000.0]},
-        "cancellation_id": {"cat": ["CANC-", {"fake": ["i64", 100000000000, 999999999999]}]},
-        "sender_bic": {"fake": ["bic"]},
-        "receiver_bic": {"fake": ["bic"]},
-        "original_date": {"fake": ["date", "%Y-%m-%d", "-5d", "-2d"]},
-        "debtor_name": {"fake": ["full_name"]},
-        "creditor_name": {"fake": ["full_name"]}
+        "msg_id": "MSG123456789",
+        "creation_datetime": "2025-01-15T10:00:00.123+00:00",
+        "original_msg_id": "ORIG-123456789",
+        "uetr": "a1234567-b123-4123-8123-123456789012",
+        "transaction_id": "TXN123456789",
+        "instruction_id": "INSTR12345678",
+        "end_to_end_id": "E2E123456789",
+        "amount": 10000.0,
+        "cancellation_id": "CANC-123456789",
+        "sender_bic": "BANKUS33XXX",
+        "receiver_bic": "BANKGB22XXX",
+        "sender_lei": "54930084UKLVMY22DS16",
+        "receiver_lei": "213800QILIUD4ROSUO03",
+        "original_date": "2025-01-14"
     },
     "schema": {
         "Assgnmt": {
-            "Id": {"var": "msg_id"},
+            "Id": {
+                "var": "msg_id"
+            },
             "Assgnr": {
                 "Agt": {
                     "FinInstnId": {
-                        "BICFI": {"var": "sender_bic"}
+                        "BICFI": {
+                            "var": "sender_bic"
+                        }
                     }
                 }
             },
             "Assgne": {
                 "Agt": {
                     "FinInstnId": {
-                        "BICFI": {"var": "receiver_bic"}
+                        "BICFI": {
+                            "var": "receiver_bic"
+                        }
                     }
                 }
             },
-            "CreDtTm": {"var": "creation_datetime"}
+            "CreDtTm": {
+                "var": "creation_datetime"
+            }
         },
-        "CtrlData": {
-            "NbOfTxs": "1",
-            "CtrlSum": {"var": "amount"}
-        },
-        "Undrlyg": [
-            {
-                "TxInf": {
-                    "CxlId": {"var": "cancellation_id"},
-                    "OrgnlGrpInf": {
-                        "OrgnlMsgId": {"var": "original_msg_id"},
-                        "OrgnlMsgNmId": "pacs.008.001.08",
-                        "OrgnlCreDtTm": {"fake": ["iso8601_datetime", "-5d", "-2d"]}
+        "Undrlyg": {
+            "TxInf": {
+                "CxlId": {
+                    "var": "cancellation_id"
+                },
+                "OrgnlGrpInf": {
+                    "OrgnlMsgId": {
+                        "var": "original_msg_id"
                     },
-                    "OrgnlInstrId": {"var": "instruction_id"},
-                    "OrgnlEndToEndId": {"var": "end_to_end_id"},
-                    "OrgnlTxId": {"var": "transaction_id"},
-                    "OrgnlIntrBkSttlmAmt": {
-                        "@Ccy": "USD",
-                        "$value": {"var": "amount"}
-                    },
-                    "OrgnlIntrBkSttlmDt": {"var": "original_date"},
-                    "CxlRsnInf": [
-                        {
-                            "Orgtr": {
-                                "Nm": "Customer Service Department",
-                                "Id": {
-                                    "OrgId": {
-                                        "AnyBIC": {"var": "sender_bic"}
-                                    }
+                    "OrgnlMsgNmId": "pacs.008.001.08",
+                    "OrgnlCreDtTm": {
+                        "fake": [
+                            "iso8601_datetime",
+                            "-5d",
+                            "-2d"
+                        ]
+                    }
+                },
+                "OrgnlInstrId": {
+                    "var": "instruction_id"
+                },
+                "OrgnlEndToEndId": {
+                    "var": "end_to_end_id"
+                },
+                "OrgnlTxId": {
+                    "var": "transaction_id"
+                },
+                "OrgnlIntrBkSttlmAmt": {
+                    "@Ccy": "USD",
+                    "$value": {
+                        "var": "amount"
+                    }
+                },
+                "OrgnlIntrBkSttlmDt": {
+                    "var": "original_date"
+                },
+                "CxlRsnInf": {
+                    "Orgtr": {
+                        "Nm": "Customer Service Department",
+                        "Id": {
+                            "OrgId": {
+                                "AnyBIC": {
+                                    "var": "sender_bic"
                                 }
-                            },
-                            "Rsn": {
-                                "Cd": "CUST"
-                            },
-                            "AddtlInf": [
-                                "Standard cancellation request",
-                                "Customer instruction to cancel payment",
-                                "Payment not yet settled"
-                            ]
+                            }
                         }
-                    ],
-                    "OrgnlTxRef": {
-                        "IntrBkSttlmAmt": {
-                            "@Ccy": "USD",
-                            "$value": {"var": "amount"}
-                        },
-                        "IntrBkSttlmDt": {"var": "original_date"},
-                        "SttlmInf": {
-                            "SttlmMtd": "INDA"
-                        },
-                        "PmtTpInf": {
-                            "InstrPrty": "NORM",
-                            "SvcLvl": [
-                                {"Cd": "SEPA"}
-                            ]
-                        },
-                        "RmtInf": {
-                            "Ustrd": ["Standard payment transfer"]
-                        },
-                        "Dbtr": {
-                            "Nm": {"var": "debtor_name"},
-                            "PstlAdr": {
-                                "Ctry": {"fake": ["country_code"]}
+                    },
+                    "Rsn": {
+                        "Cd": "CUST"
+                    },
+                    "AddtlInf": [
+                        "Standard cancellation request",
+                        "Customer instruction to cancel payment",
+                        "Payment not yet settled"
+                    ]
+                },
+                "OrgnlTxRef": {
+                    "IntrBkSttlmAmt": {
+                        "@Ccy": "USD",
+                        "$value": {
+                            "var": "amount"
+                        }
+                    },
+                    "IntrBkSttlmDt": {
+                        "var": "original_date"
+                    },
+                    "SttlmInf": {
+                        "SttlmMtd": "INDA"
+                    },
+                    "PmtTpInf": {
+                        "InstrPrty": "NORM",
+                        "SvcLvl": [
+                            {
+                                "Cd": "SEPA"
                             }
+                        ]
+                    },
+                    "RmtInf": {
+                        "Ustrd": [
+                            "Standard payment transfer"
+                        ]
+                    },
+                    "Dbtr": {
+                        "Nm": {
+                            "var": "debtor_name"
                         },
-                        "DbtrAcct": {
-                            "Id": {
-                                "IBAN": {"fake": ["iban"]}
+                        "PstlAdr": {
+                            "Ctry": {
+                                "fake": [
+                                    "country_code"
+                                ]
                             }
-                        },
-                        "DbtrAgt": {
-                            "FinInstnId": {
-                                "BICFI": {"var": "sender_bic"}
+                        }
+                    },
+                    "DbtrAcct": {
+                        "Id": {
+                            "IBAN": {
+                                "fake": [
+                                    "iban"
+                                ]
                             }
-                        },
-                        "CdtrAgt": {
-                            "FinInstnId": {
-                                "BICFI": {"var": "receiver_bic"}
+                        }
+                    },
+                    "DbtrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {
+                                "var": "sender_bic"
                             }
-                        },
-                        "Cdtr": {
-                            "Nm": {"var": "creditor_name"},
-                            "PstlAdr": {
-                                "Ctry": {"fake": ["country_code"]}
+                        }
+                    },
+                    "CdtrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {
+                                "var": "receiver_bic"
                             }
+                        }
+                    },
+                    "Cdtr": {
+                        "Nm": {
+                            "var": "creditor_name"
                         },
-                        "CdtrAcct": {
-                            "Id": {
-                                "IBAN": {"fake": ["iban"]}
+                        "PstlAdr": {
+                            "Ctry": {
+                                "fake": [
+                                    "country_code"
+                                ]
+                            }
+                        }
+                    },
+                    "CdtrAcct": {
+                        "Id": {
+                            "IBAN": {
+                                "fake": [
+                                    "iban"
+                                ]
                             }
                         }
                     }
+                },
+                "Case": {
+                    "Id": {
+                        "var": "cancellation_id"
+                    },
+                    "Cretr": {
+                        "Pty": {
+                            "Nm": "Case Creator"
+                        }
+                    },
+                    "Nm": "Cancellation Case"
+                },
+                "OrgnlUETR": {
+                    "var": "uetr"
                 }
             }
-        ]
+        }
     }
 }

@@ -1,70 +1,59 @@
 {
     "variables": {
-        "msg_id": {"cat": ["MULTI-REQ-", {"fake": ["i64", 100000000000, 999999999999]}]},
-        "creation_datetime": {"fake": ["iso8601_datetime"]},
-        "sender_bic": {"fake": ["bic"]},
-        "receiver_bic": {"fake": ["bic"]},
-        "account1_iban": {"fake": ["iban"]},
-        "account2_iban": {"fake": ["iban"]},
-        "account3_iban": {"fake": ["iban"]},
-        "account_owner": {"fake": ["company_name"]},
-        "from_date": {"fake": ["date", "%Y-%m-%d", "-30d", "-30d"]},
-        "to_date": {"fake": ["date", "%Y-%m-%d", "0d", "0d"]},
-        "customer_id": {"cat": ["CUST-", {"fake": ["i64", 100000, 999999]}]}
+        "msg_id": "MSG123456789",
+        "creation_datetime": "2025-01-15T10:00:00.123+00:00",
+        "sender_bic": "BANKUS33XXX",
+        "receiver_bic": "BANKGB22XXX",
+        "account_iban": "GB29NWBK60161331926819",
+        "account_currency": "USD",
+        "account_name": "John Smith",
+        "statement_date": "2025-01-14",
+        "request_reference": "REF-123456",
+        "from_date": "2025-01-01",
+        "to_date": "2025-01-14",
+        "customer_id": "CUST-123456",
+        "account1_iban": "GB29NWBK60161331926819",
+        "account2_iban": "DE89370400440532013000",
+        "account3_iban": "FR1420041010050500013M02606",
+        "account_owner": "ABC Corporation"
     },
     "schema": {
         "GrpHdr": {
-            "MsgId": {"var": "msg_id"},
-            "CreDtTm": {"var": "creation_datetime"},
+            "MsgId": "MSG123456789",
+            "CreDtTm": "2025-01-15T10:00:00.123+00:00",
             "MsgSndr": {
                 "Agt": {
                     "FinInstnId": {
-                        "BICFI": {"var": "sender_bic"}
+                        "BICFI": "BANKUS33XXX"
                     }
                 }
             },
             "MsgRcpt": {
                 "Agt": {
                     "FinInstnId": {
-                        "BICFI": {"var": "receiver_bic"}
+                        "BICFI": "BANKGB22XXX"
                     }
                 }
             }
         },
-        "AcctRptgReq": {
-            "RptgReq": {
-                "Id": {"cat": ["MULTI-", {"fake": ["i64", 100000, 999999]}]},
+        "RptgReq": [
+            {
+                "Id": "REF-123456",
                 "ReqdMsgNmId": "camt.053.001.08",
-                "Acct": [
-                    {
-                        "Id": {
-                            "IBAN": {"var": "account1_iban"}
-                        },
-                        "Ccy": "USD",
-                        "Nm": {"cat": [{"var": "account_owner"}, " - USD Operating"]}
+                "Acct": {
+                    "Id": {
+                        "IBAN": "GB29NWBK60161331926819"
                     },
-                    {
-                        "Id": {
-                            "IBAN": {"var": "account2_iban"}
-                        },
-                        "Ccy": "EUR",
-                        "Nm": {"cat": [{"var": "account_owner"}, " - EUR Trading"]}
-                    },
-                    {
-                        "Id": {
-                            "IBAN": {"var": "account3_iban"}
-                        },
-                        "Ccy": "GBP",
-                        "Nm": {"cat": [{"var": "account_owner"}, " - GBP Reserve"]}
-                    }
-                ],
+                    "Ccy": "USD",
+                    "Nm": "John Smith"
+                },
                 "AcctOwnr": {
-                    "Nm": {"var": "account_owner"},
+                    "Nm": "John Smith",
                     "Id": {
                         "OrgId": {
                             "Othr": [
                                 {
-                                    "Id": {"var": "customer_id"},
+                                    "Id": "CUST-123456",
                                     "SchmeNm": {
                                         "Prtry": "CUST_ID"
                                     }
@@ -75,42 +64,10 @@
                 },
                 "RptgPrd": {
                     "FrToDt": {
-                        "FrDt": {"var": "from_date"},
-                        "ToDt": {"var": "to_date"}
+                        "FrDt": "2025-01-01",
+                        "ToDt": "2025-01-14"
                     },
                     "Tp": "ALLL"
-                }
-            }
-        },
-        "SplmtryData": [
-            {
-                "Envlp": {
-                    "MultiAccountDetails": {
-                        "RequestType": "CONSOLIDATED_STATEMENT",
-                        "ConsolidationOptions": {
-                            "GroupByCurrency": true,
-                            "NetPositions": true,
-                            "IncludeSubAccounts": true
-                        },
-                        "ReportingPreferences": {
-                            "SingleStatementPerAccount": false,
-                            "ConsolidatedSummary": true,
-                            "IncludeClosedAccounts": false
-                        },
-                        "AccountRelationships": {
-                            "MasterAccount": {"var": "account1_iban"},
-                            "LinkedAccounts": [
-                                {"var": "account2_iban"},
-                                {"var": "account3_iban"}
-                            ],
-                            "ConsolidationType": "CORPORATE_GROUP"
-                        },
-                        "DeliveryInstructions": {
-                            "Format": "PDF",
-                            "Language": "EN",
-                            "Encryption": true
-                        }
-                    }
                 }
             }
         ]

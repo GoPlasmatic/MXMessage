@@ -1,326 +1,55 @@
 {
     "variables": {
-        "msg_id": {"cat": ["BATCH-", {"fake": ["i64", 100000000000, 999999999999]}]},
-        "creation_datetime": {"fake": ["iso8601_datetime"]},
-        "stmt_id": {"cat": ["HVB-", {"fake": ["i64", 100000000000, 999999999999]}]},
-        "legal_seq_number": {"fake": ["i64", 20000, 29999]},
-        "from_date": {"fake": ["date", "%Y-%m-%d", "-1d", "-1d"]},
-        "to_date": {"fake": ["date", "%Y-%m-%d", "-1d", "-1d"]},
-        "account_id": {"fake": ["iban"]},
-        "account_owner": {"fake": ["company_name"]},
-        "account_owner_lei": {"fake": ["lei"]},
-        "servicer_bic": {"fake": ["bic"]},
-        "opening_balance": {"fake": ["f64", 2000000.0, 10000000.0]},
-        "closing_balance": {"fake": ["f64", 1800000.0, 10200000.0]},
-        "total_batch_count": {"fake": ["i64", 50, 200]},
-        "total_transaction_count": {"fake": ["i64", 5000, 20000]}
+        "msg_id": "HVMSG123456789",
+        "creation_datetime": "2025-01-15T10:00:00.123+00:00",
+        "stmt_id": "HVSTMT123456789",
+        "account_id": "GB29NWBK60161331926819"
     },
     "schema": {
         "GrpHdr": {
-            "MsgId": {"var": "msg_id"},
-            "CreDtTm": {"var": "creation_datetime"},
-            "MsgRcpt": {
-                "Pty": {
-                    "Nm": {"var": "account_owner"},
-                    "Id": {
-                        "OrgId": {
-                            "LEI": {"var": "account_owner_lei"}
-                        }
-                    }
-                }
+            "MsgId": {
+                "var": "msg_id"
             },
-            "MsgPgntn": {
-                "PgNb": "1",
-                "LastPgInd": false
+            "CreDtTm": {
+                "var": "creation_datetime"
             }
         },
-        "Stmt": [
-            {
-                "Id": {"var": "stmt_id"},
-                "LglSeqNb": {"var": "legal_seq_number"},
-                "CreDtTm": {"var": "creation_datetime"},
-                "FrToDt": {
-                    "FrDtTm": {"cat": [{"var": "from_date"}, "T00:00:00Z"]},
-                    "ToDtTm": {"cat": [{"var": "to_date"}, "T23:59:59Z"]}
+        "Stmt": {
+            "Id": {
+                "var": "stmt_id"
+            },
+            "StmtPgntn": {
+                "PgNb": "1",
+                "LastPgInd": false
+            },
+            "CreDtTm": {
+                "var": "creation_datetime"
+            },
+            "Acct": {
+                "Id": {
+                    "IBAN": {
+                        "var": "account_id"
+                    }
                 },
-                "RptgSrc": {
-                    "Prtry": "BATCH_PROCESSING"
-                },
-                "Acct": {
-                    "Id": {
-                        "IBAN": {"var": "account_id"}
-                    },
+                "Ccy": "USD"
+            },
+            "Bal": [
+                {
                     "Tp": {
-                        "Cd": "CACC"
-                    },
-                    "Ccy": "USD",
-                    "Nm": "High Volume Batch Processing Account",
-                    "Ownr": {
-                        "Nm": {"var": "account_owner"},
-                        "Id": {
-                            "OrgId": {
-                                "LEI": {"var": "account_owner_lei"}
-                            }
+                        "CdOrPrtry": {
+                            "Cd": "CLBD"
                         }
                     },
-                    "Svcr": {
-                        "FinInstnId": {
-                            "BICFI": {"var": "servicer_bic"}
-                        }
-                    }
-                },
-                "Bal": [
-                    {
-                        "Tp": {
-                            "CdOrPrtry": {
-                                "Cd": "OPBD"
-                            }
-                        },
-                        "Amt": {
-                            "@Ccy": "USD",
-                            "$value": {"var": "opening_balance"}
-                        },
-                        "CdtDbtInd": "CRDT",
-                        "Dt": {
-                            "Dt": {"var": "from_date"}
-                        }
+                    "Amt": {
+                        "@Ccy": "USD",
+                        "$value": 750000.0
                     },
-                    {
-                        "Tp": {
-                            "CdOrPrtry": {
-                                "Cd": "CLBD"
-                            }
-                        },
-                        "Amt": {
-                            "@Ccy": "USD",
-                            "$value": {"var": "closing_balance"}
-                        },
-                        "CdtDbtInd": "CRDT",
-                        "Dt": {
-                            "Dt": {"var": "to_date"}
-                        }
-                    }
-                ],
-                "TxsSummry": {
-                    "TtlNtries": {
-                        "NbOfNtries": {"var": "total_batch_count"},
-                        "Sum": {"fake": ["f64", 10000000.0, 100000000.0]},
-                        "TtlNetNtry": {
-                            "Amt": {"fake": ["f64", -200000.0, 200000.0]},
-                            "CdtDbtInd": "DBIT"
-                        }
-                    },
-                    "TtlCdtNtries": {
-                        "NbOfNtries": {"fake": ["i64", 20, 100]},
-                        "Sum": {"fake": ["f64", 4000000.0, 50000000.0]}
-                    },
-                    "TtlDbtNtries": {
-                        "NbOfNtries": {"fake": ["i64", 30, 100]},
-                        "Sum": {"fake": ["f64", 6000000.0, 50000000.0]}
-                    }
-                },
-                "Ntry": [
-                    {
-                        "NtryRef": {"cat": ["ACH-BATCH-", {"fake": ["i64", 1000000, 9999999]}]},
-                        "Amt": {
-                            "@Ccy": "USD",
-                            "$value": {"fake": ["f64", 500000.0, 5000000.0]}
-                        },
-                        "CdtDbtInd": "DBIT",
-                        "Sts": {
-                            "Cd": "BOOK"
-                        },
-                        "BookgDt": {
-                            "Dt": {"var": "to_date"}
-                        },
-                        "ValDt": {
-                            "Dt": {"var": "to_date"}
-                        },
-                        "BkTxCd": {
-                            "Domn": {
-                                "Cd": "PMNT",
-                                "Fmly": {
-                                    "Cd": "ICDT",
-                                    "SubFmlyCd": "ADBT"
-                                }
-                            },
-                            "Prtry": {
-                                "Cd": "ACH_BATCH_DEBIT",
-                                "Issr": "NACHA"
-                            }
-                        },
-                        "NtryDtls": [
-                            {
-                                "Btch": {
-                                    "MsgId": {"cat": ["ACH-MSG-", {"fake": ["i64", 100000, 999999]}]},
-                                    "PmtInfId": {"cat": ["ACH-PMT-", {"fake": ["i64", 100000, 999999]}]},
-                                    "NbOfTxs": {"fake": ["i64", 100, 500]},
-                                    "TtlAmt": {
-                                        "@Ccy": "USD",
-                                        "$value": {"fake": ["f64", 500000.0, 5000000.0]}
-                                    },
-                                    "CdtDbtInd": "DBIT"
-                                }
-                            }
-                        ],
-                        "AddtlNtryInf": {"cat": ["ACH batch - ", {"fake": ["i64", 100, 500]}, " transactions aggregated"]}
-                    },
-                    {
-                        "NtryRef": {"cat": ["SEPA-BATCH-", {"fake": ["i64", 1000000, 9999999]}]},
-                        "Amt": {
-                            "@Ccy": "USD",
-                            "$value": {"fake": ["f64", 300000.0, 3000000.0]}
-                        },
-                        "CdtDbtInd": "CRDT",
-                        "Sts": {
-                            "Cd": "BOOK"
-                        },
-                        "BookgDt": {
-                            "Dt": {"var": "to_date"}
-                        },
-                        "ValDt": {
-                            "Dt": {"var": "to_date"}
-                        },
-                        "BkTxCd": {
-                            "Domn": {
-                                "Cd": "PMNT",
-                                "Fmly": {
-                                    "Cd": "RCDT",
-                                    "SubFmlyCd": "ESCT"
-                                }
-                            },
-                            "Prtry": {
-                                "Cd": "SEPA_BATCH_CREDIT",
-                                "Issr": "EPC"
-                            }
-                        },
-                        "NtryDtls": [
-                            {
-                                "Btch": {
-                                    "MsgId": {"cat": ["SEPA-MSG-", {"fake": ["i64", 100000, 999999]}]},
-                                    "PmtInfId": {"cat": ["SEPA-PMT-", {"fake": ["i64", 100000, 999999]}]},
-                                    "NbOfTxs": {"fake": ["i64", 50, 300]},
-                                    "TtlAmt": {
-                                        "@Ccy": "USD",
-                                        "$value": {"fake": ["f64", 300000.0, 3000000.0]}
-                                    },
-                                    "CdtDbtInd": "CRDT"
-                                }
-                            }
-                        ],
-                        "AddtlNtryInf": {"cat": ["SEPA batch credit - ", {"fake": ["i64", 50, 300]}, " transactions"]}
-                    },
-                    {
-                        "NtryRef": {"cat": ["PAYROLL-", {"fake": ["i64", 1000000, 9999999]}]},
-                        "Amt": {
-                            "@Ccy": "USD",
-                            "$value": {"fake": ["f64", 1000000.0, 5000000.0]}
-                        },
-                        "CdtDbtInd": "DBIT",
-                        "Sts": {
-                            "Cd": "BOOK"
-                        },
-                        "BookgDt": {
-                            "Dt": {"var": "to_date"}
-                        },
-                        "ValDt": {
-                            "Dt": {"var": "to_date"}
-                        },
-                        "BkTxCd": {
-                            "Domn": {
-                                "Cd": "PMNT",
-                                "Fmly": {
-                                    "Cd": "ICDT",
-                                    "SubFmlyCd": "SALA"
-                                }
-                            },
-                            "Prtry": {
-                                "Cd": "PAYROLL_BATCH",
-                                "Issr": "INTERNAL"
-                            }
-                        },
-                        "NtryDtls": [
-                            {
-                                "Btch": {
-                                    "MsgId": {"cat": ["PAYROLL-MSG-", {"fake": ["i64", 100000, 999999]}]},
-                                    "PmtInfId": {"cat": ["PAYROLL-PMT-", {"fake": ["i64", 100000, 999999]}]},
-                                    "NbOfTxs": {"fake": ["i64", 200, 1000]},
-                                    "TtlAmt": {
-                                        "@Ccy": "USD",
-                                        "$value": {"fake": ["f64", 1000000.0, 5000000.0]}
-                                    },
-                                    "CdtDbtInd": "DBIT"
-                                }
-                            }
-                        ],
-                        "AddtlNtryInf": {"cat": ["Monthly payroll batch - ", {"fake": ["i64", 200, 1000]}, " employees"]}
-                    },
-                    {
-                        "NtryRef": {"cat": ["SUPPLIER-", {"fake": ["i64", 1000000, 9999999]}]},
-                        "Amt": {
-                            "@Ccy": "USD",
-                            "$value": {"fake": ["f64", 200000.0, 2000000.0]}
-                        },
-                        "CdtDbtInd": "DBIT",
-                        "Sts": {
-                            "Cd": "BOOK"
-                        },
-                        "BookgDt": {
-                            "Dt": {"var": "to_date"}
-                        },
-                        "ValDt": {
-                            "Dt": {"var": "to_date"}
-                        },
-                        "BkTxCd": {
-                            "Domn": {
-                                "Cd": "PMNT",
-                                "Fmly": {
-                                    "Cd": "ICDT",
-                                    "SubFmlyCd": "SUPP"
-                                }
-                            }
-                        },
-                        "NtryDtls": [
-                            {
-                                "Btch": {
-                                    "MsgId": {"cat": ["SUPPLIER-MSG-", {"fake": ["i64", 100000, 999999]}]},
-                                    "PmtInfId": {"cat": ["SUPPLIER-PMT-", {"fake": ["i64", 100000, 999999]}]},
-                                    "NbOfTxs": {"fake": ["i64", 50, 200]},
-                                    "TtlAmt": {
-                                        "@Ccy": "USD",
-                                        "$value": {"fake": ["f64", 200000.0, 2000000.0]}
-                                    },
-                                    "CdtDbtInd": "DBIT"
-                                }
-                            }
-                        ],
-                        "AddtlNtryInf": {"cat": ["Supplier payment batch - ", {"fake": ["i64", 50, 200]}, " vendors"]}
-                    }
-                ],
-                "AddtlStmtInf": {"cat": ["High volume batch statement - Total batches: ", {"var": "total_batch_count"}, ", Total transactions: ", {"var": "total_transaction_count"}]}
-            }
-        ],
-        "SplmtryData": [
-            {
-                "Envlp": {
-                    "BatchProcessingSummary": {
-                        "TotalBatches": {"var": "total_batch_count"},
-                        "TotalTransactions": {"var": "total_transaction_count"},
-                        "ProcessingStatistics": {
-                            "SuccessfulBatches": {"fake": ["i64", 48, 198]},
-                            "FailedBatches": {"fake": ["i64", 1, 5]},
-                            "AverageTransactionsPerBatch": {"fake": ["i64", 100, 200]},
-                            "ProcessingTimeHours": {"fake": ["f64", 2.5, 6.5]}
-                        },
-                        "BatchTypes": {
-                            "ACH": {"fake": ["i64", 20, 80]},
-                            "SEPA": {"fake": ["i64", 10, 50]},
-                            "Payroll": {"fake": ["i64", 5, 20]},
-                            "Supplier": {"fake": ["i64", 15, 50]}
-                        }
+                    "CdtDbtInd": "CRDT",
+                    "Dt": {
+                        "Dt": "2025-01-15"
                     }
                 }
-            }
-        ]
+            ]
+        }
     }
 }

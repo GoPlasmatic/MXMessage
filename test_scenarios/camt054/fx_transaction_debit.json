@@ -1,134 +1,61 @@
 {
     "variables": {
-        "msg_id": {"cat": ["FX-", {"fake": ["i64", 100000000000, 999999999999]}]},
-        "creation_datetime": {"fake": ["iso8601_datetime"]},
-        "ntfctn_id": {"cat": ["FX-NTFCTN-", {"fake": ["i64", 100000000000, 999999999999]}]},
-        "creation_time": {"fake": ["iso8601_datetime"]},
-        "account_id": {"fake": ["iban"]},
-        "account_owner": {"fake": ["company_name"]},
-        "servicer_bic": {"fake": ["bic"]},
-        "entry_ref": {"cat": ["FX-ENT-", {"fake": ["i64", 1000000, 9999999]}]},
-        "debit_amount_usd": {"fake": ["f64", 10000.0, 100000.0]},
-        "credit_amount_eur": {"fake": ["f64", 9000.0, 90000.0]},
-        "exchange_rate": {"fake": ["f64", 0.88, 0.92]},
-        "booking_date": {"fake": ["date", "%Y-%m-%d", "-1d", "-1d"]},
-        "value_date": {"fake": ["date", "%Y-%m-%d", "-1d", "-1d"]},
-        "transaction_ref": {"cat": ["FX-TXN-", {"fake": ["i64", 10000000, 99999999]}]},
-        "fx_deal_ref": {"cat": ["FX-DEAL-", {"fake": ["i64", 100000, 999999]}]}
+        "msg_id": "FXMSG123456789",
+        "creation_datetime": "2025-01-15T10:00:00.123+00:00",
+        "ntfctn_id": "FXNTFCTN123456789",
+        "account_id": "GB29NWBK60161331926819"
     },
     "schema": {
         "GrpHdr": {
-            "MsgId": {"var": "msg_id"},
-            "CreDtTm": {"var": "creation_datetime"}
+            "MsgId": {
+                "var": "msg_id"
+            },
+            "CreDtTm": {
+                "var": "creation_datetime"
+            }
         },
         "Ntfctn": [
             {
-                "Id": {"var": "ntfctn_id"},
-                "CreDtTm": {"var": "creation_time"},
+                "Id": {
+                    "var": "ntfctn_id"
+                },
+                "CreDtTm": {
+                    "var": "creation_datetime"
+                },
                 "Acct": {
                     "Id": {
-                        "IBAN": {"var": "account_id"}
-                    },
-                    "Ccy": "USD",
-                    "Ownr": {
-                        "Nm": {"var": "account_owner"}
-                    },
-                    "Svcr": {
-                        "FinInstnId": {
-                            "BICFI": {"var": "servicer_bic"}
+                        "IBAN": {
+                            "var": "account_id"
                         }
-                    }
+                    },
+                    "Ccy": "USD"
                 },
                 "Ntry": [
                     {
-                        "NtryRef": {"var": "entry_ref"},
+                        "NtryRef": "FXENT123456",
                         "Amt": {
                             "@Ccy": "USD",
-                            "$value": {"var": "debit_amount_usd"}
+                            "$value": 10000.0
                         },
                         "CdtDbtInd": "DBIT",
                         "Sts": {
                             "Cd": "BOOK"
                         },
                         "BookgDt": {
-                            "Dt": {"var": "booking_date"}
+                            "Dt": "2025-01-15"
                         },
                         "ValDt": {
-                            "Dt": {"var": "value_date"}
+                            "Dt": "2025-01-15"
                         },
                         "BkTxCd": {
                             "Domn": {
                                 "Cd": "FORX",
                                 "Fmly": {
                                     "Cd": "SPOT",
-                                    "SubFmlyCd": "XCHG"
+                                    "SubFmlyCd": "FXBY"
                                 }
                             }
-                        },
-                        "NtryDtls": [
-                            {
-                                "TxDtls": [
-                                    {
-                                        "Refs": {
-                                            "AcctSvcrRef": {"var": "transaction_ref"},
-                                            "Prtry": [
-                                                {
-                                                    "Tp": "FX_DEAL_REF",
-                                                    "Ref": {"var": "fx_deal_ref"}
-                                                }
-                                            ]
-                                        },
-                                        "Amt": {
-                                            "@Ccy": "USD",
-                                            "$value": {"var": "debit_amount_usd"}
-                                        },
-                                        "CdtDbtInd": "DBIT",
-                                        "AmtDtls": {
-                                            "InstdAmt": {
-                                                "Amt": {
-                                                    "@Ccy": "USD",
-                                                    "$value": {"var": "debit_amount_usd"}
-                                                }
-                                            },
-                                            "TxAmt": {
-                                                "Amt": {
-                                                    "@Ccy": "USD",
-                                                    "$value": {"var": "debit_amount_usd"}
-                                                }
-                                            },
-                                            "CntrValAmt": {
-                                                "Amt": {
-                                                    "@Ccy": "EUR",
-                                                    "$value": {"var": "credit_amount_eur"}
-                                                },
-                                                "CcyXchg": {
-                                                    "SrcCcy": "USD",
-                                                    "TrgtCcy": "EUR",
-                                                    "XchgRate": {"var": "exchange_rate"}
-                                                }
-                                            }
-                                        },
-                                        "RltdDts": {
-                                            "TradActvtyCtrctlSttlmDt": {"var": "value_date"},
-                                            "TradDt": {"var": "booking_date"}
-                                        },
-                                        "RltdPties": {
-                                            "Cdtr": {
-                                                "Nm": {"var": "account_owner"}
-                                            },
-                                            "CdtrAcct": {
-                                                "Id": {
-                                                    "IBAN": {"fake": ["iban"]}
-                                                },
-                                                "Ccy": "EUR"
-                                            }
-                                        },
-                                        "AddtlTxInf": {"cat": ["FX spot transaction USD to EUR at rate ", {"var": "exchange_rate"}]}
-                                    }
-                                ]
-                            }
-                        ],
-                        "AddtlNtryInf": "Foreign exchange spot transaction"
+                        }
                     }
                 ]
             }

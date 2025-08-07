@@ -1,158 +1,128 @@
 {
     "variables": {
-        "msg_id": {"cat": ["INQ-RSP-", {"fake": ["i64", 100000000000, 999999999999]}]},
-        "creation_datetime": {"fake": ["iso8601_datetime"]},
-        "original_msg_id": {"cat": ["INQ-REQ-", {"fake": ["i64", 100000000000, 999999999999]}]},
-        "investigation_id": {"cat": ["INV-", {"fake": ["i64", 1000000000, 9999999999]}]},
-        "original_payment_id": {"cat": ["PMT-", {"fake": ["i64", 100000000000, 999999999999]}]},
-        "original_uetr": {"fake": ["uuid_v4"]},
-        "payment_amount": {"fake": ["f64", 5000.0, 250000.0]},
-        "original_date": {"fake": ["date", "%Y-%m-%d", "-10d", "-5d"]},
-        "responder_bic": {"fake": ["bic"]},
-        "originator_bic": {"fake": ["bic"]},
-        "current_agent_bic": {"fake": ["bic"]},
-        "booking_date": {"fake": ["date", "%Y-%m-%d", "-7d", "-3d"]}
+        "msg_id": "ANSWERINQUIRYRESPONSE123456789",
+        "creation_datetime": "2025-01-15T10:00:00.123+00:00",
+        "responder_bic": "DEUTDEFFXXX",
+        "originator_bic": "BNPAFRPPXXX",
+        "original_payment_id": "PMT123456789",
+        "investigation_id": "INV987654321",
+        "original_uetr": "550e8400-e29b-41d4-a716-446655440000",
+        "cancellation_amount": 10000.0,
+        "original_date": "2025-01-10",
+        "currency": "USD"
     },
     "schema": {
         "Assgnmt": {
-            "Id": {"var": "msg_id"},
+            "Id": {
+                "var": "msg_id"
+            },
             "Assgnr": {
                 "Agt": {
                     "FinInstnId": {
-                        "BICFI": {"var": "responder_bic"}
+                        "BICFI": {
+                            "var": "responder_bic"
+                        }
                     }
                 }
             },
             "Assgne": {
                 "Agt": {
                     "FinInstnId": {
-                        "BICFI": {"var": "originator_bic"}
+                        "BICFI": {
+                            "var": "originator_bic"
+                        }
                     }
                 }
             },
-            "CreDtTm": {"var": "creation_datetime"}
+            "CreDtTm": {
+                "var": "creation_datetime"
+            }
         },
-        "RsltnOfInvstgtn": {
-            "Sts": {
-                "Conf": "PDCR"
-            },
-            "CxlDtls": [
-                {
-                    "TxInfAndSts": [
-                        {
-                            "CxlStsId": {"var": "investigation_id"},
-                            "OrgnlGrpInf": {
-                                "OrgnlMsgId": {"var": "original_payment_id"},
-                                "OrgnlMsgNmId": "pacs.008"
-                            },
-                            "OrgnlInstrId": {"var": "original_payment_id"},
-                            "OrgnlEndToEndId": {"cat": ["E2E-", {"var": "original_payment_id"}]},
-                            "OrgnlUETR": {"var": "original_uetr"},
-                            "TxCxlSts": "PDCR",
-                            "CxlStsRsnInf": [
-                                {
-                                    "Orgtr": {
-                                        "Id": {
-                                            "OrgId": {
-                                                "AnyBIC": {"var": "responder_bic"}
-                                            }
-                                        }
-                                    },
-                                    "Rsn": {
-                                        "Prtry": "PAYMENT_CREDITED"
-                                    },
-                                    "AddtlInf": [
-                                        "Payment has been credited to beneficiary account",
-                                        {"cat": ["Booking date: ", {"var": "booking_date"}]},
-                                        {"cat": ["Current status: Funds available at ", {"var": "current_agent_bic"}]}
-                                    ]
-                                }
-                            ],
-                            "OrgnlTxRef": {
-                                "IntrBkSttlmAmt": {
-                                    "@Ccy": "USD",
-                                    "$value": {"var": "payment_amount"}
-                                },
-                                "IntrBkSttlmDt": {"var": "original_date"},
-                                "SttlmInf": {
-                                    "SttlmMtd": "INDA",
-                                    "ClrSys": {
-                                        "Cd": "TGT"
-                                    }
-                                },
-                                "Dbtr": {
-                                    "Nm": {"fake": ["company_name"]},
-                                    "PstlAdr": {
-                                        "Ctry": "US"
-                                    }
-                                },
-                                "DbtrAcct": {
-                                    "Id": {
-                                        "IBAN": {"fake": ["iban"]}
-                                    }
-                                },
-                                "DbtrAgt": {
-                                    "FinInstnId": {
-                                        "BICFI": {"var": "originator_bic"}
-                                    }
-                                },
-                                "CdtrAgt": {
-                                    "FinInstnId": {
-                                        "BICFI": {"var": "current_agent_bic"}
-                                    }
-                                },
-                                "Cdtr": {
-                                    "Nm": {"fake": ["company_name"]},
-                                    "PstlAdr": {
-                                        "Ctry": "US"
-                                    }
-                                },
-                                "CdtrAcct": {
-                                    "Id": {
-                                        "IBAN": {"fake": ["iban"]}
-                                    }
+        "Sts": {
+            "Conf": "PDCR"
+        },
+        "CxlDtls": {
+            "TxInfAndSts": {
+                "CxlStsId": {
+                    "var": "investigation_id"
+                },
+                "RslvdCase": {
+                    "Id": {
+                        "var": "investigation_id"
+                    },
+                    "Cretr": {
+                        "Agt": {
+                            "FinInstnId": {
+                                "BICFI": {
+                                    "var": "originator_bic"
                                 }
                             }
                         }
-                    ]
-                }
-            ],
-            "ModDtls": {
-                "InvstgtnSts": {
-                    "Sts": "FULF",
-                    "DtTm": {"var": "creation_datetime"},
-                    "Rsn": {
-                        "Cd": "ACCP",
-                        "Prtry": "TRANSACTION_FOUND"
                     }
-                }
-            }
-        },
-        "SplmtryData": [
-            {
-                "Envlp": {
-                    "PaymentTrackingInfo": {
-                        "GPI_EndToEndTracking": {"var": "original_uetr"},
-                        "PaymentEvents": [
-                            {
-                                "EventType": "RECEIVED",
-                                "EventTime": {"cat": [{"var": "original_date"}, "T10:30:00Z"]},
-                                "EventAgent": {"var": "originator_bic"}
-                            },
-                            {
-                                "EventType": "FORWARDED",
-                                "EventTime": {"cat": [{"var": "original_date"}, "T14:00:00Z"]},
-                                "EventAgent": {"var": "responder_bic"}
-                            },
-                            {
-                                "EventType": "CREDITED",
-                                "EventTime": {"cat": [{"var": "booking_date"}, "T09:00:00Z"]},
-                                "EventAgent": {"var": "current_agent_bic"}
+                },
+                "OrgnlGrpInf": {
+                    "OrgnlMsgId": {
+                        "var": "original_payment_id"
+                    },
+                    "OrgnlMsgNmId": "pacs.008.001.08"
+                },
+                "OrgnlInstrId": {
+                    "var": "original_payment_id"
+                },
+                "OrgnlEndToEndId": "E2E123456789",
+                "OrgnlUETR": {
+                    "var": "original_uetr"
+                },
+                "TxCxlSts": "ACCR",
+                "OrgnlTxRef": {
+                    "IntrBkSttlmAmt": {
+                        "@Ccy": {
+                            "var": "currency"
+                        },
+                        "$value": {
+                            "var": "cancellation_amount"
+                        }
+                    },
+                    "IntrBkSttlmDt": {
+                        "var": "original_date"
+                    },
+                    "Dbtr": {
+                        "Nm": "Debtor Company"
+                    },
+                    "DbtrAcct": {
+                        "Id": {
+                            "Othr": {
+                                "Id": "1234567890",
+                                "SchmeNm": {
+                                    "Cd": "BBAN"
+                                }
                             }
-                        ]
+                        }
+                    },
+                    "DbtrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {
+                                "var": "originator_bic"
+                            }
+                        }
+                    },
+                    "CdtrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {
+                                "var": "responder_bic"
+                            }
+                        }
+                    },
+                    "Cdtr": {
+                        "Nm": "Creditor Company"
+                    },
+                    "CdtrAcct": {
+                        "Id": {
+                            "IBAN": "GB29NWBK60161331926819"
+                        }
                     }
                 }
             }
-        ]
+        }
     }
 }

@@ -1,80 +1,61 @@
 {
     "variables": {
-        "msg_id": {"cat": ["STMT-REQ-", {"fake": ["i64", 100000000000, 999999999999]}]},
-        "creation_datetime": {"fake": ["iso8601_datetime"]},
-        "sender_bic": {"fake": ["bic"]},
-        "receiver_bic": {"fake": ["bic"]},
-        "account_iban": {"fake": ["iban"]},
-        "account_currency": {"fake": ["enum", "USD", "EUR", "GBP", "CHF", "JPY"]},
-        "account_name": {"fake": ["full_name"]},
-        "statement_date": {"fake": ["date", "%Y-%m-%d", "-1d", "-1d"]},
-        "request_reference": {"cat": ["REF-", {"fake": ["i64", 100000, 999999]}]}
+        "msg_id": "MSG123456789",
+        "creation_datetime": "2025-01-15T10:00:00.123+00:00",
+        "sender_bic": "BANKUS33XXX",
+        "receiver_bic": "BANKGB22XXX",
+        "account_iban": "GB29NWBK60161331926819",
+        "account_currency": "USD",
+        "account_name": "John Smith",
+        "statement_date": "2025-01-14",
+        "request_reference": "REF-123456",
+        "from_date": "2025-01-01",
+        "to_date": "2025-01-14",
+        "customer_id": "CUST-123456",
+        "account1_iban": "GB29NWBK60161331926819",
+        "account2_iban": "DE89370400440532013000",
+        "account3_iban": "FR1420041010050500013M02606",
+        "account_owner": "ABC Corporation"
     },
     "schema": {
         "GrpHdr": {
-            "MsgId": {"var": "msg_id"},
-            "CreDtTm": {"var": "creation_datetime"},
+            "MsgId": "MSG123456789",
+            "CreDtTm": "2025-01-15T10:00:00.123+00:00",
             "MsgSndr": {
                 "Agt": {
                     "FinInstnId": {
-                        "BICFI": {"var": "sender_bic"}
+                        "BICFI": "BANKUS33XXX"
                     }
                 }
             },
             "MsgRcpt": {
                 "Agt": {
                     "FinInstnId": {
-                        "BICFI": {"var": "receiver_bic"}
+                        "BICFI": "BANKGB22XXX"
                     }
                 }
             }
         },
-        "AcctRptgReq": {
-            "RptgReq": {
-                "Id": {"var": "request_reference"},
+        "RptgReq": [
+            {
+                "Id": "REF-123456",
                 "ReqdMsgNmId": "camt.053.001.08",
                 "Acct": {
                     "Id": {
-                        "IBAN": {"var": "account_iban"}
+                        "IBAN": "GB29NWBK60161331926819"
                     },
-                    "Ccy": {"var": "account_currency"},
-                    "Nm": {"var": "account_name"}
+                    "Ccy": "USD",
+                    "Nm": "John Smith"
                 },
                 "AcctOwnr": {
-                    "Nm": {"var": "account_name"}
+                    "Nm": "John Smith"
                 },
                 "RptgPrd": {
                     "FrToDt": {
-                        "FrDt": {"var": "statement_date"},
-                        "ToDt": {"var": "statement_date"}
+                        "FrDt": "2025-01-01",
+                        "ToDt": "2025-01-14"
                     },
-                    "Tp": "FIXD"
-                }
-            }
-        },
-        "SplmtryData": [
-            {
-                "Envlp": {
-                    "BasicStatementRequest": {
-                        "StatementType": "DAILY_STATEMENT",
-                        "RequestPurpose": "REGULATORY_REPORTING",
-                        "StatementOptions": {
-                            "IncludeOpeningBalance": true,
-                            "IncludeClosingBalance": true,
-                            "IncludeTransactionDetails": true,
-                            "IncludeValueDatedEntries": true
-                        },
-                        "FormatPreferences": {
-                            "DateFormat": "YYYY-MM-DD",
-                            "AmountFormat": "DECIMAL",
-                            "BalanceType": "BOOKED"
-                        },
-                        "DeliveryMethod": {
-                            "Channel": "SWIFT_MT940",
-                            "Urgency": "NORMAL",
-                            "RetryIfFailed": true
-                        }
-                    }
+                    "Tp": "ALLL"
                 }
             }
         ]

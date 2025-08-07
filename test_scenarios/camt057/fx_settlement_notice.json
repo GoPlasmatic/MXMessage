@@ -1,65 +1,61 @@
 {
     "variables": {
-        "msg_id": {"cat": ["FX-NOTIF-", {"fake": ["i64", 100000000000, 999999999999]}]},
-        "creation_datetime": {"fake": ["iso8601_datetime"]},
-        "value_date": {"fake": ["date", "%Y-%m-%d", "+2d", "+2d"]},
-        "sender_bic": {"fake": ["bic"]},
-        "receiver_bic": {"fake": ["bic"]},
-        "deal_reference": {"cat": ["FX-DEAL-", {"fake": ["i64", 100000, 999999]}]},
-        "buy_amount": {"fake": ["f64", 100000.00, 5000000.00]},
-        "buy_currency": {"fake": ["enum", "USD", "EUR", "GBP"]},
-        "sell_amount": {"fake": ["f64", 100000.00, 5000000.00]},
-        "sell_currency": {"fake": ["enum", "JPY", "CHF", "CAD"]},
-        "exchange_rate": {"fake": ["f64", 0.5000, 150.0000]},
-        "counterparty": {"fake": ["company_name"]},
-        "counterparty_bic": {"fake": ["bic"]},
-        "nostro_account": {"fake": ["iban"]}
+        "msg_id": "MSG123456789",
+        "creation_datetime": "2025-01-15T10:00:00.123+00:00",
+        "expected_datetime": "2025-01-15T14:00:00.123+00:00",
+        "sender_bic": "BANKUS33XXX",
+        "receiver_bic": "BANKGB22XXX",
+        "amount": 10000.0,
+        "currency": "USD",
+        "ordering_name": "John Smith",
+        "ordering_address": "123 Main Street",
+        "ordering_country": "US",
+        "beneficiary_account": "GB29NWBK60161331926819",
+        "beneficiary_name": "Jane Doe",
+        "payment_reference": "PMT-123456",
+        "remittance_info": "Payment for services",
+        "sender_reference": "SNDREF-123456",
+        "notification_id": "NOTIF-123456",
+        "reference": "REF-123456",
+        "ordering_customer": "ABC Corporation",
+        "purpose_code": "GDDS",
+        "batch_id": "BATCH-456789",
+        "number_of_transactions": 5,
+        "fx_rate": 1.2345,
+        "base_currency": "EUR",
+        "fx_reference": "FX-REF-789012",
+        "security_id": "US0378331005",
+        "quantity": 100,
+        "settlement_date": "2025-01-16",
+        "debtor_account": "US64SVBKUS6S1234567890",
+        "intermediary_bank": "CHASGB2LXXX"
     },
     "schema": {
-        "Assgnmt": {
-            "Id": {"var": "msg_id"},
-            "Assgnr": {
-                "Agt": {
-                    "FinInstnId": {
-                        "BICFI": {"var": "sender_bic"}
-                    }
-                }
-            },
-            "Assgne": {
-                "Agt": {
-                    "FinInstnId": {
-                        "BICFI": {"var": "receiver_bic"}
-                    }
-                }
-            },
-            "CreDtTm": {"var": "creation_datetime"}
-        },
         "Ntfctn": {
-            "Id": {"cat": ["FX-SETTLE-", {"fake": ["i64", 100000, 999999]}]},
-            "CreDtTm": {"var": "creation_datetime"},
+            "Id": "NOTIF-123456",
             "Acct": {
                 "Id": {
-                    "IBAN": {"var": "nostro_account"}
+                    "IBAN": "GB29NWBK60161331926819"
                 }
             },
             "Itm": [
                 {
-                    "Id": {"var": "deal_reference"},
-                    "XpctdValDt": {"var": "value_date"},
+                    "Id": "PMT-123456",
+                    "XpctdValDt": "2025-01-15T14:00:00.123+00:00",
                     "Amt": {
-                        "Amt": {
-                            "Value": {"var": "buy_amount"},
-                            "Ccy": {"var": "buy_currency"}
-                        }
+                        "@Ccy": "USD",
+                        "$value": 10000.0
                     },
                     "RmtInf": {
-                        "Ustrd": [{"cat": ["FX Settlement - Deal ", {"var": "deal_reference"}]}],
+                        "Ustrd": [
+                            "FX Settlement - Deal MISSING_deal_reference"
+                        ],
                         "Strd": [
                             {
                                 "AddtlRmtInf": [
-                                    {"cat": ["Buy ", {"var": "buy_currency"}, " ", {"var": "buy_amount"}]},
-                                    {"cat": ["Sell ", {"var": "sell_currency"}, " ", {"var": "sell_amount"}]},
-                                    {"cat": ["Rate: ", {"var": "exchange_rate"}]}
+                                    "Buy MISSING_buy_currency MISSING_buy_amount",
+                                    "Sell MISSING_sell_currency MISSING_sell_amount",
+                                    "Rate: MISSING_exchange_rate"
                                 ]
                             }
                         ]
@@ -67,34 +63,9 @@
                 }
             ]
         },
-        "SplmtryData": [
-            {
-                "Envlp": {
-                    "FXSettlementDetails": {
-                        "DealReference": {"var": "deal_reference"},
-                        "TradeDate": {"var": "creation_datetime"},
-                        "ValueDate": {"var": "value_date"},
-                        "BuySide": {
-                            "Amount": {"var": "buy_amount"},
-                            "Currency": {"var": "buy_currency"}
-                        },
-                        "SellSide": {
-                            "Amount": {"var": "sell_amount"},
-                            "Currency": {"var": "sell_currency"}
-                        },
-                        "ExchangeRate": {"var": "exchange_rate"},
-                        "Counterparty": {
-                            "Name": {"var": "counterparty"},
-                            "BIC": {"var": "counterparty_bic"}
-                        },
-                        "SettlementInstructions": {
-                            "Method": "GROSS",
-                            "NostroAccount": {"var": "nostro_account"},
-                            "ConfirmationRequired": true
-                        }
-                    }
-                }
-            }
-        ]
+        "GrpHdr": {
+            "MsgId": "MSG123456789",
+            "CreDtTm": "2025-01-15T10:00:00.123+00:00"
+        }
     }
 }

@@ -1,72 +1,63 @@
 {
     "variables": {
-        "msg_id": {"cat": ["PAY-NOTIF-", {"fake": ["i64", 100000000000, 999999999999]}]},
-        "creation_datetime": {"fake": ["iso8601_datetime"]},
-        "expected_datetime": {"fake": ["iso8601_datetime", "+1h", "+4h"]},
-        "sender_bic": {"fake": ["bic"]},
-        "receiver_bic": {"fake": ["bic"]},
-        "amount": {"fake": ["f64", 1000.00, 100000.00]},
-        "currency": {"fake": ["enum", "USD", "EUR", "GBP", "CHF", "CAD"]},
-        "ordering_name": {"fake": ["full_name"]},
-        "ordering_address": {"fake": ["street_address"]},
-        "ordering_country": {"fake": ["country_code"]},
-        "beneficiary_account": {"fake": ["iban"]},
-        "beneficiary_name": {"fake": ["full_name"]},
-        "payment_reference": {"cat": ["PMT-", {"fake": ["i64", 100000, 999999]}]},
-        "remittance_info": {"fake": ["sentence"]},
-        "sender_reference": {"cat": ["SNDREF-", {"fake": ["i64", 100000, 999999]}]}
+        "msg_id": "MSG123456789",
+        "creation_datetime": "2025-01-15T10:00:00.123+00:00",
+        "expected_datetime": "2025-01-15T14:00:00.123+00:00",
+        "sender_bic": "BANKUS33XXX",
+        "receiver_bic": "BANKGB22XXX",
+        "amount": 10000.0,
+        "currency": "USD",
+        "ordering_name": "John Smith",
+        "ordering_address": "123 Main Street",
+        "ordering_country": "US",
+        "beneficiary_account": "GB29NWBK60161331926819",
+        "beneficiary_name": "Jane Doe",
+        "payment_reference": "PMT-123456",
+        "remittance_info": "Payment for services",
+        "sender_reference": "SNDREF-123456",
+        "notification_id": "NOTIF-123456",
+        "reference": "REF-123456",
+        "ordering_customer": "ABC Corporation",
+        "purpose_code": "GDDS",
+        "batch_id": "BATCH-456789",
+        "number_of_transactions": 5,
+        "fx_rate": 1.2345,
+        "base_currency": "EUR",
+        "fx_reference": "FX-REF-789012",
+        "security_id": "US0378331005",
+        "quantity": 100,
+        "settlement_date": "2025-01-16",
+        "debtor_account": "US64SVBKUS6S1234567890",
+        "intermediary_bank": "CHASGB2LXXX"
     },
     "schema": {
-        "Assgnmt": {
-            "Id": {"var": "msg_id"},
-            "Assgnr": {
-                "Agt": {
-                    "FinInstnId": {
-                        "BICFI": {"var": "sender_bic"}
-                    }
-                }
-            },
-            "Assgne": {
-                "Agt": {
-                    "FinInstnId": {
-                        "BICFI": {"var": "receiver_bic"}
-                    }
-                }
-            },
-            "CreDtTm": {"var": "creation_datetime"}
-        },
         "Ntfctn": {
-            "Id": {"cat": ["NOTIF-", {"fake": ["i64", 100000, 999999]}]},
-            "CreDtTm": {"var": "creation_datetime"},
+            "Id": "NOTIF-123456",
             "Acct": {
                 "Id": {
-                    "IBAN": {"var": "beneficiary_account"}
+                    "IBAN": "GB29NWBK60161331926819"
                 },
-                "Nm": {"var": "beneficiary_name"}
+                "Nm": "Jane Doe"
             },
             "Itm": [
                 {
-                    "Id": {"var": "payment_reference"},
-                    "XpctdValDt": {"var": "expected_datetime"},
+                    "Id": "PMT-123456",
+                    "XpctdValDt": "2025-01-15T14:00:00.123+00:00",
                     "Amt": {
-                        "Amt": {
-                            "Value": {"var": "amount"},
-                            "Ccy": {"var": "currency"}
-                        }
-                    },
-                    "ChrgBr": "SHAR",
-                    "DbtrAcct": {
-                        "Nm": {"var": "ordering_name"}
+                        "@Ccy": "USD",
+                        "$value": 10000.0
                     },
                     "Dbtr": {
-                        "Nm": {"var": "ordering_name"},
+                        "Nm": "John Smith",
                         "PstlAdr": {
-                            "StrtNm": {"var": "ordering_address"},
-                            "Ctry": {"var": "ordering_country"}
+                            "StrtNm": "123 Main Street",
+                            "Ctry": "US"
                         }
                     },
                     "RmtInf": {
-                        "Ustrd": [{"var": "remittance_info"}],
+                        "Ustrd": [
+                            "Payment for services"
+                        ],
                         "Strd": [
                             {
                                 "RfrdDocInf": [
@@ -76,7 +67,7 @@
                                                 "Cd": "CINV"
                                             }
                                         },
-                                        "Nb": {"var": "sender_reference"}
+                                        "Nb": "SNDREF-123456"
                                     }
                                 ]
                             }
@@ -85,26 +76,9 @@
                 }
             ]
         },
-        "SplmtryData": [
-            {
-                "Envlp": {
-                    "PaymentNoticeDetails": {
-                        "NoticeType": "SINGLE_PAYMENT",
-                        "Priority": "NORMAL",
-                        "PaymentMethod": "TRF",
-                        "ExpectedClearingSystem": "TARGET2",
-                        "ComplianceInfo": {
-                            "ScreeningStatus": "PENDING",
-                            "RegulatoryReporting": "REQUIRED"
-                        },
-                        "RelatedCorrespondence": {
-                            "SenderReference": {"var": "sender_reference"},
-                            "MessageType": "MT103",
-                            "ExpectedArrival": {"var": "expected_datetime"}
-                        }
-                    }
-                }
-            }
-        ]
+        "GrpHdr": {
+            "MsgId": "MSG123456789",
+            "CreDtTm": "2025-01-15T10:00:00.123+00:00"
+        }
     }
 }

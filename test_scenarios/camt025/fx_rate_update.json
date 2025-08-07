@@ -1,117 +1,24 @@
 {
     "variables": {
-        "msg_id": {"cat": ["FX-UPDATE-", {"fake": ["i64", 100000000000, 999999999999]}]},
-        "creation_datetime": {"fake": ["iso8601_datetime"]},
-        "related_msg_id": {"cat": ["FX-NOTIF-", {"fake": ["i64", 100000000000, 999999999999]}]},
-        "related_ref": {"cat": ["FX-REF-", {"fake": ["i64", 100000, 999999]}]},
-        "sender_bic": {"fake": ["bic"]},
-        "receiver_bic": {"fake": ["bic"]},
-        "eur_usd_bid": {"fake": ["f64", 1.0500, 1.1500]},
-        "eur_usd_ask": {"fake": ["f64", 1.0510, 1.1510]},
-        "gbp_usd_bid": {"fake": ["f64", 1.2000, 1.3500]},
-        "gbp_usd_ask": {"fake": ["f64", 1.2010, 1.3510]},
-        "usd_jpy_bid": {"fake": ["f64", 140.00, 150.00]},
-        "usd_jpy_ask": {"fake": ["f64", 140.10, 150.10]},
-        "usd_chf_bid": {"fake": ["f64", 0.8500, 0.9500]},
-        "usd_chf_ask": {"fake": ["f64", 0.8510, 0.9510]},
-        "rate_timestamp": {"fake": ["iso8601_datetime"]},
-        "next_update": {"fake": ["iso8601_datetime", "+1h", "+1h"]}
+        "msg_id": "FXRATE123456789",
+        "creation_datetime": "2025-01-15T10:00:00.123+00:00",
+        "orig_msg_id": "ORIG789123",
+        "msg_name_id": "camt.025.001.08"
     },
     "schema": {
-        "Assgnmt": {
-            "Id": {"var": "msg_id"},
-            "Assgnr": {
-                "Agt": {
-                    "FinInstnId": {
-                        "BICFI": {"var": "sender_bic"}
-                    }
-                }
-            },
-            "Assgne": {
-                "Agt": {
-                    "FinInstnId": {
-                        "BICFI": {"var": "receiver_bic"}
-                    }
-                }
-            },
+        "MsgHdr": {
+            "MsgId": {"var": "msg_id"},
             "CreDtTm": {"var": "creation_datetime"}
         },
-        "Rct": {
-            "RltdMsgRcpt": {
-                "RcptId": {"var": "related_msg_id"},
-                "RcptDtTm": {"var": "creation_datetime"},
-                "RltdRef": {
-                    "Ref": {"var": "related_ref"}
-                }
-            }
-        },
-        "SplmtryData": [
+        "RctDtls": [
             {
-                "Envlp": {
-                    "FXRateUpdate": {
-                        "UpdateType": "SPOT_RATES",
-                        "Source": "INTERBANK_MARKET",
-                        "Timestamp": {"var": "rate_timestamp"},
-                        "NextUpdateExpected": {"var": "next_update"},
-                        "Rates": [
-                            {
-                                "CurrencyPair": "EUR/USD",
-                                "BidRate": {"var": "eur_usd_bid"},
-                                "AskRate": {"var": "eur_usd_ask"},
-                                "MidRate": {"fake": ["f64", 1.0505, 1.1505]},
-                                "Spread": 0.0010,
-                                "QuoteConvention": "DIRECT",
-                                "TenorCode": "SP",
-                                "MinimumAmount": 100000.0
-                            },
-                            {
-                                "CurrencyPair": "GBP/USD",
-                                "BidRate": {"var": "gbp_usd_bid"},
-                                "AskRate": {"var": "gbp_usd_ask"},
-                                "MidRate": {"fake": ["f64", 1.2005, 1.3505]},
-                                "Spread": 0.0010,
-                                "QuoteConvention": "DIRECT",
-                                "TenorCode": "SP",
-                                "MinimumAmount": 100000.0
-                            },
-                            {
-                                "CurrencyPair": "USD/JPY",
-                                "BidRate": {"var": "usd_jpy_bid"},
-                                "AskRate": {"var": "usd_jpy_ask"},
-                                "MidRate": {"fake": ["f64", 140.05, 150.05]},
-                                "Spread": 0.1000,
-                                "QuoteConvention": "DIRECT",
-                                "TenorCode": "SP",
-                                "MinimumAmount": 100000.0
-                            },
-                            {
-                                "CurrencyPair": "USD/CHF",
-                                "BidRate": {"var": "usd_chf_bid"},
-                                "AskRate": {"var": "usd_chf_ask"},
-                                "MidRate": {"fake": ["f64", 0.8505, 0.9505]},
-                                "Spread": 0.0010,
-                                "QuoteConvention": "DIRECT",
-                                "TenorCode": "SP",
-                                "MinimumAmount": 100000.0
-                            }
-                        ],
-                        "MarketConditions": {
-                            "Volatility": "NORMAL",
-                            "Liquidity": "HIGH",
-                            "TradingVolume": "AVERAGE"
-                        },
-                        "ForwardPoints": [
-                            {
-                                "CurrencyPair": "EUR/USD",
-                                "Tenor": "1M",
-                                "Points": {"fake": ["f64", -15.0, 15.0]}
-                            },
-                            {
-                                "CurrencyPair": "EUR/USD",
-                                "Tenor": "3M",
-                                "Points": {"fake": ["f64", -45.0, 45.0]}
-                            }
-                        ]
+                "OrgnlMsgId": {
+                    "MsgId": {"var": "orig_msg_id"},
+                    "MsgNmId": {"var": "msg_name_id"}
+                },
+                "ReqHdlg": {
+                    "Sts": {
+                        "Cd": "ACCP"
                     }
                 }
             }

@@ -1,292 +1,45 @@
 {
     "variables": {
-        "msg_id": {"cat": ["MSG", {"fake": ["i64", 100000000000, 999999999999]}]},
-        "creation_datetime": {"fake": ["iso8601_datetime"]},
-        "report_id": {"cat": ["INTRA-RPT-", {"fake": ["i64", 100000000000, 999999999999]}]},
-        "account_id": {"cat": ["NOSTRO-", {"fake": ["i64", 100000, 999999]}]},
-        "account_owner": {"fake": ["company_name"]},
-        "account_owner_bic": {"fake": ["bic"]},
-        "account_owner_lei": {"fake": ["lei"]},
-        "servicer_bic": {"fake": ["bic"]},
-        "opening_balance": {"fake": ["f64", 1000000.0, 10000000.0]},
-        "current_balance": {"fake": ["f64", 800000.0, 9800000.0]},
-        "peak_debit": {"fake": ["f64", -2000000.0, -500000.0]},
-        "peak_credit": {"fake": ["f64", 1500000.0, 12000000.0]},
-        "lowest_balance": {"fake": ["f64", 500000.0, 5000000.0]}
+        "msg_id": "INTRAMSG123456789",
+        "creation_datetime": "2025-01-15T10:00:00.123+00:00",
+        "report_id": "INTRARPT123456789",
+        "account_id": "GB29NWBK60161331926819"
     },
     "schema": {
         "GrpHdr": {
             "MsgId": {"var": "msg_id"},
-            "CreDtTm": {"var": "creation_datetime"},
-            "MsgRcpt": {
-                "Agt": {
-                    "FinInstnId": {
-                        "BICFI": {"var": "account_owner_bic"},
-                        "LEI": {"var": "account_owner_lei"}
-                    }
-                }
-            },
-            "MsgPgntn": {
+            "CreDtTm": {"var": "creation_datetime"}
+        },
+        "Rpt": {
+            "Id": {"var": "report_id"},
+            "RptPgntn": {
                 "PgNb": "1",
                 "LastPgInd": true
-            }
-        },
-        "Rpt": [
-            {
-                "Id": {"var": "report_id"},
-                "CreDtTm": {"var": "creation_datetime"},
-                "FrToDt": {
-                    "FrDtTm": {"fake": ["iso8601_datetime", "-8h", "-8h"]},
-                    "ToDtTm": {"var": "creation_datetime"}
+            },
+            "CreDtTm": {"var": "creation_datetime"},
+            "Acct": {
+                "Id": {
+                    "IBAN": {"var": "account_id"}
                 },
-                "RptgSrc": {
-                    "Prtry": "INTRADAY_LIQUIDITY_MONITORING"
-                },
-                "Acct": {
-                    "Id": {
-                        "Othr": {
-                            "Id": {"var": "account_id"},
-                            "SchmeNm": {
-                                "Prtry": "NOSTRO_ACCOUNT"
-                            }
-                        }
-                    },
+                "Ccy": "USD"
+            },
+            "Bal": [
+                {
                     "Tp": {
-                        "Prtry": "NOSTRO"
-                    },
-                    "Ccy": "USD",
-                    "Nm": "Nostro Account - Liquidity Monitoring",
-                    "Ownr": {
-                        "Nm": {"var": "account_owner"},
-                        "Id": {
-                            "OrgId": {
-                                "AnyBIC": {"var": "account_owner_bic"},
-                                "LEI": {"var": "account_owner_lei"}
-                            }
+                        "CdOrPrtry": {
+                            "Cd": "ITBD"
                         }
                     },
-                    "Svcr": {
-                        "FinInstnId": {
-                            "BICFI": {"var": "servicer_bic"}
-                        }
+                    "Amt": {
+                        "@Ccy": "USD",
+                        "$value": 50000.00
+                    },
+                    "CdtDbtInd": "CRDT",
+                    "Dt": {
+                        "DtTm": {"var": "creation_datetime"}
                     }
-                },
-                "Bal": [
-                    {
-                        "Tp": {
-                            "CdOrPrtry": {
-                                "Cd": "OPBD"
-                            }
-                        },
-                        "Amt": {
-                            "@Ccy": "USD",
-                            "$value": {"var": "opening_balance"}
-                        },
-                        "CdtDbtInd": "CRDT",
-                        "Dt": {
-                            "DtTm": {"fake": ["iso8601_datetime", "-8h", "-8h"]}
-                        }
-                    },
-                    {
-                        "Tp": {
-                            "CdOrPrtry": {
-                                "Cd": "CLBD"
-                            }
-                        },
-                        "Amt": {
-                            "@Ccy": "USD",
-                            "$value": {"var": "current_balance"}
-                        },
-                        "CdtDbtInd": "CRDT",
-                        "Dt": {
-                            "DtTm": {"var": "creation_datetime"}
-                        }
-                    },
-                    {
-                        "Tp": {
-                            "CdOrPrtry": {
-                                "Prtry": "PEAK_DEBIT_POSITION"
-                            }
-                        },
-                        "Amt": {
-                            "@Ccy": "USD",
-                            "$value": {"fake": ["f64", 500000.0, 2000000.0]}
-                        },
-                        "CdtDbtInd": "DBIT",
-                        "Dt": {
-                            "DtTm": {"fake": ["iso8601_datetime", "-6h", "-4h"]}
-                        }
-                    },
-                    {
-                        "Tp": {
-                            "CdOrPrtry": {
-                                "Prtry": "PEAK_CREDIT_POSITION"
-                            }
-                        },
-                        "Amt": {
-                            "@Ccy": "USD",
-                            "$value": {"var": "peak_credit"}
-                        },
-                        "CdtDbtInd": "CRDT",
-                        "Dt": {
-                            "DtTm": {"fake": ["iso8601_datetime", "-3h", "-2h"]}
-                        }
-                    },
-                    {
-                        "Tp": {
-                            "CdOrPrtry": {
-                                "Prtry": "LOWEST_BALANCE"
-                            }
-                        },
-                        "Amt": {
-                            "@Ccy": "USD",
-                            "$value": {"var": "lowest_balance"}
-                        },
-                        "CdtDbtInd": "CRDT",
-                        "Dt": {
-                            "DtTm": {"fake": ["iso8601_datetime", "-5h", "-4h"]}
-                        }
-                    }
-                ],
-                "TxsSummry": {
-                    "TtlNtries": {
-                        "NbOfNtries": {"fake": ["i64", 50, 200]},
-                        "Sum": {"fake": ["f64", 5000000.0, 50000000.0]}
-                    },
-                    "TtlCdtNtries": {
-                        "NbOfNtries": {"fake": ["i64", 20, 80]},
-                        "Sum": {"fake": ["f64", 2000000.0, 25000000.0]}
-                    },
-                    "TtlDbtNtries": {
-                        "NbOfNtries": {"fake": ["i64", 30, 120]},
-                        "Sum": {"fake": ["f64", 3000000.0, 25000000.0]}
-                    }
-                },
-                "Ntry": [
-                    {
-                        "NtryRef": {"cat": ["LIQ-", {"fake": ["i64", 1000000, 9999999]}]},
-                        "Amt": {
-                            "@Ccy": "USD",
-                            "$value": {"fake": ["f64", 100000.0, 1000000.0]}
-                        },
-                        "CdtDbtInd": "DBIT",
-                        "Sts": {
-                            "Cd": "BOOK"
-                        },
-                        "BookgDt": {
-                            "DtTm": {"fake": ["iso8601_datetime", "-6h", "-5h"]}
-                        },
-                        "ValDt": {
-                            "DtTm": {"fake": ["iso8601_datetime", "-6h", "-5h"]}
-                        },
-                        "BkTxCd": {
-                            "Domn": {
-                                "Cd": "PMNT",
-                                "Fmly": {
-                                    "Cd": "ICDT",
-                                    "SubFmlyCd": "PRCT"
-                                }
-                            },
-                            "Prtry": {
-                                "Cd": "PRIORITY_PAYMENT",
-                                "Issr": "SWIFT"
-                            }
-                        },
-                        "NtryDtls": [
-                            {
-                                "TxDtls": [
-                                    {
-                                        "Refs": {
-                                            "AcctSvcrRef": {"cat": ["LIQ-REF-", {"fake": ["i64", 10000000, 99999999]}]},
-                                            "InstrId": {"cat": ["INSTR-", {"fake": ["i64", 10000000, 99999999]}]}
-                                        },
-                                        "Amt": {
-                                            "@Ccy": "USD",
-                                            "$value": {"fake": ["f64", 100000.0, 1000000.0]}
-                                        },
-                                        "CdtDbtInd": "DBIT",
-                                        "RltdAgts": {
-                                            "DbtrAgt": {
-                                                "FinInstnId": {
-                                                    "BICFI": {"var": "account_owner_bic"}
-                                                }
-                                            },
-                                            "CdtrAgt": {
-                                                "FinInstnId": {
-                                                    "BICFI": {"fake": ["bic"]}
-                                                }
-                                            }
-                                        },
-                                        "RmtInf": {
-                                            "Ustrd": ["High priority liquidity transfer"]
-                                        }
-                                    }
-                                ]
-                            }
-                        ],
-                        "AddtlNtryInf": "Liquidity outflow - monitoring required"
-                    },
-                    {
-                        "NtryRef": {"cat": ["INFLOW-", {"fake": ["i64", 1000000, 9999999]}]},
-                        "Amt": {
-                            "@Ccy": "USD",
-                            "$value": {"fake": ["f64", 200000.0, 2000000.0]}
-                        },
-                        "CdtDbtInd": "CRDT",
-                        "Sts": {
-                            "Cd": "BOOK"
-                        },
-                        "BookgDt": {
-                            "DtTm": {"fake": ["iso8601_datetime", "-3h", "-2h"]}
-                        },
-                        "ValDt": {
-                            "DtTm": {"fake": ["iso8601_datetime", "-3h", "-2h"]}
-                        },
-                        "BkTxCd": {
-                            "Domn": {
-                                "Cd": "PMNT",
-                                "Fmly": {
-                                    "Cd": "RCDT",
-                                    "SubFmlyCd": "XBCT"
-                                }
-                            }
-                        },
-                        "NtryDtls": [
-                            {
-                                "TxDtls": [
-                                    {
-                                        "Refs": {
-                                            "AcctSvcrRef": {"cat": ["IN-REF-", {"fake": ["i64", 10000000, 99999999]}]}
-                                        },
-                                        "Amt": {
-                                            "@Ccy": "USD",
-                                            "$value": {"fake": ["f64", 200000.0, 2000000.0]}
-                                        },
-                                        "CdtDbtInd": "CRDT",
-                                        "RltdAgts": {
-                                            "DbtrAgt": {
-                                                "FinInstnId": {
-                                                    "BICFI": {"fake": ["bic"]}
-                                                }
-                                            },
-                                            "CdtrAgt": {
-                                                "FinInstnId": {
-                                                    "BICFI": {"var": "account_owner_bic"}
-                                                }
-                                            }
-                                        },
-                                        "RmtInf": {
-                                            "Ustrd": ["Liquidity injection"]
-                                        }
-                                    }
-                                ]
-                            }
-                        ],
-                        "AddtlNtryInf": "Liquidity inflow - position improved"
-                    }
-                ],
-                "AddtlRptInf": "Intraday liquidity monitoring - regulatory requirement"
-            }
-        ]
+                }
+            ]
+        }
     }
 }

@@ -1,124 +1,61 @@
 {
     "variables": {
-        "msg_id": {"cat": ["STO-", {"fake": ["i64", 100000000000, 999999999999]}]},
-        "creation_datetime": {"fake": ["iso8601_datetime"]},
-        "ntfctn_id": {"cat": ["STO-NTFCTN-", {"fake": ["i64", 100000000000, 999999999999]}]},
-        "creation_time": {"fake": ["iso8601_datetime"]},
-        "account_id": {"fake": ["iban"]},
-        "account_owner": {"fake": ["full_name"]},
-        "servicer_bic": {"fake": ["bic"]},
-        "entry_ref": {"cat": ["STO-ENT-", {"fake": ["i64", 1000000, 9999999]}]},
-        "debit_amount": {"fake": ["f64", 500.0, 5000.0]},
-        "booking_date": {"fake": ["date", "%Y-%m-%d", "-1d", "-1d"]},
-        "value_date": {"fake": ["date", "%Y-%m-%d", "-1d", "-1d"]},
-        "transaction_ref": {"cat": ["STO-TXN-", {"fake": ["i64", 10000000, 99999999]}]},
-        "standing_order_id": {"cat": ["STO-ID-", {"fake": ["i64", 100000, 999999]}]},
-        "creditor_name": {"fake": ["full_name"]},
-        "creditor_iban": {"fake": ["iban"]}
+        "msg_id": "SOMSG123456789",
+        "creation_datetime": "2025-01-15T10:00:00.123+00:00",
+        "ntfctn_id": "SONTFCTN123456789",
+        "account_id": "GB29NWBK60161331926819"
     },
     "schema": {
         "GrpHdr": {
-            "MsgId": {"var": "msg_id"},
-            "CreDtTm": {"var": "creation_datetime"}
+            "MsgId": {
+                "var": "msg_id"
+            },
+            "CreDtTm": {
+                "var": "creation_datetime"
+            }
         },
         "Ntfctn": [
             {
-                "Id": {"var": "ntfctn_id"},
-                "CreDtTm": {"var": "creation_time"},
+                "Id": {
+                    "var": "ntfctn_id"
+                },
+                "CreDtTm": {
+                    "var": "creation_datetime"
+                },
                 "Acct": {
                     "Id": {
-                        "IBAN": {"var": "account_id"}
-                    },
-                    "Ownr": {
-                        "Nm": {"var": "account_owner"}
-                    },
-                    "Svcr": {
-                        "FinInstnId": {
-                            "BICFI": {"var": "servicer_bic"}
+                        "IBAN": {
+                            "var": "account_id"
                         }
-                    }
+                    },
+                    "Ccy": "USD"
                 },
                 "Ntry": [
                     {
-                        "NtryRef": {"var": "entry_ref"},
+                        "NtryRef": "SOENT123456",
                         "Amt": {
                             "@Ccy": "USD",
-                            "$value": {"var": "debit_amount"}
+                            "$value": 1200.0
                         },
                         "CdtDbtInd": "DBIT",
                         "Sts": {
                             "Cd": "BOOK"
                         },
                         "BookgDt": {
-                            "Dt": {"var": "booking_date"}
+                            "Dt": "2025-01-15"
                         },
                         "ValDt": {
-                            "Dt": {"var": "value_date"}
+                            "Dt": "2025-01-15"
                         },
                         "BkTxCd": {
                             "Domn": {
                                 "Cd": "PMNT",
                                 "Fmly": {
                                     "Cd": "ICDT",
-                                    "SubFmlyCd": "BOOK"
+                                    "SubFmlyCd": "STDO"
                                 }
-                            },
-                            "Prtry": {
-                                "Cd": "STANDING_ORDER",
-                                "Issr": "BANK"
                             }
-                        },
-                        "NtryDtls": [
-                            {
-                                "TxDtls": [
-                                    {
-                                        "Refs": {
-                                            "AcctSvcrRef": {"var": "transaction_ref"},
-                                            "InstrId": {"var": "standing_order_id"}
-                                        },
-                                        "Amt": {
-                                            "@Ccy": "USD",
-                                            "$value": {"var": "debit_amount"}
-                                        },
-                                        "CdtDbtInd": "DBIT",
-                                        "RltdPties": {
-                                            "Cdtr": {
-                                                "Nm": {"var": "creditor_name"}
-                                            },
-                                            "CdtrAcct": {
-                                                "Id": {
-                                                    "IBAN": {"var": "creditor_iban"}
-                                                }
-                                            }
-                                        },
-                                        "RltdAgts": {
-                                            "CdtrAgt": {
-                                                "FinInstnId": {
-                                                    "BICFI": {"fake": ["bic"]}
-                                                }
-                                            }
-                                        },
-                                        "Purp": {
-                                            "Cd": "RENT"
-                                        },
-                                        "RltdDts": {
-                                            "AccptncDtTm": {"fake": ["iso8601_datetime", "-365d", "-30d"]},
-                                            "TradActvtyCtrctlSttlmDt": {"var": "value_date"}
-                                        },
-                                        "RmtInf": {
-                                            "Ustrd": ["Monthly rent payment"],
-                                            "Strd": [
-                                                {
-                                                    "AddtlRmtInf": ["Standing order execution - Monthly rent"]
-                                                }
-                                            ]
-                                        },
-                                        "AddtlTxInf": {"cat": ["Standing order ", {"var": "standing_order_id"}, " - Monthly execution"]}
-                                    }
-                                ]
-                            }
-                        ],
-                        "AddtlNtryInf": "Standing order payment execution"
+                        }
                     }
                 ]
             }

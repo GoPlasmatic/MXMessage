@@ -1,239 +1,45 @@
 {
     "variables": {
-        "msg_id": {"cat": ["MSG", {"fake": ["i64", 100000000000, 999999999999]}]},
-        "creation_datetime": {"fake": ["iso8601_datetime"]},
-        "report_id": {"cat": ["RPT-", {"fake": ["i64", 100000000000, 999999999999]}]},
-        "account_id": {"fake": ["iban"]},
-        "account_owner": {"fake": ["full_name"]},
-        "account_owner_id": {"fake": ["regex", "[0-9]{9}"]},
-        "servicer_bic": {"fake": ["bic"]},
-        "report_date": {"fake": ["date", "%Y-%m-%d", "-1d", "-1d"]},
-        "opening_balance": {"fake": ["f64", 50000.0, 500000.0]},
-        "closing_balance": {"fake": ["f64", 45000.0, 495000.0]},
-        "total_credits": {"fake": ["f64", 10000.0, 100000.0]},
-        "total_debits": {"fake": ["f64", 15000.0, 105000.0]},
-        "num_credits": {"fake": ["i64", 10, 50]},
-        "num_debits": {"fake": ["i64", 15, 55]}
+        "msg_id": "MSG123456789",
+        "creation_datetime": "2025-01-15T10:00:00.123+00:00",
+        "report_id": "RPT123456789",
+        "account_id": "GB29NWBK60161331926819"
     },
     "schema": {
         "GrpHdr": {
             "MsgId": {"var": "msg_id"},
+            "CreDtTm": {"var": "creation_datetime"}
+        },
+        "Rpt": {
+            "Id": {"var": "report_id"},
+            "RptPgntn": {
+                "PgNb": "1",
+                "LastPgInd": true
+            },
             "CreDtTm": {"var": "creation_datetime"},
-            "MsgRcpt": {
-                "Pty": {
-                    "Nm": {"var": "account_owner"},
-                    "Id": {
-                        "PrvtId": {
-                            "Othr": [
-                                {
-                                    "Id": {"var": "account_owner_id"},
-                                    "SchmeNm": {
-                                        "Cd": "TXID"
-                                    }
-                                }
-                            ]
+            "Acct": {
+                "Id": {
+                    "IBAN": {"var": "account_id"}
+                },
+                "Ccy": "USD"
+            },
+            "Bal": [
+                {
+                    "Tp": {
+                        "CdOrPrtry": {
+                            "Cd": "OPBD"
                         }
+                    },
+                    "Amt": {
+                        "@Ccy": "USD",
+                        "$value": 10000.00
+                    },
+                    "CdtDbtInd": "CRDT",
+                    "Dt": {
+                        "Dt": "2025-01-15"
                     }
                 }
-            }
-        },
-        "Rpt": [
-            {
-                "Id": {"var": "report_id"},
-                "CreDtTm": {"var": "creation_datetime"},
-                "RptgSrc": {
-                    "Prtry": "DAILY_BALANCE"
-                },
-                "Acct": {
-                    "Id": {
-                        "IBAN": {"var": "account_id"}
-                    },
-                    "Tp": {
-                        "Cd": "CACC"
-                    },
-                    "Ccy": "USD",
-                    "Ownr": {
-                        "Nm": {"var": "account_owner"},
-                        "Id": {
-                            "PrvtId": {
-                                "Othr": [
-                                    {
-                                        "Id": {"var": "account_owner_id"},
-                                        "SchmeNm": {
-                                            "Cd": "TXID"
-                                        }
-                                    }
-                                ]
-                            }
-                        }
-                    },
-                    "Svcr": {
-                        "FinInstnId": {
-                            "BICFI": {"var": "servicer_bic"}
-                        }
-                    }
-                },
-                "Bal": [
-                    {
-                        "Tp": {
-                            "CdOrPrtry": {
-                                "Cd": "PRCD"
-                            }
-                        },
-                        "Amt": {
-                            "@Ccy": "USD",
-                            "$value": {"var": "opening_balance"}
-                        },
-                        "CdtDbtInd": "CRDT",
-                        "Dt": {
-                            "Dt": {"var": "report_date"}
-                        }
-                    },
-                    {
-                        "Tp": {
-                            "CdOrPrtry": {
-                                "Cd": "CLBD"
-                            }
-                        },
-                        "Amt": {
-                            "@Ccy": "USD",
-                            "$value": {"var": "closing_balance"}
-                        },
-                        "CdtDbtInd": "CRDT",
-                        "Dt": {
-                            "Dt": {"fake": ["date", "%Y-%m-%d", "+0d", "+0d"]}
-                        }
-                    }
-                ],
-                "TxsSummry": {
-                    "TtlNtries": {
-                        "NbOfNtries": {"fake": ["i64", 25, 105]},
-                        "Sum": {"fake": ["f64", 25000.0, 205000.0]}
-                    },
-                    "TtlCdtNtries": {
-                        "NbOfNtries": {"var": "num_credits"},
-                        "Sum": {"var": "total_credits"}
-                    },
-                    "TtlDbtNtries": {
-                        "NbOfNtries": {"var": "num_debits"},
-                        "Sum": {"var": "total_debits"}
-                    }
-                },
-                "Ntry": [
-                    {
-                        "NtryRef": {"cat": ["NTRY-", {"fake": ["i64", 1000000, 9999999]}]},
-                        "Amt": {
-                            "@Ccy": "USD",
-                            "$value": {"fake": ["f64", 1000.0, 25000.0]}
-                        },
-                        "CdtDbtInd": "CRDT",
-                        "Sts": {
-                            "Cd": "BOOK"
-                        },
-                        "BookgDt": {
-                            "Dt": {"var": "report_date"}
-                        },
-                        "ValDt": {
-                            "Dt": {"var": "report_date"}
-                        },
-                        "BkTxCd": {
-                            "Domn": {
-                                "Cd": "PMNT",
-                                "Fmly": {
-                                    "Cd": "RCDT",
-                                    "SubFmlyCd": "XBCT"
-                                }
-                            }
-                        },
-                        "NtryDtls": [
-                            {
-                                "TxDtls": [
-                                    {
-                                        "Refs": {
-                                            "AcctSvcrRef": {"cat": ["REF-", {"fake": ["i64", 10000000, 99999999]}]},
-                                            "EndToEndId": {"cat": ["E2E-", {"fake": ["i64", 100000000000, 999999999999]}]}
-                                        },
-                                        "Amt": {
-                                            "@Ccy": "USD",
-                                            "$value": {"fake": ["f64", 1000.0, 25000.0]}
-                                        },
-                                        "CdtDbtInd": "CRDT",
-                                        "RltdPties": {
-                                            "Dbtr": {
-                                                "Nm": {"fake": ["full_name"]}
-                                            },
-                                            "DbtrAcct": {
-                                                "Id": {
-                                                    "IBAN": {"fake": ["iban"]}
-                                                }
-                                            }
-                                        },
-                                        "RmtInf": {
-                                            "Ustrd": ["Wire transfer received"]
-                                        }
-                                    }
-                                ]
-                            }
-                        ]
-                    },
-                    {
-                        "NtryRef": {"cat": ["NTRY-", {"fake": ["i64", 1000000, 9999999]}]},
-                        "Amt": {
-                            "@Ccy": "USD",
-                            "$value": {"fake": ["f64", 500.0, 15000.0]}
-                        },
-                        "CdtDbtInd": "DBIT",
-                        "Sts": {
-                            "Cd": "BOOK"
-                        },
-                        "BookgDt": {
-                            "Dt": {"var": "report_date"}
-                        },
-                        "ValDt": {
-                            "Dt": {"var": "report_date"}
-                        },
-                        "BkTxCd": {
-                            "Domn": {
-                                "Cd": "PMNT",
-                                "Fmly": {
-                                    "Cd": "ICDT",
-                                    "SubFmlyCd": "XBCT"
-                                }
-                            }
-                        },
-                        "NtryDtls": [
-                            {
-                                "TxDtls": [
-                                    {
-                                        "Refs": {
-                                            "AcctSvcrRef": {"cat": ["REF-", {"fake": ["i64", 10000000, 99999999]}]},
-                                            "EndToEndId": {"cat": ["E2E-", {"fake": ["i64", 100000000000, 999999999999]}]}
-                                        },
-                                        "Amt": {
-                                            "@Ccy": "USD",
-                                            "$value": {"fake": ["f64", 500.0, 15000.0]}
-                                        },
-                                        "CdtDbtInd": "DBIT",
-                                        "RltdPties": {
-                                            "Cdtr": {
-                                                "Nm": {"fake": ["full_name"]}
-                                            },
-                                            "CdtrAcct": {
-                                                "Id": {
-                                                    "IBAN": {"fake": ["iban"]}
-                                                }
-                                            }
-                                        },
-                                        "RmtInf": {
-                                            "Ustrd": ["Payment sent"]
-                                        }
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                ]
-            }
-        ]
+            ]
+        }
     }
 }

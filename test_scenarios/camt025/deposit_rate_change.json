@@ -1,101 +1,24 @@
 {
     "variables": {
-        "msg_id": {"cat": ["DEP-RATE-", {"fake": ["i64", 100000000000, 999999999999]}]},
-        "creation_datetime": {"fake": ["iso8601_datetime"]},
-        "related_msg_id": {"cat": ["DEP-NOTIF-", {"fake": ["i64", 100000000000, 999999999999]}]},
-        "related_account": {"fake": ["iban"]},
-        "sender_bic": {"fake": ["bic"]},
-        "receiver_bic": {"fake": ["bic"]},
-        "customer_name": {"fake": ["full_name"]},
-        "customer_id": {"cat": ["CUST-", {"fake": ["i64", 100000, 999999]}]},
-        "savings_rate_old": {"fake": ["f64", 0.5, 2.0]},
-        "savings_rate_new": {"fake": ["f64", 1.0, 3.0]},
-        "term_deposit_3m_old": {"fake": ["f64", 1.5, 3.0]},
-        "term_deposit_3m_new": {"fake": ["f64", 2.0, 4.0]},
-        "term_deposit_6m_old": {"fake": ["f64", 2.0, 3.5]},
-        "term_deposit_6m_new": {"fake": ["f64", 2.5, 4.5]},
-        "term_deposit_12m_old": {"fake": ["f64", 2.5, 4.0]},
-        "term_deposit_12m_new": {"fake": ["f64", 3.0, 5.0]},
-        "effective_date": {"fake": ["date", "%Y-%m-%d", "+7d", "+7d"]}
+        "msg_id": "DEPRATE123456789",
+        "creation_datetime": "2025-01-15T10:00:00.123+00:00",
+        "orig_msg_id": "ORIG654321",
+        "msg_name_id": "camt.025.001.08"
     },
     "schema": {
-        "Assgnmt": {
-            "Id": {"var": "msg_id"},
-            "Assgnr": {
-                "Agt": {
-                    "FinInstnId": {
-                        "BICFI": {"var": "sender_bic"}
-                    }
-                }
-            },
-            "Assgne": {
-                "Agt": {
-                    "FinInstnId": {
-                        "BICFI": {"var": "receiver_bic"}
-                    }
-                }
-            },
+        "MsgHdr": {
+            "MsgId": {"var": "msg_id"},
             "CreDtTm": {"var": "creation_datetime"}
         },
-        "Rct": {
-            "RltdMsgRcpt": {
-                "RcptId": {"var": "related_msg_id"},
-                "RcptDtTm": {"var": "creation_datetime"},
-                "RltdRef": {
-                    "Ref": {"var": "related_account"}
-                }
-            }
-        },
-        "SplmtryData": [
+        "RctDtls": [
             {
-                "Envlp": {
-                    "DepositRateChange": {
-                        "NotificationType": "RATE_INCREASE",
-                        "Customer": {
-                            "Name": {"var": "customer_name"},
-                            "Id": {"var": "customer_id"},
-                            "AccountNumber": {"var": "related_account"}
-                        },
-                        "EffectiveDate": {"var": "effective_date"},
-                        "RateChanges": [
-                            {
-                                "ProductType": "SAVINGS_ACCOUNT",
-                                "ProductCode": "SAV001",
-                                "OldRate": {"var": "savings_rate_old"},
-                                "NewRate": {"var": "savings_rate_new"},
-                                "RateType": "ANNUAL_PERCENTAGE_YIELD",
-                                "CompoundingFrequency": "DAILY"
-                            },
-                            {
-                                "ProductType": "TERM_DEPOSIT_3M",
-                                "ProductCode": "TD003",
-                                "OldRate": {"var": "term_deposit_3m_old"},
-                                "NewRate": {"var": "term_deposit_3m_new"},
-                                "RateType": "FIXED_ANNUAL",
-                                "MinimumBalance": 1000.0
-                            },
-                            {
-                                "ProductType": "TERM_DEPOSIT_6M",
-                                "ProductCode": "TD006",
-                                "OldRate": {"var": "term_deposit_6m_old"},
-                                "NewRate": {"var": "term_deposit_6m_new"},
-                                "RateType": "FIXED_ANNUAL",
-                                "MinimumBalance": 5000.0
-                            },
-                            {
-                                "ProductType": "TERM_DEPOSIT_12M",
-                                "ProductCode": "TD012",
-                                "OldRate": {"var": "term_deposit_12m_old"},
-                                "NewRate": {"var": "term_deposit_12m_new"},
-                                "RateType": "FIXED_ANNUAL",
-                                "MinimumBalance": 10000.0
-                            }
-                        ],
-                        "Reason": "Market rate adjustment following central bank policy change",
-                        "CustomerAction": {
-                            "Required": false,
-                            "Description": "Rates will be automatically applied to existing and new deposits"
-                        }
+                "OrgnlMsgId": {
+                    "MsgId": {"var": "orig_msg_id"},
+                    "MsgNmId": {"var": "msg_name_id"}
+                },
+                "ReqHdlg": {
+                    "Sts": {
+                        "Cd": "ACCP"
                     }
                 }
             }

@@ -1,331 +1,58 @@
 {
     "variables": {
-        "msg_id": {"cat": ["NOSTRO-", {"fake": ["i64", 100000000000, 999999999999]}]},
-        "creation_datetime": {"fake": ["iso8601_datetime"]},
-        "stmt_id": {"cat": ["CORR-", {"fake": ["i64", 100000000000, 999999999999]}]},
-        "legal_seq_number": {"fake": ["i64", 10000, 19999]},
-        "from_date": {"fake": ["date", "%Y-%m-%d", "-1d", "-1d"]},
-        "to_date": {"fake": ["date", "%Y-%m-%d", "-1d", "-1d"]},
-        "nostro_account": {"cat": ["NOSTRO-", {"fake": ["i64", 100000, 999999]}]},
-        "account_owner_bic": {"fake": ["bic"]},
-        "account_owner_lei": {"fake": ["lei"]},
-        "servicer_bic": {"fake": ["bic"]},
-        "servicer_lei": {"fake": ["lei"]},
-        "opening_balance": {"fake": ["f64", 1000000.0, 10000000.0]},
-        "closing_balance": {"fake": ["f64", 950000.0, 10050000.0]},
-        "available_balance": {"fake": ["f64", 900000.0, 10000000.0]}
+        "msg_id": "CORRMSG123456789",
+        "creation_datetime": "2025-01-15T10:00:00.123+00:00",
+        "stmt_id": "CORRSTMT123456789",
+        "account_id": "GB29NWBK60161331926819"
     },
     "schema": {
         "GrpHdr": {
-            "MsgId": {"var": "msg_id"},
-            "CreDtTm": {"var": "creation_datetime"},
-            "MsgRcpt": {
-                "Agt": {
-                    "FinInstnId": {
-                        "BICFI": {"var": "account_owner_bic"},
-                        "LEI": {"var": "account_owner_lei"}
-                    }
-                }
+            "MsgId": {
+                "var": "msg_id"
+            },
+            "CreDtTm": {
+                "var": "creation_datetime"
             }
         },
-        "Stmt": [
-            {
-                "Id": {"var": "stmt_id"},
-                "LglSeqNb": {"var": "legal_seq_number"},
-                "CreDtTm": {"var": "creation_datetime"},
-                "FrToDt": {
-                    "FrDtTm": {"cat": [{"var": "from_date"}, "T00:00:00Z"]},
-                    "ToDtTm": {"cat": [{"var": "to_date"}, "T23:59:59Z"]}
+        "Stmt": {
+            "Id": {
+                "var": "stmt_id"
+            },
+            "StmtPgntn": {
+                "PgNb": "1",
+                "LastPgInd": true
+            },
+            "CreDtTm": {
+                "var": "creation_datetime"
+            },
+            "Acct": {
+                "Id": {
+                    "IBAN": {
+                        "var": "account_id"
+                    }
                 },
-                "RptgSrc": {
-                    "Prtry": "CORRESPONDENT_BANKING"
+                "Tp": {
+                    "Cd": "NREX"
                 },
-                "Acct": {
-                    "Id": {
-                        "Othr": {
-                            "Id": {"var": "nostro_account"},
-                            "SchmeNm": {
-                                "Prtry": "NOSTRO_ACCOUNT"
-                            }
-                        }
-                    },
+                "Ccy": "USD"
+            },
+            "Bal": [
+                {
                     "Tp": {
-                        "Prtry": "NOSTRO"
-                    },
-                    "Ccy": "USD",
-                    "Nm": "Nostro Account - USD Clearing",
-                    "Ownr": {
-                        "Agt": {
-                            "FinInstnId": {
-                                "BICFI": {"var": "account_owner_bic"},
-                                "LEI": {"var": "account_owner_lei"},
-                                "Nm": {"fake": ["company_name"]}
-                            }
+                        "CdOrPrtry": {
+                            "Cd": "CLBD"
                         }
                     },
-                    "Svcr": {
-                        "FinInstnId": {
-                            "BICFI": {"var": "servicer_bic"},
-                            "LEI": {"var": "servicer_lei"},
-                            "Nm": {"fake": ["company_name"]}
-                        }
+                    "Amt": {
+                        "@Ccy": "USD",
+                        "$value": 500000.0
+                    },
+                    "CdtDbtInd": "CRDT",
+                    "Dt": {
+                        "Dt": "2025-01-15"
                     }
-                },
-                "Bal": [
-                    {
-                        "Tp": {
-                            "CdOrPrtry": {
-                                "Cd": "OPBD"
-                            }
-                        },
-                        "Amt": {
-                            "@Ccy": "USD",
-                            "$value": {"var": "opening_balance"}
-                        },
-                        "CdtDbtInd": "CRDT",
-                        "Dt": {
-                            "Dt": {"var": "from_date"}
-                        }
-                    },
-                    {
-                        "Tp": {
-                            "CdOrPrtry": {
-                                "Cd": "CLBD"
-                            }
-                        },
-                        "Amt": {
-                            "@Ccy": "USD",
-                            "$value": {"var": "closing_balance"}
-                        },
-                        "CdtDbtInd": "CRDT",
-                        "Dt": {
-                            "Dt": {"var": "to_date"}
-                        }
-                    },
-                    {
-                        "Tp": {
-                            "CdOrPrtry": {
-                                "Cd": "CLAV"
-                            }
-                        },
-                        "Amt": {
-                            "@Ccy": "USD",
-                            "$value": {"var": "available_balance"}
-                        },
-                        "CdtDbtInd": "CRDT",
-                        "Dt": {
-                            "Dt": {"var": "to_date"}
-                        }
-                    }
-                ],
-                "TxsSummry": {
-                    "TtlNtries": {
-                        "NbOfNtries": {"fake": ["i64", 20, 100]},
-                        "Sum": {"fake": ["f64", 5000000.0, 50000000.0]}
-                    },
-                    "TtlCdtNtries": {
-                        "NbOfNtries": {"fake": ["i64", 10, 50]},
-                        "Sum": {"fake": ["f64", 2000000.0, 25000000.0]}
-                    },
-                    "TtlDbtNtries": {
-                        "NbOfNtries": {"fake": ["i64", 10, 50]},
-                        "Sum": {"fake": ["f64", 3000000.0, 25000000.0]}
-                    }
-                },
-                "Ntry": [
-                    {
-                        "NtryRef": {"cat": ["MT202-", {"fake": ["i64", 1000000, 9999999]}]},
-                        "Amt": {
-                            "@Ccy": "USD",
-                            "$value": {"fake": ["f64", 100000.0, 1000000.0]}
-                        },
-                        "CdtDbtInd": "CRDT",
-                        "Sts": {
-                            "Cd": "BOOK"
-                        },
-                        "BookgDt": {
-                            "Dt": {"var": "to_date"}
-                        },
-                        "ValDt": {
-                            "Dt": {"var": "to_date"}
-                        },
-                        "BkTxCd": {
-                            "Domn": {
-                                "Cd": "PMNT",
-                                "Fmly": {
-                                    "Cd": "RCDT",
-                                    "SubFmlyCd": "XBCT"
-                                }
-                            },
-                            "Prtry": {
-                                "Cd": "MT202_COVER",
-                                "Issr": "SWIFT"
-                            }
-                        },
-                        "NtryDtls": [
-                            {
-                                "TxDtls": [
-                                    {
-                                        "Refs": {
-                                            "AcctSvcrRef": {"cat": ["CORR-TXN-", {"fake": ["i64", 10000000, 99999999]}]},
-                                            "EndToEndId": {"cat": ["MT202-", {"fake": ["i64", 100000000000, 999999999999]}]},
-                                            "UETR": {"fake": ["uuid_v4"]},
-                                            "Prtry": [
-                                                {
-                                                    "Tp": "SENDER_REF",
-                                                    "Ref": {"cat": ["SNDREF-", {"fake": ["i64", 100000, 999999]}]}
-                                                }
-                                            ]
-                                        },
-                                        "Amt": {
-                                            "@Ccy": "USD",
-                                            "$value": {"fake": ["f64", 100000.0, 1000000.0]}
-                                        },
-                                        "CdtDbtInd": "CRDT",
-                                        "RltdAgts": {
-                                            "IntrmyAgt1": {
-                                                "FinInstnId": {
-                                                    "BICFI": {"fake": ["bic"]}
-                                                }
-                                            }
-                                        },
-                                        "RmtInf": {
-                                            "Ustrd": ["Cover payment for customer transfer"]
-                                        }
-                                    }
-                                ]
-                            }
-                        ],
-                        "AddtlNtryInf": "MT202 cover payment received"
-                    },
-                    {
-                        "NtryRef": {"cat": ["MT202COV-", {"fake": ["i64", 1000000, 9999999]}]},
-                        "Amt": {
-                            "@Ccy": "USD",
-                            "$value": {"fake": ["f64", 150000.0, 1500000.0]}
-                        },
-                        "CdtDbtInd": "DBIT",
-                        "Sts": {
-                            "Cd": "BOOK"
-                        },
-                        "BookgDt": {
-                            "Dt": {"var": "to_date"}
-                        },
-                        "ValDt": {
-                            "Dt": {"var": "to_date"}
-                        },
-                        "BkTxCd": {
-                            "Domn": {
-                                "Cd": "PMNT",
-                                "Fmly": {
-                                    "Cd": "ICDT",
-                                    "SubFmlyCd": "XBCT"
-                                }
-                            },
-                            "Prtry": {
-                                "Cd": "MT202COV_OUTGOING",
-                                "Issr": "SWIFT"
-                            }
-                        },
-                        "NtryDtls": [
-                            {
-                                "TxDtls": [
-                                    {
-                                        "Refs": {
-                                            "AcctSvcrRef": {"cat": ["CORR-OUT-", {"fake": ["i64", 10000000, 99999999]}]},
-                                            "EndToEndId": {"cat": ["MT103-", {"fake": ["i64", 100000000000, 999999999999]}]},
-                                            "UETR": {"fake": ["uuid_v4"]}
-                                        },
-                                        "Amt": {
-                                            "@Ccy": "USD",
-                                            "$value": {"fake": ["f64", 150000.0, 1500000.0]}
-                                        },
-                                        "CdtDbtInd": "DBIT",
-                                        "RltdPties": {
-                                            "UltmtDbtr": {
-                                                "Nm": {"fake": ["company_name"]}
-                                            },
-                                            "UltmtCdtr": {
-                                                "Nm": {"fake": ["company_name"]}
-                                            }
-                                        },
-                                        "RltdAgts": {
-                                            "CdtrAgt": {
-                                                "FinInstnId": {
-                                                    "BICFI": {"fake": ["bic"]}
-                                                }
-                                            }
-                                        },
-                                        "RmtInf": {
-                                            "Ustrd": ["Cover for MT103 customer payment"]
-                                        }
-                                    }
-                                ]
-                            }
-                        ],
-                        "AddtlNtryInf": "MT202COV outgoing cover payment"
-                    },
-                    {
-                        "NtryRef": {"cat": ["FX-", {"fake": ["i64", 1000000, 9999999]}]},
-                        "Amt": {
-                            "@Ccy": "USD",
-                            "$value": {"fake": ["f64", 50000.0, 500000.0]}
-                        },
-                        "CdtDbtInd": "CRDT",
-                        "Sts": {
-                            "Cd": "BOOK"
-                        },
-                        "BookgDt": {
-                            "Dt": {"var": "to_date"}
-                        },
-                        "ValDt": {
-                            "Dt": {"var": "to_date"}
-                        },
-                        "BkTxCd": {
-                            "Domn": {
-                                "Cd": "FORX",
-                                "Fmly": {
-                                    "Cd": "SPOT",
-                                    "SubFmlyCd": "XCHG"
-                                }
-                            }
-                        },
-                        "NtryDtls": [
-                            {
-                                "TxDtls": [
-                                    {
-                                        "Refs": {
-                                            "AcctSvcrRef": {"cat": ["FX-DEAL-", {"fake": ["i64", 10000000, 99999999]}]}
-                                        },
-                                        "Amt": {
-                                            "@Ccy": "USD",
-                                            "$value": {"fake": ["f64", 50000.0, 500000.0]}
-                                        },
-                                        "CdtDbtInd": "CRDT",
-                                        "AmtDtls": {
-                                            "CntrValAmt": {
-                                                "Amt": {
-                                                    "@Ccy": "EUR",
-                                                    "$value": {"fake": ["f64", 45000.0, 450000.0]}
-                                                },
-                                                "CcyXchg": {
-                                                    "SrcCcy": "EUR",
-                                                    "TrgtCcy": "USD",
-                                                    "XchgRate": {"fake": ["f64", 1.08, 1.12]}
-                                                }
-                                            }
-                                        },
-                                        "RmtInf": {
-                                            "Ustrd": ["FX conversion for nostro funding"]
-                                        }
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                ],
-                "AddtlStmtInf": "Nostro account statement - correspondent banking operations"
-            }
-        ]
+                }
+            ]
+        }
     }
 }

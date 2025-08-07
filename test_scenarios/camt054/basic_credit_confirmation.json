@@ -1,106 +1,61 @@
 {
     "variables": {
-        "msg_id": {"cat": ["CRDT-", {"fake": ["i64", 100000000000, 999999999999]}]},
-        "creation_datetime": {"fake": ["iso8601_datetime"]},
-        "ntfctn_id": {"cat": ["CRDTNTFCTN-", {"fake": ["i64", 100000000000, 999999999999]}]},
-        "creation_time": {"fake": ["iso8601_datetime"]},
-        "account_id": {"fake": ["iban"]},
-        "account_owner": {"fake": ["full_name"]},
-        "servicer_bic": {"fake": ["bic"]},
-        "entry_ref": {"cat": ["ENT-", {"fake": ["i64", 1000000, 9999999]}]},
-        "credit_amount": {"fake": ["f64", 100.0, 50000.0]},
-        "booking_date": {"fake": ["date", "%Y-%m-%d", "-1d", "-1d"]},
-        "value_date": {"fake": ["date", "%Y-%m-%d", "-1d", "-1d"]},
-        "transaction_ref": {"cat": ["TXN-", {"fake": ["i64", 10000000, 99999999]}]},
-        "end_to_end_id": {"cat": ["E2E-", {"fake": ["i64", 100000000000, 999999999999]}]},
-        "debtor_name": {"fake": ["company_name"]},
-        "debtor_bic": {"fake": ["bic"]}
+        "msg_id": "CRDTMSG123456789",
+        "creation_datetime": "2025-01-15T10:00:00.123+00:00",
+        "ntfctn_id": "CRDTNTFCTN123456789",
+        "account_id": "GB29NWBK60161331926819"
     },
     "schema": {
         "GrpHdr": {
-            "MsgId": {"var": "msg_id"},
-            "CreDtTm": {"var": "creation_datetime"}
+            "MsgId": {
+                "var": "msg_id"
+            },
+            "CreDtTm": {
+                "var": "creation_datetime"
+            }
         },
         "Ntfctn": [
             {
-                "Id": {"var": "ntfctn_id"},
-                "CreDtTm": {"var": "creation_time"},
+                "Id": {
+                    "var": "ntfctn_id"
+                },
+                "CreDtTm": {
+                    "var": "creation_datetime"
+                },
                 "Acct": {
                     "Id": {
-                        "IBAN": {"var": "account_id"}
-                    },
-                    "Ownr": {
-                        "Nm": {"var": "account_owner"}
-                    },
-                    "Svcr": {
-                        "FinInstnId": {
-                            "BICFI": {"var": "servicer_bic"}
+                        "IBAN": {
+                            "var": "account_id"
                         }
-                    }
+                    },
+                    "Ccy": "USD"
                 },
                 "Ntry": [
                     {
-                        "NtryRef": {"var": "entry_ref"},
+                        "NtryRef": "ENT123456",
                         "Amt": {
                             "@Ccy": "USD",
-                            "$value": {"var": "credit_amount"}
+                            "$value": 10000.0
                         },
                         "CdtDbtInd": "CRDT",
                         "Sts": {
                             "Cd": "BOOK"
                         },
                         "BookgDt": {
-                            "Dt": {"var": "booking_date"}
+                            "Dt": "2025-01-15"
                         },
                         "ValDt": {
-                            "Dt": {"var": "value_date"}
+                            "Dt": "2025-01-15"
                         },
                         "BkTxCd": {
                             "Domn": {
                                 "Cd": "PMNT",
                                 "Fmly": {
                                     "Cd": "RCDT",
-                                    "SubFmlyCd": "ESCT"
+                                    "SubFmlyCd": "XBCT"
                                 }
                             }
-                        },
-                        "NtryDtls": [
-                            {
-                                "TxDtls": [
-                                    {
-                                        "Refs": {
-                                            "AcctSvcrRef": {"var": "transaction_ref"},
-                                            "EndToEndId": {"var": "end_to_end_id"}
-                                        },
-                                        "Amt": {
-                                            "@Ccy": "USD",
-                                            "$value": {"var": "credit_amount"}
-                                        },
-                                        "CdtDbtInd": "CRDT",
-                                        "RltdPties": {
-                                            "Dbtr": {
-                                                "Nm": {"var": "debtor_name"}
-                                            },
-                                            "DbtrAcct": {
-                                                "Id": {
-                                                    "IBAN": {"fake": ["iban"]}
-                                                }
-                                            }
-                                        },
-                                        "RltdAgts": {
-                                            "DbtrAgt": {
-                                                "FinInstnId": {
-                                                    "BICFI": {"var": "debtor_bic"}
-                                                }
-                                            }
-                                        },
-                                        "RmtInf": {
-                                            "Ustrd": ["Payment received"]
-                                        }
-                                    }
-                                ]
-                            }
-                        ]
+                        }
                     }
                 ]
             }

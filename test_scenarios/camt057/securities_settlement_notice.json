@@ -1,61 +1,57 @@
 {
     "variables": {
-        "msg_id": {"cat": ["SEC-NOTIF-", {"fake": ["i64", 100000000000, 999999999999]}]},
-        "creation_datetime": {"fake": ["iso8601_datetime"]},
-        "settlement_date": {"fake": ["date", "%Y-%m-%d", "+3d", "+3d"]},
-        "sender_bic": {"fake": ["bic"]},
-        "receiver_bic": {"fake": ["bic"]},
-        "trade_reference": {"cat": ["SEC-TRD-", {"fake": ["i64", 100000, 999999]}]},
-        "settlement_amount": {"fake": ["f64", 100000.00, 10000000.00]},
-        "currency": {"fake": ["enum", "USD", "EUR", "GBP", "JPY"]},
-        "isin": {"cat": ["US", {"fake": ["alphanumeric", 10, 10]}]},
-        "quantity": {"fake": ["i64", 100, 100000]},
-        "price": {"fake": ["f64", 10.00, 500.00]},
-        "counterparty": {"fake": ["company_name"]},
-        "counterparty_bic": {"fake": ["bic"]},
-        "custody_account": {"cat": ["CUST-", {"fake": ["i64", 10000000, 99999999]}]}
+        "msg_id": "MSG123456789",
+        "creation_datetime": "2025-01-15T10:00:00.123+00:00",
+        "expected_datetime": "2025-01-15T14:00:00.123+00:00",
+        "sender_bic": "BANKUS33XXX",
+        "receiver_bic": "BANKGB22XXX",
+        "amount": 10000.0,
+        "currency": "USD",
+        "ordering_name": "John Smith",
+        "ordering_address": "123 Main Street",
+        "ordering_country": "US",
+        "beneficiary_account": "GB29NWBK60161331926819",
+        "beneficiary_name": "Jane Doe",
+        "payment_reference": "PMT-123456",
+        "remittance_info": "Payment for services",
+        "sender_reference": "SNDREF-123456",
+        "notification_id": "NOTIF-123456",
+        "reference": "REF-123456",
+        "ordering_customer": "ABC Corporation",
+        "purpose_code": "GDDS",
+        "batch_id": "BATCH-456789",
+        "number_of_transactions": 5,
+        "fx_rate": 1.2345,
+        "base_currency": "EUR",
+        "fx_reference": "FX-REF-789012",
+        "security_id": "US0378331005",
+        "quantity": 100,
+        "settlement_date": "2025-01-16",
+        "debtor_account": "US64SVBKUS6S1234567890",
+        "intermediary_bank": "CHASGB2LXXX"
     },
     "schema": {
-        "Assgnmt": {
-            "Id": {"var": "msg_id"},
-            "Assgnr": {
-                "Agt": {
-                    "FinInstnId": {
-                        "BICFI": {"var": "sender_bic"}
-                    }
-                }
-            },
-            "Assgne": {
-                "Agt": {
-                    "FinInstnId": {
-                        "BICFI": {"var": "receiver_bic"}
-                    }
-                }
-            },
-            "CreDtTm": {"var": "creation_datetime"}
-        },
         "Ntfctn": {
-            "Id": {"cat": ["SEC-SETTLE-", {"fake": ["i64", 100000, 999999]}]},
-            "CreDtTm": {"var": "creation_datetime"},
+            "Id": "NOTIF-123456",
             "Acct": {
                 "Id": {
                     "Othr": {
-                        "Id": {"var": "custody_account"}
+                        "Id": "MISSING_custody_account"
                     }
                 }
             },
             "Itm": [
                 {
-                    "Id": {"var": "trade_reference"},
-                    "XpctdValDt": {"var": "settlement_date"},
+                    "Id": "PMT-123456",
+                    "XpctdValDt": "2025-01-15T14:00:00.123+00:00",
                     "Amt": {
-                        "Amt": {
-                            "Value": {"var": "settlement_amount"},
-                            "Ccy": {"var": "currency"}
-                        }
+                        "@Ccy": "USD",
+                        "$value": 10000.0
                     },
                     "RmtInf": {
-                        "Ustrd": [{"cat": ["Securities Settlement - ", {"var": "isin"}]}],
+                        "Ustrd": [
+                            "Securities Settlement - MISSING_isin"
+                        ],
                         "Strd": [
                             {
                                 "RfrdDocInf": [
@@ -65,12 +61,12 @@
                                                 "Prtry": "SEC_TRADE"
                                             }
                                         },
-                                        "Nb": {"var": "trade_reference"}
+                                        "Nb": "MISSING_trade_reference"
                                     }
                                 ],
                                 "AddtlRmtInf": [
-                                    {"cat": ["ISIN: ", {"var": "isin"}]},
-                                    {"cat": ["Qty: ", {"var": "quantity"}, " @ ", {"var": "price"}]}
+                                    "ISIN: MISSING_isin",
+                                    "Qty: 100 @ MISSING_price"
                                 ]
                             }
                         ]
@@ -78,38 +74,9 @@
                 }
             ]
         },
-        "SplmtryData": [
-            {
-                "Envlp": {
-                    "SecuritiesSettlementDetails": {
-                        "TradeReference": {"var": "trade_reference"},
-                        "TradeDate": {"var": "creation_datetime"},
-                        "SettlementDate": {"var": "settlement_date"},
-                        "Security": {
-                            "ISIN": {"var": "isin"},
-                            "Description": "Corporate Bond",
-                            "Quantity": {"var": "quantity"},
-                            "Price": {"var": "price"},
-                            "Currency": {"var": "currency"}
-                        },
-                        "CashConsideration": {
-                            "Amount": {"var": "settlement_amount"},
-                            "Currency": {"var": "currency"},
-                            "SettlementType": "DVP"
-                        },
-                        "Counterparty": {
-                            "Name": {"var": "counterparty"},
-                            "BIC": {"var": "counterparty_bic"},
-                            "SafekeepingAccount": {"fake": ["alphanumeric", 10, 10]}
-                        },
-                        "SettlementInstructions": {
-                            "Place": "DTCC",
-                            "SafekeepingAccount": {"var": "custody_account"},
-                            "Priority": "NORMAL"
-                        }
-                    }
-                }
-            }
-        ]
+        "GrpHdr": {
+            "MsgId": "MSG123456789",
+            "CreDtTm": "2025-01-15T10:00:00.123+00:00"
+        }
     }
 }
