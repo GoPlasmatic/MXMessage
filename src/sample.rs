@@ -18,7 +18,6 @@
 // https://github.com/GoPlasmatic/MXMessage
 
 use crate::error::ValidationError;
-use crate::mx_envelope::BusinessApplicationHeaderBuilder;
 use crate::scenario_config::{
     ScenarioConfig, find_scenario_by_name_with_config, find_scenario_for_message_type_with_config,
 };
@@ -517,118 +516,660 @@ fn generate_xml_for_message_type(
     // Generate BICs and message ID based on scenario
     let (from_bic, to_bic, msg_id) = generate_header_info(message_type, scenario_name);
 
-    // Build the header
-    let mut header_builder = BusinessApplicationHeaderBuilder::new(msg_def_id.to_string())
-        .from_bicfi(from_bic)
-        .to_bicfi(to_bic)
-        .business_message_identifier(msg_id);
-
-    // Add CBPR+ service for CBPR scenarios
-    if let Some(scenario) = scenario_name {
+    // Determine business service
+    let biz_svc = if let Some(scenario) = scenario_name {
         if scenario.contains("cbpr") {
-            header_builder = header_builder.business_service("swift.cbprplus.01".to_string());
+            "swift.cbprplus.01".to_string()
+        } else {
+            "swift.ug".to_string()
         }
-    }
-
-    let header = header_builder.build();
+    } else {
+        "swift.ug".to_string()
+    };
 
     // Parse the JSON data and generate XML based on message type
     match message_type {
         "pacs008" => {
             use crate::document::pacs_008_001_08::FIToFICustomerCreditTransferV08;
+            use crate::header::bah_pacs_008_001_08::{
+                BranchAndFinancialInstitutionIdentification62, BusinessApplicationHeaderV02,
+                FinancialInstitutionIdentification182, Party44Choice1,
+            };
+
             let message: FIToFICustomerCreditTransferV08 = serde_json::from_str(json_data)
                 .map_err(|e| ValidationError::new(9997, format!("Failed to parse pacs008: {e}")))?;
+
+            let header = BusinessApplicationHeaderV02 {
+                char_set: None,
+                fr: Party44Choice1 {
+                    fi_id: Some(BranchAndFinancialInstitutionIdentification62 {
+                        fin_instn_id: FinancialInstitutionIdentification182 {
+                            bicfi: from_bic,
+                            clr_sys_mmb_id: None,
+                            lei: None,
+                        },
+                    }),
+                },
+                to: Party44Choice1 {
+                    fi_id: Some(BranchAndFinancialInstitutionIdentification62 {
+                        fin_instn_id: FinancialInstitutionIdentification182 {
+                            bicfi: to_bic,
+                            clr_sys_mmb_id: None,
+                            lei: None,
+                        },
+                    }),
+                },
+                biz_msg_idr: msg_id,
+                msg_def_idr: msg_def_id.to_string(),
+                biz_svc,
+                mkt_prctc: None,
+                cre_dt: chrono::Utc::now()
+                    .format("%Y-%m-%dT%H:%M:%S%.3fZ")
+                    .to_string(),
+                cpy_dplct: None,
+                pssbl_dplct: None,
+                prty: None,
+                rltd: None,
+            };
+
             to_mx_xml(&message, header, namespace_suffix, None)
                 .map_err(|e| ValidationError::new(9997, format!("Failed to generate XML: {e}")))
         }
         "pacs009" => {
             use crate::document::pacs_009_001_08::FinancialInstitutionCreditTransferV08;
+            use crate::header::bah_pacs_009_001_08::{
+                BranchAndFinancialInstitutionIdentification62, BusinessApplicationHeaderV02,
+                FinancialInstitutionIdentification182, Party44Choice1,
+            };
+
             let message: FinancialInstitutionCreditTransferV08 = serde_json::from_str(json_data)
                 .map_err(|e| ValidationError::new(9997, format!("Failed to parse pacs009: {e}")))?;
+
+            let header = BusinessApplicationHeaderV02 {
+                char_set: None,
+                fr: Party44Choice1 {
+                    fi_id: Some(BranchAndFinancialInstitutionIdentification62 {
+                        fin_instn_id: FinancialInstitutionIdentification182 {
+                            bicfi: from_bic.clone(),
+                            clr_sys_mmb_id: None,
+                            lei: None,
+                        },
+                    }),
+                },
+                to: Party44Choice1 {
+                    fi_id: Some(BranchAndFinancialInstitutionIdentification62 {
+                        fin_instn_id: FinancialInstitutionIdentification182 {
+                            bicfi: to_bic.clone(),
+                            clr_sys_mmb_id: None,
+                            lei: None,
+                        },
+                    }),
+                },
+                biz_msg_idr: msg_id.clone(),
+                msg_def_idr: msg_def_id.to_string(),
+                biz_svc: biz_svc.clone(),
+                mkt_prctc: None,
+                cre_dt: chrono::Utc::now()
+                    .format("%Y-%m-%dT%H:%M:%S%.3fZ")
+                    .to_string(),
+                cpy_dplct: None,
+                pssbl_dplct: None,
+                prty: None,
+                rltd: None,
+            };
+
             to_mx_xml(&message, header, namespace_suffix, None)
                 .map_err(|e| ValidationError::new(9997, format!("Failed to generate XML: {e}")))
         }
         "pacs003" => {
             use crate::document::pacs_003_001_08::FIToFICustomerDirectDebitV08;
+            use crate::header::bah_pacs_003_001_08::{
+                BranchAndFinancialInstitutionIdentification64, BusinessApplicationHeaderV02,
+                FinancialInstitutionIdentification184, Party44Choice1,
+            };
+
             let message: FIToFICustomerDirectDebitV08 = serde_json::from_str(json_data)
                 .map_err(|e| ValidationError::new(9997, format!("Failed to parse pacs003: {e}")))?;
+
+            let header = BusinessApplicationHeaderV02 {
+                char_set: None,
+                fr: Party44Choice1 {
+                    fi_id: Some(BranchAndFinancialInstitutionIdentification64 {
+                        fin_instn_id: FinancialInstitutionIdentification184 {
+                            bicfi: from_bic.clone(),
+                            clr_sys_mmb_id: None,
+                            lei: None,
+                        },
+                    }),
+                },
+                to: Party44Choice1 {
+                    fi_id: Some(BranchAndFinancialInstitutionIdentification64 {
+                        fin_instn_id: FinancialInstitutionIdentification184 {
+                            bicfi: to_bic.clone(),
+                            clr_sys_mmb_id: None,
+                            lei: None,
+                        },
+                    }),
+                },
+                biz_msg_idr: msg_id.clone(),
+                msg_def_idr: msg_def_id.to_string(),
+                biz_svc: biz_svc.clone(),
+                mkt_prctc: None,
+                cre_dt: chrono::Utc::now()
+                    .format("%Y-%m-%dT%H:%M:%S%.3fZ")
+                    .to_string(),
+                cpy_dplct: None,
+                pssbl_dplct: None,
+                prty: None,
+                rltd: None,
+            };
+
             to_mx_xml(&message, header, namespace_suffix, None)
                 .map_err(|e| ValidationError::new(9997, format!("Failed to generate XML: {e}")))
         }
         "pacs002" => {
             use crate::document::pacs_002_001_10::FIToFIPaymentStatusReportV10;
+            use crate::header::bah_pacs_002_001_10::{
+                BranchAndFinancialInstitutionIdentification61, BusinessApplicationHeaderV02,
+                FinancialInstitutionIdentification181, Party44Choice1,
+            };
+
             let message: FIToFIPaymentStatusReportV10 = serde_json::from_str(json_data)
                 .map_err(|e| ValidationError::new(9997, format!("Failed to parse pacs002: {e}")))?;
+
+            let header = BusinessApplicationHeaderV02 {
+                char_set: None,
+                fr: Party44Choice1 {
+                    fi_id: Some(BranchAndFinancialInstitutionIdentification61 {
+                        fin_instn_id: FinancialInstitutionIdentification181 {
+                            bicfi: from_bic.clone(),
+                            clr_sys_mmb_id: None,
+                            lei: None,
+                        },
+                    }),
+                },
+                to: Party44Choice1 {
+                    fi_id: Some(BranchAndFinancialInstitutionIdentification61 {
+                        fin_instn_id: FinancialInstitutionIdentification181 {
+                            bicfi: to_bic.clone(),
+                            clr_sys_mmb_id: None,
+                            lei: None,
+                        },
+                    }),
+                },
+                biz_msg_idr: msg_id.clone(),
+                msg_def_idr: msg_def_id.to_string(),
+                biz_svc: biz_svc.clone(),
+                mkt_prctc: None,
+                cre_dt: chrono::Utc::now()
+                    .format("%Y-%m-%dT%H:%M:%S%.3fZ")
+                    .to_string(),
+                cpy_dplct: None,
+                pssbl_dplct: None,
+                prty: None,
+                rltd: None,
+            };
+
             to_mx_xml(&message, header, namespace_suffix, None)
                 .map_err(|e| ValidationError::new(9997, format!("Failed to generate XML: {e}")))
         }
         "pain001" => {
             use crate::document::pain_001_001_09::CustomerCreditTransferInitiationV09;
+            use crate::header::bah_pain_001_001_09::{
+                BranchAndFinancialInstitutionIdentification64, BusinessApplicationHeaderV02,
+                FinancialInstitutionIdentification183, Party44Choice1,
+            };
+
             let message: CustomerCreditTransferInitiationV09 = serde_json::from_str(json_data)
                 .map_err(|e| ValidationError::new(9997, format!("Failed to parse pain001: {e}")))?;
+
+            let header = BusinessApplicationHeaderV02 {
+                char_set: None,
+                fr: Party44Choice1 {
+                    fi_id: Some(BranchAndFinancialInstitutionIdentification64 {
+                        fin_instn_id: FinancialInstitutionIdentification183 {
+                            bicfi: from_bic.clone(),
+                            clr_sys_mmb_id: None,
+                            lei: None,
+                        },
+                    }),
+                },
+                to: Party44Choice1 {
+                    fi_id: Some(BranchAndFinancialInstitutionIdentification64 {
+                        fin_instn_id: FinancialInstitutionIdentification183 {
+                            bicfi: to_bic.clone(),
+                            clr_sys_mmb_id: None,
+                            lei: None,
+                        },
+                    }),
+                },
+                biz_msg_idr: msg_id.clone(),
+                msg_def_idr: msg_def_id.to_string(),
+                biz_svc: biz_svc.clone(),
+                mkt_prctc: None,
+                cre_dt: chrono::Utc::now()
+                    .format("%Y-%m-%dT%H:%M:%S%.3fZ")
+                    .to_string(),
+                cpy_dplct: None,
+                pssbl_dplct: None,
+                prty: None,
+                rltd: None,
+            };
+
             to_mx_xml(&message, header, namespace_suffix, None)
                 .map_err(|e| ValidationError::new(9997, format!("Failed to generate XML: {e}")))
         }
         "pain008" => {
             use crate::document::pain_008_001_08::CustomerDirectDebitInitiationV08;
+            use crate::header::bah_pain_008_001_08::{
+                BranchAndFinancialInstitutionIdentification66, BusinessApplicationHeaderV02,
+                FinancialInstitutionIdentification185, Party44Choice1,
+            };
+
             let message: CustomerDirectDebitInitiationV08 = serde_json::from_str(json_data)
                 .map_err(|e| ValidationError::new(9997, format!("Failed to parse pain008: {e}")))?;
+
+            let header = BusinessApplicationHeaderV02 {
+                char_set: None,
+                fr: Party44Choice1 {
+                    fi_id: Some(BranchAndFinancialInstitutionIdentification66 {
+                        fin_instn_id: FinancialInstitutionIdentification185 {
+                            bicfi: from_bic.clone(),
+                            clr_sys_mmb_id: None,
+                            lei: None,
+                        },
+                    }),
+                },
+                to: Party44Choice1 {
+                    fi_id: Some(BranchAndFinancialInstitutionIdentification66 {
+                        fin_instn_id: FinancialInstitutionIdentification185 {
+                            bicfi: to_bic.clone(),
+                            clr_sys_mmb_id: None,
+                            lei: None,
+                        },
+                    }),
+                },
+                biz_msg_idr: msg_id.clone(),
+                msg_def_idr: msg_def_id.to_string(),
+                biz_svc: biz_svc.clone(),
+                mkt_prctc: None,
+                cre_dt: chrono::Utc::now()
+                    .format("%Y-%m-%dT%H:%M:%S%.3fZ")
+                    .to_string(),
+                cpy_dplct: None,
+                pssbl_dplct: None,
+                prty: None,
+                rltd: None,
+            };
+
             to_mx_xml(&message, header, namespace_suffix, None)
                 .map_err(|e| ValidationError::new(9997, format!("Failed to generate XML: {e}")))
         }
         "camt025" => {
             use crate::document::camt_025_001_08::ReceiptV08;
+            use crate::header::bah_camt_025_001_08::{
+                BranchAndFinancialInstitutionIdentification61, BusinessApplicationHeaderV02,
+                FinancialInstitutionIdentification181, Party44Choice1,
+            };
+
             let message: ReceiptV08 = serde_json::from_str(json_data)
                 .map_err(|e| ValidationError::new(9997, format!("Failed to parse camt025: {e}")))?;
+
+            let header = BusinessApplicationHeaderV02 {
+                char_set: None,
+                fr: Party44Choice1 {
+                    fi_id: Some(BranchAndFinancialInstitutionIdentification61 {
+                        fin_instn_id: FinancialInstitutionIdentification181 {
+                            bicfi: from_bic.clone(),
+                            clr_sys_mmb_id: None,
+                            lei: None,
+                        },
+                    }),
+                },
+                to: Party44Choice1 {
+                    fi_id: Some(BranchAndFinancialInstitutionIdentification61 {
+                        fin_instn_id: FinancialInstitutionIdentification181 {
+                            bicfi: to_bic.clone(),
+                            clr_sys_mmb_id: None,
+                            lei: None,
+                        },
+                    }),
+                },
+                biz_msg_idr: msg_id.clone(),
+                msg_def_idr: msg_def_id.to_string(),
+                biz_svc: crate::header::bah_camt_025_001_08::Max35Textfixed::CodeSWIFTCBPRPLUS01,
+                mkt_prctc: None,
+                cre_dt: chrono::Utc::now()
+                    .format("%Y-%m-%dT%H:%M:%S%.3fZ")
+                    .to_string(),
+                cpy_dplct: None,
+                pssbl_dplct: None,
+                prty: None,
+                rltd: None,
+            };
+
             to_mx_xml(&message, header, namespace_suffix, None)
                 .map_err(|e| ValidationError::new(9997, format!("Failed to generate XML: {e}")))
         }
         "camt029" => {
             use crate::document::camt_029_001_09::ResolutionOfInvestigationV09;
+            use crate::header::bah_camt_029_001::{
+                BranchAndFinancialInstitutionIdentification61, BusinessApplicationHeaderV02,
+                FinancialInstitutionIdentification181, Party44Choice1,
+            };
+
             let message: ResolutionOfInvestigationV09 = serde_json::from_str(json_data)
                 .map_err(|e| ValidationError::new(9997, format!("Failed to parse camt029: {e}")))?;
+
+            let header = BusinessApplicationHeaderV02 {
+                char_set: None,
+                fr: Party44Choice1 {
+                    fi_id: Some(BranchAndFinancialInstitutionIdentification61 {
+                        fin_instn_id: FinancialInstitutionIdentification181 {
+                            bicfi: from_bic.clone(),
+                            clr_sys_mmb_id: None,
+                            lei: None,
+                        },
+                    }),
+                },
+                to: Party44Choice1 {
+                    fi_id: Some(BranchAndFinancialInstitutionIdentification61 {
+                        fin_instn_id: FinancialInstitutionIdentification181 {
+                            bicfi: to_bic.clone(),
+                            clr_sys_mmb_id: None,
+                            lei: None,
+                        },
+                    }),
+                },
+                biz_msg_idr: msg_id.clone(),
+                msg_def_idr: msg_def_id.to_string(),
+                biz_svc: biz_svc.clone(),
+                mkt_prctc: None,
+                cre_dt: chrono::Utc::now()
+                    .format("%Y-%m-%dT%H:%M:%S%.3fZ")
+                    .to_string(),
+                cpy_dplct: None,
+                pssbl_dplct: None,
+                prty: None,
+                rltd: None,
+            };
+
             to_mx_xml(&message, header, namespace_suffix, None)
                 .map_err(|e| ValidationError::new(9997, format!("Failed to generate XML: {e}")))
         }
         "camt052" => {
             use crate::document::camt_052_001_08::BankToCustomerAccountReportV08;
+            use crate::header::bah_camt_052_001_08::{
+                BranchAndFinancialInstitutionIdentification65, BusinessApplicationHeaderV02,
+                FinancialInstitutionIdentification183, Party44Choice1,
+            };
+
             let message: BankToCustomerAccountReportV08 = serde_json::from_str(json_data)
                 .map_err(|e| ValidationError::new(9997, format!("Failed to parse camt052: {e}")))?;
+
+            let header = BusinessApplicationHeaderV02 {
+                char_set: None,
+                fr: Party44Choice1 {
+                    fi_id: Some(BranchAndFinancialInstitutionIdentification65 {
+                        fin_instn_id: FinancialInstitutionIdentification183 {
+                            bicfi: from_bic.clone(),
+                            clr_sys_mmb_id: None,
+                            lei: None,
+                        },
+                    }),
+                },
+                to: Party44Choice1 {
+                    fi_id: Some(BranchAndFinancialInstitutionIdentification65 {
+                        fin_instn_id: FinancialInstitutionIdentification183 {
+                            bicfi: to_bic.clone(),
+                            clr_sys_mmb_id: None,
+                            lei: None,
+                        },
+                    }),
+                },
+                biz_msg_idr: msg_id.clone(),
+                msg_def_idr: msg_def_id.to_string(),
+                biz_svc: biz_svc.clone(),
+                mkt_prctc: None,
+                cre_dt: chrono::Utc::now()
+                    .format("%Y-%m-%dT%H:%M:%S%.3fZ")
+                    .to_string(),
+                cpy_dplct: None,
+                pssbl_dplct: None,
+                prty: None,
+                rltd: None,
+            };
+
             to_mx_xml(&message, header, namespace_suffix, None)
                 .map_err(|e| ValidationError::new(9997, format!("Failed to generate XML: {e}")))
         }
         "camt053" => {
             use crate::document::camt_053_001_08::BankToCustomerStatementV08;
+            use crate::header::bah_camt_053_001_08::{
+                BranchAndFinancialInstitutionIdentification63, BusinessApplicationHeaderV02,
+                FinancialInstitutionIdentification182, Party44Choice1,
+            };
+
             let message: BankToCustomerStatementV08 = serde_json::from_str(json_data)
                 .map_err(|e| ValidationError::new(9997, format!("Failed to parse camt053: {e}")))?;
+
+            let header = BusinessApplicationHeaderV02 {
+                char_set: None,
+                fr: Party44Choice1 {
+                    fi_id: Some(BranchAndFinancialInstitutionIdentification63 {
+                        fin_instn_id: FinancialInstitutionIdentification182 {
+                            bicfi: from_bic.clone(),
+                            clr_sys_mmb_id: None,
+                            lei: None,
+                        },
+                    }),
+                },
+                to: Party44Choice1 {
+                    fi_id: Some(BranchAndFinancialInstitutionIdentification63 {
+                        fin_instn_id: FinancialInstitutionIdentification182 {
+                            bicfi: to_bic.clone(),
+                            clr_sys_mmb_id: None,
+                            lei: None,
+                        },
+                    }),
+                },
+                biz_msg_idr: msg_id.clone(),
+                msg_def_idr: msg_def_id.to_string(),
+                biz_svc: biz_svc.clone(),
+                mkt_prctc: None,
+                cre_dt: chrono::Utc::now()
+                    .format("%Y-%m-%dT%H:%M:%S%.3fZ")
+                    .to_string(),
+                cpy_dplct: None,
+                pssbl_dplct: None,
+                prty: None,
+                rltd: None,
+            };
+
             to_mx_xml(&message, header, namespace_suffix, None)
                 .map_err(|e| ValidationError::new(9997, format!("Failed to generate XML: {e}")))
         }
         "camt054" => {
             use crate::document::camt_054_001_08::BankToCustomerDebitCreditNotificationV08;
+            use crate::header::bah_camt_054_001::{
+                BranchAndFinancialInstitutionIdentification68, BusinessApplicationHeaderV02,
+                FinancialInstitutionIdentification187, Party44Choice1,
+            };
+
             let message: BankToCustomerDebitCreditNotificationV08 = serde_json::from_str(json_data)
                 .map_err(|e| ValidationError::new(9997, format!("Failed to parse camt054: {e}")))?;
+
+            let header = BusinessApplicationHeaderV02 {
+                char_set: None,
+                fr: Party44Choice1 {
+                    fi_id: Some(BranchAndFinancialInstitutionIdentification68 {
+                        fin_instn_id: FinancialInstitutionIdentification187 {
+                            bicfi: from_bic.clone(),
+                            clr_sys_mmb_id: None,
+                            lei: None,
+                        },
+                    }),
+                },
+                to: Party44Choice1 {
+                    fi_id: Some(BranchAndFinancialInstitutionIdentification68 {
+                        fin_instn_id: FinancialInstitutionIdentification187 {
+                            bicfi: to_bic.clone(),
+                            clr_sys_mmb_id: None,
+                            lei: None,
+                        },
+                    }),
+                },
+                biz_msg_idr: msg_id.clone(),
+                msg_def_idr: msg_def_id.to_string(),
+                biz_svc: biz_svc.clone(),
+                mkt_prctc: None,
+                cre_dt: chrono::Utc::now()
+                    .format("%Y-%m-%dT%H:%M:%S%.3fZ")
+                    .to_string(),
+                cpy_dplct: None,
+                pssbl_dplct: None,
+                prty: None,
+                rltd: None,
+            };
+
             to_mx_xml(&message, header, namespace_suffix, None)
                 .map_err(|e| ValidationError::new(9997, format!("Failed to generate XML: {e}")))
         }
         "camt056" => {
             use crate::document::camt_056_001_08::FIToFIPaymentCancellationRequestV08;
+            use crate::header::bah_camt_056_001_08::{
+                BranchAndFinancialInstitutionIdentification61, BusinessApplicationHeaderV02,
+                FinancialInstitutionIdentification181, Party44Choice1,
+            };
+
             let message: FIToFIPaymentCancellationRequestV08 = serde_json::from_str(json_data)
                 .map_err(|e| ValidationError::new(9997, format!("Failed to parse camt056: {e}")))?;
+
+            let header = BusinessApplicationHeaderV02 {
+                char_set: None,
+                fr: Party44Choice1 {
+                    fi_id: Some(BranchAndFinancialInstitutionIdentification61 {
+                        fin_instn_id: FinancialInstitutionIdentification181 {
+                            bicfi: from_bic.clone(),
+                            clr_sys_mmb_id: None,
+                            lei: None,
+                        },
+                    }),
+                },
+                to: Party44Choice1 {
+                    fi_id: Some(BranchAndFinancialInstitutionIdentification61 {
+                        fin_instn_id: FinancialInstitutionIdentification181 {
+                            bicfi: to_bic.clone(),
+                            clr_sys_mmb_id: None,
+                            lei: None,
+                        },
+                    }),
+                },
+                biz_msg_idr: msg_id.clone(),
+                msg_def_idr: msg_def_id.to_string(),
+                biz_svc: biz_svc.clone(),
+                mkt_prctc: None,
+                cre_dt: chrono::Utc::now()
+                    .format("%Y-%m-%dT%H:%M:%S%.3fZ")
+                    .to_string(),
+                cpy_dplct: None,
+                pssbl_dplct: None,
+                prty: None,
+                rltd: None,
+            };
+
             to_mx_xml(&message, header, namespace_suffix, None)
                 .map_err(|e| ValidationError::new(9997, format!("Failed to generate XML: {e}")))
         }
         "camt057" => {
             use crate::document::camt_057_001_06::NotificationToReceiveV06;
+            use crate::header::bah_camt_057_001_06::{
+                BranchAndFinancialInstitutionIdentification62, BusinessApplicationHeaderV02,
+                FinancialInstitutionIdentification182, Party44Choice1,
+            };
+
             let message: NotificationToReceiveV06 = serde_json::from_str(json_data)
                 .map_err(|e| ValidationError::new(9997, format!("Failed to parse camt057: {e}")))?;
+
+            let header = BusinessApplicationHeaderV02 {
+                char_set: None,
+                fr: Party44Choice1 {
+                    fi_id: Some(BranchAndFinancialInstitutionIdentification62 {
+                        fin_instn_id: FinancialInstitutionIdentification182 {
+                            bicfi: from_bic.clone(),
+                            clr_sys_mmb_id: None,
+                            lei: None,
+                        },
+                    }),
+                },
+                to: Party44Choice1 {
+                    fi_id: Some(BranchAndFinancialInstitutionIdentification62 {
+                        fin_instn_id: FinancialInstitutionIdentification182 {
+                            bicfi: to_bic.clone(),
+                            clr_sys_mmb_id: None,
+                            lei: None,
+                        },
+                    }),
+                },
+                biz_msg_idr: msg_id.clone(),
+                msg_def_idr: msg_def_id.to_string(),
+                biz_svc: biz_svc.clone(),
+                mkt_prctc: None,
+                cre_dt: chrono::Utc::now()
+                    .format("%Y-%m-%dT%H:%M:%S%.3fZ")
+                    .to_string(),
+                cpy_dplct: None,
+                pssbl_dplct: None,
+                prty: None,
+                rltd: None,
+            };
+
             to_mx_xml(&message, header, namespace_suffix, None)
                 .map_err(|e| ValidationError::new(9997, format!("Failed to generate XML: {e}")))
         }
         "camt060" => {
             use crate::document::camt_060_001_05::AccountReportingRequestV05;
+            use crate::header::bah_camt_060_001_05::{
+                BranchAndFinancialInstitutionIdentification62, BusinessApplicationHeaderV02,
+                FinancialInstitutionIdentification182, Party44Choice1,
+            };
+
             let message: AccountReportingRequestV05 = serde_json::from_str(json_data)
                 .map_err(|e| ValidationError::new(9997, format!("Failed to parse camt060: {e}")))?;
+
+            let header = BusinessApplicationHeaderV02 {
+                char_set: None,
+                fr: Party44Choice1 {
+                    fi_id: Some(BranchAndFinancialInstitutionIdentification62 {
+                        fin_instn_id: FinancialInstitutionIdentification182 {
+                            bicfi: from_bic.clone(),
+                            clr_sys_mmb_id: None,
+                            lei: None,
+                        },
+                    }),
+                },
+                to: Party44Choice1 {
+                    fi_id: Some(BranchAndFinancialInstitutionIdentification62 {
+                        fin_instn_id: FinancialInstitutionIdentification182 {
+                            bicfi: to_bic.clone(),
+                            clr_sys_mmb_id: None,
+                            lei: None,
+                        },
+                    }),
+                },
+                biz_msg_idr: msg_id.clone(),
+                msg_def_idr: msg_def_id.to_string(),
+                biz_svc: biz_svc.clone(),
+                mkt_prctc: None,
+                cre_dt: chrono::Utc::now()
+                    .format("%Y-%m-%dT%H:%M:%S%.3fZ")
+                    .to_string(),
+                cpy_dplct: None,
+                pssbl_dplct: None,
+                prty: None,
+                rltd: None,
+            };
+
             to_mx_xml(&message, header, namespace_suffix, None)
                 .map_err(|e| ValidationError::new(9997, format!("Failed to generate XML: {e}")))
         }

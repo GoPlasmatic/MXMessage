@@ -32,7 +32,5 @@ pub use sample::{SampleGenerator, generate_sample, generate_sample_with_config};
 pub use scenario_config::ScenarioConfig;
 
 // Re-export MX envelope and XML utilities
-pub use mx_envelope::{
-    BusinessApplicationHeaderBuilder, BusinessApplicationHeaderV02, MxDocument, MxEnvelope,
-};
+pub use mx_envelope::{MxDocument, MxEnvelope};
 pub use xml::{XmlConfig, from_mx_xml, to_mx_xml};
