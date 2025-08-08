@@ -18,9 +18,11 @@
 // https://github.com/GoPlasmatic/MXMessage
 
 use crate::error::ValidationError;
+use crate::mx_envelope::BusinessApplicationHeaderBuilder;
 use crate::scenario_config::{
     ScenarioConfig, find_scenario_by_name_with_config, find_scenario_for_message_type_with_config,
 };
+use crate::xml::to_mx_xml;
 use fake::Fake;
 use rand::Rng;
 use serde_json::{Value, json};
@@ -29,66 +31,21 @@ use uuid::Uuid;
 
 type Result<T> = std::result::Result<T, ValidationError>;
 
-/// Generate a sample MX message based on test scenarios
+/// Internal function to generate a sample MX message object (for testing)
 ///
-/// This function loads a test scenario configuration for the specified message type
-/// and generates a realistic MX message using the fake crate for dynamic data generation.
-///
-/// # Arguments
-///
-/// * `message_type` - The MX message type (e.g., "pacs008", "camt053")
-/// * `scenario_name` - Optional scenario name. If None, uses the default scenario
-///
-/// # Returns
-///
-/// Returns a complete message object of type T
-///
-/// # Example
-///
-/// ```no_run
-/// # use mx_message::sample::generate_sample;
-/// # use mx_message::document::pacs_008_001_08::FIToFICustomerCreditTransferV08;
-/// // Generate a standard pacs.008 message
-/// let pacs008_msg: FIToFICustomerCreditTransferV08 = generate_sample("pacs008", None).unwrap();
-///
-/// // Generate a specific scenario
-/// let pacs008_high_value: FIToFICustomerCreditTransferV08 =
-///     generate_sample("pacs008", Some("high_value")).unwrap();
-/// ```
-pub fn generate_sample<T>(message_type: &str, scenario_name: Option<&str>) -> Result<T>
+/// This function is used internally by tests that need the message object
+/// rather than the XML string.
+#[doc(hidden)]
+pub fn generate_sample_object<T>(message_type: &str, scenario_name: Option<&str>) -> Result<T>
 where
     T: serde::de::DeserializeOwned,
 {
-    generate_sample_with_config(message_type, scenario_name, &ScenarioConfig::default())
+    generate_sample_object_with_config(message_type, scenario_name, &ScenarioConfig::default())
 }
 
-/// Generate a sample MX message with custom configuration
-///
-/// This function loads a test scenario configuration for the specified message type
-/// and generates a realistic MX message using the fake crate for dynamic data generation.
-///
-/// # Arguments
-///
-/// * `message_type` - The MX message type (e.g., "pacs008", "camt053")
-/// * `scenario_name` - Optional scenario name. If None, uses the default scenario
-/// * `config` - Configuration for scenario file paths
-///
-/// # Returns
-///
-/// Returns a complete message object of type T
-///
-/// # Example
-///
-/// ```no_run
-/// # use mx_message::sample::{generate_sample_with_config, ScenarioConfig};
-/// # use mx_message::document::pacs_008_001_08::FIToFICustomerCreditTransferV08;
-/// # use std::path::PathBuf;
-/// // Generate with custom paths
-/// let config = ScenarioConfig::with_paths(vec![PathBuf::from("./my_scenarios")]);
-/// let pacs008_msg: FIToFICustomerCreditTransferV08 =
-///     generate_sample_with_config("pacs008", None, &config).unwrap();
-/// ```
-pub fn generate_sample_with_config<T>(
+/// Internal function to generate a sample MX message object with custom configuration (for testing)
+#[doc(hidden)]
+pub fn generate_sample_object_with_config<T>(
     message_type: &str,
     scenario_name: Option<&str>,
     config: &ScenarioConfig,
@@ -120,24 +77,99 @@ where
     })
 }
 
-/// A builder for generating MX message samples with custom configuration
+/// Generate a sample MX XML message based on test scenarios
+///
+/// This function loads a test scenario configuration for the specified message type
+/// and generates a complete MX XML message with envelope and header.
+///
+/// # Arguments
+///
+/// * `message_type` - The MX message type (e.g., "pacs008", "camt053")
+/// * `scenario_name` - Optional scenario name. If None, uses the default scenario
+///
+/// # Returns
+///
+/// Returns a complete MX XML string with envelope and header
+///
+/// # Example
+///
+/// ```no_run
+/// # use mx_message::sample::generate_sample;
+/// // Generate a standard pacs.008 message as XML
+/// let pacs008_xml = generate_sample("pacs008", None).unwrap();
+///
+/// // Generate a specific scenario
+/// let pacs008_high_value_xml = generate_sample("pacs008", Some("high_value")).unwrap();
+/// ```
+pub fn generate_sample(message_type: &str, scenario_name: Option<&str>) -> Result<String> {
+    generate_sample_with_config(message_type, scenario_name, &ScenarioConfig::default())
+}
+
+/// Generate a sample MX XML message with custom configuration
+///
+/// This function loads a test scenario configuration for the specified message type
+/// and generates a complete MX XML message with envelope and header.
+///
+/// # Arguments
+///
+/// * `message_type` - The MX message type (e.g., "pacs008", "camt053")
+/// * `scenario_name` - Optional scenario name. If None, uses the default scenario
+/// * `config` - Configuration for scenario file paths
+///
+/// # Returns
+///
+/// Returns a complete MX XML string with envelope and header
+///
+/// # Example
+///
+/// ```no_run
+/// # use mx_message::sample::generate_sample_with_config;
+/// # use mx_message::scenario_config::ScenarioConfig;
+/// # use std::path::PathBuf;
+/// // Generate with custom paths
+/// let config = ScenarioConfig::with_paths(vec![PathBuf::from("./my_scenarios")]);
+/// let pacs008_xml = generate_sample_with_config("pacs008", None, &config).unwrap();
+/// ```
+pub fn generate_sample_with_config(
+    message_type: &str,
+    scenario_name: Option<&str>,
+    config: &ScenarioConfig,
+) -> Result<String> {
+    // Load the scenario configuration JSON
+    let scenario_json = if let Some(name) = scenario_name {
+        find_scenario_by_name_with_config(message_type, name, config)?
+    } else {
+        find_scenario_for_message_type_with_config(message_type, config)?
+    };
+
+    // Process the scenario to generate data
+    let generated_data = process_scenario(&scenario_json)?;
+
+    // Convert generated data to string for parsing
+    let generated_json = serde_json::to_string_pretty(&generated_data).map_err(|e| {
+        ValidationError::new(9997, format!("Failed to serialize generated data: {e}"))
+    })?;
+
+    // Generate the XML based on message type
+    generate_xml_for_message_type(message_type, &generated_json, scenario_name)
+}
+
+/// A builder for generating MX XML message samples with custom configuration
 ///
 /// The `SampleGenerator` provides a fluent interface for configuring and generating
-/// MX message samples with custom scenario paths.
+/// MX XML message samples with custom scenario paths.
 ///
 /// # Example
 ///
 /// ```no_run
 /// # use mx_message::sample::SampleGenerator;
-/// # use mx_message::document::pacs_008_001_08::FIToFICustomerCreditTransferV08;
 /// # use std::path::PathBuf;
 /// let generator = SampleGenerator::new()
 ///     .with_path(PathBuf::from("./custom_scenarios"))
 ///     .with_path(PathBuf::from("./backup_scenarios"));
 ///
-/// let pacs008: FIToFICustomerCreditTransferV08 = generator.generate("pacs008", None).unwrap();
-/// let pacs008_cbpr: FIToFICustomerCreditTransferV08 =
-///     generator.generate("pacs008", Some("cbpr_business_payment")).unwrap();
+/// let pacs008_xml = generator.generate("pacs008", None).unwrap();
+/// let pacs008_cbpr_xml = generator.generate("pacs008", Some("cbpr_business_payment")).unwrap();
 /// ```
 #[derive(Debug, Clone)]
 pub struct SampleGenerator {
@@ -175,16 +207,13 @@ impl SampleGenerator {
         self
     }
 
-    /// Generate a sample MX message
+    /// Generate a sample MX XML message
     ///
     /// # Arguments
     ///
     /// * `message_type` - The MX message type (e.g., "pacs008", "camt053")
     /// * `scenario_name` - Optional scenario name. If None, uses the default scenario
-    pub fn generate<T>(&self, message_type: &str, scenario_name: Option<&str>) -> Result<T>
-    where
-        T: serde::de::DeserializeOwned,
-    {
+    pub fn generate(&self, message_type: &str, scenario_name: Option<&str>) -> Result<String> {
         generate_sample_with_config(message_type, scenario_name, &self.config)
     }
 
@@ -455,6 +484,195 @@ fn generate_fake_value(fake_type: &str, args: &[Value], rng: &mut impl Rng) -> R
 }
 
 /// Process schema value with variable substitution
+/// Generate XML for a specific message type
+fn generate_xml_for_message_type(
+    message_type: &str,
+    json_data: &str,
+    scenario_name: Option<&str>,
+) -> Result<String> {
+    // Determine message definition ID and namespace
+    let (msg_def_id, namespace_suffix) = match message_type {
+        "pacs008" => ("pacs.008.001.08", "pacs.008"),
+        "pacs009" => ("pacs.009.001.08", "pacs.009"),
+        "pacs003" => ("pacs.003.001.08", "pacs.003"),
+        "pacs002" => ("pacs.002.001.10", "pacs.002"),
+        "pain001" => ("pain.001.001.09", "pain.001"),
+        "pain008" => ("pain.008.001.08", "pain.008"),
+        "camt025" => ("camt.025.001.08", "camt.025"),
+        "camt029" => ("camt.029.001.09", "camt.029"),
+        "camt052" => ("camt.052.001.08", "camt.052"),
+        "camt053" => ("camt.053.001.08", "camt.053"),
+        "camt054" => ("camt.054.001.08", "camt.054"),
+        "camt056" => ("camt.056.001.08", "camt.056"),
+        "camt057" => ("camt.057.001.06", "camt.057"),
+        "camt060" => ("camt.060.001.05", "camt.060"),
+        _ => {
+            return Err(ValidationError::new(
+                9997,
+                format!("Unsupported message type: {message_type}"),
+            ));
+        }
+    };
+
+    // Generate BICs and message ID based on scenario
+    let (from_bic, to_bic, msg_id) = generate_header_info(message_type, scenario_name);
+
+    // Build the header
+    let mut header_builder = BusinessApplicationHeaderBuilder::new(msg_def_id.to_string())
+        .from_bicfi(from_bic)
+        .to_bicfi(to_bic)
+        .business_message_identifier(msg_id);
+
+    // Add CBPR+ service for CBPR scenarios
+    if let Some(scenario) = scenario_name {
+        if scenario.contains("cbpr") {
+            header_builder = header_builder.business_service("swift.cbprplus.01".to_string());
+        }
+    }
+
+    let header = header_builder.build();
+
+    // Parse the JSON data and generate XML based on message type
+    match message_type {
+        "pacs008" => {
+            use crate::document::pacs_008_001_08::FIToFICustomerCreditTransferV08;
+            let message: FIToFICustomerCreditTransferV08 = serde_json::from_str(json_data)
+                .map_err(|e| ValidationError::new(9997, format!("Failed to parse pacs008: {e}")))?;
+            to_mx_xml(&message, header, namespace_suffix, None)
+                .map_err(|e| ValidationError::new(9997, format!("Failed to generate XML: {e}")))
+        }
+        "pacs009" => {
+            use crate::document::pacs_009_001_08::FinancialInstitutionCreditTransferV08;
+            let message: FinancialInstitutionCreditTransferV08 = serde_json::from_str(json_data)
+                .map_err(|e| ValidationError::new(9997, format!("Failed to parse pacs009: {e}")))?;
+            to_mx_xml(&message, header, namespace_suffix, None)
+                .map_err(|e| ValidationError::new(9997, format!("Failed to generate XML: {e}")))
+        }
+        "pacs003" => {
+            use crate::document::pacs_003_001_08::FIToFICustomerDirectDebitV08;
+            let message: FIToFICustomerDirectDebitV08 = serde_json::from_str(json_data)
+                .map_err(|e| ValidationError::new(9997, format!("Failed to parse pacs003: {e}")))?;
+            to_mx_xml(&message, header, namespace_suffix, None)
+                .map_err(|e| ValidationError::new(9997, format!("Failed to generate XML: {e}")))
+        }
+        "pacs002" => {
+            use crate::document::pacs_002_001_10::FIToFIPaymentStatusReportV10;
+            let message: FIToFIPaymentStatusReportV10 = serde_json::from_str(json_data)
+                .map_err(|e| ValidationError::new(9997, format!("Failed to parse pacs002: {e}")))?;
+            to_mx_xml(&message, header, namespace_suffix, None)
+                .map_err(|e| ValidationError::new(9997, format!("Failed to generate XML: {e}")))
+        }
+        "pain001" => {
+            use crate::document::pain_001_001_09::CustomerCreditTransferInitiationV09;
+            let message: CustomerCreditTransferInitiationV09 = serde_json::from_str(json_data)
+                .map_err(|e| ValidationError::new(9997, format!("Failed to parse pain001: {e}")))?;
+            to_mx_xml(&message, header, namespace_suffix, None)
+                .map_err(|e| ValidationError::new(9997, format!("Failed to generate XML: {e}")))
+        }
+        "pain008" => {
+            use crate::document::pain_008_001_08::CustomerDirectDebitInitiationV08;
+            let message: CustomerDirectDebitInitiationV08 = serde_json::from_str(json_data)
+                .map_err(|e| ValidationError::new(9997, format!("Failed to parse pain008: {e}")))?;
+            to_mx_xml(&message, header, namespace_suffix, None)
+                .map_err(|e| ValidationError::new(9997, format!("Failed to generate XML: {e}")))
+        }
+        "camt025" => {
+            use crate::document::camt_025_001_08::ReceiptV08;
+            let message: ReceiptV08 = serde_json::from_str(json_data)
+                .map_err(|e| ValidationError::new(9997, format!("Failed to parse camt025: {e}")))?;
+            to_mx_xml(&message, header, namespace_suffix, None)
+                .map_err(|e| ValidationError::new(9997, format!("Failed to generate XML: {e}")))
+        }
+        "camt029" => {
+            use crate::document::camt_029_001_09::ResolutionOfInvestigationV09;
+            let message: ResolutionOfInvestigationV09 = serde_json::from_str(json_data)
+                .map_err(|e| ValidationError::new(9997, format!("Failed to parse camt029: {e}")))?;
+            to_mx_xml(&message, header, namespace_suffix, None)
+                .map_err(|e| ValidationError::new(9997, format!("Failed to generate XML: {e}")))
+        }
+        "camt052" => {
+            use crate::document::camt_052_001_08::BankToCustomerAccountReportV08;
+            let message: BankToCustomerAccountReportV08 = serde_json::from_str(json_data)
+                .map_err(|e| ValidationError::new(9997, format!("Failed to parse camt052: {e}")))?;
+            to_mx_xml(&message, header, namespace_suffix, None)
+                .map_err(|e| ValidationError::new(9997, format!("Failed to generate XML: {e}")))
+        }
+        "camt053" => {
+            use crate::document::camt_053_001_08::BankToCustomerStatementV08;
+            let message: BankToCustomerStatementV08 = serde_json::from_str(json_data)
+                .map_err(|e| ValidationError::new(9997, format!("Failed to parse camt053: {e}")))?;
+            to_mx_xml(&message, header, namespace_suffix, None)
+                .map_err(|e| ValidationError::new(9997, format!("Failed to generate XML: {e}")))
+        }
+        "camt054" => {
+            use crate::document::camt_054_001_08::BankToCustomerDebitCreditNotificationV08;
+            let message: BankToCustomerDebitCreditNotificationV08 = serde_json::from_str(json_data)
+                .map_err(|e| ValidationError::new(9997, format!("Failed to parse camt054: {e}")))?;
+            to_mx_xml(&message, header, namespace_suffix, None)
+                .map_err(|e| ValidationError::new(9997, format!("Failed to generate XML: {e}")))
+        }
+        "camt056" => {
+            use crate::document::camt_056_001_08::FIToFIPaymentCancellationRequestV08;
+            let message: FIToFIPaymentCancellationRequestV08 = serde_json::from_str(json_data)
+                .map_err(|e| ValidationError::new(9997, format!("Failed to parse camt056: {e}")))?;
+            to_mx_xml(&message, header, namespace_suffix, None)
+                .map_err(|e| ValidationError::new(9997, format!("Failed to generate XML: {e}")))
+        }
+        "camt057" => {
+            use crate::document::camt_057_001_06::NotificationToReceiveV06;
+            let message: NotificationToReceiveV06 = serde_json::from_str(json_data)
+                .map_err(|e| ValidationError::new(9997, format!("Failed to parse camt057: {e}")))?;
+            to_mx_xml(&message, header, namespace_suffix, None)
+                .map_err(|e| ValidationError::new(9997, format!("Failed to generate XML: {e}")))
+        }
+        "camt060" => {
+            use crate::document::camt_060_001_05::AccountReportingRequestV05;
+            let message: AccountReportingRequestV05 = serde_json::from_str(json_data)
+                .map_err(|e| ValidationError::new(9997, format!("Failed to parse camt060: {e}")))?;
+            to_mx_xml(&message, header, namespace_suffix, None)
+                .map_err(|e| ValidationError::new(9997, format!("Failed to generate XML: {e}")))
+        }
+        _ => Err(ValidationError::new(
+            9997,
+            format!("Unsupported message type: {message_type}"),
+        )),
+    }
+}
+
+/// Generate header information based on message type and scenario
+fn generate_header_info(
+    message_type: &str,
+    scenario_name: Option<&str>,
+) -> (String, String, String) {
+    let scenario_suffix = scenario_name
+        .map(|s| s.replace('_', "-").to_uppercase())
+        .unwrap_or_else(|| "DEFAULT".to_string());
+
+    let msg_prefix = message_type.to_uppercase();
+
+    // Generate contextual BICs based on scenario
+    let (from_bic, to_bic) = if let Some(scenario) = scenario_name {
+        match scenario {
+            s if s.contains("cbpr") => ("CBPRBNK1XXX".to_string(), "CBPRBNK2XXX".to_string()),
+            s if s.contains("high_value") => ("HVBANK1XXX".to_string(), "HVBANK2XXX".to_string()),
+            s if s.contains("corporate") => ("CORPBNK1XXX".to_string(), "CORPBNK2XXX".to_string()),
+            s if s.contains("treasury") => ("TREASBNKXXX".to_string(), "TREASBNKYYY".to_string()),
+            _ => ("SAMPLEB1XXX".to_string(), "SAMPLEB2XXX".to_string()),
+        }
+    } else {
+        ("SAMPLEB1XXX".to_string(), "SAMPLEB2XXX".to_string())
+    };
+
+    let msg_id = format!(
+        "{}-{}-{}",
+        msg_prefix,
+        scenario_suffix,
+        uuid::Uuid::new_v4().to_string()[..8].to_uppercase()
+    );
+
+    (from_bic, to_bic, msg_id)
+}
+
 fn process_schema_value(value: &Value, vars: &serde_json::Map<String, Value>) -> Result<Value> {
     match value {
         Value::Object(obj) => {

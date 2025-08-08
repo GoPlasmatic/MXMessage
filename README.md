@@ -28,6 +28,7 @@ MXMessage is a comprehensive Rust library for handling ISO 20022 (MX) financial 
   - **CBPR+ Compliant:** Full support for Central Bank Payment Regulation Plus based schemas.
   - **Type-Safe:** Strongly typed Rust structures generated from official XSD schemas.
   - **Comprehensive Validation:** Field-level, pattern, and business rule validation with detailed error codes.
+  - **Complete MX XML Generation:** Generate ISO 20022 compliant XML with proper envelope and Business Application Header.
   - **Multiple Formats:** Native support for both JSON and XML serialization.
   - **Test Data Generation:** Automatic generation of valid test messages using configurable scenarios.
   - **Extensive Coverage:** Support for pacs, pain, and camt message families.
@@ -170,6 +171,55 @@ println!("Generated sample: {}", serde_json::to_string_pretty(&sample)?);
 
 // Scenarios support fake data generation
 // See test_scenarios/ directory for examples
+```
+
+### Complete MX XML Generation
+
+Generate ISO 20022 compliant XML with proper envelope and Business Application Header:
+
+```rust
+use mx_message::xml::create_pacs008_xml;
+use mx_message::sample::generate_sample;
+
+// Generate sample message
+let message = generate_sample("pacs008", Some("standard"))?;
+
+// Create complete MX XML with envelope
+let xml = create_pacs008_xml(
+    &message,
+    "BANKUS33XXX".to_string(),  // From BIC
+    "BANKGB22XXX".to_string(),  // To BIC
+    "MSG-2024-001".to_string(),  // Business Message ID
+)?;
+
+println!("{}", xml);
+```
+
+Advanced XML configuration:
+
+```rust
+use mx_message::mx_envelope::BusinessApplicationHeaderBuilder;
+use mx_message::xml::{to_mx_xml, XmlConfig};
+
+// Build custom header with all options
+let header = BusinessApplicationHeaderBuilder::new("pacs.008.001.08".to_string())
+    .from_bicfi("BANKUS33XXX".to_string())
+    .to_bicfi("BANKGB22XXX".to_string())
+    .business_message_identifier("MSG-001".to_string())
+    .business_service("swift.cbprplus.01".to_string())
+    .priority("HIGH".to_string())
+    .build();
+
+// Configure XML output
+let config = XmlConfig {
+    include_declaration: true,
+    pretty_print: true,
+    indent: "  ".to_string(),
+    include_schema_location: true,
+};
+
+// Generate XML with custom configuration
+let xml = to_mx_xml(&message, header, "pacs.008", Some(config))?;
 ```
 
 ### Validation Error Handling

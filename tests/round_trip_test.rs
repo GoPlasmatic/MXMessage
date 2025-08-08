@@ -1,5 +1,5 @@
 use mx_message::parse_result::ParserConfig;
-use mx_message::sample::generate_sample;
+use mx_message::sample::generate_sample_object;
 use mx_message::validation::Validate;
 use quick_xml::de::from_str as xml_from_str;
 use quick_xml::se::to_string as xml_to_string;
@@ -148,7 +148,7 @@ fn test_single_scenario(
 
     // Generate sample message
     let generated_json: serde_json::Value =
-        match generate_sample(&msg_type_for_generate, Some(scenario_name)) {
+        match generate_sample_object(&msg_type_for_generate, Some(scenario_name)) {
             Ok(json) => json,
             Err(e) => {
                 result.mark_parse_failed(format!("Generation error: {e:?}"));
@@ -216,23 +216,21 @@ fn get_message_types() -> Vec<String> {
     let mut message_types = Vec::new();
 
     if let Ok(entries) = fs::read_dir(scenarios_dir) {
-        for entry in entries {
-            if let Ok(entry) = entry {
-                let path = entry.path();
-                if path.is_dir() {
-                    if let Some(name) = path.file_name().and_then(|s| s.to_str()) {
-                        // Convert directory names like "pacs008" to "pacs.008"
-                        if name.starts_with("pacs")
-                            || name.starts_with("pain")
-                            || name.starts_with("camt")
-                        {
-                            let msg_type = if name.len() >= 7 {
-                                format!("{}.{}", &name[0..4], &name[4..7])
-                            } else {
-                                name.to_string()
-                            };
-                            message_types.push(msg_type);
-                        }
+        for entry in entries.flatten() {
+            let path = entry.path();
+            if path.is_dir() {
+                if let Some(name) = path.file_name().and_then(|s| s.to_str()) {
+                    // Convert directory names like "pacs008" to "pacs.008"
+                    if name.starts_with("pacs")
+                        || name.starts_with("pain")
+                        || name.starts_with("camt")
+                    {
+                        let msg_type = if name.len() >= 7 {
+                            format!("{}.{}", &name[0..4], &name[4..7])
+                        } else {
+                            name.to_string()
+                        };
+                        message_types.push(msg_type);
                     }
                 }
             }

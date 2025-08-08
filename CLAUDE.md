@@ -54,14 +54,17 @@ cargo doc --no-deps
 
 ### Examples
 ```bash
-# Run pacs.008 example
-cargo run --example pacs008_example
+# Run XML generation example (with sample data)
+cargo run --example xml_generation
 
-# Run XML serialization example
-cargo run --example xml_serialization
+# Run validation example
+cargo run --example validation_example
 
-# Run sample generation example
-cargo run --example generate_samples
+# Run error collection example
+cargo run --example error_collection
+
+# Run custom sample generation example
+cargo run --example sample_generation_custom
 ```
 
 ### Sample Generation
