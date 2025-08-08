@@ -106,10 +106,10 @@ impl TestResult {
 fn validate_message<T: Validate>(msg: &T) -> Result<(), Vec<String>> {
     let config = ParserConfig::default();
     let mut collector = mx_message::parse_result::ErrorCollector::new();
-    
+
     // Call validate which collects errors
     msg.validate("", &config, &mut collector);
-    
+
     if !collector.has_errors() {
         Ok(())
     } else {
@@ -138,8 +138,7 @@ fn test_single_scenario(
         result.xml_serialization_status = "⏭️";
         result.xml_roundtrip_status = "⏭️";
         result.error_stage = Some(format!(
-            "Skipped: Message type {} not implemented",
-            message_type
+            "Skipped: Message type {message_type} not implemented"
         ));
         return result;
     }
@@ -152,17 +151,15 @@ fn test_single_scenario(
         match generate_sample(&msg_type_for_generate, Some(scenario_name)) {
             Ok(json) => json,
             Err(e) => {
-                result.mark_parse_failed(format!("Generation error: {:?}", e));
+                result.mark_parse_failed(format!("Generation error: {e:?}"));
                 if debug_mode {
-                    eprintln!("\n[Test {test_index}] Generation failed: {:?}", e);
+                    eprintln!("\n[Test {test_index}] Generation failed: {e:?}");
                     eprintln!("Message type: {message_type} (using {msg_type_for_generate})");
                     eprintln!("Scenario: {scenario_name}");
 
                     // Try to read the scenario file for debugging
-                    let scenario_file = format!(
-                        "test_scenarios/{}/{}.json",
-                        msg_type_for_generate, scenario_name
-                    );
+                    let scenario_file =
+                        format!("test_scenarios/{msg_type_for_generate}/{scenario_name}.json");
                     if let Ok(content) = std::fs::read_to_string(&scenario_file) {
                         eprintln!("Scenario file content (first 500 chars):");
                         eprintln!("{}", &content[..content.len().min(500)]);
@@ -193,8 +190,8 @@ fn test_single_scenario(
                         result.mark_xml_roundtrip_failed("JSON mismatch after XML roundtrip");
                         if debug_mode {
                             eprintln!("\n[Test {test_index}] XML roundtrip mismatch");
-                            eprintln!("Original MX JSON: {:?}", mx_struct_json);
-                            eprintln!("Roundtrip JSON: {:?}", roundtrip_json);
+                            eprintln!("Original MX JSON: {mx_struct_json:?}");
+                            eprintln!("Roundtrip JSON: {roundtrip_json:?}");
                         }
                     }
                 }
@@ -248,7 +245,7 @@ fn get_message_types() -> Vec<String> {
 
 fn get_scenarios_for_message_type(message_type: &str) -> Vec<String> {
     let dir_name = message_type.replace(".", "");
-    let index_path = format!("test_scenarios/{}/index.json", dir_name);
+    let index_path = format!("test_scenarios/{dir_name}/index.json");
 
     match fs::read_to_string(&index_path) {
         Ok(content) => match serde_json::from_str::<ScenarioIndex>(&content) {
@@ -467,8 +464,7 @@ fn test_round_trip_scenarios() {
 
     if skipped_count > 0 {
         println!(
-            "\n✅ All {} tests passed! ({} tests skipped for unsupported message types)",
-            passed_count, skipped_count
+            "\n✅ All {passed_count} tests passed! ({skipped_count} tests skipped for unsupported message types)"
         );
     } else {
         println!("\n✅ All {} tests passed!", test_results.len());
@@ -651,7 +647,7 @@ fn parse_and_validate_mx_message(
                     if let Err(errors) = validate_message(&mx_msg) {
                         if debug_mode {
                             eprintln!("\n[Test {test_index}] MX structure validation failed:");
-                            eprintln!("Errors: {:?}", errors);
+                            eprintln!("Errors: {errors:?}");
                             eprintln!("MX structure that failed validation:");
                             eprintln!(
                                 "{}",
@@ -669,14 +665,13 @@ fn parse_and_validate_mx_message(
                             Ok((mx_json, xml))
                         }
                         Err(e) => Err(ValidationOrSerializationError::Serialization(format!(
-                            "XML serialization error: {:?}",
-                            e
+                            "XML serialization error: {e:?}"
                         ))),
                     }
                 }
                 Err(e) => {
                     if debug_mode {
-                        eprintln!("\n[Test {test_index}] Failed to parse pacs.008: {:?}", e);
+                        eprintln!("\n[Test {test_index}] Failed to parse pacs.008: {e:?}");
                         eprintln!("Generated JSON that failed to parse:");
                         eprintln!(
                             "{}",
@@ -706,14 +701,13 @@ fn parse_and_validate_mx_message(
                             Ok((mx_json, xml))
                         }
                         Err(e) => Err(ValidationOrSerializationError::Serialization(format!(
-                            "XML serialization error: {:?}",
-                            e
+                            "XML serialization error: {e:?}"
                         ))),
                     }
                 }
                 Err(e) => {
                     if debug_mode {
-                        eprintln!("\n[Test {test_index}] Failed to parse pacs.009: {:?}", e);
+                        eprintln!("\n[Test {test_index}] Failed to parse pacs.009: {e:?}");
                     }
                     Err(ValidationOrSerializationError::Validation(vec![format!(
                         "Parse error: {:?}",
@@ -730,7 +724,7 @@ fn parse_and_validate_mx_message(
                     if let Err(errors) = validate_message(&mx_msg) {
                         if debug_mode {
                             eprintln!("\n[Test {test_index}] MX structure validation failed:");
-                            eprintln!("Errors: {:?}", errors);
+                            eprintln!("Errors: {errors:?}");
                             eprintln!("MX structure that failed validation:");
                             eprintln!(
                                 "{}",
@@ -748,14 +742,13 @@ fn parse_and_validate_mx_message(
                             Ok((mx_json, xml))
                         }
                         Err(e) => Err(ValidationOrSerializationError::Serialization(format!(
-                            "XML serialization error: {:?}",
-                            e
+                            "XML serialization error: {e:?}"
                         ))),
                     }
                 }
                 Err(e) => {
                     if debug_mode {
-                        eprintln!("\n[Test {test_index}] Failed to parse pacs.003: {:?}", e);
+                        eprintln!("\n[Test {test_index}] Failed to parse pacs.003: {e:?}");
                     }
                     Err(ValidationOrSerializationError::Validation(vec![format!(
                         "Parse error: {:?}",
@@ -779,14 +772,13 @@ fn parse_and_validate_mx_message(
                             Ok((mx_json, xml))
                         }
                         Err(e) => Err(ValidationOrSerializationError::Serialization(format!(
-                            "XML serialization error: {:?}",
-                            e
+                            "XML serialization error: {e:?}"
                         ))),
                     }
                 }
                 Err(e) => {
                     if debug_mode {
-                        eprintln!("\n[Test {test_index}] Failed to parse pacs.002: {:?}", e);
+                        eprintln!("\n[Test {test_index}] Failed to parse pacs.002: {e:?}");
                     }
                     Err(ValidationOrSerializationError::Validation(vec![format!(
                         "Parse error: {:?}",
@@ -803,7 +795,7 @@ fn parse_and_validate_mx_message(
                     if let Err(errors) = validate_message(&mx_msg) {
                         if debug_mode {
                             eprintln!("\n[Test {test_index}] MX structure validation failed:");
-                            eprintln!("Errors: {:?}", errors);
+                            eprintln!("Errors: {errors:?}");
                             eprintln!("MX structure that failed validation:");
                             eprintln!(
                                 "{}",
@@ -821,14 +813,13 @@ fn parse_and_validate_mx_message(
                             Ok((mx_json, xml))
                         }
                         Err(e) => Err(ValidationOrSerializationError::Serialization(format!(
-                            "XML serialization error: {:?}",
-                            e
+                            "XML serialization error: {e:?}"
                         ))),
                     }
                 }
                 Err(e) => {
                     if debug_mode {
-                        eprintln!("\n[Test {test_index}] Failed to parse pain.001: {:?}", e);
+                        eprintln!("\n[Test {test_index}] Failed to parse pain.001: {e:?}");
                         eprintln!("Generated JSON that failed to parse:");
                         eprintln!(
                             "{}",
@@ -858,14 +849,13 @@ fn parse_and_validate_mx_message(
                             Ok((mx_json, xml))
                         }
                         Err(e) => Err(ValidationOrSerializationError::Serialization(format!(
-                            "XML serialization error: {:?}",
-                            e
+                            "XML serialization error: {e:?}"
                         ))),
                     }
                 }
                 Err(e) => {
                     if debug_mode {
-                        eprintln!("\n[Test {test_index}] Failed to parse pain.008: {:?}", e);
+                        eprintln!("\n[Test {test_index}] Failed to parse pain.008: {e:?}");
                     }
                     Err(ValidationOrSerializationError::Validation(vec![format!(
                         "Parse error: {:?}",
@@ -887,14 +877,13 @@ fn parse_and_validate_mx_message(
                             Ok((mx_json, xml))
                         }
                         Err(e) => Err(ValidationOrSerializationError::Serialization(format!(
-                            "XML serialization error: {:?}",
-                            e
+                            "XML serialization error: {e:?}"
                         ))),
                     }
                 }
                 Err(e) => {
                     if debug_mode {
-                        eprintln!("\n[Test {test_index}] Failed to parse camt.025: {:?}", e);
+                        eprintln!("\n[Test {test_index}] Failed to parse camt.025: {e:?}");
                     }
                     Err(ValidationOrSerializationError::Validation(vec![format!(
                         "Parse error: {:?}",
@@ -919,14 +908,13 @@ fn parse_and_validate_mx_message(
                             Ok((mx_json, xml))
                         }
                         Err(e) => Err(ValidationOrSerializationError::Serialization(format!(
-                            "XML serialization error: {:?}",
-                            e
+                            "XML serialization error: {e:?}"
                         ))),
                     }
                 }
                 Err(e) => {
                     if debug_mode {
-                        eprintln!("\n[Test {test_index}] Failed to parse camt.029: {:?}", e);
+                        eprintln!("\n[Test {test_index}] Failed to parse camt.029: {e:?}");
                     }
                     Err(ValidationOrSerializationError::Validation(vec![format!(
                         "Parse error: {:?}",
@@ -950,14 +938,13 @@ fn parse_and_validate_mx_message(
                             Ok((mx_json, xml))
                         }
                         Err(e) => Err(ValidationOrSerializationError::Serialization(format!(
-                            "XML serialization error: {:?}",
-                            e
+                            "XML serialization error: {e:?}"
                         ))),
                     }
                 }
                 Err(e) => {
                     if debug_mode {
-                        eprintln!("\n[Test {test_index}] Failed to parse camt.052: {:?}", e);
+                        eprintln!("\n[Test {test_index}] Failed to parse camt.052: {e:?}");
                     }
                     Err(ValidationOrSerializationError::Validation(vec![format!(
                         "Parse error: {:?}",
@@ -981,14 +968,13 @@ fn parse_and_validate_mx_message(
                             Ok((mx_json, xml))
                         }
                         Err(e) => Err(ValidationOrSerializationError::Serialization(format!(
-                            "XML serialization error: {:?}",
-                            e
+                            "XML serialization error: {e:?}"
                         ))),
                     }
                 }
                 Err(e) => {
                     if debug_mode {
-                        eprintln!("\n[Test {test_index}] Failed to parse camt.053: {:?}", e);
+                        eprintln!("\n[Test {test_index}] Failed to parse camt.053: {e:?}");
                     }
                     Err(ValidationOrSerializationError::Validation(vec![format!(
                         "Parse error: {:?}",
@@ -1012,14 +998,13 @@ fn parse_and_validate_mx_message(
                             Ok((mx_json, xml))
                         }
                         Err(e) => Err(ValidationOrSerializationError::Serialization(format!(
-                            "XML serialization error: {:?}",
-                            e
+                            "XML serialization error: {e:?}"
                         ))),
                     }
                 }
                 Err(e) => {
                     if debug_mode {
-                        eprintln!("\n[Test {test_index}] Failed to parse camt.054: {:?}", e);
+                        eprintln!("\n[Test {test_index}] Failed to parse camt.054: {e:?}");
                     }
                     Err(ValidationOrSerializationError::Validation(vec![format!(
                         "Parse error: {:?}",
@@ -1043,14 +1028,13 @@ fn parse_and_validate_mx_message(
                             Ok((mx_json, xml))
                         }
                         Err(e) => Err(ValidationOrSerializationError::Serialization(format!(
-                            "XML serialization error: {:?}",
-                            e
+                            "XML serialization error: {e:?}"
                         ))),
                     }
                 }
                 Err(e) => {
                     if debug_mode {
-                        eprintln!("\n[Test {test_index}] Failed to parse camt.056: {:?}", e);
+                        eprintln!("\n[Test {test_index}] Failed to parse camt.056: {e:?}");
                     }
                     Err(ValidationOrSerializationError::Validation(vec![format!(
                         "Parse error: {:?}",
@@ -1074,14 +1058,13 @@ fn parse_and_validate_mx_message(
                             Ok((mx_json, xml))
                         }
                         Err(e) => Err(ValidationOrSerializationError::Serialization(format!(
-                            "XML serialization error: {:?}",
-                            e
+                            "XML serialization error: {e:?}"
                         ))),
                     }
                 }
                 Err(e) => {
                     if debug_mode {
-                        eprintln!("\n[Test {test_index}] Failed to parse camt.057: {:?}", e);
+                        eprintln!("\n[Test {test_index}] Failed to parse camt.057: {e:?}");
                     }
                     Err(ValidationOrSerializationError::Validation(vec![format!(
                         "Parse error: {:?}",
@@ -1105,14 +1088,13 @@ fn parse_and_validate_mx_message(
                             Ok((mx_json, xml))
                         }
                         Err(e) => Err(ValidationOrSerializationError::Serialization(format!(
-                            "XML serialization error: {:?}",
-                            e
+                            "XML serialization error: {e:?}"
                         ))),
                     }
                 }
                 Err(e) => {
                     if debug_mode {
-                        eprintln!("\n[Test {test_index}] Failed to parse camt.060: {:?}", e);
+                        eprintln!("\n[Test {test_index}] Failed to parse camt.060: {e:?}");
                     }
                     Err(ValidationOrSerializationError::Validation(vec![format!(
                         "Parse error: {:?}",
@@ -1146,13 +1128,10 @@ fn parse_xml_back_to_json(
                 Ok(mx_msg) => Ok(serde_json::to_value(&mx_msg).unwrap()),
                 Err(e) => {
                     if debug_mode {
-                        eprintln!(
-                            "\n[Test {test_index}] Failed to parse XML for pacs.008: {:?}",
-                            e
-                        );
+                        eprintln!("\n[Test {test_index}] Failed to parse XML for pacs.008: {e:?}");
                         eprintln!("XML content: {}", &xml_string[..xml_string.len().min(500)]);
                     }
-                    Err(format!("XML parse error: {:?}", e))
+                    Err(format!("XML parse error: {e:?}"))
                 }
             }
         }
@@ -1162,12 +1141,9 @@ fn parse_xml_back_to_json(
                 Ok(mx_msg) => Ok(serde_json::to_value(&mx_msg).unwrap()),
                 Err(e) => {
                     if debug_mode {
-                        eprintln!(
-                            "\n[Test {test_index}] Failed to parse XML for pacs.009: {:?}",
-                            e
-                        );
+                        eprintln!("\n[Test {test_index}] Failed to parse XML for pacs.009: {e:?}");
                     }
-                    Err(format!("XML parse error: {:?}", e))
+                    Err(format!("XML parse error: {e:?}"))
                 }
             }
         }
@@ -1176,12 +1152,9 @@ fn parse_xml_back_to_json(
                 Ok(mx_msg) => Ok(serde_json::to_value(&mx_msg).unwrap()),
                 Err(e) => {
                     if debug_mode {
-                        eprintln!(
-                            "\n[Test {test_index}] Failed to parse XML for pacs.003: {:?}",
-                            e
-                        );
+                        eprintln!("\n[Test {test_index}] Failed to parse XML for pacs.003: {e:?}");
                     }
-                    Err(format!("XML parse error: {:?}", e))
+                    Err(format!("XML parse error: {e:?}"))
                 }
             }
         }
@@ -1190,12 +1163,9 @@ fn parse_xml_back_to_json(
                 Ok(mx_msg) => Ok(serde_json::to_value(&mx_msg).unwrap()),
                 Err(e) => {
                     if debug_mode {
-                        eprintln!(
-                            "\n[Test {test_index}] Failed to parse XML for pacs.002: {:?}",
-                            e
-                        );
+                        eprintln!("\n[Test {test_index}] Failed to parse XML for pacs.002: {e:?}");
                     }
-                    Err(format!("XML parse error: {:?}", e))
+                    Err(format!("XML parse error: {e:?}"))
                 }
             }
         }
@@ -1204,12 +1174,9 @@ fn parse_xml_back_to_json(
                 Ok(mx_msg) => Ok(serde_json::to_value(&mx_msg).unwrap()),
                 Err(e) => {
                     if debug_mode {
-                        eprintln!(
-                            "\n[Test {test_index}] Failed to parse XML for pain.001: {:?}",
-                            e
-                        );
+                        eprintln!("\n[Test {test_index}] Failed to parse XML for pain.001: {e:?}");
                     }
-                    Err(format!("XML parse error: {:?}", e))
+                    Err(format!("XML parse error: {e:?}"))
                 }
             }
         }
@@ -1218,12 +1185,9 @@ fn parse_xml_back_to_json(
                 Ok(mx_msg) => Ok(serde_json::to_value(&mx_msg).unwrap()),
                 Err(e) => {
                     if debug_mode {
-                        eprintln!(
-                            "\n[Test {test_index}] Failed to parse XML for pain.008: {:?}",
-                            e
-                        );
+                        eprintln!("\n[Test {test_index}] Failed to parse XML for pain.008: {e:?}");
                     }
-                    Err(format!("XML parse error: {:?}", e))
+                    Err(format!("XML parse error: {e:?}"))
                 }
             }
         }
@@ -1231,12 +1195,9 @@ fn parse_xml_back_to_json(
             Ok(mx_msg) => Ok(serde_json::to_value(&mx_msg).unwrap()),
             Err(e) => {
                 if debug_mode {
-                    eprintln!(
-                        "\n[Test {test_index}] Failed to parse XML for camt.025: {:?}",
-                        e
-                    );
+                    eprintln!("\n[Test {test_index}] Failed to parse XML for camt.025: {e:?}");
                 }
-                Err(format!("XML parse error: {:?}", e))
+                Err(format!("XML parse error: {e:?}"))
             }
         },
         // camt.027 and camt.028 are not available in this MX library version
@@ -1245,12 +1206,9 @@ fn parse_xml_back_to_json(
                 Ok(mx_msg) => Ok(serde_json::to_value(&mx_msg).unwrap()),
                 Err(e) => {
                     if debug_mode {
-                        eprintln!(
-                            "\n[Test {test_index}] Failed to parse XML for camt.029: {:?}",
-                            e
-                        );
+                        eprintln!("\n[Test {test_index}] Failed to parse XML for camt.029: {e:?}");
                     }
-                    Err(format!("XML parse error: {:?}", e))
+                    Err(format!("XML parse error: {e:?}"))
                 }
             }
         }
@@ -1259,12 +1217,9 @@ fn parse_xml_back_to_json(
                 Ok(mx_msg) => Ok(serde_json::to_value(&mx_msg).unwrap()),
                 Err(e) => {
                     if debug_mode {
-                        eprintln!(
-                            "\n[Test {test_index}] Failed to parse XML for camt.052: {:?}",
-                            e
-                        );
+                        eprintln!("\n[Test {test_index}] Failed to parse XML for camt.052: {e:?}");
                     }
-                    Err(format!("XML parse error: {:?}", e))
+                    Err(format!("XML parse error: {e:?}"))
                 }
             }
         }
@@ -1273,12 +1228,9 @@ fn parse_xml_back_to_json(
                 Ok(mx_msg) => Ok(serde_json::to_value(&mx_msg).unwrap()),
                 Err(e) => {
                     if debug_mode {
-                        eprintln!(
-                            "\n[Test {test_index}] Failed to parse XML for camt.053: {:?}",
-                            e
-                        );
+                        eprintln!("\n[Test {test_index}] Failed to parse XML for camt.053: {e:?}");
                     }
-                    Err(format!("XML parse error: {:?}", e))
+                    Err(format!("XML parse error: {e:?}"))
                 }
             }
         }
@@ -1289,12 +1241,9 @@ fn parse_xml_back_to_json(
                 Ok(mx_msg) => Ok(serde_json::to_value(&mx_msg).unwrap()),
                 Err(e) => {
                     if debug_mode {
-                        eprintln!(
-                            "\n[Test {test_index}] Failed to parse XML for camt.054: {:?}",
-                            e
-                        );
+                        eprintln!("\n[Test {test_index}] Failed to parse XML for camt.054: {e:?}");
                     }
-                    Err(format!("XML parse error: {:?}", e))
+                    Err(format!("XML parse error: {e:?}"))
                 }
             }
         }
@@ -1303,12 +1252,9 @@ fn parse_xml_back_to_json(
                 Ok(mx_msg) => Ok(serde_json::to_value(&mx_msg).unwrap()),
                 Err(e) => {
                     if debug_mode {
-                        eprintln!(
-                            "\n[Test {test_index}] Failed to parse XML for camt.056: {:?}",
-                            e
-                        );
+                        eprintln!("\n[Test {test_index}] Failed to parse XML for camt.056: {e:?}");
                     }
-                    Err(format!("XML parse error: {:?}", e))
+                    Err(format!("XML parse error: {e:?}"))
                 }
             }
         }
@@ -1316,12 +1262,9 @@ fn parse_xml_back_to_json(
             Ok(mx_msg) => Ok(serde_json::to_value(&mx_msg).unwrap()),
             Err(e) => {
                 if debug_mode {
-                    eprintln!(
-                        "\n[Test {test_index}] Failed to parse XML for camt.057: {:?}",
-                        e
-                    );
+                    eprintln!("\n[Test {test_index}] Failed to parse XML for camt.057: {e:?}");
                 }
-                Err(format!("XML parse error: {:?}", e))
+                Err(format!("XML parse error: {e:?}"))
             }
         },
         "camt.060" => {
@@ -1329,18 +1272,14 @@ fn parse_xml_back_to_json(
                 Ok(mx_msg) => Ok(serde_json::to_value(&mx_msg).unwrap()),
                 Err(e) => {
                     if debug_mode {
-                        eprintln!(
-                            "\n[Test {test_index}] Failed to parse XML for camt.060: {:?}",
-                            e
-                        );
+                        eprintln!("\n[Test {test_index}] Failed to parse XML for camt.060: {e:?}");
                     }
-                    Err(format!("XML parse error: {:?}", e))
+                    Err(format!("XML parse error: {e:?}"))
                 }
             }
         }
         _ => Err(format!(
-            "Message type {} not yet supported in round-trip test",
-            message_type
+            "Message type {message_type} not yet supported in round-trip test"
         )),
     }
 }

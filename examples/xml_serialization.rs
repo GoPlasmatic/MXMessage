@@ -19,9 +19,12 @@ fn main() -> Result<(), Box<dyn Error>> {
     let config = ParserConfig::default();
     let mut collector = ErrorCollector::new();
     document.validate("", &config, &mut collector);
-    
+
     if collector.has_errors() {
-        println!("✗ Message validation failed with {} errors:", collector.error_count());
+        println!(
+            "✗ Message validation failed with {} errors:",
+            collector.error_count()
+        );
         for error in collector.errors() {
             println!("  - {} (code: {})", error.message, error.code);
         }
@@ -42,7 +45,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     println!("3. XML Serialization:");
     let xml_output = xml_to_string(&document)?;
     println!("XML Output:");
-    println!("{}\n", xml_output);
+    println!("{xml_output}\n");
 
     // Deserialize from XML
     println!("4. XML Deserialization:");
@@ -53,7 +56,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     println!("5. Validating deserialized message...");
     let mut collector2 = ErrorCollector::new();
     deserialized_document.validate("", &config, &mut collector2);
-    
+
     if collector2.has_errors() {
         println!(
             "✗ Deserialized message validation failed with {} errors:",
@@ -78,9 +81,9 @@ fn main() -> Result<(), Box<dyn Error>> {
         let deserialized_json = serde_json::to_string_pretty(&deserialized_document)?;
 
         println!("Original JSON:");
-        println!("{}\n", original_json);
+        println!("{original_json}\n");
         println!("Deserialized JSON:");
-        println!("{}\n", deserialized_json);
+        println!("{deserialized_json}\n");
     }
 
     println!("=== XML Serialization Example completed ===");

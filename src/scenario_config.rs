@@ -41,7 +41,7 @@ impl Default for ScenarioConfig {
                 return Self { base_paths: paths };
             }
         }
-        
+
         // Default paths
         Self {
             base_paths: vec![
@@ -57,18 +57,18 @@ impl ScenarioConfig {
     pub fn new() -> Self {
         Self::default()
     }
-    
+
     /// Create a configuration with specific paths
     pub fn with_paths(paths: Vec<PathBuf>) -> Self {
         Self { base_paths: paths }
     }
-    
+
     /// Add a path to the configuration
     pub fn add_path(mut self, path: PathBuf) -> Self {
         self.base_paths.push(path);
         self
     }
-    
+
     /// Clear all paths and set new ones
     pub fn set_paths(mut self, paths: Vec<PathBuf>) -> Self {
         self.base_paths = paths;
@@ -83,7 +83,7 @@ fn parse_env_paths(env_value: &str) -> Vec<PathBuf> {
     let separator = ';';
     #[cfg(not(windows))]
     let separator = ':';
-    
+
     env_value
         .split(separator)
         .filter(|s| !s.is_empty())
@@ -108,7 +108,7 @@ pub fn load_scenario_json<P: AsRef<Path>>(path: P) -> Result<Value> {
 /// 3. First .json file in {base_path}/{message_type}/
 pub fn find_scenario_for_message_type_with_config(
     message_type: &str,
-    config: &ScenarioConfig
+    config: &ScenarioConfig,
 ) -> Result<Value> {
     for base_path in &config.base_paths {
         let mt_dir = base_path.join(message_type.to_lowercase());
@@ -142,7 +142,8 @@ pub fn find_scenario_for_message_type_with_config(
         }
     }
 
-    let searched_paths: Vec<String> = config.base_paths
+    let searched_paths: Vec<String> = config
+        .base_paths
         .iter()
         .map(|p| format!("{}/{}", p.display(), message_type.to_lowercase()))
         .collect();
@@ -171,24 +172,29 @@ pub fn find_scenario_for_message_type(message_type: &str) -> Result<Value> {
 pub fn find_scenario_by_name_with_config(
     message_type: &str,
     scenario_name: &str,
-    config: &ScenarioConfig
+    config: &ScenarioConfig,
 ) -> Result<Value> {
     for base_path in &config.base_paths {
         let scenario_path = base_path
             .join(message_type.to_lowercase())
-            .join(format!("{}.json", scenario_name));
-        
+            .join(format!("{scenario_name}.json"));
+
         if scenario_path.exists() {
             return load_scenario_json(scenario_path);
         }
     }
 
-    let tried_paths: Vec<String> = config.base_paths
+    let tried_paths: Vec<String> = config
+        .base_paths
         .iter()
-        .map(|p| format!("{}/{}/{}.json", 
-            p.display(), 
-            message_type.to_lowercase(), 
-            scenario_name))
+        .map(|p| {
+            format!(
+                "{}/{}/{}.json",
+                p.display(),
+                message_type.to_lowercase(),
+                scenario_name
+            )
+        })
         .collect();
 
     Err(ValidationError::new(
@@ -280,7 +286,7 @@ mod tests {
         let temp_dir = TempDir::new().unwrap();
         let pacs008_dir = temp_dir.path().join("pacs008");
         fs::create_dir(&pacs008_dir).unwrap();
-        
+
         // Create a test scenario file
         let scenario_json = r#"{
             "variables": {
@@ -292,17 +298,17 @@ mod tests {
                 }
             }
         }"#;
-        
+
         let scenario_path = pacs008_dir.join("test_scenario.json");
         fs::write(&scenario_path, scenario_json).unwrap();
-        
+
         // Test with custom config
         let config = ScenarioConfig::with_paths(vec![temp_dir.path().to_path_buf()]);
-        
+
         // This should find our test scenario
         let result = find_scenario_for_message_type_with_config("pacs008", &config);
         assert!(result.is_ok());
-        
+
         // Test finding by name
         let result = find_scenario_by_name_with_config("pacs008", "test_scenario", &config);
         assert!(result.is_ok());
@@ -311,12 +317,12 @@ mod tests {
     #[test]
     fn test_scenario_not_found_error() {
         let config = ScenarioConfig::with_paths(vec![PathBuf::from("/nonexistent/path")]);
-        
+
         let result = find_scenario_for_message_type_with_config("pacs999", &config);
         assert!(result.is_err());
-        
+
         if let Err(e) = result {
-            let error_msg = format!("{:?}", e);
+            let error_msg = format!("{e:?}");
             assert!(error_msg.contains("No test scenarios found"));
             assert!(error_msg.contains("pacs999"));
         }

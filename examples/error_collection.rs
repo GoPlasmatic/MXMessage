@@ -1,5 +1,8 @@
+use mx_message::document::pacs_008_001_08::{
+    FIToFICustomerCreditTransferV08, GroupHeader931, Max15NumericTextfixed,
+    SettlementInstruction71, SettlementMethod1Code1,
+};
 use mx_message::parse_result::{ErrorCollector, ParserConfig};
-use mx_message::document::pacs_008_001_08::{FIToFICustomerCreditTransferV08, GroupHeader931, SettlementInstruction71, SettlementMethod1Code1, Max15NumericTextfixed};
 use mx_message::validation::Validate;
 
 fn main() {
@@ -8,7 +11,7 @@ fn main() {
     // Create a message with multiple validation issues
     let payment = FIToFICustomerCreditTransferV08 {
         grp_hdr: GroupHeader931 {
-            msg_id: "ID".to_string(), // Too short (min 5 chars)
+            msg_id: "ID".to_string(),              // Too short (min 5 chars)
             cre_dt_tm: "invalid-date".to_string(), // Wrong format
             nb_of_txs: Max15NumericTextfixed::Code1,
             sttlm_inf: SettlementInstruction71 {
@@ -36,10 +39,7 @@ fn main() {
         for error in collector.errors() {
             println!(
                 "  - {}: {} (code: {})",
-                error
-                    .path
-                    .as_ref()
-                    .unwrap_or(&"root".to_string()),
+                error.path.as_ref().unwrap_or(&"root".to_string()),
                 error.message,
                 error.code
             );
@@ -79,6 +79,8 @@ fn main() {
             println!("  - {}: {}", error.code, error.message);
         }
     } else {
-        println!("✓ Message is valid (except for empty transactions which may be business rule violation)");
+        println!(
+            "✓ Message is valid (except for empty transactions which may be business rule violation)"
+        );
     }
 }

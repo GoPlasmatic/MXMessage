@@ -26,5 +26,5 @@ pub mod scenario_config;
 pub mod validation;
 
 // Re-export sample generation utilities
-pub use sample::{generate_sample, generate_sample_with_config, SampleGenerator};
+pub use sample::{SampleGenerator, generate_sample, generate_sample_with_config};
 pub use scenario_config::ScenarioConfig;

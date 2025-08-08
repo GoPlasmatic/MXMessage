@@ -17,7 +17,10 @@ fn main() {
     transfer.validate("", &config, &mut collector);
 
     if collector.has_errors() {
-        println!("   Validation failed with {} errors:", collector.error_count());
+        println!(
+            "   Validation failed with {} errors:",
+            collector.error_count()
+        );
         for error in collector.errors() {
             println!(
                 "     - Error {}: {} (field: {:?}, path: {:?})",
@@ -42,7 +45,10 @@ fn main() {
     transfer.validate("", &fail_fast_config, &mut collector2);
 
     if collector2.has_errors() {
-        println!("   Validation failed with {} error(s) (fail_fast mode):", collector2.error_count());
+        println!(
+            "   Validation failed with {} error(s) (fail_fast mode):",
+            collector2.error_count()
+        );
         for error in collector2.errors() {
             println!(
                 "     - Error {}: {} (field: {:?}, path: {:?})",
@@ -63,7 +69,10 @@ fn main() {
     transfer.validate("", &lenient_config, &mut collector3);
 
     if collector3.has_errors() {
-        println!("   Validation failed with {} errors (lenient mode):", collector3.error_count());
+        println!(
+            "   Validation failed with {} errors (lenient mode):",
+            collector3.error_count()
+        );
         for error in collector3.errors() {
             println!(
                 "     - Error {}: {} (field: {:?}, path: {:?})",

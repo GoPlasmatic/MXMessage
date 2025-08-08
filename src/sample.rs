@@ -19,9 +19,7 @@
 
 use crate::error::ValidationError;
 use crate::scenario_config::{
-    find_scenario_by_name_with_config,
-    find_scenario_for_message_type_with_config,
-    ScenarioConfig
+    ScenarioConfig, find_scenario_by_name_with_config, find_scenario_for_message_type_with_config,
 };
 use fake::Fake;
 use rand::Rng;
@@ -87,13 +85,13 @@ where
 /// # use std::path::PathBuf;
 /// // Generate with custom paths
 /// let config = ScenarioConfig::with_paths(vec![PathBuf::from("./my_scenarios")]);
-/// let pacs008_msg: FIToFICustomerCreditTransferV08 = 
+/// let pacs008_msg: FIToFICustomerCreditTransferV08 =
 ///     generate_sample_with_config("pacs008", None, &config).unwrap();
 /// ```
 pub fn generate_sample_with_config<T>(
-    message_type: &str, 
+    message_type: &str,
     scenario_name: Option<&str>,
-    config: &ScenarioConfig
+    config: &ScenarioConfig,
 ) -> Result<T>
 where
     T: serde::de::DeserializeOwned,
@@ -138,7 +136,7 @@ where
 ///     .with_path(PathBuf::from("./backup_scenarios"));
 ///
 /// let pacs008: FIToFICustomerCreditTransferV08 = generator.generate("pacs008", None).unwrap();
-/// let pacs008_cbpr: FIToFICustomerCreditTransferV08 = 
+/// let pacs008_cbpr: FIToFICustomerCreditTransferV08 =
 ///     generator.generate("pacs008", Some("cbpr_business_payment")).unwrap();
 /// ```
 #[derive(Debug, Clone)]
@@ -159,24 +157,24 @@ impl SampleGenerator {
             config: ScenarioConfig::default(),
         }
     }
-    
+
     /// Create a sample generator with specific configuration
     pub fn with_config(config: ScenarioConfig) -> Self {
         Self { config }
     }
-    
+
     /// Add a path to search for scenario files
     pub fn with_path(mut self, path: PathBuf) -> Self {
         self.config = self.config.add_path(path);
         self
     }
-    
+
     /// Set multiple paths to search for scenario files (replaces existing paths)
     pub fn with_paths(mut self, paths: Vec<PathBuf>) -> Self {
         self.config = self.config.set_paths(paths);
         self
     }
-    
+
     /// Generate a sample MX message
     ///
     /// # Arguments
@@ -189,7 +187,7 @@ impl SampleGenerator {
     {
         generate_sample_with_config(message_type, scenario_name, &self.config)
     }
-    
+
     /// Get a reference to the current configuration
     pub fn config(&self) -> &ScenarioConfig {
         &self.config
@@ -228,7 +226,7 @@ fn generate_value(spec: &Value, rng: &mut impl Rng) -> Result<Value> {
         Value::Object(obj) => {
             if let Some(fake_spec) = obj.get("fake") {
                 if let Value::Array(fake_arr) = fake_spec {
-                    if let Some(Value::String(fake_type)) = fake_arr.get(0) {
+                    if let Some(Value::String(fake_type)) = fake_arr.first() {
                         return generate_fake_value(fake_type, &fake_arr[1..], rng);
                     }
                 }
@@ -236,7 +234,7 @@ fn generate_value(spec: &Value, rng: &mut impl Rng) -> Result<Value> {
                 if let Value::Array(parts) = cat_spec {
                     // If only one element and it's an object, evaluate it directly
                     if parts.len() == 1 {
-                        if let Some(Value::Object(_)) = parts.get(0) {
+                        if let Some(Value::Object(_)) = parts.first() {
                             let generated = generate_value(&parts[0], rng)?;
                             // Convert numbers to strings for single element cat
                             if let Value::Number(n) = generated {
@@ -265,11 +263,9 @@ fn generate_value(spec: &Value, rng: &mut impl Rng) -> Result<Value> {
                     }
                     return Ok(Value::String(result));
                 }
-            } else if let Some(pick_spec) = obj.get("pick") {
-                if let Value::Array(options) = pick_spec {
-                    let idx = rng.gen_range(0..options.len());
-                    return Ok(options[idx].clone());
-                }
+            } else if let Some(Value::Array(options)) = obj.get("pick") {
+                let idx = rng.gen_range(0..options.len());
+                return Ok(options[idx].clone());
             }
         }
         _ => return Ok(spec.clone()),
@@ -296,18 +292,17 @@ fn generate_fake_value(fake_type: &str, args: &[Value], rng: &mut impl Rng) -> R
                 (0..3).map(|_| rng.gen_range(b'0'..=b'9') as char).collect()
             };
             Ok(Value::String(format!(
-                "{}{}{}{}",
-                letters, country, location, branch
+                "{letters}{country}{location}{branch}"
             )))
         }
         "uuid" => Ok(Value::String(Uuid::new_v4().to_string())),
         "i64" => {
-            let min = args.get(0).and_then(|v| v.as_i64()).unwrap_or(0);
+            let min = args.first().and_then(|v| v.as_i64()).unwrap_or(0);
             let max = args.get(1).and_then(|v| v.as_i64()).unwrap_or(i64::MAX);
             Ok(Value::Number(rng.gen_range(min..=max).into()))
         }
         "f64" => {
-            let min = args.get(0).and_then(|v| v.as_f64()).unwrap_or(0.0);
+            let min = args.first().and_then(|v| v.as_f64()).unwrap_or(0.0);
             let max = args.get(1).and_then(|v| v.as_f64()).unwrap_or(f64::MAX);
             let value = rng.gen_range(min..=max);
             // Round to 2 decimal places for currency amounts
@@ -328,18 +323,18 @@ fn generate_fake_value(fake_type: &str, args: &[Value], rng: &mut impl Rng) -> R
         "country_name" => Ok(Value::String(CountryName().fake())),
         "word" => Ok(Value::String(Word().fake())),
         "words" => {
-            let min = args.get(0).and_then(|v| v.as_u64()).unwrap_or(1) as usize;
+            let min = args.first().and_then(|v| v.as_u64()).unwrap_or(1) as usize;
             let max = args.get(1).and_then(|v| v.as_u64()).unwrap_or(3) as usize;
             let count = rng.gen_range(min..=max);
             let words: Vec<String> = (0..count).map(|_| Word().fake()).collect();
             Ok(Value::String(words.join(" ")))
         }
         "iban" => {
-            let country = args.get(0).and_then(|v| v.as_str()).unwrap_or("DE");
+            let country = args.first().and_then(|v| v.as_str()).unwrap_or("DE");
             // Generate a simple IBAN-like string
             let check = format!("{:02}", rng.gen_range(10..99));
             let account: String = (0..18).map(|_| rng.gen_range(0..10).to_string()).collect();
-            Ok(Value::String(format!("{}{}{}", country, check, account)))
+            Ok(Value::String(format!("{country}{check}{account}")))
         }
         "lei" => {
             // Generate a realistic LEI (18 uppercase alphanumeric + 2 check digits)
@@ -348,11 +343,11 @@ fn generate_fake_value(fake_type: &str, args: &[Value], rng: &mut impl Rng) -> R
                 .map(|_| chars.chars().nth(rng.gen_range(0..chars.len())).unwrap())
                 .collect();
             let check = format!("{:02}", rng.gen_range(10..99));
-            Ok(Value::String(format!("{}{}", lei, check)))
+            Ok(Value::String(format!("{lei}{check}")))
         }
         "alphanumeric" => {
             // Generate alphanumeric string of specified length
-            let min_len = args.get(0).and_then(|v| v.as_u64()).unwrap_or(10) as usize;
+            let min_len = args.first().and_then(|v| v.as_u64()).unwrap_or(10) as usize;
             let max_len = args
                 .get(1)
                 .and_then(|v| v.as_u64())
@@ -385,7 +380,7 @@ fn generate_fake_value(fake_type: &str, args: &[Value], rng: &mut impl Rng) -> R
         "city_name" => Ok(Value::String(CityName().fake())),
         "date" => {
             // Generate date in specified format
-            let format = args.get(0).and_then(|v| v.as_str()).unwrap_or("%Y-%m-%d");
+            let format = args.first().and_then(|v| v.as_str()).unwrap_or("%Y-%m-%d");
             let _start_offset = args.get(1).and_then(|v| v.as_str()).unwrap_or("0d");
             let _end_offset = args.get(2).and_then(|v| v.as_str()).unwrap_or("0d");
 
@@ -404,17 +399,15 @@ fn generate_fake_value(fake_type: &str, args: &[Value], rng: &mut impl Rng) -> R
         }
         "regex" => {
             // Handle regex patterns that define a set of options
-            if let Some(pattern_val) = args.get(0) {
-                if let Value::String(pattern) = pattern_val {
-                    // Simple handling for common patterns
-                    if pattern.starts_with('(') && pattern.ends_with(')') {
-                        // Extract options from pattern like "(GB|DE|FR|SG|HK)"
-                        let inner = &pattern[1..pattern.len() - 1];
-                        let options: Vec<&str> = inner.split('|').collect();
-                        if !options.is_empty() {
-                            let idx = rng.gen_range(0..options.len());
-                            return Ok(Value::String(options[idx].to_string()));
-                        }
+            if let Some(Value::String(pattern)) = args.first() {
+                // Simple handling for common patterns
+                if pattern.starts_with('(') && pattern.ends_with(')') {
+                    // Extract options from pattern like "(GB|DE|FR|SG|HK)"
+                    let inner = &pattern[1..pattern.len() - 1];
+                    let options: Vec<&str> = inner.split('|').collect();
+                    if !options.is_empty() {
+                        let idx = rng.gen_range(0..options.len());
+                        return Ok(Value::String(options[idx].to_string()));
                     }
                 }
             }
@@ -434,14 +427,14 @@ fn generate_fake_value(fake_type: &str, args: &[Value], rng: &mut impl Rng) -> R
             let domains = ["example.com", "company.com", "corp.com", "bank.com"];
             let first = first_names[rng.gen_range(0..first_names.len())];
             let domain = domains[rng.gen_range(0..domains.len())];
-            Ok(Value::String(format!("{}@{}", first, domain)))
+            Ok(Value::String(format!("{first}@{domain}")))
         }
         "phone_number" => {
             // Generate a phone number
             let area = rng.gen_range(200..999);
             let prefix = rng.gen_range(200..999);
             let line = rng.gen_range(1000..9999);
-            Ok(Value::String(format!("+1-{}-{}-{}", area, prefix, line)))
+            Ok(Value::String(format!("+1-{area}-{prefix}-{line}")))
         }
         "state_abbr" => {
             // US state abbreviations
@@ -455,10 +448,7 @@ fn generate_fake_value(fake_type: &str, args: &[Value], rng: &mut impl Rng) -> R
             let hour = rng.gen_range(0..24);
             let minute = rng.gen_range(0..60);
             let second = rng.gen_range(0..60);
-            Ok(Value::String(format!(
-                "{:02}:{:02}:{:02}",
-                hour, minute, second
-            )))
+            Ok(Value::String(format!("{hour:02}:{minute:02}:{second:02}")))
         }
         _ => Ok(Value::String(format!("FAKE_{}", fake_type.to_uppercase()))),
     }
@@ -469,26 +459,22 @@ fn process_schema_value(value: &Value, vars: &serde_json::Map<String, Value>) ->
     match value {
         Value::Object(obj) => {
             // Check if this is a variable reference first
-            if let Some(var_ref) = obj.get("var") {
-                if let Value::String(var_name) = var_ref {
-                    if let Some(var_value) = vars.get(var_name) {
-                        return Ok(var_value.clone());
-                    }
+            if let Some(Value::String(var_name)) = obj.get("var") {
+                if let Some(var_value) = vars.get(var_name) {
+                    return Ok(var_value.clone());
                 }
             }
 
             // Handle cat spec with variable resolution
-            if let Some(cat_spec) = obj.get("cat") {
-                if let Value::Array(parts) = cat_spec {
-                    // Process each part to resolve variables
-                    let resolved_parts: Vec<Value> = parts
-                        .iter()
-                        .map(|part| process_schema_value(part, vars))
-                        .collect::<Result<Vec<_>>>()?;
-                    let resolved_obj = json!({"cat": resolved_parts});
-                    let mut rng = rand::thread_rng();
-                    return generate_value(&resolved_obj, &mut rng);
-                }
+            if let Some(Value::Array(parts)) = obj.get("cat") {
+                // Process each part to resolve variables
+                let resolved_parts: Vec<Value> = parts
+                    .iter()
+                    .map(|part| process_schema_value(part, vars))
+                    .collect::<Result<Vec<_>>>()?;
+                let resolved_obj = json!({"cat": resolved_parts});
+                let mut rng = rand::thread_rng();
+                return generate_value(&resolved_obj, &mut rng);
             }
 
             // Check if this object itself is a fake/pick spec

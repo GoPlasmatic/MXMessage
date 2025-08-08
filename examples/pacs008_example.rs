@@ -18,9 +18,12 @@ fn main() -> Result<(), Box<dyn Error>> {
     let config = ParserConfig::default();
     let mut collector = ErrorCollector::new();
     document.validate("", &config, &mut collector);
-    
+
     if collector.has_errors() {
-        println!("✗ Message validation failed with {} errors:", collector.error_count());
+        println!(
+            "✗ Message validation failed with {} errors:",
+            collector.error_count()
+        );
         for error in collector.errors() {
             println!("  - {} (code: {})", error.message, error.code);
         }
@@ -54,7 +57,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     println!("4. Validating deserialized message...");
     let mut collector2 = ErrorCollector::new();
     deserialized_document.validate("", &config, &mut collector2);
-    
+
     if collector2.has_errors() {
         println!(
             "✗ Deserialized message validation failed with {} errors:",
@@ -104,10 +107,10 @@ fn main() -> Result<(), Box<dyn Error>> {
     );
     println!("     Charge Bearer: {:?}", document.cdt_trf_tx_inf.chrg_br);
     if let Some(ref debtor_name) = document.cdt_trf_tx_inf.dbtr.nm {
-        println!("     Debtor: {}", debtor_name);
+        println!("     Debtor: {debtor_name}");
     }
     if let Some(ref creditor_name) = document.cdt_trf_tx_inf.cdtr.nm {
-        println!("     Creditor: {}", creditor_name);
+        println!("     Creditor: {creditor_name}");
     }
 
     println!("\n=== Example completed successfully ===");

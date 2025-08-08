@@ -47,10 +47,7 @@ pub mod helpers {
             if value.chars().count() < min_len {
                 let error = ValidationError::new(
                     1001,
-                    format!(
-                        "{} is shorter than the minimum length of {}",
-                        field_name, min_len
-                    ),
+                    format!("{field_name} is shorter than the minimum length of {min_len}"),
                 )
                 .with_field(field_name.to_string())
                 .with_path(path.to_string());
@@ -69,7 +66,7 @@ pub mod helpers {
             if value.chars().count() > max_len {
                 let error = ValidationError::new(
                     1002,
-                    format!("{} exceeds the maximum length of {}", field_name, max_len),
+                    format!("{field_name} exceeds the maximum length of {max_len}"),
                 )
                 .with_field(field_name.to_string())
                 .with_path(path.to_string());
@@ -102,7 +99,7 @@ pub mod helpers {
                 collector.add_critical_error(
                     ValidationError::new(
                         9999,
-                        format!("Invalid regex pattern for {}: {}", field_name, pattern),
+                        format!("Invalid regex pattern for {field_name}: {pattern}"),
                     )
                     .with_field(field_name.to_string())
                     .with_path(path.to_string()),
@@ -114,7 +111,7 @@ pub mod helpers {
         if !regex.is_match(value) {
             let error = ValidationError::new(
                 1005,
-                format!("{} does not match the required pattern", field_name),
+                format!("{field_name} does not match the required pattern"),
             )
             .with_field(field_name.to_string())
             .with_path(path.to_string());
@@ -140,7 +137,7 @@ pub mod helpers {
         collector: &mut ErrorCollector,
     ) -> bool {
         if value.is_none() {
-            let error = ValidationError::new(1003, format!("{} is required", field_name))
+            let error = ValidationError::new(1003, format!("{field_name} is required"))
                 .with_field(field_name.to_string())
                 .with_path(path.to_string());
 
@@ -155,7 +152,7 @@ pub mod helpers {
         if parent.is_empty() {
             field.to_string()
         } else {
-            format!("{}.{}", parent, field)
+            format!("{parent}.{field}")
         }
     }
 }
