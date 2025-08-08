@@ -18,10 +18,15 @@
 // https://github.com/GoPlasmatic/MXMessage
 
 use crate::error::ValidationError;
-use crate::scenario_config::{find_scenario_by_name, find_scenario_for_message_type};
+use crate::scenario_config::{
+    find_scenario_by_name_with_config,
+    find_scenario_for_message_type_with_config,
+    ScenarioConfig
+};
 use fake::Fake;
 use rand::Rng;
 use serde_json::{Value, json};
+use std::path::PathBuf;
 use uuid::Uuid;
 
 type Result<T> = std::result::Result<T, ValidationError>;
@@ -56,11 +61,48 @@ pub fn generate_sample<T>(message_type: &str, scenario_name: Option<&str>) -> Re
 where
     T: serde::de::DeserializeOwned,
 {
+    generate_sample_with_config(message_type, scenario_name, &ScenarioConfig::default())
+}
+
+/// Generate a sample MX message with custom configuration
+///
+/// This function loads a test scenario configuration for the specified message type
+/// and generates a realistic MX message using the fake crate for dynamic data generation.
+///
+/// # Arguments
+///
+/// * `message_type` - The MX message type (e.g., "pacs008", "camt053")
+/// * `scenario_name` - Optional scenario name. If None, uses the default scenario
+/// * `config` - Configuration for scenario file paths
+///
+/// # Returns
+///
+/// Returns a complete message object of type T
+///
+/// # Example
+///
+/// ```no_run
+/// # use mx_message::sample::{generate_sample_with_config, ScenarioConfig};
+/// # use mx_message::document::pacs_008_001_08::FIToFICustomerCreditTransferV08;
+/// # use std::path::PathBuf;
+/// // Generate with custom paths
+/// let config = ScenarioConfig::with_paths(vec![PathBuf::from("./my_scenarios")]);
+/// let pacs008_msg: FIToFICustomerCreditTransferV08 = 
+///     generate_sample_with_config("pacs008", None, &config).unwrap();
+/// ```
+pub fn generate_sample_with_config<T>(
+    message_type: &str, 
+    scenario_name: Option<&str>,
+    config: &ScenarioConfig
+) -> Result<T>
+where
+    T: serde::de::DeserializeOwned,
+{
     // Load the scenario configuration JSON
     let scenario_json = if let Some(name) = scenario_name {
-        find_scenario_by_name(message_type, name)?
+        find_scenario_by_name_with_config(message_type, name, config)?
     } else {
-        find_scenario_for_message_type(message_type)?
+        find_scenario_for_message_type_with_config(message_type, config)?
     };
 
     // Process the scenario to generate data
@@ -78,6 +120,80 @@ where
             format!("Failed to parse generated JSON into {message_type}: {e}"),
         )
     })
+}
+
+/// A builder for generating MX message samples with custom configuration
+///
+/// The `SampleGenerator` provides a fluent interface for configuring and generating
+/// MX message samples with custom scenario paths.
+///
+/// # Example
+///
+/// ```no_run
+/// # use mx_message::sample::SampleGenerator;
+/// # use mx_message::document::pacs_008_001_08::FIToFICustomerCreditTransferV08;
+/// # use std::path::PathBuf;
+/// let generator = SampleGenerator::new()
+///     .with_path(PathBuf::from("./custom_scenarios"))
+///     .with_path(PathBuf::from("./backup_scenarios"));
+///
+/// let pacs008: FIToFICustomerCreditTransferV08 = generator.generate("pacs008", None).unwrap();
+/// let pacs008_cbpr: FIToFICustomerCreditTransferV08 = 
+///     generator.generate("pacs008", Some("cbpr_business_payment")).unwrap();
+/// ```
+#[derive(Debug, Clone)]
+pub struct SampleGenerator {
+    config: ScenarioConfig,
+}
+
+impl Default for SampleGenerator {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+impl SampleGenerator {
+    /// Create a new sample generator with default configuration
+    pub fn new() -> Self {
+        Self {
+            config: ScenarioConfig::default(),
+        }
+    }
+    
+    /// Create a sample generator with specific configuration
+    pub fn with_config(config: ScenarioConfig) -> Self {
+        Self { config }
+    }
+    
+    /// Add a path to search for scenario files
+    pub fn with_path(mut self, path: PathBuf) -> Self {
+        self.config = self.config.add_path(path);
+        self
+    }
+    
+    /// Set multiple paths to search for scenario files (replaces existing paths)
+    pub fn with_paths(mut self, paths: Vec<PathBuf>) -> Self {
+        self.config = self.config.set_paths(paths);
+        self
+    }
+    
+    /// Generate a sample MX message
+    ///
+    /// # Arguments
+    ///
+    /// * `message_type` - The MX message type (e.g., "pacs008", "camt053")
+    /// * `scenario_name` - Optional scenario name. If None, uses the default scenario
+    pub fn generate<T>(&self, message_type: &str, scenario_name: Option<&str>) -> Result<T>
+    where
+        T: serde::de::DeserializeOwned,
+    {
+        generate_sample_with_config(message_type, scenario_name, &self.config)
+    }
+    
+    /// Get a reference to the current configuration
+    pub fn config(&self) -> &ScenarioConfig {
+        &self.config
+    }
 }
 
 /// Process scenario JSON and generate fake data

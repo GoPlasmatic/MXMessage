@@ -28,3 +28,4 @@ fake = { version = "2.9", features = ["derive", "chrono"] }
 
 [dev-dependencies]
 quick-xml = { version = "0.31", features = ["serialize"] }
+tempfile = "3.8"
