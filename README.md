@@ -7,10 +7,10 @@
 
 *Full CBPR+ compliance with comprehensive validation and test data generation.*
 
-  [![Release Crates](https://github.com/GoPlasmatic/MXMessage/actions/workflows/crate-publish.yml/badge.svg)](https://github.com/GoPlasmatic/MXMessage/actions/workflows/crate-publish.yml)
   [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
   [![Rust](https://img.shields.io/badge/rust-1.70+-orange.svg)](https://www.rust-lang.org)
   [![Crates.io](https://img.shields.io/crates/v/mx-message.svg)](https://crates.io/crates/mx-message)
+  [![Swift CBPR+](https://img.shields.io/badge/Swift-CBPR%2B%20SR2025-green.svg)](https://www.swift.com)
 
   <p>
     <a href="https://github.com/GoPlasmatic">🏢 Organization</a> •
@@ -25,10 +25,11 @@ MXMessage is a comprehensive Rust library for handling ISO 20022 (MX) financial 
 
 ## 🚀 Key Features
 
-  - **CBPR+ Compliant:** Full support for Central Bank Payment Regulation Plus based schemas.
+  - **CBPR+ SR2025 Compliant:** Full support for Central Bank Payment Regulation Plus SR2025 schemas.
+  - **Simplified v3 API:** Two main functions (`to_json` and `to_xml`) handle all message types with automatic envelope generation.
   - **Type-Safe:** Strongly typed Rust structures generated from official XSD schemas.
   - **Comprehensive Validation:** Field-level, pattern, and business rule validation with detailed error codes.
-  - **Complete MX XML Generation:** Generate ISO 20022 compliant XML with proper envelope and Business Application Header.
+  - **Complete MX XML Generation:** Automatic ISO 20022 compliant XML with proper AppHdr envelope.
   - **Multiple Formats:** Native support for both JSON and XML serialization.
   - **Test Data Generation:** Automatic generation of valid test messages using configurable scenarios.
   - **Extensive Coverage:** Support for pacs, pain, and camt message families.
@@ -133,31 +134,47 @@ Add `mx-message` to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-mx-message = "0.1"
+mx-message = "3.0"
 serde_json = "1.0"  # For JSON support
 quick-xml = { version = "0.31", features = ["serialize"] }  # For XML support
 ```
 
 ## 📖 Usage
 
-### Basic Message Creation
+### Basic Message Creation (v3 API)
 
 ```rust
+use mx_message::{to_json, to_xml};
 use mx_message::document::Document;
 use mx_message::pacs_008_001_08::*;
 
 // Create a payment message
-let payment = create_payment_message();
+let payment = FIToFICustomerCreditTransferV08 {
+    grp_hdr: GroupHeader93 {
+        msg_id: "MSGID123456".to_string(),
+        cre_dt_tm: "2024-01-15T10:30:00Z".to_string(),
+        nb_of_txs: "1".to_string(),
+        // ... other fields
+    },
+    cdt_trf_tx_inf: vec![/* transactions */],
+    splmtry_data: None,
+};
 
-// Validate against CBPR+ rules
-match payment.validate() {
+let document = Document::FIToFICustomerCreditTransferV08(Box::new(payment));
+
+// Validate against CBPR+ SR2025 rules
+match document.validate() {
     Ok(_) => println!("✓ Message is valid"),
     Err(e) => eprintln!("✗ Validation failed: {}", e.message),
 }
 
-// Serialize to JSON
-let json = serde_json::to_string_pretty(&payment)?;
+// Convert to JSON (simplified v3 API)
+let json = to_json(&document)?;
 println!("{}", json);
+
+// Convert to XML with automatic envelope (simplified v3 API)
+let xml = to_xml(&document)?;
+println!("{}", xml);
 ```
 
 ### Test Data Generation
@@ -173,53 +190,64 @@ println!("Generated sample: {}", serde_json::to_string_pretty(&sample)?);
 // See test_scenarios/ directory for examples
 ```
 
-### Complete MX XML Generation
+### Complete MX XML Generation (v3 Simplified API)
 
-Generate ISO 20022 compliant XML with proper envelope and Business Application Header:
+Generate ISO 20022 compliant XML with proper envelope and Business Application Header using the simplified v3 API:
 
 ```rust
-use mx_message::xml::create_pacs008_xml;
-use mx_message::sample::generate_sample;
+use mx_message::{to_json, to_xml};
+use mx_message::document::Document;
 
-// Generate sample message
-let message = generate_sample("pacs008", Some("standard"))?;
+// Create or load your message
+let document = Document::FIToFICustomerCreditTransferV08(/* ... */);
 
-// Create complete MX XML with envelope
-let xml = create_pacs008_xml(
-    &message,
-    "BANKUS33XXX".to_string(),  // From BIC
-    "BANKGB22XXX".to_string(),  // To BIC
-    "MSG-2024-001".to_string(),  // Business Message ID
-)?;
+// Convert to JSON - simple one-liner
+let json = to_json(&document)?;
+println!("{}", json);
 
+// Convert to XML with automatic envelope generation
+let xml = to_xml(&document)?;
 println!("{}", xml);
 ```
 
-Advanced XML configuration:
+The v3 API automatically:
+- Generates the correct Business Application Header based on message type
+- Creates a properly formatted MX envelope with AppHdr
+- Sets appropriate namespaces and CBPR+ compliance indicators
+- Handles all message types uniformly
+
+**Note:** The simplified API uses sensible defaults. For advanced customization of headers and envelopes, the lower-level APIs are still available:
 
 ```rust
-use mx_message::mx_envelope::BusinessApplicationHeaderBuilder;
-use mx_message::xml::{to_mx_xml, XmlConfig};
+use mx_message::mx_envelope::create_mx_envelope;
+use mx_message::header::head_001_001_02::BusinessApplicationHeaderV02;
 
-// Build custom header with all options
-let header = BusinessApplicationHeaderBuilder::new("pacs.008.001.08".to_string())
-    .from_bicfi("BANKUS33XXX".to_string())
-    .to_bicfi("BANKGB22XXX".to_string())
-    .business_message_identifier("MSG-001".to_string())
-    .business_service("swift.cbprplus.01".to_string())
-    .priority("HIGH".to_string())
-    .build();
-
-// Configure XML output
-let config = XmlConfig {
-    include_declaration: true,
-    pretty_print: true,
-    indent: "  ".to_string(),
-    include_schema_location: true,
+// Create custom header for advanced use cases
+let custom_header = BusinessApplicationHeaderV02 {
+    fr: Party44Choice {
+        fiid: Some(FinancialInstitutionIdentification18 {
+            bicfi: Some("BANKUS33XXX".to_string()),
+            ..Default::default()
+        }),
+        ..Default::default()
+    },
+    to: Party44Choice {
+        fiid: Some(FinancialInstitutionIdentification18 {
+            bicfi: Some("BANKGB22XXX".to_string()),
+            ..Default::default()
+        }),
+        ..Default::default()
+    },
+    biz_msg_idr: "MSG-2024-001".to_string(),
+    msg_def_idr: "pacs.008.001.08".to_string(),
+    biz_svc: Some("swift.cbprplus.02".to_string()),
+    cre_dt: "2024-01-15T10:30:00Z".to_string(),
+    ..Default::default()
 };
 
-// Generate XML with custom configuration
-let xml = to_mx_xml(&message, header, "pacs.008", Some(config))?;
+// Create envelope with custom header
+let envelope = create_mx_envelope(custom_header, document)?;
+let xml = quick_xml::se::to_string(&envelope)?;
 ```
 
 ### Validation Error Handling
@@ -307,15 +335,16 @@ TEST_MESSAGE_TYPE=pacs.008 TEST_SCENARIO=cbpr_cross_border_payment TEST_DEBUG=1 
 
 For detailed test scenarios and MT to MX mapping, see the [Test Scenarios Documentation](test_scenarios/README.md).
 
-## 🏛️ CBPR+ Compliance
+## 🏛️ CBPR+ SR2025 Compliance
 
-This library implements CBPR+ (Central Bank Payment Regulation Plus) compliant schemas, providing:
+This library implements CBPR+ SR2025 (Central Bank Payment Regulation Plus Standards Release 2025) compliant schemas, providing:
 
 - **Enhanced Validation**: Stricter rules for regulatory compliance
 - **UETR Support**: Unique End-to-end Transaction Reference tracking
 - **Central Bank Integration**: Support for central bank payment systems
 - **Cross-Border Payments**: Full support for international transactions
 - **Regulatory Reporting**: Compliance with reporting requirements
+- **BizSvc SR2025**: Updated Business Service identifier `swift.cbprplus.02` for SR2025 compliance
 
 ## 📊 Supported Message Types
 
