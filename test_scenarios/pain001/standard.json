@@ -24,7 +24,7 @@
             "To": {"FIId": {"FinInstnId": {"BICFI": {"fake": ["bic"]}}}},
             "BizMsgIdr": {"var": "msg_id"},
             "MsgDefIdr": "pain.001.001.09",
-            "BizSvc": "swift.ug",
+            "BizSvc": "swift.cbprplus.01",
             "CreDt": {"var": "creation_datetime"}
         },
         "Document": {
