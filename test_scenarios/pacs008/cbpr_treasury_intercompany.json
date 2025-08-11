@@ -1,300 +1,86 @@
 {
     "variables": {
-        "msg_id": {
-            "cat": [
-                "CBPR-TREAS-IC-",
-                {
-                    "fake": [
-                        "i64",
-                        100000000000,
-                        999999999999
-                    ]
-                }
-            ]
-        },
-        "creation_datetime": {
-            "fake": [
-                "iso8601_datetime"
-            ]
-        },
-        "payment_id": {
-            "cat": [
-                "TREAS-IC-",
-                {
-                    "fake": [
-                        "i64",
-                        100000,
-                        999999
-                    ]
-                }
-            ]
-        },
-        "uetr": {
-            "fake": [
-                "uuid"
-            ]
-        },
-        "amount": {
-            "fake": [
-                "f64",
-                1000000.0,
-                50000000.0
-            ]
-        },
+        "msg_id": {"cat": ["CBPR-TREAS-IC-", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "payment_id": {"cat": ["TREAS-IC-", {"fake": ["i64", 100000, 999999]}]},
+        "uetr": {"fake": ["uuid"]},
+        "amount": {"fake": ["f64", 1000000.0, 50000000.0]},
         "currency": {
-            "fake": [
-                "enum",
-                "USD",
-                "EUR",
-                "GBP",
-                "JPY",
-                "CHF"
-            ]
+            "fake": ["enum", "USD", "EUR", "GBP", "JPY", "CHF"]
         },
-        "sender_bic": {
-            "fake": [
-                "bic"
-            ]
-        },
-        "receiver_bic": {
-            "fake": [
-                "bic"
-            ]
-        },
-        "parent_company": {
-            "cat": [
-                {
-                    "fake": [
-                        "company_name"
-                    ]
-                },
-                " Holdings Ltd"
-            ]
-        },
-        "parent_lei": {
-            "fake": [
-                "lei"
-            ]
-        },
-        "parent_country": {
-            "fake": [
-                "country_code"
-            ]
-        },
-        "parent_account": {
-            "fake": [
-                "iban"
-            ]
-        },
-        "subsidiary": {
-            "cat": [
-                {
-                    "fake": [
-                        "company_name"
-                    ]
-                },
-                " Subsidiary Inc"
-            ]
-        },
-        "subsidiary_lei": {
-            "fake": [
-                "lei"
-            ]
-        },
-        "subsidiary_country": {
-            "fake": [
-                "country_code"
-            ]
-        },
-        "subsidiary_account": {
-            "fake": [
-                "iban"
-            ]
-        },
-        "cost_center": {
-            "cat": [
-                "CC-",
-                {
-                    "fake": [
-                        "i64",
-                        1000,
-                        9999
-                    ]
-                }
-            ]
-        },
-        "fx_rate": {
-            "fake": [
-                "f64",
-                0.8,
-                1.2
-            ]
-        }
+        "sender_bic": {"fake": ["bic"]},
+        "receiver_bic": {"fake": ["bic"]},
+        "parent_company": {"cat": [{"fake": ["company_name"]}, " Holdings Ltd"]},
+        "parent_lei": {"fake": ["lei"]},
+        "parent_country": {"fake": ["country_code"]},
+        "parent_account": {"fake": ["iban"]},
+        "subsidiary": {"cat": [{"fake": ["company_name"]}, " Subsidiary Inc"]},
+        "subsidiary_lei": {"fake": ["lei"]},
+        "subsidiary_country": {"fake": ["country_code"]},
+        "subsidiary_account": {"fake": ["iban"]},
+        "cost_center": {"cat": ["CC-", {"fake": ["i64", 1000, 9999]}]},
+        "fx_rate": {"fake": ["f64", 0.8, 1.2]}
     },
     "schema": {
-        "GrpHdr": {
-            "MsgId": {
-                "var": "msg_id"
-            },
-            "CreDtTm": {
-                "var": "creation_datetime"
-            },
-            "NbOfTxs": "1",
-            "SttlmInf": {
-                "SttlmMtd": "INDA"
-            }
+        "AppHdr": {
+            "Fr": {"FIId": {"FinInstnId": {"BICFI": {"var": "sender_bic"}}}},
+            "To": {"FIId": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}}}},
+            "BizMsgIdr": {"var": "msg_id"},
+            "MsgDefIdr": "pacs.008.001.08",
+            "BizSvc": "swift.cbprplus.01",
+            "CreDt": {"var": "creation_datetime"}
         },
-        "CdtTrfTxInf": {
-            "PmtId": {
-                "InstrId": {
-                    "var": "payment_id"
+        "Document": {
+            "FIToFICstmrCdtTrf": {
+                "GrpHdr": {
+                    "MsgId": {"var": "msg_id"},
+                    "CreDtTm": {"var": "creation_datetime"},
+                    "NbOfTxs": "1",
+                    "SttlmInf": {"SttlmMtd": "INDA"}
                 },
-                "EndToEndId": {
-                    "var": "payment_id"
-                },
-                "UETR": {
-                    "var": "uetr"
-                }
-            },
-            "PmtTpInf": {
-                "InstrPrty": "NORM",
-                "SvcLvl": [
-                    {
-                        "Cd": "G001"
-                    }
-                ],
-                "CtgyPurp": {
-                    "Cd": "INTC"
-                }
-            },
-            "IntrBkSttlmAmt": {
-                "@Ccy": {
-                    "var": "currency"
-                },
-                "$value": {
-                    "var": "amount"
-                }
-            },
-            "IntrBkSttlmDt": {
-                "fake": [
-                    "date",
-                    "%Y-%m-%d",
-                    "0d",
-                    "+1d"
-                ]
-            },
-            "InstdAmt": {
-                "@Ccy": {
-                    "var": "currency"
-                },
-                "$value": {
-                    "var": "amount"
-                }
-            },
-            "XchgRate": {
-                "var": "fx_rate"
-            },
-            "ChrgBr": "DEBT",
-            "Dbtr": {
-                "Nm": {
-                    "var": "parent_company"
-                },
-                "PstlAdr": {
-                    "Ctry": {
-                        "var": "parent_country"
-                    }
-                },
-                "Id": {
-                    "OrgId": {
-                        "LEI": {
-                            "var": "parent_lei"
-                        }
-                    }
-                }
-            },
-            "DbtrAcct": {
-                "Id": {
-                    "IBAN": {
-                        "var": "parent_account"
-                    }
-                }
-            },
-            "DbtrAgt": {
-                "FinInstnId": {
-                    "BICFI": {
-                        "var": "sender_bic"
-                    }
-                }
-            },
-            "CdtrAgt": {
-                "FinInstnId": {
-                    "BICFI": {
-                        "var": "receiver_bic"
-                    }
-                }
-            },
-            "Cdtr": {
-                "Nm": {
-                    "var": "subsidiary"
-                },
-                "PstlAdr": {
-                    "Ctry": {
-                        "var": "subsidiary_country"
-                    }
-                },
-                "Id": {
-                    "OrgId": {
-                        "LEI": {
-                            "var": "subsidiary_lei"
-                        }
-                    }
-                }
-            },
-            "CdtrAcct": {
-                "Id": {
-                    "IBAN": {
-                        "var": "subsidiary_account"
-                    }
-                }
-            },
-            "Purp": {
-                "Cd": "INTC"
-            },
-            "RmtInf": {
-                "Ustrd": {
-                    "cat": [
-                        "Intercompany cash sweep - Cost Center ",
-                        {
-                            "var": "cost_center"
-                        }
-                    ]
-                },
-                "Strd": [
-                    {
-                        "AddtlRmtInf": [
-                            "Monthly treasury cash concentration",
-                            "Generated remittance information",
-                            "Generated remittance information"
+                "CdtTrfTxInf": {
+                    "PmtId": {
+                        "InstrId": {"var": "payment_id"},
+                        "EndToEndId": {"var": "payment_id"},
+                        "UETR": {"var": "uetr"}
+                    },
+                    "PmtTpInf": {"InstrPrty": "NORM", "SvcLvl": [{"Cd": "G001"}], "CtgyPurp": {"Cd": "INTC"}},
+                    "IntrBkSttlmAmt": {"@Ccy": {"var": "currency"}, "$value": {"var": "amount"}},
+                    "IntrBkSttlmDt": {
+                        "fake": ["date", "%Y-%m-%d", "0d", "+1d"]
+                    },
+                    "InstdAmt": {"@Ccy": {"var": "currency"}, "$value": {"var": "amount"}},
+                    "XchgRate": {"var": "fx_rate"},
+                    "ChrgBr": "DEBT",
+                    "Dbtr": {
+                        "Nm": {"var": "parent_company"},
+                        "PstlAdr": {"Ctry": {"var": "parent_country"}},
+                        "Id": {"OrgId": {"LEI": {"var": "parent_lei"}}}
+                    },
+                    "DbtrAcct": {"Id": {"IBAN": {"var": "parent_account"}}},
+                    "DbtrAgt": {"FinInstnId": {"BICFI": {"var": "sender_bic"}}},
+                    "CdtrAgt": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}}},
+                    "Cdtr": {
+                        "Nm": {"var": "subsidiary"},
+                        "PstlAdr": {"Ctry": {"var": "subsidiary_country"}},
+                        "Id": {"OrgId": {"LEI": {"var": "subsidiary_lei"}}}
+                    },
+                    "CdtrAcct": {"Id": {"IBAN": {"var": "subsidiary_account"}}},
+                    "Purp": {"Cd": "INTC"},
+                    "RmtInf": {
+                        "Ustrd": {"cat": ["Intercompany cash sweep - Cost Center ", {"var": "cost_center"}]},
+                        "Strd": [
+                            {
+                                "AddtlRmtInf": [
+                                    "Monthly treasury cash concentration",
+                                    "Generated remittance information",
+                                    "Generated remittance information"
+                                ]
+                            }
                         ]
-                    }
-                ]
-            },
-            "InstgAgt": {
-                "FinInstnId": {
-                    "BICFI": {
-                        "fake": [
-                            "bic"
-                        ]
-                    }
-                }
-            },
-            "InstdAgt": {
-                "FinInstnId": {
-                    "BICFI": {
-                        "fake": [
-                            "bic"
-                        ]
-                    }
+                    },
+                    "InstgAgt": {"FinInstnId": {"BICFI": {"fake": ["bic"]}}},
+                    "InstdAgt": {"FinInstnId": {"BICFI": {"fake": ["bic"]}}}
                 }
             }
         }

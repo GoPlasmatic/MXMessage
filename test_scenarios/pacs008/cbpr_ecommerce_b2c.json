@@ -1,489 +1,164 @@
 {
     "variables": {
-        "msg_id": {
-            "cat": [
-                "MSG",
-                {
-                    "fake": [
-                        "i64",
-                        100000000000,
-                        999999999999
-                    ]
-                }
-            ]
-        },
-        "creation_datetime": {
-            "fake": [
-                "iso8601_datetime"
-            ]
-        },
-        "sender_bic": {
-            "fake": [
-                "bic"
-            ]
-        },
-        "receiver_bic": {
-            "fake": [
-                "bic"
-            ]
-        },
-        "transaction_ref": {
-            "cat": [
-                "TXN",
-                {
-                    "fake": [
-                        "i64",
-                        100000000000,
-                        999999999999
-                    ]
-                }
-            ]
-        },
-        "instruction_id": {
-            "cat": [
-                "INSTR",
-                {
-                    "fake": [
-                        "i64",
-                        10000000,
-                        99999999
-                    ]
-                }
-            ]
-        },
-        "end_to_end_id": {
-            "cat": [
-                "E2E",
-                {
-                    "fake": [
-                        "i64",
-                        100000000000,
-                        999999999999
-                    ]
-                }
-            ]
-        },
-        "uetr": {
-            "fake": [
-                "uuid"
-            ]
-        },
-        "amount": {
-            "fake": [
-                "f64",
-                25.0,
-                2500.0
-            ]
-        },
-        "customer_name": {
-            "fake": [
-                "name"
-            ]
-        },
-        "customer_email": {
-            "fake": [
-                "email"
-            ]
-        },
-        "merchant_name": {
-            "cat": [
-                {
-                    "fake": [
-                        "company_name"
-                    ]
-                },
-                " Online Store"
-            ]
-        },
-        "order_id": {
-            "cat": [
-                "ORD-",
-                {
-                    "fake": [
-                        "i64",
-                        2024000000,
-                        2024999999
-                    ]
-                }
-            ]
-        },
-        "payment_token": {
-            "cat": [
-                "TOK-",
-                {
-                    "fake": [
-                        "i64",
-                        100000000000000000,
-                        999999999999999999
-                    ]
-                }
-            ]
-        },
-        "card_last_four": {
-            "fake": [
-                "i64",
-                1000,
-                9999
-            ]
-        }
+        "msg_id": {"cat": ["MSG", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "sender_bic": {"fake": ["bic"]},
+        "receiver_bic": {"fake": ["bic"]},
+        "transaction_ref": {"cat": ["TXN", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "instruction_id": {"cat": ["INSTR", {"fake": ["i64", 10000000, 99999999]}]},
+        "end_to_end_id": {"cat": ["E2E", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "uetr": {"fake": ["uuid"]},
+        "amount": {"fake": ["f64", 25.0, 2500.0]},
+        "customer_name": {"fake": ["name"]},
+        "customer_email": {"fake": ["email"]},
+        "merchant_name": {"cat": [{"fake": ["company_name"]}, " Online Store"]},
+        "order_id": {"cat": ["ORD-", {"fake": ["i64", 2024000000, 2024999999]}]},
+        "payment_token": {"cat": ["TOK-", {"fake": ["i64", 100000000000000000, 999999999999999999]}]},
+        "card_last_four": {"fake": ["i64", 1000, 9999]}
     },
     "schema": {
-        "GrpHdr": {
-            "MsgId": {
-                "var": "msg_id"
-            },
-            "CreDtTm": {
-                "var": "creation_datetime"
-            },
-            "NbOfTxs": "1",
-            "SttlmInf": {
-                "SttlmMtd": "INDA"
-            }
+        "AppHdr": {
+            "Fr": {"FIId": {"FinInstnId": {"BICFI": {"var": "sender_bic"}}}},
+            "To": {"FIId": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}}}},
+            "BizMsgIdr": {"var": "msg_id"},
+            "MsgDefIdr": "pacs.008.001.08",
+            "BizSvc": "swift.cbprplus.01",
+            "CreDt": {"var": "creation_datetime"}
         },
-        "CdtTrfTxInf": {
-            "PmtId": {
-                "InstrId": {
-                    "var": "instruction_id"
+        "Document": {
+            "FIToFICstmrCdtTrf": {
+                "GrpHdr": {
+                    "MsgId": {"var": "msg_id"},
+                    "CreDtTm": {"var": "creation_datetime"},
+                    "NbOfTxs": "1",
+                    "SttlmInf": {"SttlmMtd": "INDA"}
                 },
-                "EndToEndId": {
-                    "var": "end_to_end_id"
-                },
-                "TxId": {
-                    "var": "transaction_ref"
-                },
-                "UETR": {
-                    "var": "uetr"
-                }
-            },
-            "PmtTpInf": {
-                "InstrPrty": "NORM",
-                "SvcLvl": [
-                    {
-                        "Cd": "CBPR"
-                    }
-                ],
-                "CtgyPurp": {
-                    "Cd": "GDDS"
-                },
-                "LclInstrm": {
-                    "Prtry": "ECOMMERCE_PURCHASE"
-                }
-            },
-            "IntrBkSttlmAmt": {
-                "@Ccy": "USD",
-                "$value": {
-                    "var": "amount"
-                }
-            },
-            "IntrBkSttlmDt": {
-                "fake": [
-                    "date",
-                    "%Y-%m-%d",
-                    "+0d",
-                    "+0d"
-                ]
-            },
-            "SttlmPrty": "NORM",
-            "InstdAmt": {
-                "@Ccy": "USD",
-                "$value": {
-                    "var": "amount"
-                }
-            },
-            "ChrgBr": "SHAR",
-            "InstgAgt": {
-                "FinInstnId": {
-                    "BICFI": {
-                        "var": "sender_bic"
+                "CdtTrfTxInf": {
+                    "PmtId": {
+                        "InstrId": {"var": "instruction_id"},
+                        "EndToEndId": {"var": "end_to_end_id"},
+                        "TxId": {"var": "transaction_ref"},
+                        "UETR": {"var": "uetr"}
                     },
-                    "LEI": {
-                        "fake": [
-                            "lei"
-                        ]
-                    }
-                }
-            },
-            "InstdAgt": {
-                "FinInstnId": {
-                    "BICFI": {
-                        "var": "receiver_bic"
+                    "PmtTpInf": {
+                        "InstrPrty": "NORM",
+                        "SvcLvl": [{"Cd": "CBPR"}],
+                        "CtgyPurp": {"Cd": "GDDS"},
+                        "LclInstrm": {"Prtry": "ECOMMERCE_PURCHASE"}
                     },
-                    "LEI": {
-                        "fake": [
-                            "lei"
-                        ]
-                    }
-                }
-            },
-            "Dbtr": {
-                "Nm": {
-                    "var": "customer_name"
-                },
-                "PstlAdr": {
-                    "StrtNm": {
-                        "fake": [
-                            "street_name"
-                        ]
+                    "IntrBkSttlmAmt": {"@Ccy": "USD", "$value": {"var": "amount"}},
+                    "IntrBkSttlmDt": {
+                        "fake": ["date", "%Y-%m-%d", "+0d", "+0d"]
                     },
-                    "BldgNb": {
-                        "cat": [
-                            {
-                                "fake": [
-                                    "i64",
-                                    1,
-                                    999
-                                ]
-                            }
-                        ]
-                    },
-                    "PstCd": {
-                        "fake": [
-                            "postcode"
-                        ]
-                    },
-                    "TwnNm": {
-                        "fake": [
-                            "city_name"
-                        ]
-                    },
-                    "CtrySubDvsn": {
-                        "fake": [
-                            "state_abbr"
-                        ]
-                    },
-                    "Ctry": "US"
-                },
-                "CtryOfRes": "US",
-                "Id": {
-                    "PrvtId": {
-                        "Othr": [
-                            {
-                                "Id": {
-                                    "var": "customer_email"
-                                },
-                                "SchmeNm": {
-                                    "Prtry": "EMAIL_ADDRESS"
-                                }
-                            }
-                        ]
-                    }
-                },
-                "CtctDtls": {
-                    "EmailAdr": {
-                        "var": "customer_email"
-                    }
-                }
-            },
-            "DbtrAcct": {
-                "Id": {
-                    "Othr": {
+                    "SttlmPrty": "NORM",
+                    "InstdAmt": {"@Ccy": "USD", "$value": {"var": "amount"}},
+                    "ChrgBr": "SHAR",
+                    "InstgAgt": {"FinInstnId": {"BICFI": {"var": "sender_bic"}, "LEI": {"fake": ["lei"]}}},
+                    "InstdAgt": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}, "LEI": {"fake": ["lei"]}}},
+                    "Dbtr": {
+                        "Nm": {"var": "customer_name"},
+                        "PstlAdr": {
+                            "StrtNm": {"fake": ["street_name"]},
+                            "BldgNb": {"cat": [{"fake": ["i64", 1, 999]}]},
+                            "PstCd": {"fake": ["postcode"]},
+                            "TwnNm": {"fake": ["city_name"]},
+                            "CtrySubDvsn": {"fake": ["state_abbr"]},
+                            "Ctry": "US"
+                        },
+                        "CtryOfRes": "US",
                         "Id": {
-                            "cat": [
-                                "****",
-                                {
-                                    "var": "card_last_four"
-                                }
-                            ]
+                            "PrvtId": {"Othr": [{"Id": {"var": "customer_email"}, "SchmeNm": {"Prtry": "EMAIL_ADDRESS"}}]}
                         },
-                        "SchmeNm": {
-                            "Prtry": "CARD_NUMBER_MASKED"
-                        }
-                    }
-                },
-                "Ccy": "USD",
-                "Nm": "Payment Card Account"
-            },
-            "DbtrAgt": {
-                "FinInstnId": {
-                    "BICFI": {
-                        "var": "sender_bic"
+                        "CtctDtls": {"EmailAdr": {"var": "customer_email"}}
                     },
-                    "Nm": "Card Issuer Bank",
-                    "LEI": {
-                        "fake": [
-                            "lei"
-                        ]
-                    }
-                }
-            },
-            "CdtrAgt": {
-                "FinInstnId": {
-                    "BICFI": {
-                        "var": "receiver_bic"
-                    },
-                    "Nm": "Merchant Acquirer Bank",
-                    "LEI": {
-                        "fake": [
-                            "lei"
-                        ]
-                    }
-                }
-            },
-            "Cdtr": {
-                "Nm": {
-                    "var": "merchant_name"
-                },
-                "PstlAdr": {
-                    "StrtNm": {
-                        "cat": [
-                            {
-                                "fake": [
-                                    "i64",
-                                    1,
-                                    999
-                                ]
-                            },
-                            " Commerce Drive"
-                        ]
-                    },
-                    "PstCd": {
-                        "fake": [
-                            "postcode"
-                        ]
-                    },
-                    "TwnNm": {
-                        "fake": [
-                            "city_name"
-                        ]
-                    },
-                    "CtrySubDvsn": {
-                        "fake": [
-                            "state_abbr"
-                        ]
-                    },
-                    "Ctry": "US"
-                },
-                "CtryOfRes": "US",
-                "Id": {
-                    "OrgId": {
-                        "LEI": {
-                            "fake": [
-                                "lei"
-                            ]
-                        },
-                        "Othr": [
-                            {
-                                "Id": {
-                                    "cat": [
-                                        "MID-",
-                                        {
-                                            "fake": [
-                                                "i64",
-                                                100000000,
-                                                999999999
-                                            ]
-                                        }
-                                    ]
-                                },
-                                "SchmeNm": {
-                                    "Prtry": "MERCHANT_ID"
-                                }
-                            }
-                        ]
-                    }
-                }
-            },
-            "CdtrAcct": {
-                "Id": {
-                    "Othr": {
+                    "DbtrAcct": {
                         "Id": {
-                            "cat": [
-                                "MERCH-",
-                                {
-                                    "fake": [
-                                        "i64",
-                                        100000000,
-                                        999999999
-                                    ]
-                                }
-                            ]
+                            "Othr": {
+                                "Id": {"cat": ["****", {"var": "card_last_four"}]},
+                                "SchmeNm": {"Prtry": "CARD_NUMBER_MASKED"}
+                            }
                         },
-                        "SchmeNm": {
-                            "Prtry": "MERCHANT_ACCOUNT"
+                        "Ccy": "USD",
+                        "Nm": "Payment Card Account"
+                    },
+                    "DbtrAgt": {
+                        "FinInstnId": {"BICFI": {"var": "sender_bic"}, "Nm": "Card Issuer Bank", "LEI": {"fake": ["lei"]}}
+                    },
+                    "CdtrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {"var": "receiver_bic"},
+                            "Nm": "Merchant Acquirer Bank",
+                            "LEI": {"fake": ["lei"]}
                         }
-                    }
-                },
-                "Ccy": "USD",
-                "Nm": "Merchant Settlement Account"
-            },
-            "Purp": {
-                "Cd": "GDDS"
-            },
-            "RgltryRptg": [
-                {
-                    "Dtls": [
-                        {
-                            "Tp": "BOTH",
-                            "Dt": {
-                                "fake": [
-                                    "date",
-                                    "%Y-%m-%d",
-                                    "+0d",
-                                    "+0d"
-                                ]
-                            },
-                            "Ctry": "US",
-                            "Cd": "150",
-                            "Amt": {
-                                "@Ccy": "USD",
-                                "$value": {
-                                    "var": "amount"
-                                }
-                            },
-                            "Inf": [
-                                "CBPR+ ECOMMERCE B2C TRANSACTION"
-                            ]
-                        }
-                    ]
-                }
-            ],
-            "RmtInf": {
-                "Strd": [
-                    {
-                        "RfrdDocInf": [
-                            {
-                                "Tp": {
-                                    "CdOrPrtry": {
-                                        "Prtry": "ECOMMERCE_ORDER"
+                    },
+                    "Cdtr": {
+                        "Nm": {"var": "merchant_name"},
+                        "PstlAdr": {
+                            "StrtNm": {"cat": [{"fake": ["i64", 1, 999]}, " Commerce Drive"]},
+                            "PstCd": {"fake": ["postcode"]},
+                            "TwnNm": {"fake": ["city_name"]},
+                            "CtrySubDvsn": {"fake": ["state_abbr"]},
+                            "Ctry": "US"
+                        },
+                        "CtryOfRes": "US",
+                        "Id": {
+                            "OrgId": {
+                                "LEI": {"fake": ["lei"]},
+                                "Othr": [
+                                    {
+                                        "Id": {"cat": ["MID-", {"fake": ["i64", 100000000, 999999999]}]},
+                                        "SchmeNm": {"Prtry": "MERCHANT_ID"}
                                     }
-                                },
-                                "Nb": {
-                                    "var": "order_id"
-                                },
-                                "RltdDt": {
-                                    "fake": [
-                                        "date",
-                                        "%Y-%m-%d",
-                                        "+0d",
-                                        "+0d"
-                                    ]
-                                }
+                                ]
                             }
-                        ],
-                        "RfrdDocAmt": {
-                            "DuePyblAmt": {
-                                "@Ccy": "USD",
-                                "$value": {
-                                    "var": "amount"
-                                }
+                        }
+                    },
+                    "CdtrAcct": {
+                        "Id": {
+                            "Othr": {
+                                "Id": {"cat": ["MERCH-", {"fake": ["i64", 100000000, 999999999]}]},
+                                "SchmeNm": {"Prtry": "MERCHANT_ACCOUNT"}
                             }
                         },
-                        "CdtrRefInf": {
-                            "Tp": {
-                                "CdOrPrtry": {
-                                    "Prtry": "PAYMENT_TOKEN"
+                        "Ccy": "USD",
+                        "Nm": "Merchant Settlement Account"
+                    },
+                    "Purp": {"Cd": "GDDS"},
+                    "RgltryRptg": [
+                        {
+                            "Dtls": [
+                                {
+                                    "Tp": "BOTH",
+                                    "Dt": {
+                                        "fake": ["date", "%Y-%m-%d", "+0d", "+0d"]
+                                    },
+                                    "Ctry": "US",
+                                    "Cd": "150",
+                                    "Amt": {"@Ccy": "USD", "$value": {"var": "amount"}},
+                                    "Inf": ["CBPR+ ECOMMERCE B2C TRANSACTION"]
                                 }
-                            },
-                            "Ref": {
-                                "var": "payment_token"
+                            ]
+                        }
+                    ],
+                    "RmtInf": {
+                        "Strd": [
+                            {
+                                "RfrdDocInf": [
+                                    {
+                                        "Tp": {"CdOrPrtry": {"Prtry": "ECOMMERCE_ORDER"}},
+                                        "Nb": {"var": "order_id"},
+                                        "RltdDt": {
+                                            "fake": ["date", "%Y-%m-%d", "+0d", "+0d"]
+                                        }
+                                    }
+                                ],
+                                "RfrdDocAmt": {"DuePyblAmt": {"@Ccy": "USD", "$value": {"var": "amount"}}},
+                                "CdtrRefInf": {"Tp": {"CdOrPrtry": {"Prtry": "PAYMENT_TOKEN"}}, "Ref": {"var": "payment_token"}},
+                                "AddtlRmtInf": ["Generated remittance information", "Generated remittance information"]
                             }
-                        },
-                        "AddtlRmtInf": [
-                            "Generated remittance information",
-                            "Generated remittance information"
                         ]
                     }
-                ]
+                }
             }
         }
     }

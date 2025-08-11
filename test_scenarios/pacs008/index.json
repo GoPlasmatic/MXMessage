@@ -2,10 +2,7 @@
     "message_type": "pacs.008.001.08",
     "description": "FI to FI Customer Credit Transfer",
     "scenarios": [
-        {
-            "file": "standard.json",
-            "description": "Standard payment transfer"
-        },
+        {"file": "standard.json", "description": "Standard payment transfer"},
         {
             "file": "high_value.json",
             "description": "High value payment with enhanced compliance"
@@ -30,10 +27,7 @@
             "file": "cbpr_salary_payment.json",
             "description": "CBPR+ compliant salary payment"
         },
-        {
-            "file": "minimal.json",
-            "description": "Minimal required fields only"
-        },
+        {"file": "minimal.json", "description": "Minimal required fields only"},
         {
             "file": "correspondent_banking.json",
             "description": "Correspondent banking with intermediary agents"
@@ -42,10 +36,7 @@
             "file": "fx_conversion.json",
             "description": "Payment with foreign exchange conversion"
         },
-        {
-            "file": "cbpr_rent_payment.json",
-            "description": "CBPR+ compliant rental payment"
-        },
+        {"file": "cbpr_rent_payment.json", "description": "CBPR+ compliant rental payment"},
         {
             "file": "cbpr_healthcare_payment.json",
             "description": "CBPR+ compliant healthcare payment"
@@ -54,26 +45,14 @@
             "file": "cbpr_pension_payment.json",
             "description": "CBPR+ compliant pension payment"
         },
-        {
-            "file": "cbpr_tax_payment.json",
-            "description": "CBPR+ compliant tax payment"
-        },
+        {"file": "cbpr_tax_payment.json", "description": "CBPR+ compliant tax payment"},
         {
             "file": "cbpr_education_payment.json",
             "description": "CBPR+ compliant education payment"
         },
-        {
-            "file": "remit_basic.json",
-            "description": "Basic remittance transfer"
-        },
-        {
-            "file": "return.json",
-            "description": "Payment return scenario"
-        },
-        {
-            "file": "rejection.json",
-            "description": "Payment rejection scenario"
-        },
+        {"file": "remit_basic.json", "description": "Basic remittance transfer"},
+        {"file": "return.json", "description": "Payment return scenario"},
+        {"file": "rejection.json", "description": "Payment rejection scenario"},
         {
             "file": "cbpr_fees_payment.json",
             "description": "CBPR+ compliant professional fees payment"
@@ -102,10 +81,7 @@
             "file": "stp.json",
             "description": "Straight-through processing optimized payment"
         },
-        {
-            "file": "treasury_payment.json",
-            "description": "Corporate treasury payment"
-        },
+        {"file": "treasury_payment.json", "description": "Corporate treasury payment"},
         {
             "file": "cbpr_ecommerce_b2c.json",
             "description": "CBPR+ compliant e-commerce B2C payment"

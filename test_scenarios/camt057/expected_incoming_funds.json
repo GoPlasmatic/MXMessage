@@ -31,49 +31,38 @@
         "intermediary_bank": "CHASGB2LXXX"
     },
     "schema": {
-        "Ntfctn": {
-            "Id": "NOTIF-123456",
-            "Acct": {
-                "Id": {
-                    "IBAN": "GB29NWBK60161331926819"
-                }
-            },
-            "Itm": [
-                {
-                    "Id": "PMT-123456",
-                    "XpctdValDt": "2025-01-15T14:00:00.123+00:00",
-                    "Amt": {
-                        "@Ccy": "USD",
-                        "$value": 10000.0
-                    },
-                    "RmtInf": {
-                        "Strd": [
-                            {
-                                "RfrdDocInf": [
-                                    {
-                                        "Tp": {
-                                            "CdOrPrtry": {
-                                                "Cd": "MSIN"
-                                            }
-                                        },
-                                        "Nb": "REF-123456"
-                                    }
-                                ],
-                                "AddtlRmtInf": [
-                                    "Expected payment from ABC Corporation"
-                                ]
-                            }
-                        ]
-                    },
-                    "Purp": {
-                        "Cd": "GDDS"
-                    }
-                }
-            ]
+        "AppHdr": {
+            "Fr": {"FIId": {"FinInstnId": {"BICFI": {"var": "sender_bic"}}}},
+            "To": {"FIId": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}}}},
+            "BizMsgIdr": {"var": "msg_id"},
+            "MsgDefIdr": "camt.057.001.06",
+            "BizSvc": "swift.ug",
+            "CreDt": {"var": "creation_datetime"}
         },
-        "GrpHdr": {
-            "MsgId": "MSG123456789",
-            "CreDtTm": "2025-01-15T10:00:00.123+00:00"
+        "Document": {
+            "NtfctnToRcv": {
+                "Ntfctn": {
+                    "Id": "NOTIF-123456",
+                    "Acct": {"Id": {"IBAN": "GB29NWBK60161331926819"}},
+                    "Itm": [
+                        {
+                            "Id": "PMT-123456",
+                            "XpctdValDt": "2025-01-15T14:00:00.123+00:00",
+                            "Amt": {"@Ccy": "USD", "$value": 10000.0},
+                            "RmtInf": {
+                                "Strd": [
+                                    {
+                                        "RfrdDocInf": [{"Tp": {"CdOrPrtry": {"Cd": "MSIN"}}, "Nb": "REF-123456"}],
+                                        "AddtlRmtInf": ["Expected payment from ABC Corporation"]
+                                    }
+                                ]
+                            },
+                            "Purp": {"Cd": "GDDS"}
+                        }
+                    ]
+                },
+                "GrpHdr": {"MsgId": "MSG123456789", "CreDtTm": "2025-01-15T10:00:00.123+00:00"}
+            }
         }
     }
 }

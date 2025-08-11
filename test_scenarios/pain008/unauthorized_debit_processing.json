@@ -1,461 +1,159 @@
 {
     "variables": {
-        "msg_id": {
-            "cat": [
-                "MSGUNAUTH",
-                {
-                    "fake": [
-                        "i64",
-                        100000000000,
-                        999999999999
-                    ]
-                }
-            ]
-        },
-        "creation_datetime": {
-            "fake": [
-                "iso8601_datetime"
-            ]
-        },
-        "company_name": {
-            "fake": [
-                "company_name"
-            ]
-        },
-        "company_lei": {
-            "fake": [
-                "lei"
-            ]
-        },
-        "pmt_inf_id": {
-            "cat": [
-                "UNAUTH",
-                {
-                    "fake": [
-                        "i64",
-                        10000000,
-                        99999999
-                    ]
-                }
-            ]
-        },
+        "msg_id": {"cat": ["MSGUNAUTH", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "company_name": {"fake": ["company_name"]},
+        "company_lei": {"fake": ["lei"]},
+        "pmt_inf_id": {"cat": ["UNAUTH", {"fake": ["i64", 10000000, 99999999]}]},
         "collection_date": "2025-01-25",
-        "creditor_iban": {
-            "fake": [
-                "iban",
-                "DE"
-            ]
-        },
-        "creditor_bic": {
-            "fake": [
-                "bic"
-            ]
-        },
-        "creditor_scheme_id": {
-            "cat": [
-                "DE",
-                {
-                    "fake": [
-                        "i64",
-                        10000000,
-                        99999999
-                    ]
-                },
-                "ZZZ"
-            ]
-        },
+        "creditor_iban": {"fake": ["iban", "DE"]},
+        "creditor_bic": {"fake": ["bic"]},
+        "creditor_scheme_id": {"cat": ["DE", {"fake": ["i64", 10000000, 99999999]}, "ZZZ"]},
         "num_disputes": 3
     },
     "schema": {
-        "GrpHdr": {
-            "MsgId": {
-                "var": "msg_id"
-            },
-            "CreDtTm": {
-                "var": "creation_datetime"
-            },
-            "NbOfTxs": {
-                "cat": [
-                    {
-                        "var": "num_disputes"
-                    }
-                ]
-            },
-            "InitgPty": {
-                "Nm": {
-                    "var": "company_name"
-                },
-                "Id": {
-                    "OrgId": {
-                        "LEI": {
-                            "var": "company_lei"
-                        }
-                    }
-                },
-                "CtctDtls": {
-                    "Nm": "Dispute Resolution Team",
-                    "EmailAdr": {
-                        "cat": [
-                            "disputes@",
-                            {
-                                "fake": [
-                                    "domain_name"
-                                ]
-                            }
-                        ]
-                    },
-                    "PhneNb": {
-                        "cat": [
-                            "+49",
-                            {
-                                "fake": [
-                                    "i64",
-                                    1000000000,
-                                    9999999999
-                                ]
-                            }
-                        ]
-                    },
-                    "FaxNb": {
-                        "cat": [
-                            "+49",
-                            {
-                                "fake": [
-                                    "i64",
-                                    1000000000,
-                                    9999999999
-                                ]
-                            }
-                        ]
-                    }
-                }
-            },
-            "FwdgAgt": {
-                "FinInstnId": {
-                    "BICFI": "DEUTDEFFXXX"
-                }
-            }
+        "AppHdr": {
+            "Fr": {"FIId": {"FinInstnId": {"BICFI": {"fake": ["bic"]}}}},
+            "To": {"FIId": {"FinInstnId": {"BICFI": {"fake": ["bic"]}}}},
+            "BizMsgIdr": {"var": "msg_id"},
+            "MsgDefIdr": "pain.008.001.08",
+            "BizSvc": "swift.ug",
+            "CreDt": {"var": "creation_datetime"}
         },
-        "PmtInf": {
-            "PmtInfId": {
-                "var": "pmt_inf_id"
-            },
-            "PmtMtd": "DD",
-            "PmtTpInf": {
-                "SvcLvl": [
-                    {
-                        "Cd": "SEPA"
-                    }
-                ],
-                "LclInstrm": {
-                    "Cd": "B2B"
-                },
-                "SeqTp": "OOFF",
-                "CtgyPurp": {
-                    "Cd": "CASH"
-                }
-            },
-            "ReqdColltnDt": {
-                "var": "collection_date"
-            },
-            "Cdtr": {
-                "Nm": {
-                    "var": "company_name"
-                },
-                "PstlAdr": {
-                    "Ctry": "DE",
-                    "AdrLine": [
-                        {
-                            "fake": [
-                                "street_address"
-                            ]
-                        },
-                        {
-                            "cat": [
-                                {
-                                    "fake": [
-                                        "postcode"
-                                    ]
-                                },
-                                " ",
-                                {
-                                    "fake": [
-                                        "city_name"
-                                    ]
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "Id": {
-                    "OrgId": {
-                        "LEI": {
-                            "var": "company_lei"
-                        },
-                        "Othr": [
-                            {
-                                "Id": {
-                                    "cat": [
-                                        "DE",
-                                        {
-                                            "fake": [
-                                                "i64",
-                                                100000000,
-                                                999999999
-                                            ]
-                                        }
-                                    ]
-                                },
-                                "SchmeNm": {
-                                    "Cd": "TXID"
-                                }
-                            }
-                        ]
-                    }
-                }
-            },
-            "CdtrAcct": {
-                "Id": {
-                    "IBAN": {
-                        "var": "creditor_iban"
-                    }
-                },
-                "Tp": {
-                    "Cd": "CACC"
-                },
-                "Ccy": "EUR",
-                "Nm": "Dispute Resolution Account"
-            },
-            "CdtrAgt": {
-                "FinInstnId": {
-                    "BICFI": {
-                        "var": "creditor_bic"
-                    },
-                    "LEI": {
-                        "fake": [
-                            "lei"
-                        ]
-                    }
-                }
-            },
-            "CdtrSchmeId": {
-                "Id": {
-                    "PrvtId": {
-                        "Othr": [
-                            {
-                                "Id": {
-                                    "var": "creditor_scheme_id"
-                                },
-                                "SchmeNm": {
-                                    "Prtry": "SEPA"
-                                }
-                            }
-                        ]
-                    }
-                }
-            },
-            "ChrgBr": "DEBT",
-            "DrctDbtTxInf": [
-                {
-                    "PmtId": {
-                        "InstrId": {
-                            "cat": [
-                                "UNAUTH",
-                                {
-                                    "fake": [
-                                        "i64",
-                                        100001,
-                                        999999
-                                    ]
-                                }
-                            ]
-                        },
-                        "EndToEndId": {
-                            "cat": [
-                                "E2EUNAUTH",
-                                {
-                                    "fake": [
-                                        "i64",
-                                        100000000000,
-                                        999999999999
-                                    ]
-                                }
-                            ]
+        "Document": {
+            "CstmrDrctDbtInitn": {
+                "GrpHdr": {
+                    "MsgId": {"var": "msg_id"},
+                    "CreDtTm": {"var": "creation_datetime"},
+                    "NbOfTxs": {"cat": [{"var": "num_disputes"}]},
+                    "InitgPty": {
+                        "Nm": {"var": "company_name"},
+                        "Id": {"OrgId": {"LEI": {"var": "company_lei"}}},
+                        "CtctDtls": {
+                            "Nm": "Dispute Resolution Team",
+                            "EmailAdr": {"cat": ["disputes@", {"fake": ["domain_name"]}]},
+                            "PhneNb": {"cat": ["+49", {"fake": ["i64", 1000000000, 9999999999]}]},
+                            "FaxNb": {"cat": ["+49", {"fake": ["i64", 1000000000, 9999999999]}]}
                         }
                     },
-                    "InstdAmt": {
-                        "@Ccy": "EUR",
-                        "$value": {
-                            "fake": [
-                                "f64",
-                                500.0,
-                                2500.0
-                            ]
-                        }
+                    "FwdgAgt": {"FinInstnId": {"BICFI": "DEUTDEFFXXX"}}
+                },
+                "PmtInf": {
+                    "PmtInfId": {"var": "pmt_inf_id"},
+                    "PmtMtd": "DD",
+                    "PmtTpInf": {
+                        "SvcLvl": [{"Cd": "SEPA"}],
+                        "LclInstrm": {"Cd": "B2B"},
+                        "SeqTp": "OOFF",
+                        "CtgyPurp": {"Cd": "CASH"}
                     },
-                    "DrctDbtTx": {
-                        "MndtRltdInf": {
-                            "MndtId": "DISPUTED-NO-MANDATE",
-                            "DtOfSgntr": "1900-01-01",
-                            "AmdmntInd": false
-                        },
-                        "PreNtfctnId": {
-                            "cat": [
-                                "DISPUTE",
-                                {
-                                    "fake": [
-                                        "i64",
-                                        100001,
-                                        999999
-                                    ]
-                                }
-                            ]
-                        },
-                        "PreNtfctnDt": "2025-01-15"
-                    },
-                    "DbtrAgt": {
-                        "FinInstnId": {
-                            "BICFI": {
-                                "fake": [
-                                    "bic"
-                                ]
-                            },
-                            "LEI": {
-                                "fake": [
-                                    "lei"
-                                ]
-                            }
-                        }
-                    },
-                    "Dbtr": {
-                        "Nm": {
-                            "fake": [
-                                "company_name"
-                            ]
-                        },
+                    "ReqdColltnDt": {"var": "collection_date"},
+                    "Cdtr": {
+                        "Nm": {"var": "company_name"},
                         "PstlAdr": {
-                            "Ctry": {
-                                "fake": [
-                                    "country_code"
-                                ]
-                            },
+                            "Ctry": "DE",
                             "AdrLine": [
-                                {
-                                    "fake": [
-                                        "street_address"
-                                    ]
-                                },
-                                {
-                                    "fake": [
-                                        "city_name"
-                                    ]
-                                }
+                                {"fake": ["street_address"]},
+                                {"cat": [{"fake": ["postcode"]}, " ", {"fake": ["city_name"]}]}
                             ]
                         },
                         "Id": {
                             "OrgId": {
-                                "LEI": {
-                                    "fake": [
-                                        "lei"
-                                    ]
-                                },
+                                "LEI": {"var": "company_lei"},
                                 "Othr": [
                                     {
-                                        "Id": {
-                                            "cat": [
-                                                "DISP",
-                                                {
-                                                    "fake": [
-                                                        "i64",
-                                                        100001,
-                                                        999999
-                                                    ]
-                                                }
-                                            ]
-                                        },
-                                        "SchmeNm": {
-                                            "Prtry": "DISPUTE_CASE"
-                                        }
+                                        "Id": {"cat": ["DE", {"fake": ["i64", 100000000, 999999999]}]},
+                                        "SchmeNm": {"Cd": "TXID"}
                                     }
                                 ]
                             }
                         }
                     },
-                    "DbtrAcct": {
+                    "CdtrAcct": {
+                        "Id": {"IBAN": {"var": "creditor_iban"}},
+                        "Tp": {"Cd": "CACC"},
+                        "Ccy": "EUR",
+                        "Nm": "Dispute Resolution Account"
+                    },
+                    "CdtrAgt": {"FinInstnId": {"BICFI": {"var": "creditor_bic"}, "LEI": {"fake": ["lei"]}}},
+                    "CdtrSchmeId": {
                         "Id": {
-                            "IBAN": {
-                                "fake": [
-                                    "iban"
-                                ]
-                            }
+                            "PrvtId": {"Othr": [{"Id": {"var": "creditor_scheme_id"}, "SchmeNm": {"Prtry": "SEPA"}}]}
                         }
                     },
-                    "Purp": {
-                        "Cd": "CASH"
-                    },
-                    "RgltryRptg": [
+                    "ChrgBr": "DEBT",
+                    "DrctDbtTxInf": [
                         {
-                            "Dtls": [
+                            "PmtId": {
+                                "InstrId": {"cat": ["UNAUTH", {"fake": ["i64", 100001, 999999]}]},
+                                "EndToEndId": {"cat": ["E2EUNAUTH", {"fake": ["i64", 100000000000, 999999999999]}]}
+                            },
+                            "InstdAmt": {"@Ccy": "EUR", "$value": {"fake": ["f64", 500.0, 2500.0]}},
+                            "DrctDbtTx": {
+                                "MndtRltdInf": {"MndtId": "DISPUTED-NO-MANDATE", "DtOfSgntr": "1900-01-01", "AmdmntInd": false},
+                                "PreNtfctnId": {"cat": ["DISPUTE", {"fake": ["i64", 100001, 999999]}]},
+                                "PreNtfctnDt": "2025-01-15"
+                            },
+                            "DbtrAgt": {"FinInstnId": {"BICFI": {"fake": ["bic"]}, "LEI": {"fake": ["lei"]}}},
+                            "Dbtr": {
+                                "Nm": {"fake": ["company_name"]},
+                                "PstlAdr": {
+                                    "Ctry": {"fake": ["country_code"]},
+                                    "AdrLine": [{"fake": ["street_address"]}, {"fake": ["city_name"]}]
+                                },
+                                "Id": {
+                                    "OrgId": {
+                                        "LEI": {"fake": ["lei"]},
+                                        "Othr": [
+                                            {
+                                                "Id": {"cat": ["DISP", {"fake": ["i64", 100001, 999999]}]},
+                                                "SchmeNm": {"Prtry": "DISPUTE_CASE"}
+                                            }
+                                        ]
+                                    }
+                                }
+                            },
+                            "DbtrAcct": {"Id": {"IBAN": {"fake": ["iban"]}}},
+                            "Purp": {"Cd": "CASH"},
+                            "RgltryRptg": [
                                 {
-                                    "Tp": "DEBT",
-                                    "Dt": "2025-01-25",
-                                    "Ctry": "DE",
-                                    "Cd": "DISPUTE",
-                                    "Amt": {
-                                        "@Ccy": "EUR",
-                                        "$value": {
-                                            "fake": [
-                                                "f64",
-                                                500.0,
-                                                2500.0
-                                            ]
+                                    "Dtls": [
+                                        {
+                                            "Tp": "DEBT",
+                                            "Dt": "2025-01-25",
+                                            "Ctry": "DE",
+                                            "Cd": "DISPUTE",
+                                            "Amt": {"@Ccy": "EUR", "$value": {"fake": ["f64", 500.0, 2500.0]}},
+                                            "Inf": ["UNAUTHORIZED DEBIT - UNDER INVESTIG"]
                                         }
-                                    },
-                                    "Inf": [
-                                        "UNAUTHORIZED DEBIT - UNDER INVESTIG"
                                     ]
                                 }
-                            ]
-                        }
-                    ],
-                    "RmtInf": {
-                        "Ustrd": "DISPUTED TRANSACTION - NO AUTHORIZATION",
-                        "Strd": [
-                            {
-                                "RfrdDocInf": [
+                            ],
+                            "RmtInf": {
+                                "Ustrd": "DISPUTED TRANSACTION - NO AUTHORIZATION",
+                                "Strd": [
                                     {
-                                        "Tp": {
-                                            "CdOrPrtry": {
-                                                "Prtry": "DISPUTE_REF"
+                                        "RfrdDocInf": [
+                                            {
+                                                "Tp": {"CdOrPrtry": {"Prtry": "DISPUTE_REF"}},
+                                                "Nb": {"cat": ["CASE-", {"fake": ["i64", 2025001, 2025999]}]},
+                                                "RltdDt": "2025-01-10"
                                             }
-                                        },
-                                        "Nb": {
-                                            "cat": [
-                                                "CASE-",
-                                                {
-                                                    "fake": [
-                                                        "i64",
-                                                        2025001,
-                                                        2025999
-                                                    ]
-                                                }
-                                            ]
-                                        },
-                                        "RltdDt": "2025-01-10"
+                                        ],
+                                        "AddtlRmtInf": [
+                                            "Customer claims no business relationship",
+                                            "No mandate signed or authorized",
+                                            "Legal action may follow",
+                                            "Contact Legal Dept: legal@company.com"
+                                        ]
                                     }
-                                ],
-                                "AddtlRmtInf": [
-                                    "Customer claims no business relationship",
-                                    "No mandate signed or authorized",
-                                    "Legal action may follow",
-                                    "Contact Legal Dept: legal@company.com"
                                 ]
                             }
-                        ]
-                    }
+                        }
+                    ],
+                    "NbOfTxs": "1"
                 }
-            ],
-            "NbOfTxs": "1"
+            }
         }
     }
 }

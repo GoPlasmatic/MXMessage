@@ -1,276 +1,100 @@
 {
     "variables": {
-        "msg_id": {
-            "cat": [
-                "MSG",
-                {
-                    "fake": [
-                        "i64",
-                        100000000000,
-                        999999999999
-                    ]
-                }
-            ]
-        },
-        "creation_datetime": {
-            "fake": [
-                "iso8601_datetime"
-            ]
-        },
-        "sender_bic": {
-            "fake": [
-                "bic"
-            ]
-        },
-        "receiver_bic": {
-            "fake": [
-                "bic"
-            ]
-        },
-        "transaction_ref": {
-            "cat": [
-                "TXN",
-                {
-                    "fake": [
-                        "i64",
-                        100000000000,
-                        999999999999
-                    ]
-                }
-            ]
-        },
-        "instruction_id": {
-            "cat": [
-                "INSTR",
-                {
-                    "fake": [
-                        "i64",
-                        10000000,
-                        99999999
-                    ]
-                }
-            ]
-        },
-        "end_to_end_id": {
-            "cat": [
-                "E2E",
-                {
-                    "fake": [
-                        "i64",
-                        100000000000,
-                        999999999999
-                    ]
-                }
-            ]
-        },
-        "amount": {
-            "fake": [
-                "f64",
-                500000.0,
-                25000000.0
-            ]
-        },
-        "sender_lei": {
-            "fake": [
-                "lei"
-            ]
-        },
-        "receiver_lei": {
-            "fake": [
-                "lei"
-            ]
-        },
-        "uetr": {
-            "fake": [
-                "uuid"
-            ]
-        }
+        "msg_id": {"cat": ["MSG", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "sender_bic": {"fake": ["bic"]},
+        "receiver_bic": {"fake": ["bic"]},
+        "transaction_ref": {"cat": ["TXN", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "instruction_id": {"cat": ["INSTR", {"fake": ["i64", 10000000, 99999999]}]},
+        "end_to_end_id": {"cat": ["E2E", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "amount": {"fake": ["f64", 500000.0, 25000000.0]},
+        "sender_lei": {"fake": ["lei"]},
+        "receiver_lei": {"fake": ["lei"]},
+        "uetr": {"fake": ["uuid"]}
     },
     "schema": {
-        "GrpHdr": {
-            "MsgId": {
-                "var": "msg_id"
-            },
-            "CreDtTm": {
-                "var": "creation_datetime"
-            },
-            "NbOfTxs": "1",
-            "SttlmInf": {
-                "SttlmMtd": "INDA"
-            }
+        "AppHdr": {
+            "Fr": {"FIId": {"FinInstnId": {"BICFI": {"var": "sender_bic"}}}},
+            "To": {"FIId": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}}}},
+            "BizMsgIdr": {"var": "msg_id"},
+            "MsgDefIdr": "pacs.009.001.08",
+            "BizSvc": "swift.ug",
+            "CreDt": {"var": "creation_datetime"}
         },
-        "CdtTrfTxInf": {
-            "PmtId": {
-                "InstrId": {
-                    "var": "instruction_id"
+        "Document": {
+            "FinInstnCdtTrf": {
+                "GrpHdr": {
+                    "MsgId": {"var": "msg_id"},
+                    "CreDtTm": {"var": "creation_datetime"},
+                    "NbOfTxs": "1",
+                    "SttlmInf": {"SttlmMtd": "INDA"}
                 },
-                "EndToEndId": {
-                    "var": "end_to_end_id"
-                },
-                "TxId": {
-                    "var": "transaction_ref"
-                },
-                "UETR": {
-                    "var": "uetr"
-                }
-            },
-            "PmtTpInf": {
-                "InstrPrty": "NORM",
-                "SvcLvl": [
-                    {
-                        "Cd": "NORM"
-                    }
-                ],
-                "LclInstrm": {
-                    "Prtry": "BANK_TRANSFER_NON_COVER"
-                }
-            },
-            "IntrBkSttlmAmt": {
-                "@Ccy": "USD",
-                "$value": {
-                    "var": "amount"
-                }
-            },
-            "IntrBkSttlmDt": {
-                "fake": [
-                    "date",
-                    "%Y-%m-%d",
-                    "+0d",
-                    "+1d"
-                ]
-            },
-            "InstgAgt": {
-                "FinInstnId": {
-                    "BICFI": {
-                        "var": "sender_bic"
+                "CdtTrfTxInf": {
+                    "PmtId": {
+                        "InstrId": {"var": "instruction_id"},
+                        "EndToEndId": {"var": "end_to_end_id"},
+                        "TxId": {"var": "transaction_ref"},
+                        "UETR": {"var": "uetr"}
                     },
-                    "LEI": {
-                        "var": "sender_lei"
-                    }
-                }
-            },
-            "InstdAgt": {
-                "FinInstnId": {
-                    "BICFI": {
-                        "var": "receiver_bic"
+                    "PmtTpInf": {
+                        "InstrPrty": "NORM",
+                        "SvcLvl": [{"Cd": "NORM"}],
+                        "LclInstrm": {"Prtry": "BANK_TRANSFER_NON_COVER"}
                     },
-                    "LEI": {
-                        "var": "receiver_lei"
-                    }
-                }
-            },
-            "Dbtr": {
-                "FinInstnId": {
-                    "BICFI": {
-                        "var": "sender_bic"
+                    "IntrBkSttlmAmt": {"@Ccy": "USD", "$value": {"var": "amount"}},
+                    "IntrBkSttlmDt": {
+                        "fake": ["date", "%Y-%m-%d", "+0d", "+1d"]
                     },
-                    "LEI": {
-                        "var": "sender_lei"
-                    },
-                    "Nm": {
-                        "fake": [
-                            "company_name"
-                        ]
-                    }
-                }
-            },
-            "DbtrAcct": {
-                "Id": {
-                    "Othr": {
-                        "Id": {
-                            "cat": [
-                                "POSITION-",
-                                {
-                                    "fake": [
-                                        "i64",
-                                        100000,
-                                        999999
-                                    ]
-                                }
-                            ]
-                        },
-                        "SchmeNm": {
-                            "Prtry": "POSITION_ACCOUNT"
+                    "InstgAgt": {"FinInstnId": {"BICFI": {"var": "sender_bic"}, "LEI": {"var": "sender_lei"}}},
+                    "InstdAgt": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}, "LEI": {"var": "receiver_lei"}}},
+                    "Dbtr": {
+                        "FinInstnId": {
+                            "BICFI": {"var": "sender_bic"},
+                            "LEI": {"var": "sender_lei"},
+                            "Nm": {"fake": ["company_name"]}
                         }
-                    }
-                },
-                "Ccy": "USD"
-            },
-            "DbtrAgt": {
-                "FinInstnId": {
-                    "BICFI": {
-                        "var": "sender_bic"
                     },
-                    "LEI": {
-                        "var": "sender_lei"
-                    }
-                }
-            },
-            "CdtrAgt": {
-                "FinInstnId": {
-                    "BICFI": {
-                        "var": "receiver_bic"
-                    },
-                    "LEI": {
-                        "var": "receiver_lei"
-                    }
-                }
-            },
-            "Cdtr": {
-                "FinInstnId": {
-                    "BICFI": {
-                        "var": "receiver_bic"
-                    },
-                    "LEI": {
-                        "var": "receiver_lei"
-                    },
-                    "Nm": {
-                        "fake": [
-                            "company_name"
-                        ]
-                    }
-                }
-            },
-            "CdtrAcct": {
-                "Id": {
-                    "Othr": {
+                    "DbtrAcct": {
                         "Id": {
-                            "cat": [
-                                "POSITION-",
-                                {
-                                    "fake": [
-                                        "i64",
-                                        100000,
-                                        999999
-                                    ]
-                                }
-                            ]
+                            "Othr": {
+                                "Id": {"cat": ["POSITION-", {"fake": ["i64", 100000, 999999]}]},
+                                "SchmeNm": {"Prtry": "POSITION_ACCOUNT"}
+                            }
                         },
-                        "SchmeNm": {
-                            "Prtry": "POSITION_ACCOUNT"
+                        "Ccy": "USD"
+                    },
+                    "DbtrAgt": {"FinInstnId": {"BICFI": {"var": "sender_bic"}, "LEI": {"var": "sender_lei"}}},
+                    "CdtrAgt": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}, "LEI": {"var": "receiver_lei"}}},
+                    "Cdtr": {
+                        "FinInstnId": {
+                            "BICFI": {"var": "receiver_bic"},
+                            "LEI": {"var": "receiver_lei"},
+                            "Nm": {"fake": ["company_name"]}
                         }
-                    }
-                },
-                "Ccy": "USD"
-            },
-            "InstrForNxtAgt": [
-                {
-                    "InstrInf": "MT205 NON-COVER - DIRECT SETTLEMENT"
-                }
-            ],
-            "Purp": {
-                "Cd": "LIMA"
-            },
-            "RmtInf": {
-                "Strd": [
-                    {
-                        "AddtlRmtInf": [
-                            "Direct bank-to-bank transfer",
-                            "No cover arrangement required",
-                            "Position adjustment between banks"
+                    },
+                    "CdtrAcct": {
+                        "Id": {
+                            "Othr": {
+                                "Id": {"cat": ["POSITION-", {"fake": ["i64", 100000, 999999]}]},
+                                "SchmeNm": {"Prtry": "POSITION_ACCOUNT"}
+                            }
+                        },
+                        "Ccy": "USD"
+                    },
+                    "InstrForNxtAgt": [{"InstrInf": "MT205 NON-COVER - DIRECT SETTLEMENT"}],
+                    "Purp": {"Cd": "LIMA"},
+                    "RmtInf": {
+                        "Strd": [
+                            {
+                                "AddtlRmtInf": [
+                                    "Direct bank-to-bank transfer",
+                                    "No cover arrangement required",
+                                    "Position adjustment between banks"
+                                ]
+                            }
                         ]
                     }
-                ]
+                }
             }
         }
     }

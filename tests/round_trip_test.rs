@@ -1,5 +1,6 @@
 use mx_message::parse_result::ParserConfig;
 use mx_message::sample::generate_sample_object;
+use mx_message::scenario_config::ScenarioConfig;
 use mx_message::validation::Validate;
 use quick_xml::de::from_str as xml_from_str;
 use quick_xml::se::to_string as xml_to_string;
@@ -147,27 +148,30 @@ fn test_single_scenario(
     let msg_type_for_generate = message_type.replace(".", "");
 
     // Generate sample message
-    let generated_json: serde_json::Value =
-        match generate_sample_object(&msg_type_for_generate, Some(scenario_name)) {
-            Ok(json) => json,
-            Err(e) => {
-                result.mark_parse_failed(format!("Generation error: {e:?}"));
-                if debug_mode {
-                    eprintln!("\n[Test {test_index}] Generation failed: {e:?}");
-                    eprintln!("Message type: {message_type} (using {msg_type_for_generate})");
-                    eprintln!("Scenario: {scenario_name}");
+    let generated_json: serde_json::Value = match generate_sample_object(
+        &msg_type_for_generate,
+        Some(scenario_name),
+        &ScenarioConfig::default(),
+    ) {
+        Ok(json) => json,
+        Err(e) => {
+            result.mark_parse_failed(format!("Generation error: {e:?}"));
+            if debug_mode {
+                eprintln!("\n[Test {test_index}] Generation failed: {e:?}");
+                eprintln!("Message type: {message_type} (using {msg_type_for_generate})");
+                eprintln!("Scenario: {scenario_name}");
 
-                    // Try to read the scenario file for debugging
-                    let scenario_file =
-                        format!("test_scenarios/{msg_type_for_generate}/{scenario_name}.json");
-                    if let Ok(content) = std::fs::read_to_string(&scenario_file) {
-                        eprintln!("Scenario file content (first 500 chars):");
-                        eprintln!("{}", &content[..content.len().min(500)]);
-                    }
+                // Try to read the scenario file for debugging
+                let scenario_file =
+                    format!("test_scenarios/{msg_type_for_generate}/{scenario_name}.json");
+                if let Ok(content) = std::fs::read_to_string(&scenario_file) {
+                    eprintln!("Scenario file content (first 500 chars):");
+                    eprintln!("{}", &content[..content.len().min(500)]);
                 }
-                return result;
             }
-        };
+            return result;
+        }
+    };
 
     result.mark_parse_success();
 

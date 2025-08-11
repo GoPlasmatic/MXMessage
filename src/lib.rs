@@ -28,7 +28,7 @@ pub mod validation;
 pub mod xml;
 
 // Re-export sample generation utilities
-pub use sample::{SampleGenerator, generate_sample, generate_sample_with_config};
+pub use sample::{generate_sample_object, generate_sample_xml};
 pub use scenario_config::ScenarioConfig;
 
 // Re-export MX envelope and XML utilities

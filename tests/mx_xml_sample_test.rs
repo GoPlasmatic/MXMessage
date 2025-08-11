@@ -2,22 +2,19 @@
 
 #[cfg(test)]
 mod tests {
-    use mx_message::sample::{SampleGenerator, generate_sample, generate_sample_with_config};
+    use mx_message::sample::generate_sample_xml;
     use mx_message::scenario_config::ScenarioConfig;
-    use std::path::PathBuf;
 
     #[test]
     fn test_xml_generation_with_sample_pacs008() {
         // Generate sample pacs.008 message as XML
-        let xml = generate_sample("pacs008", Some("standard")).expect("Failed to generate sample");
+        let xml = generate_sample_xml("pacs008", Some("standard"), &ScenarioConfig::default())
+            .expect("Failed to generate sample");
 
         // Verify XML structure
         assert!(xml.contains("<?xml"), "Missing XML declaration");
         assert!(xml.contains("<Envelope"), "Missing Envelope");
-        assert!(
-            xml.contains("<BusinessApplicationHeaderV02>") || xml.contains("<AppHdr>"),
-            "Missing Application Header"
-        );
+        assert!(xml.contains("<AppHdr"), "Missing Application Header");
         assert!(xml.contains("<Document"), "Missing Document");
         assert!(
             xml.contains("xmlns=\"urn:iso:std:iso:20022:tech:xsd:pacs.008.001.08\""),
@@ -27,14 +24,8 @@ mod tests {
             xml.contains("<FIToFICstmrCdtTrf") || xml.contains("<FIToFICustomerCreditTransferV08>"),
             "Missing message root element"
         );
-        assert!(
-            xml.contains("SAMPLEB1XXX") || xml.contains("STANDARDBNK1"),
-            "Missing sender BIC"
-        );
-        assert!(
-            xml.contains("SAMPLEB2XXX") || xml.contains("STANDARDBNK2"),
-            "Missing receiver BIC"
-        );
+        // Check that BIC codes are present (they are randomly generated)
+        assert!(xml.contains("<BICFI>"), "Missing BIC elements");
     }
 
     #[test]
@@ -42,7 +33,7 @@ mod tests {
         let scenarios = vec!["standard", "high_value", "cbpr_business_payment", "minimal"];
 
         for scenario in scenarios {
-            let result = generate_sample("pacs008", Some(scenario));
+            let result = generate_sample_xml("pacs008", Some(scenario), &ScenarioConfig::default());
 
             assert!(
                 result.is_ok(),
@@ -66,7 +57,7 @@ mod tests {
     #[test]
     fn test_xml_with_different_message_types() {
         // Test PACS.008
-        let pacs008_xml = generate_sample("pacs008", None);
+        let pacs008_xml = generate_sample_xml("pacs008", None, &ScenarioConfig::default());
         assert!(pacs008_xml.is_ok(), "Failed to generate pacs008 sample");
 
         if let Ok(xml) = pacs008_xml {
@@ -81,7 +72,8 @@ mod tests {
         }
 
         // Test PAIN.001
-        let pain001_xml = generate_sample("pain001", Some("standard"));
+        let pain001_xml =
+            generate_sample_xml("pain001", Some("standard"), &ScenarioConfig::default());
         assert!(pain001_xml.is_ok(), "Failed to generate pain001 sample");
 
         if let Ok(xml) = pain001_xml {
@@ -96,7 +88,11 @@ mod tests {
         }
 
         // Test CAMT.053
-        let camt053_xml = generate_sample("camt053", Some("daily_account_statement"));
+        let camt053_xml = generate_sample_xml(
+            "camt053",
+            Some("daily_account_statement"),
+            &ScenarioConfig::default(),
+        );
         assert!(camt053_xml.is_ok(), "Failed to generate camt053 sample");
 
         if let Ok(xml) = camt053_xml {
@@ -108,7 +104,7 @@ mod tests {
         }
 
         // Test CAMT.052
-        let camt052_xml = generate_sample("camt052", None);
+        let camt052_xml = generate_sample_xml("camt052", None, &ScenarioConfig::default());
         assert!(camt052_xml.is_ok(), "Failed to generate camt052 sample");
 
         if let Ok(xml) = camt052_xml {
@@ -119,7 +115,11 @@ mod tests {
         }
 
         // Test PAIN.008
-        let pain008_xml = generate_sample("pain008", Some("general_direct_debit_basic"));
+        let pain008_xml = generate_sample_xml(
+            "pain008",
+            Some("general_direct_debit_basic"),
+            &ScenarioConfig::default(),
+        );
         assert!(pain008_xml.is_ok(), "Failed to generate pain008 sample");
 
         if let Ok(xml) = pain008_xml {
@@ -133,8 +133,9 @@ mod tests {
     #[test]
     fn test_xml_header_information() {
         // Test that header information is properly generated based on scenario
-        let standard_xml = generate_sample("pacs008", Some("standard"))
-            .expect("Failed to generate standard sample");
+        let standard_xml =
+            generate_sample_xml("pacs008", Some("standard"), &ScenarioConfig::default())
+                .expect("Failed to generate standard sample");
 
         // Check for standard BICs
         assert!(
@@ -143,12 +144,17 @@ mod tests {
         );
 
         // Test CBPR scenario has specific headers
-        let cbpr_xml = generate_sample("pacs008", Some("cbpr_business_payment"))
-            .expect("Failed to generate CBPR sample");
+        let cbpr_xml = generate_sample_xml(
+            "pacs008",
+            Some("cbpr_business_payment"),
+            &ScenarioConfig::default(),
+        )
+        .expect("Failed to generate CBPR sample");
 
+        // CBPR scenarios have cbprplus in the business service
         assert!(
-            cbpr_xml.contains("CBPRBNK1XXX") || cbpr_xml.contains("cbpr"),
-            "CBPR scenario should have CBPR-related BICs"
+            cbpr_xml.contains("swift.cbprplus"),
+            "CBPR scenario should have CBPR+ business service"
         );
         assert!(
             cbpr_xml.contains("swift.cbprplus.01") || cbpr_xml.contains("<BizSvc>"),
@@ -156,12 +162,14 @@ mod tests {
         );
 
         // Test high value scenario
-        let high_value_xml = generate_sample("pacs008", Some("high_value"))
-            .expect("Failed to generate high value sample");
+        let high_value_xml =
+            generate_sample_xml("pacs008", Some("high_value"), &ScenarioConfig::default())
+                .expect("Failed to generate high value sample");
 
+        // High value scenarios should still contain valid BIC codes
         assert!(
-            high_value_xml.contains("HVBANK") || high_value_xml.contains("HIGH"),
-            "High value scenario should have appropriate identifiers"
+            high_value_xml.contains("<BICFI>"),
+            "High value scenario should have BIC identifiers"
         );
     }
 
@@ -170,7 +178,7 @@ mod tests {
         // Test with custom scenario configuration
         let custom_config = ScenarioConfig::default();
 
-        let xml = generate_sample_with_config("pacs008", Some("standard"), &custom_config)
+        let xml = generate_sample_xml("pacs008", Some("standard"), &custom_config)
             .expect("Sample generation with custom config failed");
 
         assert!(xml.contains("<?xml"), "Missing XML declaration");
@@ -179,32 +187,11 @@ mod tests {
     }
 
     #[test]
-    fn test_sample_generator_builder() {
-        let generator = SampleGenerator::new().with_path(PathBuf::from("test_scenarios"));
-
-        // Test multiple message types with the same generator
-        let pacs008_xml = generator
-            .generate("pacs008", None)
-            .expect("Failed to generate pacs008");
-        assert!(pacs008_xml.contains("pacs.008.001.08"));
-
-        let pain001_xml = generator
-            .generate("pain001", Some("standard"))
-            .expect("Failed to generate pain001");
-        assert!(pain001_xml.contains("pain.001.001.09"));
-
-        let camt053_xml = generator
-            .generate("camt053", Some("daily_account_statement"))
-            .expect("Failed to generate camt053");
-        assert!(camt053_xml.contains("camt.053.001.08"));
-    }
-
-    #[test]
     fn test_xml_structure_consistency() {
         // Generate multiple samples and verify consistent structure
         for _ in 0..3 {
-            let xml =
-                generate_sample("pacs008", Some("minimal")).expect("Failed to generate sample");
+            let xml = generate_sample_xml("pacs008", Some("minimal"), &ScenarioConfig::default())
+                .expect("Failed to generate sample");
 
             // Check basic structure elements are always present
             assert!(
@@ -213,7 +200,7 @@ mod tests {
             );
             assert!(xml.contains("<Envelope"), "Should contain Envelope");
             assert!(xml.contains("</Envelope>"), "Should close Envelope");
-            assert!(xml.contains("<AppHdr>") || xml.contains("<BusinessApplicationHeaderV02>"));
+            assert!(xml.contains("<AppHdr"));
             assert!(xml.contains("<Document"), "Should contain Document");
             assert!(xml.contains("</Document>"), "Should close Document");
 
@@ -232,10 +219,10 @@ mod tests {
     #[test]
     fn test_message_id_generation() {
         // Test that message IDs are unique and follow expected pattern
-        let xml1 =
-            generate_sample("pacs008", Some("standard")).expect("Failed to generate first sample");
-        let xml2 =
-            generate_sample("pacs008", Some("standard")).expect("Failed to generate second sample");
+        let xml1 = generate_sample_xml("pacs008", Some("standard"), &ScenarioConfig::default())
+            .expect("Failed to generate first sample");
+        let xml2 = generate_sample_xml("pacs008", Some("standard"), &ScenarioConfig::default())
+            .expect("Failed to generate second sample");
 
         // Extract message IDs
         let extract_msg_id = |xml: &str| -> Option<String> {
@@ -253,14 +240,10 @@ mod tests {
         // Message IDs should be unique
         assert_ne!(msg_id1, msg_id2, "Message IDs should be unique");
 
-        // Message IDs should follow expected pattern
+        // Message IDs should be in the MSG format
         assert!(
-            msg_id1.contains("PACS008"),
-            "Message ID should contain message type"
-        );
-        assert!(
-            msg_id1.contains("STANDARD"),
-            "Message ID should contain scenario"
+            msg_id1.starts_with("MSG"),
+            "Message ID should start with MSG"
         );
     }
 
@@ -270,21 +253,21 @@ mod tests {
             ("pacs008", None),
             ("pacs009", Some("standard")),
             ("pacs003", Some("fi_direct_debit_basic")),
-            ("pacs002", None),
+            ("pacs002", Some("cheque_collection_advice")),
             ("pain001", Some("standard")),
             ("pain008", Some("general_direct_debit_basic")),
-            ("camt025", None),
+            ("camt025", Some("central_bank_rate_notification")),
             ("camt029", Some("answer_cancellation")),
-            ("camt052", None),
+            ("camt052", Some("daily_balance_report")),
             ("camt053", Some("daily_account_statement")),
-            ("camt054", None),
+            ("camt054", Some("basic_debit_confirmation")),
             ("camt056", Some("cbpr_cancellation_request")),
-            ("camt057", None),
-            ("camt060", None),
+            ("camt057", Some("expected_incoming_funds")),
+            ("camt060", Some("interim_report_request")),
         ];
 
         for (msg_type, scenario) in message_types {
-            let result = generate_sample(msg_type, scenario);
+            let result = generate_sample_xml(msg_type, scenario, &ScenarioConfig::default());
             assert!(
                 result.is_ok(),
                 "Failed to generate {msg_type} with scenario {scenario:?}"

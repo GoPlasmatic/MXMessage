@@ -1,367 +1,103 @@
 {
     "variables": {
-        "msg_id": {
-            "cat": [
-                "MSG",
-                {
-                    "fake": [
-                        "i64",
-                        100000000000,
-                        999999999999
-                    ]
-                }
-            ]
-        },
-        "creation_datetime": {
-            "fake": [
-                "iso8601_datetime"
-            ]
-        },
-        "sender_bic": {
-            "fake": [
-                "bic"
-            ]
-        },
-        "receiver_bic": {
-            "fake": [
-                "bic"
-            ]
-        },
-        "transaction_ref": {
-            "cat": [
-                "TXN",
-                {
-                    "fake": [
-                        "i64",
-                        100000000000,
-                        999999999999
-                    ]
-                }
-            ]
-        },
-        "instruction_id": {
-            "cat": [
-                "INSTR",
-                {
-                    "fake": [
-                        "i64",
-                        10000000,
-                        99999999
-                    ]
-                }
-            ]
-        },
-        "end_to_end_id": {
-            "cat": [
-                "E2E",
-                {
-                    "fake": [
-                        "i64",
-                        100000000000,
-                        999999999999
-                    ]
-                }
-            ]
-        },
-        "uetr": {
-            "fake": [
-                "uuid"
-            ]
-        },
-        "amount": {
-            "fake": [
-                "f64",
-                10000.0,
-                100000.0
-            ]
-        },
-        "sender_lei": {
-            "fake": [
-                "lei"
-            ]
-        },
-        "receiver_lei": {
-            "fake": [
-                "lei"
-            ]
-        },
-        "sender_name": {
-            "fake": [
-                "company_name"
-            ]
-        },
-        "receiver_name": {
-            "fake": [
-                "company_name"
-            ]
-        },
-        "sender_iban": {
-            "fake": [
-                "iban",
-                "US"
-            ]
-        },
-        "receiver_iban": {
-            "fake": [
-                "iban",
-                "GB"
-            ]
-        }
+        "msg_id": {"cat": ["MSG", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "sender_bic": {"fake": ["bic"]},
+        "receiver_bic": {"fake": ["bic"]},
+        "transaction_ref": {"cat": ["TXN", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "instruction_id": {"cat": ["INSTR", {"fake": ["i64", 10000000, 99999999]}]},
+        "end_to_end_id": {"cat": ["E2E", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "uetr": {"fake": ["uuid"]},
+        "amount": {"fake": ["f64", 10000.0, 100000.0]},
+        "sender_lei": {"fake": ["lei"]},
+        "receiver_lei": {"fake": ["lei"]},
+        "sender_name": {"fake": ["company_name"]},
+        "receiver_name": {"fake": ["company_name"]},
+        "sender_iban": {"fake": ["iban", "US"]},
+        "receiver_iban": {"fake": ["iban", "GB"]}
     },
     "schema": {
-        "GrpHdr": {
-            "MsgId": {
-                "var": "msg_id"
+        "AppHdr": {
+            "Fr": {
+                "FIId": {"FinInstnId": {"BICFI": {"var": "sender_bic"}, "LEI": {"var": "sender_lei"}}}
             },
-            "CreDtTm": {
-                "var": "creation_datetime"
+            "To": {
+                "FIId": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}, "LEI": {"var": "receiver_lei"}}}
             },
-            "NbOfTxs": "1",
-            "TtlIntrBkSttlmAmt": {
-                "@Ccy": "USD",
-                "$value": {
-                    "var": "amount"
-                }
-            },
-            "IntrBkSttlmDt": {
-                "fake": [
-                    "date",
-                    "%Y-%m-%d",
-                    "+0d",
-                    "+0d"
-                ]
-            },
-            "SttlmInf": {
-                "SttlmMtd": "INDA",
-                "ClrSys": {
-                    "Cd": "TGT"
-                }
-            },
-            "InstgAgt": {
-                "FinInstnId": {
-                    "BICFI": {
-                        "var": "sender_bic"
-                    },
-                    "LEI": {
-                        "var": "sender_lei"
-                    }
-                }
-            },
-            "InstdAgt": {
-                "FinInstnId": {
-                    "BICFI": {
-                        "var": "receiver_bic"
-                    },
-                    "LEI": {
-                        "var": "receiver_lei"
-                    }
-                }
-            }
+            "BizMsgIdr": {"var": "msg_id"},
+            "MsgDefIdr": "pacs.008.001.08",
+            "BizSvc": "swift.cbprplus.01",
+            "CreDt": {"var": "creation_datetime"}
         },
-        "CdtTrfTxInf": {
-            "PmtId": {
-                "InstrId": {
-                    "var": "instruction_id"
-                },
-                "EndToEndId": {
-                    "var": "end_to_end_id"
-                },
-                "TxId": {
-                    "var": "transaction_ref"
-                },
-                "UETR": {
-                    "var": "uetr"
-                },
-                "ClrSysRef": {
-                    "cat": [
-                        "CLR",
-                        {
-                            "fake": [
-                                "i64",
-                                100000000,
-                                999999999
-                            ]
-                        }
-                    ]
-                }
-            },
-            "PmtTpInf": {
-                "InstrPrty": "NORM",
-                "SvcLvl": [
-                    {
-                        "Cd": "G001"
-                    }
-                ],
-                "CtgyPurp": {
-                    "Cd": "TRAD"
-                }
-            },
-            "IntrBkSttlmAmt": {
-                "@Ccy": "USD",
-                "$value": {
-                    "var": "amount"
-                }
-            },
-            "IntrBkSttlmDt": {
-                "fake": [
-                    "date",
-                    "%Y-%m-%d",
-                    "+0d",
-                    "+0d"
-                ]
-            },
-            "SttlmPrty": "NORM",
-            "SttlmTmIndctn": {
-                "DbtDtTm": {
-                    "fake": [
-                        "iso8601_datetime"
-                    ]
-                },
-                "CdtDtTm": {
-                    "fake": [
-                        "iso8601_datetime"
-                    ]
-                }
-            },
-            "InstdAmt": {
-                "@Ccy": "USD",
-                "$value": {
-                    "var": "amount"
-                }
-            },
-            "XchgRate": 1.0,
-            "ChrgBr": "SHAR",
-            "InstgAgt": {
-                "FinInstnId": {
-                    "BICFI": {
-                        "var": "sender_bic"
+        "Document": {
+            "FIToFICstmrCdtTrf": {
+                "GrpHdr": {
+                    "MsgId": {"var": "msg_id"},
+                    "CreDtTm": {"var": "creation_datetime"},
+                    "NbOfTxs": "1",
+                    "TtlIntrBkSttlmAmt": {"@Ccy": "USD", "$value": {"var": "amount"}},
+                    "IntrBkSttlmDt": {
+                        "fake": ["date", "%Y-%m-%d", "+0d", "+0d"]
                     },
-                    "LEI": {
-                        "var": "sender_lei"
-                    }
-                }
-            },
-            "InstdAgt": {
-                "FinInstnId": {
-                    "BICFI": {
-                        "var": "receiver_bic"
+                    "SttlmInf": {"SttlmMtd": "INDA", "ClrSys": {"Cd": "TGT"}},
+                    "InstgAgt": {"FinInstnId": {"BICFI": {"var": "sender_bic"}, "LEI": {"var": "sender_lei"}}},
+                    "InstdAgt": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}, "LEI": {"var": "receiver_lei"}}}
+                },
+                "CdtTrfTxInf": {
+                    "PmtId": {
+                        "InstrId": {"var": "instruction_id"},
+                        "EndToEndId": {"var": "end_to_end_id"},
+                        "TxId": {"var": "transaction_ref"},
+                        "UETR": {"var": "uetr"},
+                        "ClrSysRef": {"cat": ["CLR", {"fake": ["i64", 100000000, 999999999]}]}
                     },
-                    "LEI": {
-                        "var": "receiver_lei"
-                    }
-                }
-            },
-            "Dbtr": {
-                "Nm": {
-                    "var": "sender_name"
-                },
-                "PstlAdr": {
-                    "Ctry": "US"
-                },
-                "Id": {
-                    "OrgId": {
-                        "LEI": {
-                            "var": "sender_lei"
-                        }
-                    }
-                }
-            },
-            "DbtrAcct": {
-                "Id": {
-                    "IBAN": {
-                        "var": "sender_iban"
-                    }
-                },
-                "Ccy": "USD"
-            },
-            "DbtrAgt": {
-                "FinInstnId": {
-                    "BICFI": {
-                        "var": "sender_bic"
+                    "PmtTpInf": {"InstrPrty": "NORM", "SvcLvl": [{"Cd": "G001"}], "CtgyPurp": {"Cd": "TRAD"}},
+                    "IntrBkSttlmAmt": {"@Ccy": "USD", "$value": {"var": "amount"}},
+                    "IntrBkSttlmDt": {
+                        "fake": ["date", "%Y-%m-%d", "+0d", "+0d"]
                     },
-                    "LEI": {
-                        "var": "sender_lei"
-                    }
-                }
-            },
-            "CdtrAgt": {
-                "FinInstnId": {
-                    "BICFI": {
-                        "var": "receiver_bic"
+                    "SttlmPrty": "NORM",
+                    "SttlmTmIndctn": {
+                        "DbtDtTm": {"fake": ["iso8601_datetime"]},
+                        "CdtDtTm": {"fake": ["iso8601_datetime"]}
                     },
-                    "LEI": {
-                        "var": "receiver_lei"
-                    }
-                }
-            },
-            "Cdtr": {
-                "Nm": {
-                    "var": "receiver_name"
-                },
-                "PstlAdr": {
-                    "Ctry": "GB"
-                },
-                "Id": {
-                    "OrgId": {
-                        "LEI": {
-                            "var": "receiver_lei"
-                        }
-                    }
-                }
-            },
-            "CdtrAcct": {
-                "Id": {
-                    "IBAN": {
-                        "var": "receiver_iban"
-                    }
-                },
-                "Ccy": "USD"
-            },
-            "Purp": {
-                "Cd": "TRAD"
-            },
-            "RmtInf": {
-                "Strd": [
-                    {
-                        "RfrdDocInf": [
+                    "InstdAmt": {"@Ccy": "USD", "$value": {"var": "amount"}},
+                    "XchgRate": 1.0,
+                    "ChrgBr": "SHAR",
+                    "InstgAgt": {"FinInstnId": {"BICFI": {"var": "sender_bic"}, "LEI": {"var": "sender_lei"}}},
+                    "InstdAgt": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}, "LEI": {"var": "receiver_lei"}}},
+                    "Dbtr": {
+                        "Nm": {"var": "sender_name"},
+                        "PstlAdr": {"Ctry": "US"},
+                        "Id": {"OrgId": {"LEI": {"var": "sender_lei"}}}
+                    },
+                    "DbtrAcct": {"Id": {"IBAN": {"var": "sender_iban"}}, "Ccy": "USD"},
+                    "DbtrAgt": {"FinInstnId": {"BICFI": {"var": "sender_bic"}, "LEI": {"var": "sender_lei"}}},
+                    "CdtrAgt": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}, "LEI": {"var": "receiver_lei"}}},
+                    "Cdtr": {
+                        "Nm": {"var": "receiver_name"},
+                        "PstlAdr": {"Ctry": "GB"},
+                        "Id": {"OrgId": {"LEI": {"var": "receiver_lei"}}}
+                    },
+                    "CdtrAcct": {"Id": {"IBAN": {"var": "receiver_iban"}}, "Ccy": "USD"},
+                    "Purp": {"Cd": "TRAD"},
+                    "RmtInf": {
+                        "Strd": [
                             {
-                                "Tp": {
-                                    "CdOrPrtry": {
-                                        "Cd": "CINV"
-                                    }
-                                },
-                                "Nb": {
-                                    "cat": [
-                                        "INV-",
-                                        {
-                                            "fake": [
-                                                "i64",
-                                                2024000000,
-                                                2024999999
-                                            ]
+                                "RfrdDocInf": [
+                                    {
+                                        "Tp": {"CdOrPrtry": {"Cd": "CINV"}},
+                                        "Nb": {"cat": ["INV-", {"fake": ["i64", 2024000000, 2024999999]}]},
+                                        "RltdDt": {
+                                            "fake": ["date", "%Y-%m-%d", "-30d", "-1d"]
                                         }
-                                    ]
-                                },
-                                "RltdDt": {
-                                    "fake": [
-                                        "date",
-                                        "%Y-%m-%d",
-                                        "-30d",
-                                        "-1d"
-                                    ]
-                                }
+                                    }
+                                ],
+                                "RfrdDocAmt": {"DuePyblAmt": {"@Ccy": "USD", "$value": {"var": "amount"}}}
                             }
-                        ],
-                        "RfrdDocAmt": {
-                            "DuePyblAmt": {
-                                "@Ccy": "USD",
-                                "$value": {
-                                    "var": "amount"
-                                }
-                            }
-                        }
+                        ]
                     }
-                ]
+                }
             }
         }
     }

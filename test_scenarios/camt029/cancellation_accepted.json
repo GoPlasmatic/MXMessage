@@ -12,113 +12,44 @@
         "currency": "USD"
     },
     "schema": {
-        "Assgnmt": {
-            "Id": {
-                "var": "msg_id"
-            },
-            "Assgnr": {
-                "Agt": {
-                    "FinInstnId": {
-                        "BICFI": {
-                            "var": "responder_bic"
-                        }
-                    }
-                }
-            },
-            "Assgne": {
-                "Agt": {
-                    "FinInstnId": {
-                        "BICFI": {
-                            "var": "originator_bic"
-                        }
-                    }
-                }
-            },
-            "CreDtTm": {
-                "var": "creation_datetime"
-            }
+        "AppHdr": {
+            "Fr": {"FIId": {"FinInstnId": {"BICFI": {"fake": ["bic"]}}}},
+            "To": {"FIId": {"FinInstnId": {"BICFI": {"fake": ["bic"]}}}},
+            "BizMsgIdr": {"var": "msg_id"},
+            "MsgDefIdr": "camt.029.001.09",
+            "BizSvc": "swift.ug",
+            "CreDt": {"var": "creation_datetime"}
         },
-        "Sts": {
-            "Conf": "CNCL"
-        },
-        "CxlDtls": {
-            "TxInfAndSts": {
-                "CxlStsId": {
-                    "var": "investigation_id"
+        "Document": {
+            "RsltnOfInvstgtn": {
+                "Assgnmt": {
+                    "Id": {"var": "msg_id"},
+                    "Assgnr": {"Agt": {"FinInstnId": {"BICFI": {"var": "responder_bic"}}}},
+                    "Assgne": {"Agt": {"FinInstnId": {"BICFI": {"var": "originator_bic"}}}},
+                    "CreDtTm": {"var": "creation_datetime"}
                 },
-                "RslvdCase": {
-                    "Id": {
-                        "var": "investigation_id"
-                    },
-                    "Cretr": {
-                        "Agt": {
-                            "FinInstnId": {
-                                "BICFI": {
-                                    "var": "originator_bic"
-                                }
-                            }
-                        }
-                    }
-                },
-                "OrgnlGrpInf": {
-                    "OrgnlMsgId": {
-                        "var": "original_payment_id"
-                    },
-                    "OrgnlMsgNmId": "pacs.008.001.08"
-                },
-                "OrgnlInstrId": {
-                    "var": "original_payment_id"
-                },
-                "OrgnlEndToEndId": "E2E123456789",
-                "OrgnlUETR": {
-                    "var": "original_uetr"
-                },
-                "TxCxlSts": "ACCR",
-                "OrgnlTxRef": {
-                    "IntrBkSttlmAmt": {
-                        "@Ccy": {
-                            "var": "currency"
+                "Sts": {"Conf": "CNCL"},
+                "CxlDtls": {
+                    "TxInfAndSts": {
+                        "CxlStsId": {"var": "investigation_id"},
+                        "RslvdCase": {
+                            "Id": {"var": "investigation_id"},
+                            "Cretr": {"Agt": {"FinInstnId": {"BICFI": {"var": "originator_bic"}}}}
                         },
-                        "$value": {
-                            "var": "cancellation_amount"
-                        }
-                    },
-                    "IntrBkSttlmDt": {
-                        "var": "original_date"
-                    },
-                    "Dbtr": {
-                        "Nm": "Debtor Company"
-                    },
-                    "DbtrAcct": {
-                        "Id": {
-                            "Othr": {
-                                "Id": "1234567890",
-                                "SchmeNm": {
-                                    "Cd": "BBAN"
-                                }
-                            }
-                        }
-                    },
-                    "DbtrAgt": {
-                        "FinInstnId": {
-                            "BICFI": {
-                                "var": "originator_bic"
-                            }
-                        }
-                    },
-                    "CdtrAgt": {
-                        "FinInstnId": {
-                            "BICFI": {
-                                "var": "responder_bic"
-                            }
-                        }
-                    },
-                    "Cdtr": {
-                        "Nm": "Creditor Company"
-                    },
-                    "CdtrAcct": {
-                        "Id": {
-                            "IBAN": "GB29NWBK60161331926819"
+                        "OrgnlGrpInf": {"OrgnlMsgId": {"var": "original_payment_id"}, "OrgnlMsgNmId": "pacs.008.001.08"},
+                        "OrgnlInstrId": {"var": "original_payment_id"},
+                        "OrgnlEndToEndId": "E2E123456789",
+                        "OrgnlUETR": {"var": "original_uetr"},
+                        "TxCxlSts": "ACCR",
+                        "OrgnlTxRef": {
+                            "IntrBkSttlmAmt": {"@Ccy": {"var": "currency"}, "$value": {"var": "cancellation_amount"}},
+                            "IntrBkSttlmDt": {"var": "original_date"},
+                            "Dbtr": {"Nm": "Debtor Company"},
+                            "DbtrAcct": {"Id": {"Othr": {"Id": "1234567890", "SchmeNm": {"Cd": "BBAN"}}}},
+                            "DbtrAgt": {"FinInstnId": {"BICFI": {"var": "originator_bic"}}},
+                            "CdtrAgt": {"FinInstnId": {"BICFI": {"var": "responder_bic"}}},
+                            "Cdtr": {"Nm": "Creditor Company"},
+                            "CdtrAcct": {"Id": {"IBAN": "GB29NWBK60161331926819"}}
                         }
                     }
                 }

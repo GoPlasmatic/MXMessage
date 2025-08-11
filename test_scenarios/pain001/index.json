@@ -26,25 +26,10 @@
             "file": "cbpr_supplier_batch.json",
             "description": "CBPR+ compliant supplier batch payment"
         },
-        {
-            "file": "multi_currency.json",
-            "description": "Multi-currency payment batch"
-        },
-        {
-            "file": "salary_payment.json",
-            "description": "Monthly salary payment batch"
-        },
-        {
-            "file": "scheduled_payment.json",
-            "description": "Scheduled future-dated payment"
-        },
-        {
-            "file": "urgent_payment.json",
-            "description": "Urgent priority payment"
-        },
-        {
-            "file": "vendor_payment.json",
-            "description": "Vendor/supplier payment batch"
-        }
+        {"file": "multi_currency.json", "description": "Multi-currency payment batch"},
+        {"file": "salary_payment.json", "description": "Monthly salary payment batch"},
+        {"file": "scheduled_payment.json", "description": "Scheduled future-dated payment"},
+        {"file": "urgent_payment.json", "description": "Urgent priority payment"},
+        {"file": "vendor_payment.json", "description": "Vendor/supplier payment batch"}
     ]
 }

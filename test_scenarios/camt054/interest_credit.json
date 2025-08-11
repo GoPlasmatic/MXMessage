@@ -6,59 +6,36 @@
         "account_id": "GB29NWBK60161331926819"
     },
     "schema": {
-        "GrpHdr": {
-            "MsgId": {
-                "var": "msg_id"
-            },
-            "CreDtTm": {
-                "var": "creation_datetime"
-            }
+        "AppHdr": {
+            "Fr": {"FIId": {"FinInstnId": {"BICFI": {"fake": ["bic"]}}}},
+            "To": {"FIId": {"FinInstnId": {"BICFI": {"fake": ["bic"]}}}},
+            "BizMsgIdr": {"var": "msg_id"},
+            "MsgDefIdr": "camt.054.001.08",
+            "BizSvc": "swift.ug",
+            "CreDt": {"var": "creation_datetime"}
         },
-        "Ntfctn": [
-            {
-                "Id": {
-                    "var": "ntfctn_id"
-                },
-                "CreDtTm": {
-                    "var": "creation_datetime"
-                },
-                "Acct": {
-                    "Id": {
-                        "IBAN": {
-                            "var": "account_id"
-                        }
-                    },
-                    "Ccy": "USD"
-                },
-                "Ntry": [
+        "Document": {
+            "BkToCstmrDbtCdtNtfctn": {
+                "GrpHdr": {"MsgId": {"var": "msg_id"}, "CreDtTm": {"var": "creation_datetime"}},
+                "Ntfctn": [
                     {
-                        "NtryRef": "INTENT123456",
-                        "Amt": {
-                            "@Ccy": "USD",
-                            "$value": 125.0
-                        },
-                        "CdtDbtInd": "CRDT",
-                        "Sts": {
-                            "Cd": "BOOK"
-                        },
-                        "BookgDt": {
-                            "Dt": "2025-01-15"
-                        },
-                        "ValDt": {
-                            "Dt": "2025-01-15"
-                        },
-                        "BkTxCd": {
-                            "Domn": {
-                                "Cd": "CAMT",
-                                "Fmly": {
-                                    "Cd": "ACCI",
-                                    "SubFmlyCd": "INTR"
-                                }
+                        "Id": {"var": "ntfctn_id"},
+                        "CreDtTm": {"var": "creation_datetime"},
+                        "Acct": {"Id": {"IBAN": {"var": "account_id"}}, "Ccy": "USD"},
+                        "Ntry": [
+                            {
+                                "NtryRef": "INTENT123456",
+                                "Amt": {"@Ccy": "USD", "$value": 125.0},
+                                "CdtDbtInd": "CRDT",
+                                "Sts": {"Cd": "BOOK"},
+                                "BookgDt": {"Dt": "2025-01-15"},
+                                "ValDt": {"Dt": "2025-01-15"},
+                                "BkTxCd": {"Domn": {"Cd": "CAMT", "Fmly": {"Cd": "ACCI", "SubFmlyCd": "INTR"}}}
                             }
-                        }
+                        ]
                     }
                 ]
             }
-        ]
+        }
     }
 }

@@ -1,375 +1,133 @@
 {
     "variables": {
-        "msg_id": {
-            "cat": [
-                "MSG",
-                {
-                    "fake": [
-                        "i64",
-                        100000000000,
-                        999999999999
-                    ]
-                }
-            ]
-        },
-        "creation_datetime": {
-            "fake": [
-                "iso8601_datetime"
-            ]
-        },
-        "sender_bic": {
-            "fake": [
-                "bic"
-            ]
-        },
-        "receiver_bic": {
-            "fake": [
-                "bic"
-            ]
-        },
-        "transaction_ref": {
-            "cat": [
-                "TXN",
-                {
-                    "fake": [
-                        "i64",
-                        100000000000,
-                        999999999999
-                    ]
-                }
-            ]
-        },
-        "instruction_id": {
-            "cat": [
-                "INSTR",
-                {
-                    "fake": [
-                        "i64",
-                        10000000,
-                        99999999
-                    ]
-                }
-            ]
-        },
-        "end_to_end_id": {
-            "cat": [
-                "E2E",
-                {
-                    "fake": [
-                        "i64",
-                        100000000000,
-                        999999999999
-                    ]
-                }
-            ]
-        },
-        "amount": {
-            "fake": [
-                "f64",
-                10000000.0,
-                500000000.0
-            ]
-        },
-        "sender_lei": {
-            "fake": [
-                "lei"
-            ]
-        },
-        "receiver_lei": {
-            "fake": [
-                "lei"
-            ]
-        },
-        "central_bank_bic": {
-            "fake": [
-                "bic"
-            ]
-        },
-        "liquidity_ref": {
-            "cat": [
-                "LIQ-",
-                {
-                    "fake": [
-                        "i64",
-                        2024000000,
-                        2024999999
-                    ]
-                }
-            ]
-        },
-        "uetr": {
-            "fake": [
-                "uuid"
-            ]
-        }
+        "msg_id": {"cat": ["MSG", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "sender_bic": {"fake": ["bic"]},
+        "receiver_bic": {"fake": ["bic"]},
+        "transaction_ref": {"cat": ["TXN", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "instruction_id": {"cat": ["INSTR", {"fake": ["i64", 10000000, 99999999]}]},
+        "end_to_end_id": {"cat": ["E2E", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "amount": {"fake": ["f64", 10000000.0, 500000000.0]},
+        "sender_lei": {"fake": ["lei"]},
+        "receiver_lei": {"fake": ["lei"]},
+        "central_bank_bic": {"fake": ["bic"]},
+        "liquidity_ref": {"cat": ["LIQ-", {"fake": ["i64", 2024000000, 2024999999]}]},
+        "uetr": {"fake": ["uuid"]}
     },
     "schema": {
-        "GrpHdr": {
-            "MsgId": {
-                "var": "msg_id"
-            },
-            "CreDtTm": {
-                "var": "creation_datetime"
-            },
-            "NbOfTxs": "1",
-            "SttlmInf": {
-                "SttlmMtd": "INDA",
-                "ClrSys": {
-                    "Cd": "RTG"
-                }
-            }
+        "AppHdr": {
+            "Fr": {"FIId": {"FinInstnId": {"BICFI": {"var": "sender_bic"}}}},
+            "To": {"FIId": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}}}},
+            "BizMsgIdr": {"var": "msg_id"},
+            "MsgDefIdr": "pacs.009.001.08",
+            "BizSvc": "swift.ug",
+            "CreDt": {"var": "creation_datetime"}
         },
-        "CdtTrfTxInf": {
-            "PmtId": {
-                "InstrId": {
-                    "var": "instruction_id"
+        "Document": {
+            "FinInstnCdtTrf": {
+                "GrpHdr": {
+                    "MsgId": {"var": "msg_id"},
+                    "CreDtTm": {"var": "creation_datetime"},
+                    "NbOfTxs": "1",
+                    "SttlmInf": {"SttlmMtd": "INDA", "ClrSys": {"Cd": "RTG"}}
                 },
-                "EndToEndId": {
-                    "var": "end_to_end_id"
-                },
-                "TxId": {
-                    "var": "transaction_ref"
-                },
-                "UETR": {
-                    "var": "uetr"
-                }
-            },
-            "PmtTpInf": {
-                "InstrPrty": "HIGH",
-                "SvcLvl": [
-                    {
-                        "Cd": "RTGS"
-                    }
-                ],
-                "LclInstrm": {
-                    "Prtry": "URGENT_LIQUIDITY"
-                }
-            },
-            "IntrBkSttlmAmt": {
-                "@Ccy": "USD",
-                "$value": {
-                    "var": "amount"
-                }
-            },
-            "IntrBkSttlmDt": {
-                "fake": [
-                    "date",
-                    "%Y-%m-%d",
-                    "+0d",
-                    "+0d"
-                ]
-            },
-            "SttlmPrty": "HIGH",
-            "SttlmTmReq": {
-                "CLSTm": "16:00:00+00:00"
-            },
-            "AccptncDtTm": {
-                "fake": [
-                    "iso8601_datetime"
-                ]
-            },
-            "InstgAgt": {
-                "FinInstnId": {
-                    "BICFI": {
-                        "var": "sender_bic"
+                "CdtTrfTxInf": {
+                    "PmtId": {
+                        "InstrId": {"var": "instruction_id"},
+                        "EndToEndId": {"var": "end_to_end_id"},
+                        "TxId": {"var": "transaction_ref"},
+                        "UETR": {"var": "uetr"}
                     },
-                    "LEI": {
-                        "var": "sender_lei"
-                    }
-                }
-            },
-            "InstdAgt": {
-                "FinInstnId": {
-                    "BICFI": {
-                        "var": "receiver_bic"
+                    "PmtTpInf": {
+                        "InstrPrty": "HIGH",
+                        "SvcLvl": [{"Cd": "RTGS"}],
+                        "LclInstrm": {"Prtry": "URGENT_LIQUIDITY"}
                     },
-                    "LEI": {
-                        "var": "receiver_lei"
-                    }
-                }
-            },
-            "IntrmyAgt1": {
-                "FinInstnId": {
-                    "BICFI": {
-                        "var": "central_bank_bic"
+                    "IntrBkSttlmAmt": {"@Ccy": "USD", "$value": {"var": "amount"}},
+                    "IntrBkSttlmDt": {
+                        "fake": ["date", "%Y-%m-%d", "+0d", "+0d"]
                     },
-                    "Nm": "Central Bank",
-                    "PstlAdr": {
-                        "Ctry": "US"
-                    }
-                }
-            },
-            "Dbtr": {
-                "FinInstnId": {
-                    "BICFI": {
-                        "var": "sender_bic"
+                    "SttlmPrty": "HIGH",
+                    "SttlmTmReq": {"CLSTm": "16:00:00+00:00"},
+                    "AccptncDtTm": {"fake": ["iso8601_datetime"]},
+                    "InstgAgt": {"FinInstnId": {"BICFI": {"var": "sender_bic"}, "LEI": {"var": "sender_lei"}}},
+                    "InstdAgt": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}, "LEI": {"var": "receiver_lei"}}},
+                    "IntrmyAgt1": {
+                        "FinInstnId": {"BICFI": {"var": "central_bank_bic"}, "Nm": "Central Bank", "PstlAdr": {"Ctry": "US"}}
                     },
-                    "LEI": {
-                        "var": "sender_lei"
-                    },
-                    "Nm": {
-                        "fake": [
-                            "company_name"
-                        ]
-                    }
-                }
-            },
-            "DbtrAcct": {
-                "Id": {
-                    "Othr": {
-                        "Id": {
-                            "cat": [
-                                "RESERVE-",
-                                {
-                                    "fake": [
-                                        "i64",
-                                        100000,
-                                        999999
-                                    ]
-                                }
-                            ]
-                        },
-                        "SchmeNm": {
-                            "Prtry": "CENTRAL_BANK_RESERVE"
+                    "Dbtr": {
+                        "FinInstnId": {
+                            "BICFI": {"var": "sender_bic"},
+                            "LEI": {"var": "sender_lei"},
+                            "Nm": {"fake": ["company_name"]}
                         }
-                    }
-                },
-                "Ccy": "USD"
-            },
-            "DbtrAgt": {
-                "FinInstnId": {
-                    "BICFI": {
-                        "var": "sender_bic"
                     },
-                    "LEI": {
-                        "var": "sender_lei"
-                    }
-                }
-            },
-            "CdtrAgt": {
-                "FinInstnId": {
-                    "BICFI": {
-                        "var": "receiver_bic"
-                    },
-                    "LEI": {
-                        "var": "receiver_lei"
-                    }
-                }
-            },
-            "Cdtr": {
-                "FinInstnId": {
-                    "BICFI": {
-                        "var": "receiver_bic"
-                    },
-                    "LEI": {
-                        "var": "receiver_lei"
-                    },
-                    "Nm": {
-                        "fake": [
-                            "company_name"
-                        ]
-                    }
-                }
-            },
-            "CdtrAcct": {
-                "Id": {
-                    "Othr": {
+                    "DbtrAcct": {
                         "Id": {
-                            "cat": [
-                                "RESERVE-",
-                                {
-                                    "fake": [
-                                        "i64",
-                                        100000,
-                                        999999
-                                    ]
-                                }
-                            ]
+                            "Othr": {
+                                "Id": {"cat": ["RESERVE-", {"fake": ["i64", 100000, 999999]}]},
+                                "SchmeNm": {"Prtry": "CENTRAL_BANK_RESERVE"}
+                            }
                         },
-                        "SchmeNm": {
-                            "Prtry": "CENTRAL_BANK_RESERVE"
+                        "Ccy": "USD"
+                    },
+                    "DbtrAgt": {"FinInstnId": {"BICFI": {"var": "sender_bic"}, "LEI": {"var": "sender_lei"}}},
+                    "CdtrAgt": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}, "LEI": {"var": "receiver_lei"}}},
+                    "Cdtr": {
+                        "FinInstnId": {
+                            "BICFI": {"var": "receiver_bic"},
+                            "LEI": {"var": "receiver_lei"},
+                            "Nm": {"fake": ["company_name"]}
                         }
-                    }
-                },
-                "Ccy": "USD"
-            },
-            "InstrForCdtrAgt": [
-                {
-                    "Cd": "PHOB",
-                    "InstrInf": "URGENT LIQUIDITY PROVISION"
-                }
-            ],
-            "InstrForNxtAgt": [
-                {
-                    "InstrInf": "IMMEDIATE CREDIT REQUIRED"
-                }
-            ],
-            "Purp": {
-                "Cd": "LIMA"
-            },
-            "RgltryRptg": [
-                {
-                    "Dtls": [
+                    },
+                    "CdtrAcct": {
+                        "Id": {
+                            "Othr": {
+                                "Id": {"cat": ["RESERVE-", {"fake": ["i64", 100000, 999999]}]},
+                                "SchmeNm": {"Prtry": "CENTRAL_BANK_RESERVE"}
+                            }
+                        },
+                        "Ccy": "USD"
+                    },
+                    "InstrForCdtrAgt": [{"Cd": "PHOB", "InstrInf": "URGENT LIQUIDITY PROVISION"}],
+                    "InstrForNxtAgt": [{"InstrInf": "IMMEDIATE CREDIT REQUIRED"}],
+                    "Purp": {"Cd": "LIMA"},
+                    "RgltryRptg": [
                         {
-                            "Tp": "BOTH",
-                            "Dt": {
-                                "fake": [
-                                    "date",
-                                    "%Y-%m-%d",
-                                    "+0d",
-                                    "+0d"
-                                ]
-                            },
-                            "Ctry": "US",
-                            "Cd": "EMG",
-                            "Amt": {
-                                "@Ccy": "USD",
-                                "$value": {
-                                    "var": "amount"
-                                }
-                            },
-                            "Inf": [
-                                "EMERGENCY LIQUIDITY PROVISION",
+                            "Dtls": [
                                 {
-                                    "var": "liquidity_ref"
+                                    "Tp": "BOTH",
+                                    "Dt": {
+                                        "fake": ["date", "%Y-%m-%d", "+0d", "+0d"]
+                                    },
+                                    "Ctry": "US",
+                                    "Cd": "EMG",
+                                    "Amt": {"@Ccy": "USD", "$value": {"var": "amount"}},
+                                    "Inf": ["EMERGENCY LIQUIDITY PROVISION", {"var": "liquidity_ref"}]
                                 }
                             ]
+                        }
+                    ],
+                    "RmtInf": {
+                        "Strd": [
+                            {
+                                "AddtlRmtInf": [
+                                    "Urgent liquidity transfer",
+                                    {"cat": ["Reference: ", {"var": "liquidity_ref"}]},
+                                    "Intraday liquidity facility",
+                                    "Central bank emergency funding"
+                                ]
+                            }
+                        ]
+                    },
+                    "SplmtryData": [
+                        {
+                            "PlcAndNm": "LiquidityManagement",
+                            "Envlp": {"Document": {"Prtry": {"Tp": "LIQUIDITY_TYPE", "Id": "EMERGENCY_FUNDING"}}}
                         }
                     ]
                 }
-            ],
-            "RmtInf": {
-                "Strd": [
-                    {
-                        "AddtlRmtInf": [
-                            "Urgent liquidity transfer",
-                            {
-                                "cat": [
-                                    "Reference: ",
-                                    {
-                                        "var": "liquidity_ref"
-                                    }
-                                ]
-                            },
-                            "Intraday liquidity facility",
-                            "Central bank emergency funding"
-                        ]
-                    }
-                ]
-            },
-            "SplmtryData": [
-                {
-                    "PlcAndNm": "LiquidityManagement",
-                    "Envlp": {
-                        "Document": {
-                            "Prtry": {
-                                "Tp": "LIQUIDITY_TYPE",
-                                "Id": "EMERGENCY_FUNDING"
-                            }
-                        }
-                    }
-                }
-            ]
+            }
         }
     }
 }

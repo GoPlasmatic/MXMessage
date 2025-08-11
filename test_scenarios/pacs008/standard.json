@@ -17,95 +17,82 @@
         "purpose_code": "SUPP"
     },
     "schema": {
-        "GrpHdr": {
-            "MsgId": {"var": "msg_id"},
-            "CreDtTm": {"var": "creation_datetime"},
-            "NbOfTxs": "1",
-            "SttlmInf": {
-                "SttlmMtd": "INDA"
-            }
+        "AppHdr": {
+            "Fr": {"FIId": {"FinInstnId": {"BICFI": {"var": "sender_bic"}}}},
+            "To": {"FIId": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}}}},
+            "BizMsgIdr": {"var": "msg_id"},
+            "MsgDefIdr": "pacs.008.001.08",
+            "BizSvc": "swift.ug",
+            "CreDt": {"var": "creation_datetime"}
         },
-        "CdtTrfTxInf": {
-            "PmtId": {
-                "InstrId": {"var": "instruction_id"},
-                "EndToEndId": {"var": "end_to_end_id"},
-                "TxId": {"var": "transaction_ref"},
-                "UETR": {"var": "uetr"}
-            },
-            "IntrBkSttlmAmt": {
-                "@Ccy": {"var": "currency"},
-                "$value": {"var": "amount"}
-            },
-            "IntrBkSttlmDt": {"var": "value_date"},
-            "SttlmPrty": "NORM",
-            "InstdAmt": {
-                "@Ccy": {"var": "currency"},  
-                "$value": {"var": "amount"}
-            },
-            "ChrgBr": {"var": "charges"},
-            "InstgAgt": {
-                "FinInstnId": {
-                    "BICFI": {"var": "sender_bic"}
-                }
-            },
-            "InstdAgt": {
-                "FinInstnId": {
-                    "BICFI": {"var": "receiver_bic"}
-                }
-            },
-            "Dbtr": {
-                "Nm": {"fake": ["company_name"]},
-                "PstlAdr": {
-                    "StrtNm": {"fake": ["street_name"]},
-                    "BldgNb": {"cat": [{"fake": ["i64", 1, 999]}]},
-                    "PstCd": {"fake": ["postcode"]},
-                    "TwnNm": {"fake": ["city_name"]},
-                    "Ctry": "DE"
+        "Document": {
+            "FIToFICstmrCdtTrf": {
+                "GrpHdr": {
+                    "MsgId": {"var": "msg_id"},
+                    "CreDtTm": {"var": "creation_datetime"},
+                    "NbOfTxs": "1",
+                    "SttlmInf": {"SttlmMtd": "INDA"}
                 },
-                "CtryOfRes": "DE"
-            },
-            "DbtrAcct": {
-                "Id": {
-                    "IBAN": {"var": "debtor_iban"}
-                },
-                "Ccy": {"var": "currency"},
-                "Nm": {"fake": ["words", 2, 3]}
-            },
-            "DbtrAgt": {
-                "FinInstnId": {
-                    "BICFI": {"var": "sender_bic"},
-                    "Nm": {"fake": ["company_name"]}
+                "CdtTrfTxInf": {
+                    "PmtId": {
+                        "InstrId": {"var": "instruction_id"},
+                        "EndToEndId": {"var": "end_to_end_id"},
+                        "TxId": {"var": "transaction_ref"},
+                        "UETR": {"var": "uetr"}
+                    },
+                    "IntrBkSttlmAmt": {"@Ccy": {"var": "currency"}, "$value": {"var": "amount"}},
+                    "IntrBkSttlmDt": {"var": "value_date"},
+                    "SttlmPrty": "NORM",
+                    "InstdAmt": {"@Ccy": {"var": "currency"}, "$value": {"var": "amount"}},
+                    "ChrgBr": {"var": "charges"},
+                    "InstgAgt": {"FinInstnId": {"BICFI": {"var": "sender_bic"}}},
+                    "InstdAgt": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}}},
+                    "Dbtr": {
+                        "Nm": {"fake": ["company_name"]},
+                        "PstlAdr": {
+                            "StrtNm": {"fake": ["street_name"]},
+                            "BldgNb": {"cat": [{"fake": ["i64", 1, 999]}]},
+                            "PstCd": {"fake": ["postcode"]},
+                            "TwnNm": {"fake": ["city_name"]},
+                            "Ctry": "DE"
+                        },
+                        "CtryOfRes": "DE"
+                    },
+                    "DbtrAcct": {
+                        "Id": {"IBAN": {"var": "debtor_iban"}},
+                        "Ccy": {"var": "currency"},
+                        "Nm": {"fake": ["words", 2, 3]}
+                    },
+                    "DbtrAgt": {"FinInstnId": {"BICFI": {"var": "sender_bic"}, "Nm": {"fake": ["company_name"]}}},
+                    "CdtrAgt": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}, "Nm": {"fake": ["company_name"]}}},
+                    "Cdtr": {
+                        "Nm": {"fake": ["company_name"]},
+                        "PstlAdr": {
+                            "StrtNm": {"fake": ["street_name"]},
+                            "BldgNb": {"cat": [{"fake": ["i64", 1, 999]}]},
+                            "PstCd": {"fake": ["postcode"]},
+                            "TwnNm": {"fake": ["city_name"]},
+                            "Ctry": "FR"
+                        },
+                        "CtryOfRes": "FR"
+                    },
+                    "CdtrAcct": {
+                        "Id": {"IBAN": {"var": "creditor_iban"}},
+                        "Ccy": {"var": "currency"},
+                        "Nm": {"fake": ["words", 2, 3]}
+                    },
+                    "Purp": {"Cd": {"var": "purpose_code"}},
+                    "RmtInf": {
+                        "Ustrd": {
+                            "cat": [
+                                "Payment for Invoice ",
+                                {"fake": ["word"]},
+                                "-2024-",
+                                {"fake": ["i64", 1, 999]}
+                            ]
+                        }
+                    }
                 }
-            },
-            "CdtrAgt": {
-                "FinInstnId": {
-                    "BICFI": {"var": "receiver_bic"},
-                    "Nm": {"fake": ["company_name"]}
-                }
-            },
-            "Cdtr": {
-                "Nm": {"fake": ["company_name"]},
-                "PstlAdr": {
-                    "StrtNm": {"fake": ["street_name"]},
-                    "BldgNb": {"cat": [{"fake": ["i64", 1, 999]}]},
-                    "PstCd": {"fake": ["postcode"]},
-                    "TwnNm": {"fake": ["city_name"]},
-                    "Ctry": "FR"
-                },
-                "CtryOfRes": "FR"
-            },
-            "CdtrAcct": {
-                "Id": {
-                    "IBAN": {"var": "creditor_iban"}
-                },
-                "Ccy": {"var": "currency"},
-                "Nm": {"fake": ["words", 2, 3]}
-            },
-            "Purp": {
-                "Cd": {"var": "purpose_code"}
-            },
-            "RmtInf": {
-                "Ustrd": {"cat": ["Payment for Invoice ", {"fake": ["word"]}, "-2024-", {"fake": ["i64", 1, 999]}]}
             }
         }
     }

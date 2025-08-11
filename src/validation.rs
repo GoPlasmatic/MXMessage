@@ -95,7 +95,7 @@ pub mod helpers {
     ) -> bool {
         // Trim whitespace before validation
         let trimmed_value = value.trim();
-        
+
         let regex = match Regex::new(pattern) {
             Ok(r) => r,
             Err(_) => {
@@ -114,7 +114,7 @@ pub mod helpers {
         if !regex.is_match(trimmed_value) {
             let error = ValidationError::new(
                 1005,
-                format!("{field_name} does not match the required pattern (value: '{}')", value),
+                format!("{field_name} does not match the required pattern (value: '{value}')"),
             )
             .with_field(field_name.to_string())
             .with_path(path.to_string());

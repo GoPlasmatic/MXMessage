@@ -1,571 +1,210 @@
 {
     "variables": {
-        "msg_id": {
-            "cat": [
-                "MSG",
-                {
-                    "fake": [
-                        "i64",
-                        100000000000,
-                        999999999999
-                    ]
-                }
-            ]
-        },
-        "creation_datetime": {
-            "fake": [
-                "iso8601_datetime"
-            ]
-        },
-        "sender_bic": {
-            "fake": [
-                "bic"
-            ]
-        },
-        "receiver_bic": {
-            "fake": [
-                "bic"
-            ]
-        },
-        "transaction_ref": {
-            "cat": [
-                "TXN",
-                {
-                    "fake": [
-                        "i64",
-                        100000000000,
-                        999999999999
-                    ]
-                }
-            ]
-        },
-        "instruction_id": {
-            "cat": [
-                "INSTR",
-                {
-                    "fake": [
-                        "i64",
-                        10000000,
-                        99999999
-                    ]
-                }
-            ]
-        },
-        "end_to_end_id": {
-            "cat": [
-                "E2E",
-                {
-                    "fake": [
-                        "i64",
-                        100000000000,
-                        999999999999
-                    ]
-                }
-            ]
-        },
-        "uetr": {
-            "fake": [
-                "uuid"
-            ]
-        },
-        "amount": {
-            "fake": [
-                "f64",
-                50.0,
-                500.0
-            ]
-        },
-        "customer_name": {
-            "fake": [
-                "name"
-            ]
-        },
-        "account_number": {
-            "cat": [
-                "ACC-",
-                {
-                    "fake": [
-                        "i64",
-                        10000000,
-                        99999999
-                    ]
-                }
-            ]
-        },
-        "utility_company": {
-            "cat": [
-                {
-                    "fake": [
-                        "city_name"
-                    ]
-                },
-                " Energy Services"
-            ]
-        },
-        "utility_type": {
-            "fake": [
-                "regex",
-                "(ELECTRICITY|GAS|WATER|TELECOM)"
-            ]
-        },
+        "msg_id": {"cat": ["MSG", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "sender_bic": {"fake": ["bic"]},
+        "receiver_bic": {"fake": ["bic"]},
+        "transaction_ref": {"cat": ["TXN", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "instruction_id": {"cat": ["INSTR", {"fake": ["i64", 10000000, 99999999]}]},
+        "end_to_end_id": {"cat": ["E2E", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "uetr": {"fake": ["uuid"]},
+        "amount": {"fake": ["f64", 50.0, 500.0]},
+        "customer_name": {"fake": ["name"]},
+        "account_number": {"cat": ["ACC-", {"fake": ["i64", 10000000, 99999999]}]},
+        "utility_company": {"cat": [{"fake": ["city_name"]}, " Energy Services"]},
+        "utility_type": {"fake": ["regex", "(ELECTRICITY|GAS|WATER|TELECOM)"]},
         "billing_period": {
-            "fake": [
-                "date",
-                "%Y-%m",
-                "-1M",
-                "-1M"
-            ]
+            "fake": ["date", "%Y-%m", "-1M", "-1M"]
         },
-        "meter_reading": {
-            "fake": [
-                "i64",
-                10000,
-                99999
-            ]
-        }
+        "meter_reading": {"fake": ["i64", 10000, 99999]}
     },
     "schema": {
-        "GrpHdr": {
-            "MsgId": {
-                "var": "msg_id"
-            },
-            "CreDtTm": {
-                "var": "creation_datetime"
-            },
-            "NbOfTxs": "1",
-            "SttlmInf": {
-                "SttlmMtd": "INDA"
-            }
+        "AppHdr": {
+            "Fr": {"FIId": {"FinInstnId": {"BICFI": {"var": "sender_bic"}}}},
+            "To": {"FIId": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}}}},
+            "BizMsgIdr": {"var": "msg_id"},
+            "MsgDefIdr": "pacs.008.001.08",
+            "BizSvc": "swift.cbprplus.01",
+            "CreDt": {"var": "creation_datetime"}
         },
-        "CdtTrfTxInf": {
-            "PmtId": {
-                "InstrId": {
-                    "var": "instruction_id"
+        "Document": {
+            "FIToFICstmrCdtTrf": {
+                "GrpHdr": {
+                    "MsgId": {"var": "msg_id"},
+                    "CreDtTm": {"var": "creation_datetime"},
+                    "NbOfTxs": "1",
+                    "SttlmInf": {"SttlmMtd": "INDA"}
                 },
-                "EndToEndId": {
-                    "var": "end_to_end_id"
-                },
-                "TxId": {
-                    "var": "transaction_ref"
-                },
-                "UETR": {
-                    "var": "uetr"
-                }
-            },
-            "PmtTpInf": {
-                "InstrPrty": "NORM",
-                "SvcLvl": [
-                    {
-                        "Cd": "CBPR"
-                    }
-                ],
-                "CtgyPurp": {
-                    "Cd": "UTIP"
-                },
-                "LclInstrm": {
-                    "Prtry": {
-                        "cat": [
-                            {
-                                "var": "utility_type"
-                            },
-                            "_BILL_PAYMENT"
-                        ]
-                    }
-                }
-            },
-            "IntrBkSttlmAmt": {
-                "@Ccy": "AUD",
-                "$value": {
-                    "var": "amount"
-                }
-            },
-            "IntrBkSttlmDt": {
-                "fake": [
-                    "date",
-                    "%Y-%m-%d",
-                    "+0d",
-                    "+0d"
-                ]
-            },
-            "SttlmPrty": "NORM",
-            "InstdAmt": {
-                "@Ccy": "AUD",
-                "$value": {
-                    "var": "amount"
-                }
-            },
-            "ChrgBr": "SHAR",
-            "InstgAgt": {
-                "FinInstnId": {
-                    "BICFI": {
-                        "var": "sender_bic"
+                "CdtTrfTxInf": {
+                    "PmtId": {
+                        "InstrId": {"var": "instruction_id"},
+                        "EndToEndId": {"var": "end_to_end_id"},
+                        "TxId": {"var": "transaction_ref"},
+                        "UETR": {"var": "uetr"}
                     },
-                    "LEI": {
-                        "fake": [
-                            "lei"
-                        ]
-                    }
-                }
-            },
-            "InstdAgt": {
-                "FinInstnId": {
-                    "BICFI": {
-                        "var": "receiver_bic"
+                    "PmtTpInf": {
+                        "InstrPrty": "NORM",
+                        "SvcLvl": [{"Cd": "CBPR"}],
+                        "CtgyPurp": {"Cd": "UTIP"},
+                        "LclInstrm": {"Prtry": {"cat": [{"var": "utility_type"}, "_BILL_PAYMENT"]}}
                     },
-                    "LEI": {
-                        "fake": [
-                            "lei"
-                        ]
-                    }
-                }
-            },
-            "Dbtr": {
-                "Nm": {
-                    "var": "customer_name"
-                },
-                "PstlAdr": {
-                    "StrtNm": {
-                        "fake": [
-                            "street_name"
-                        ]
+                    "IntrBkSttlmAmt": {"@Ccy": "AUD", "$value": {"var": "amount"}},
+                    "IntrBkSttlmDt": {
+                        "fake": ["date", "%Y-%m-%d", "+0d", "+0d"]
                     },
-                    "BldgNb": {
-                        "cat": [
-                            {
-                                "fake": [
-                                    "i64",
-                                    1,
-                                    999
-                                ]
-                            }
-                        ]
-                    },
-                    "PstCd": {
-                        "fake": [
-                            "postcode"
-                        ]
-                    },
-                    "TwnNm": {
-                        "fake": [
-                            "city_name"
-                        ]
-                    },
-                    "CtrySubDvsn": {
-                        "fake": [
-                            "regex",
-                            "(NSW|VIC|QLD|WA|SA|TAS|ACT|NT)"
-                        ]
-                    },
-                    "Ctry": "AU"
-                },
-                "CtryOfRes": "AU",
-                "Id": {
-                    "PrvtId": {
-                        "Othr": [
-                            {
-                                "Id": {
-                                    "var": "account_number"
-                                },
-                                "SchmeNm": {
-                                    "Prtry": "UTILITY_ACCOUNT_NUMBER"
-                                }
-                            }
-                        ]
-                    }
-                }
-            },
-            "DbtrAcct": {
-                "Id": {
-                    "Othr": {
+                    "SttlmPrty": "NORM",
+                    "InstdAmt": {"@Ccy": "AUD", "$value": {"var": "amount"}},
+                    "ChrgBr": "SHAR",
+                    "InstgAgt": {"FinInstnId": {"BICFI": {"var": "sender_bic"}, "LEI": {"fake": ["lei"]}}},
+                    "InstdAgt": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}, "LEI": {"fake": ["lei"]}}},
+                    "Dbtr": {
+                        "Nm": {"var": "customer_name"},
+                        "PstlAdr": {
+                            "StrtNm": {"fake": ["street_name"]},
+                            "BldgNb": {"cat": [{"fake": ["i64", 1, 999]}]},
+                            "PstCd": {"fake": ["postcode"]},
+                            "TwnNm": {"fake": ["city_name"]},
+                            "CtrySubDvsn": {"fake": ["regex", "(NSW|VIC|QLD|WA|SA|TAS|ACT|NT)"]},
+                            "Ctry": "AU"
+                        },
+                        "CtryOfRes": "AU",
                         "Id": {
-                            "cat": [
-                                "BSB",
-                                {
-                                    "fake": [
-                                        "i64",
-                                        100,
-                                        999
-                                    ]
-                                },
-                                "-",
-                                {
-                                    "fake": [
-                                        "i64",
-                                        100,
-                                        999
-                                    ]
-                                },
-                                " ACC",
-                                {
-                                    "fake": [
-                                        "i64",
-                                        10000000,
-                                        99999999
-                                    ]
-                                }
-                            ]
-                        },
-                        "SchmeNm": {
-                            "Prtry": "AU_BSB_ACCOUNT"
+                            "PrvtId": {
+                                "Othr": [{"Id": {"var": "account_number"}, "SchmeNm": {"Prtry": "UTILITY_ACCOUNT_NUMBER"}}]
+                            }
                         }
-                    }
-                },
-                "Ccy": "AUD",
-                "Nm": "Household Account"
-            },
-            "DbtrAgt": {
-                "FinInstnId": {
-                    "BICFI": {
-                        "var": "sender_bic"
                     },
-                    "Nm": {
-                        "fake": [
-                            "company_name"
-                        ]
-                    },
-                    "LEI": {
-                        "fake": [
-                            "lei"
-                        ]
-                    }
-                }
-            },
-            "CdtrAgt": {
-                "FinInstnId": {
-                    "BICFI": {
-                        "var": "receiver_bic"
-                    },
-                    "Nm": {
-                        "fake": [
-                            "company_name"
-                        ]
-                    },
-                    "LEI": {
-                        "fake": [
-                            "lei"
-                        ]
-                    }
-                }
-            },
-            "Cdtr": {
-                "Nm": {
-                    "var": "utility_company"
-                },
-                "PstlAdr": {
-                    "StrtNm": {
-                        "cat": [
-                            {
-                                "fake": [
-                                    "i64",
-                                    1,
-                                    999
-                                ]
-                            },
-                            " Energy Plaza"
-                        ]
-                    },
-                    "PstCd": {
-                        "fake": [
-                            "postcode"
-                        ]
-                    },
-                    "TwnNm": {
-                        "fake": [
-                            "city_name"
-                        ]
-                    },
-                    "CtrySubDvsn": {
-                        "fake": [
-                            "regex",
-                            "(NSW|VIC|QLD|WA|SA|TAS|ACT|NT)"
-                        ]
-                    },
-                    "Ctry": "AU"
-                },
-                "CtryOfRes": "AU",
-                "Id": {
-                    "OrgId": {
-                        "LEI": {
-                            "fake": [
-                                "lei"
-                            ]
-                        },
-                        "Othr": [
-                            {
+                    "DbtrAcct": {
+                        "Id": {
+                            "Othr": {
                                 "Id": {
                                     "cat": [
-                                        "ABN ",
-                                        {
-                                            "fake": [
-                                                "i64",
-                                                10,
-                                                99
-                                            ]
-                                        },
-                                        " ",
-                                        {
-                                            "fake": [
-                                                "i64",
-                                                100,
-                                                999
-                                            ]
-                                        },
-                                        " ",
-                                        {
-                                            "fake": [
-                                                "i64",
-                                                100,
-                                                999
-                                            ]
-                                        },
-                                        " ",
-                                        {
-                                            "fake": [
-                                                "i64",
-                                                100,
-                                                999
-                                            ]
-                                        }
-                                    ]
-                                },
-                                "SchmeNm": {
-                                    "Prtry": "AUSTRALIAN_BUSINESS_NUMBER"
-                                }
-                            }
-                        ]
-                    }
-                }
-            },
-            "CdtrAcct": {
-                "Id": {
-                    "Othr": {
-                        "Id": {
-                            "cat": [
-                                "BSB",
-                                {
-                                    "fake": [
-                                        "i64",
-                                        100,
-                                        999
-                                    ]
-                                },
-                                "-",
-                                {
-                                    "fake": [
-                                        "i64",
-                                        100,
-                                        999
-                                    ]
-                                },
-                                " ACC",
-                                {
-                                    "fake": [
-                                        "i64",
-                                        10000000,
-                                        99999999
-                                    ]
-                                }
-                            ]
-                        },
-                        "SchmeNm": {
-                            "Prtry": "AU_BSB_ACCOUNT"
-                        }
-                    }
-                },
-                "Ccy": "AUD",
-                "Nm": "Utility Collections Account"
-            },
-            "Purp": {
-                "Cd": "UTIP"
-            },
-            "RgltryRptg": [
-                {
-                    "Dtls": [
-                        {
-                            "Tp": "BOTH",
-                            "Dt": {
-                                "fake": [
-                                    "date",
-                                    "%Y-%m-%d",
-                                    "+0d",
-                                    "+0d"
-                                ]
-                            },
-                            "Ctry": "AU",
-                            "Cd": "150",
-                            "Amt": {
-                                "@Ccy": "AUD",
-                                "$value": {
-                                    "var": "amount"
-                                }
-                            },
-                            "Inf": [
-                                "CBPR+ UTILITY PAYMENT"
-                            ]
-                        }
-                    ]
-                }
-            ],
-            "RmtInf": {
-                "Strd": [
-                    {
-                        "RfrdDocInf": [
-                            {
-                                "Tp": {
-                                    "CdOrPrtry": {
-                                        "Prtry": "UTILITY_BILL"
-                                    }
-                                },
-                                "Nb": {
-                                    "cat": [
-                                        "BILL-",
-                                        {
-                                            "var": "billing_period"
-                                        },
+                                        "BSB",
+                                        {"fake": ["i64", 100, 999]},
                                         "-",
-                                        {
-                                            "fake": [
-                                                "i64",
-                                                100000,
-                                                999999
-                                            ]
-                                        }
+                                        {"fake": ["i64", 100, 999]},
+                                        " ACC",
+                                        {"fake": ["i64", 10000000, 99999999]}
                                     ]
                                 },
-                                "RltdDt": {
-                                    "fake": [
-                                        "date",
-                                        "%Y-%m-%d",
-                                        "-10d",
-                                        "-1d"
+                                "SchmeNm": {"Prtry": "AU_BSB_ACCOUNT"}
+                            }
+                        },
+                        "Ccy": "AUD",
+                        "Nm": "Household Account"
+                    },
+                    "DbtrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {"var": "sender_bic"},
+                            "Nm": {"fake": ["company_name"]},
+                            "LEI": {"fake": ["lei"]}
+                        }
+                    },
+                    "CdtrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {"var": "receiver_bic"},
+                            "Nm": {"fake": ["company_name"]},
+                            "LEI": {"fake": ["lei"]}
+                        }
+                    },
+                    "Cdtr": {
+                        "Nm": {"var": "utility_company"},
+                        "PstlAdr": {
+                            "StrtNm": {"cat": [{"fake": ["i64", 1, 999]}, " Energy Plaza"]},
+                            "PstCd": {"fake": ["postcode"]},
+                            "TwnNm": {"fake": ["city_name"]},
+                            "CtrySubDvsn": {"fake": ["regex", "(NSW|VIC|QLD|WA|SA|TAS|ACT|NT)"]},
+                            "Ctry": "AU"
+                        },
+                        "CtryOfRes": "AU",
+                        "Id": {
+                            "OrgId": {
+                                "LEI": {"fake": ["lei"]},
+                                "Othr": [
+                                    {
+                                        "Id": {
+                                            "cat": [
+                                                "ABN ",
+                                                {"fake": ["i64", 10, 99]},
+                                                " ",
+                                                {"fake": ["i64", 100, 999]},
+                                                " ",
+                                                {"fake": ["i64", 100, 999]},
+                                                " ",
+                                                {"fake": ["i64", 100, 999]}
+                                            ]
+                                        },
+                                        "SchmeNm": {"Prtry": "AUSTRALIAN_BUSINESS_NUMBER"}
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "CdtrAcct": {
+                        "Id": {
+                            "Othr": {
+                                "Id": {
+                                    "cat": [
+                                        "BSB",
+                                        {"fake": ["i64", 100, 999]},
+                                        "-",
+                                        {"fake": ["i64", 100, 999]},
+                                        " ACC",
+                                        {"fake": ["i64", 10000000, 99999999]}
                                     ]
-                                }
-                            }
-                        ],
-                        "RfrdDocAmt": {
-                            "DuePyblAmt": {
-                                "@Ccy": "AUD",
-                                "$value": {
-                                    "var": "amount"
-                                }
+                                },
+                                "SchmeNm": {"Prtry": "AU_BSB_ACCOUNT"}
                             }
                         },
-                        "CdtrRefInf": {
-                            "Tp": {
-                                "CdOrPrtry": {
-                                    "Prtry": "CUSTOMER_REFERENCE"
+                        "Ccy": "AUD",
+                        "Nm": "Utility Collections Account"
+                    },
+                    "Purp": {"Cd": "UTIP"},
+                    "RgltryRptg": [
+                        {
+                            "Dtls": [
+                                {
+                                    "Tp": "BOTH",
+                                    "Dt": {
+                                        "fake": ["date", "%Y-%m-%d", "+0d", "+0d"]
+                                    },
+                                    "Ctry": "AU",
+                                    "Cd": "150",
+                                    "Amt": {"@Ccy": "AUD", "$value": {"var": "amount"}},
+                                    "Inf": ["CBPR+ UTILITY PAYMENT"]
                                 }
-                            },
-                            "Ref": {
-                                "var": "account_number"
+                            ]
+                        }
+                    ],
+                    "RmtInf": {
+                        "Strd": [
+                            {
+                                "RfrdDocInf": [
+                                    {
+                                        "Tp": {"CdOrPrtry": {"Prtry": "UTILITY_BILL"}},
+                                        "Nb": {
+                                            "cat": [
+                                                "BILL-",
+                                                {"var": "billing_period"},
+                                                "-",
+                                                {"fake": ["i64", 100000, 999999]}
+                                            ]
+                                        },
+                                        "RltdDt": {
+                                            "fake": ["date", "%Y-%m-%d", "-10d", "-1d"]
+                                        }
+                                    }
+                                ],
+                                "RfrdDocAmt": {"DuePyblAmt": {"@Ccy": "AUD", "$value": {"var": "amount"}}},
+                                "CdtrRefInf": {
+                                    "Tp": {"CdOrPrtry": {"Prtry": "CUSTOMER_REFERENCE"}},
+                                    "Ref": {"var": "account_number"}
+                                },
+                                "AddtlRmtInf": ["Generated remittance information", "Generated remittance information"]
                             }
-                        },
-                        "AddtlRmtInf": [
-                            "Generated remittance information",
-                            "Generated remittance information"
                         ]
                     }
-                ]
+                }
             }
         }
     }

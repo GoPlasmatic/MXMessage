@@ -1,379 +1,140 @@
 {
     "variables": {
-        "msg_id": {
-            "cat": [
-                "MSG",
-                {
-                    "fake": [
-                        "i64",
-                        100000000000,
-                        999999999999
-                    ]
-                }
-            ]
-        },
-        "creation_datetime": {
-            "fake": [
-                "iso8601_datetime"
-            ]
-        },
-        "sender_bic": {
-            "fake": [
-                "bic"
-            ]
-        },
-        "receiver_bic": {
-            "fake": [
-                "bic"
-            ]
-        },
-        "transaction_ref": {
-            "cat": [
-                "TXN",
-                {
-                    "fake": [
-                        "i64",
-                        100000000000,
-                        999999999999
-                    ]
-                }
-            ]
-        },
-        "instruction_id": {
-            "cat": [
-                "INSTR",
-                {
-                    "fake": [
-                        "i64",
-                        10000000,
-                        99999999
-                    ]
-                }
-            ]
-        },
-        "end_to_end_id": {
-            "cat": [
-                "E2E",
-                {
-                    "fake": [
-                        "i64",
-                        100000000000,
-                        999999999999
-                    ]
-                }
-            ]
-        },
-        "uetr": {
-            "fake": [
-                "uuid"
-            ]
-        },
-        "amount": {
-            "fake": [
-                "f64",
-                25000.0,
-                2500000.0
-            ]
-        },
-        "sender_lei": {
-            "fake": [
-                "lei"
-            ]
-        },
-        "receiver_lei": {
-            "fake": [
-                "lei"
-            ]
-        },
-        "intermediary_lei": {
-            "fake": [
-                "lei"
-            ]
-        },
-        "final_beneficiary_bic": {
-            "fake": [
-                "bic"
-            ]
-        }
+        "msg_id": {"cat": ["MSG", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "sender_bic": {"fake": ["bic"]},
+        "receiver_bic": {"fake": ["bic"]},
+        "transaction_ref": {"cat": ["TXN", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "instruction_id": {"cat": ["INSTR", {"fake": ["i64", 10000000, 99999999]}]},
+        "end_to_end_id": {"cat": ["E2E", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "uetr": {"fake": ["uuid"]},
+        "amount": {"fake": ["f64", 25000.0, 2500000.0]},
+        "sender_lei": {"fake": ["lei"]},
+        "receiver_lei": {"fake": ["lei"]},
+        "intermediary_lei": {"fake": ["lei"]},
+        "final_beneficiary_bic": {"fake": ["bic"]}
     },
     "schema": {
-        "GrpHdr": {
-            "MsgId": {
-                "var": "msg_id"
+        "AppHdr": {
+            "Fr": {
+                "FIId": {"FinInstnId": {"BICFI": {"var": "sender_bic"}, "LEI": {"var": "sender_lei"}}}
             },
-            "CreDtTm": {
-                "var": "creation_datetime"
+            "To": {
+                "FIId": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}, "LEI": {"var": "receiver_lei"}}}
             },
-            "NbOfTxs": "1",
-            "SttlmInf": {
-                "SttlmMtd": "INDA"
-            }
+            "BizMsgIdr": {"var": "msg_id"},
+            "MsgDefIdr": "pacs.009.001.08",
+            "BizSvc": "swift.cbprplus.01",
+            "CreDt": {"var": "creation_datetime"}
         },
-        "CdtTrfTxInf": {
-            "PmtId": {
-                "InstrId": {
-                    "var": "instruction_id"
+        "Document": {
+            "FinInstnCdtTrf": {
+                "GrpHdr": {
+                    "MsgId": {"var": "msg_id"},
+                    "CreDtTm": {"var": "creation_datetime"},
+                    "NbOfTxs": "1",
+                    "SttlmInf": {"SttlmMtd": "INDA"}
                 },
-                "EndToEndId": {
-                    "var": "end_to_end_id"
-                },
-                "TxId": {
-                    "var": "transaction_ref"
-                },
-                "UETR": {
-                    "var": "uetr"
-                }
-            },
-            "PmtTpInf": {
-                "InstrPrty": "NORM",
-                "SvcLvl": [
-                    {
-                        "Cd": "G001"
-                    }
-                ],
-                "LclInstrm": {
-                    "Prtry": "SERIAL_PAYMENT"
-                }
-            },
-            "IntrBkSttlmAmt": {
-                "@Ccy": "USD",
-                "$value": {
-                    "var": "amount"
-                }
-            },
-            "IntrBkSttlmDt": {
-                "fake": [
-                    "date",
-                    "%Y-%m-%d",
-                    "+0d",
-                    "+2d"
-                ]
-            },
-            "SttlmPrty": "NORM",
-            "InstgAgt": {
-                "FinInstnId": {
-                    "BICFI": {
-                        "var": "sender_bic"
+                "CdtTrfTxInf": {
+                    "PmtId": {
+                        "InstrId": {"var": "instruction_id"},
+                        "EndToEndId": {"var": "end_to_end_id"},
+                        "TxId": {"var": "transaction_ref"},
+                        "UETR": {"var": "uetr"}
                     },
-                    "LEI": {
-                        "var": "sender_lei"
-                    }
-                }
-            },
-            "InstdAgt": {
-                "FinInstnId": {
-                    "BICFI": {
-                        "var": "receiver_bic"
+                    "PmtTpInf": {
+                        "InstrPrty": "NORM",
+                        "SvcLvl": [{"Cd": "G001"}],
+                        "LclInstrm": {"Prtry": "SERIAL_PAYMENT"}
                     },
-                    "LEI": {
-                        "var": "receiver_lei"
-                    }
-                }
-            },
-            "IntrmyAgt1": {
-                "FinInstnId": {
-                    "BICFI": {
-                        "var": "receiver_bic"
+                    "IntrBkSttlmAmt": {"@Ccy": "USD", "$value": {"var": "amount"}},
+                    "IntrBkSttlmDt": {
+                        "fake": ["date", "%Y-%m-%d", "+0d", "+2d"]
                     },
-                    "LEI": {
-                        "var": "receiver_lei"
+                    "SttlmPrty": "NORM",
+                    "InstgAgt": {"FinInstnId": {"BICFI": {"var": "sender_bic"}, "LEI": {"var": "sender_lei"}}},
+                    "InstdAgt": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}, "LEI": {"var": "receiver_lei"}}},
+                    "IntrmyAgt1": {
+                        "FinInstnId": {
+                            "BICFI": {"var": "receiver_bic"},
+                            "LEI": {"var": "receiver_lei"},
+                            "Nm": {"cat": [{"fake": ["company_name"]}, " (Serial Intermediary)"]}
+                        }
                     },
-                    "Nm": {
-                        "cat": [
-                            {
-                                "fake": [
-                                    "company_name"
-                                ]
-                            },
-                            " (Serial Intermediary)"
-                        ]
-                    }
-                }
-            },
-            "Dbtr": {
-                "FinInstnId": {
-                    "BICFI": {
-                        "var": "sender_bic"
+                    "Dbtr": {
+                        "FinInstnId": {
+                            "BICFI": {"var": "sender_bic"},
+                            "LEI": {"var": "sender_lei"},
+                            "Nm": {"fake": ["company_name"]}
+                        }
                     },
-                    "LEI": {
-                        "var": "sender_lei"
-                    },
-                    "Nm": {
-                        "fake": [
-                            "company_name"
-                        ]
-                    }
-                }
-            },
-            "DbtrAcct": {
-                "Id": {
-                    "Othr": {
+                    "DbtrAcct": {
                         "Id": {
-                            "cat": [
-                                "NOSTRO-",
+                            "Othr": {
+                                "Id": {"cat": ["NOSTRO-", {"fake": ["i64", 100000, 999999]}]},
+                                "SchmeNm": {"Prtry": "NOSTRO_ACCOUNT"}
+                            }
+                        },
+                        "Ccy": "USD"
+                    },
+                    "DbtrAgt": {"FinInstnId": {"BICFI": {"var": "sender_bic"}, "LEI": {"var": "sender_lei"}}},
+                    "CdtrAgt": {"FinInstnId": {"BICFI": {"var": "final_beneficiary_bic"}, "LEI": {"fake": ["lei"]}}},
+                    "Cdtr": {
+                        "FinInstnId": {
+                            "BICFI": {"var": "final_beneficiary_bic"},
+                            "LEI": {"fake": ["lei"]},
+                            "Nm": {"cat": [{"fake": ["company_name"]}, " (Final Beneficiary)"]}
+                        }
+                    },
+                    "CdtrAcct": {
+                        "Id": {
+                            "Othr": {
+                                "Id": {"cat": ["FINAL-", {"fake": ["i64", 100000, 999999]}]},
+                                "SchmeNm": {"Prtry": "BENEFICIARY_ACCOUNT"}
+                            }
+                        },
+                        "Ccy": "USD"
+                    },
+                    "InstrForCdtrAgt": [{"Cd": "PHOB", "InstrInf": "SERIAL PAYMENT - FORWARD TO FINAL BENEFICIARY"}],
+                    "InstrForNxtAgt": [{"InstrInf": {"cat": ["COV ", {"var": "final_beneficiary_bic"}]}}],
+                    "Purp": {"Prtry": "SERIAL_COVER"},
+                    "RgltryRptg": [
+                        {
+                            "Dtls": [
                                 {
-                                    "fake": [
-                                        "i64",
-                                        100000,
-                                        999999
-                                    ]
+                                    "Tp": "BOTH",
+                                    "Dt": {
+                                        "fake": ["date", "%Y-%m-%d", "+0d", "+0d"]
+                                    },
+                                    "Ctry": "US",
+                                    "Cd": "SERIAL",
+                                    "Amt": {"@Ccy": "USD", "$value": {"var": "amount"}},
+                                    "Inf": ["CBPR+ SERIAL PAYMENT ROUTING"]
                                 }
                             ]
-                        },
-                        "SchmeNm": {
-                            "Prtry": "NOSTRO_ACCOUNT"
                         }
-                    }
-                },
-                "Ccy": "USD"
-            },
-            "DbtrAgt": {
-                "FinInstnId": {
-                    "BICFI": {
-                        "var": "sender_bic"
-                    },
-                    "LEI": {
-                        "var": "sender_lei"
-                    }
-                }
-            },
-            "CdtrAgt": {
-                "FinInstnId": {
-                    "BICFI": {
-                        "var": "final_beneficiary_bic"
-                    },
-                    "LEI": {
-                        "fake": [
-                            "lei"
-                        ]
-                    }
-                }
-            },
-            "Cdtr": {
-                "FinInstnId": {
-                    "BICFI": {
-                        "var": "final_beneficiary_bic"
-                    },
-                    "LEI": {
-                        "fake": [
-                            "lei"
-                        ]
-                    },
-                    "Nm": {
-                        "cat": [
+                    ],
+                    "RmtInf": {
+                        "Strd": [
                             {
-                                "fake": [
-                                    "company_name"
+                                "AddtlRmtInf": [
+                                    "Serial payment through correspondent network",
+                                    {"cat": ["Final beneficiary: ", {"var": "final_beneficiary_bic"}]},
+                                    "CBPR+ compliant serial routing"
                                 ]
-                            },
-                            " (Final Beneficiary)"
-                        ]
-                    }
-                }
-            },
-            "CdtrAcct": {
-                "Id": {
-                    "Othr": {
-                        "Id": {
-                            "cat": [
-                                "FINAL-",
-                                {
-                                    "fake": [
-                                        "i64",
-                                        100000,
-                                        999999
-                                    ]
-                                }
-                            ]
-                        },
-                        "SchmeNm": {
-                            "Prtry": "BENEFICIARY_ACCOUNT"
-                        }
-                    }
-                },
-                "Ccy": "USD"
-            },
-            "InstrForCdtrAgt": [
-                {
-                    "Cd": "PHOB",
-                    "InstrInf": "SERIAL PAYMENT - FORWARD TO FINAL BENEFICIARY"
-                }
-            ],
-            "InstrForNxtAgt": [
-                {
-                    "InstrInf": {
-                        "cat": [
-                            "COV ",
-                            {
-                                "var": "final_beneficiary_bic"
                             }
                         ]
-                    }
-                }
-            ],
-            "Purp": {
-                "Prtry": "SERIAL_COVER"
-            },
-            "RgltryRptg": [
-                {
-                    "Dtls": [
+                    },
+                    "SplmtryData": [
                         {
-                            "Tp": "BOTH",
-                            "Dt": {
-                                "fake": [
-                                    "date",
-                                    "%Y-%m-%d",
-                                    "+0d",
-                                    "+0d"
-                                ]
-                            },
-                            "Ctry": "US",
-                            "Cd": "SERIAL",
-                            "Amt": {
-                                "@Ccy": "USD",
-                                "$value": {
-                                    "var": "amount"
-                                }
-                            },
-                            "Inf": [
-                                "CBPR+ SERIAL PAYMENT ROUTING"
-                            ]
+                            "PlcAndNm": "SerialPaymentTracking",
+                            "Envlp": {
+                                "Document": {"Xprtn": "2099-12-31", "Prtry": {"Tp": "CBPR_PLUS_VERSION", "Id": "1.0"}}
+                            }
                         }
                     ]
                 }
-            ],
-            "RmtInf": {
-                "Strd": [
-                    {
-                        "AddtlRmtInf": [
-                            "Serial payment through correspondent network",
-                            {
-                                "cat": [
-                                    "Final beneficiary: ",
-                                    {
-                                        "var": "final_beneficiary_bic"
-                                    }
-                                ]
-                            },
-                            "CBPR+ compliant serial routing"
-                        ]
-                    }
-                ]
-            },
-            "SplmtryData": [
-                {
-                    "PlcAndNm": "SerialPaymentTracking",
-                    "Envlp": {
-                        "Document": {
-                            "Xprtn": "2099-12-31",
-                            "Prtry": {
-                                "Tp": "CBPR_PLUS_VERSION",
-                                "Id": "1.0"
-                            }
-                        }
-                    }
-                }
-            ]
+            }
         }
     }
 }

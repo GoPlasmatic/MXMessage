@@ -16,270 +16,105 @@
         "original_date": "2025-01-14"
     },
     "schema": {
-        "Assgnmt": {
-            "Id": {
-                "var": "msg_id"
-            },
-            "Assgnr": {
-                "Agt": {
-                    "FinInstnId": {
-                        "BICFI": {
-                            "var": "sender_bic"
-                        },
-                        "LEI": {
-                            "var": "sender_lei"
-                        }
-                    }
-                }
-            },
-            "Assgne": {
-                "Agt": {
-                    "FinInstnId": {
-                        "BICFI": {
-                            "var": "receiver_bic"
-                        },
-                        "LEI": {
-                            "var": "receiver_lei"
-                        }
-                    }
-                }
-            },
-            "CreDtTm": {
-                "var": "creation_datetime"
-            }
+        "AppHdr": {
+            "Fr": {"FIId": {"FinInstnId": {"BICFI": {"var": "sender_bic"}}}},
+            "To": {"FIId": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}}}},
+            "BizMsgIdr": {"var": "msg_id"},
+            "MsgDefIdr": "camt.056.001.08",
+            "BizSvc": "swift.ug",
+            "CreDt": {"var": "creation_datetime"}
         },
-        "Undrlyg": {
-            "TxInf": {
-                "CxlId": {
-                    "var": "cancellation_id"
-                },
-                "OrgnlGrpInf": {
-                    "OrgnlMsgId": {
-                        "var": "original_msg_id"
+        "Document": {
+            "FIToFIPmtCxlReq": {
+                "Assgnmt": {
+                    "Id": {"var": "msg_id"},
+                    "Assgnr": {"Agt": {"FinInstnId": {"BICFI": {"var": "sender_bic"}, "LEI": {"var": "sender_lei"}}}},
+                    "Assgne": {
+                        "Agt": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}, "LEI": {"var": "receiver_lei"}}}
                     },
-                    "OrgnlMsgNmId": "pacs.009.001.08",
-                    "OrgnlCreDtTm": {
-                        "fake": [
-                            "iso8601_datetime",
-                            "-48h",
-                            "-24h"
-                        ]
-                    }
+                    "CreDtTm": {"var": "creation_datetime"}
                 },
-                "OrgnlInstrId": {
-                    "var": "instruction_id"
-                },
-                "OrgnlEndToEndId": {
-                    "var": "end_to_end_id"
-                },
-                "OrgnlTxId": {
-                    "var": "transaction_id"
-                },
-                "OrgnlIntrBkSttlmAmt": {
-                    "@Ccy": "USD",
-                    "$value": {
-                        "var": "amount"
-                    }
-                },
-                "OrgnlIntrBkSttlmDt": {
-                    "var": "original_date"
-                },
-                "CxlRsnInf": {
-                    "Orgtr": {
-                        "Agt": {
-                            "FinInstnId": {
-                                "BICFI": {
-                                    "var": "sender_bic"
-                                },
-                                "LEI": {
-                                    "var": "sender_lei"
+                "Undrlyg": {
+                    "TxInf": {
+                        "CxlId": {"var": "cancellation_id"},
+                        "OrgnlGrpInf": {
+                            "OrgnlMsgId": {"var": "original_msg_id"},
+                            "OrgnlMsgNmId": "pacs.009.001.08",
+                            "OrgnlCreDtTm": {"fake": ["iso8601_datetime", "-48h", "-24h"]}
+                        },
+                        "OrgnlInstrId": {"var": "instruction_id"},
+                        "OrgnlEndToEndId": {"var": "end_to_end_id"},
+                        "OrgnlTxId": {"var": "transaction_id"},
+                        "OrgnlIntrBkSttlmAmt": {"@Ccy": "USD", "$value": {"var": "amount"}},
+                        "OrgnlIntrBkSttlmDt": {"var": "original_date"},
+                        "CxlRsnInf": {
+                            "Orgtr": {"Agt": {"FinInstnId": {"BICFI": {"var": "sender_bic"}, "LEI": {"var": "sender_lei"}}}},
+                            "Rsn": {"Cd": "AGNT"},
+                            "AddtlInf": [
+                                "FI to FI standard cancellation",
+                                "Bilateral agreement to cancel",
+                                "Funds to be returned via alternate channel"
+                            ]
+                        },
+                        "OrgnlTxRef": {
+                            "IntrBkSttlmAmt": {"@Ccy": "USD", "$value": {"var": "amount"}},
+                            "IntrBkSttlmDt": {"var": "original_date"},
+                            "SttlmInf": {"SttlmMtd": "INDA", "ClrSys": {"Cd": "ILF"}},
+                            "PmtTpInf": {
+                                "InstrPrty": "NORM",
+                                "SvcLvl": [{"Cd": "G001"}],
+                                "LclInstrm": {"Prtry": "FI_LIQUIDITY"}
+                            },
+                            "RmtInf": {"Ustrd": ["FI to FI liquidity management", "Standard interbank transfer"]},
+                            "Dbtr": {
+                                "FinInstnId": {
+                                    "BICFI": {"var": "sender_bic"},
+                                    "LEI": {"var": "sender_lei"},
+                                    "Nm": {"fake": ["company_name"]},
+                                    "PstlAdr": {"Ctry": {"fake": ["country_code"]}}
                                 }
-                            }
-                        }
-                    },
-                    "Rsn": {
-                        "Cd": "AGNT"
-                    },
-                    "AddtlInf": [
-                        "FI to FI standard cancellation",
-                        "Bilateral agreement to cancel",
-                        "Funds to be returned via alternate channel"
-                    ]
-                },
-                "OrgnlTxRef": {
-                    "IntrBkSttlmAmt": {
-                        "@Ccy": "USD",
-                        "$value": {
-                            "var": "amount"
-                        }
-                    },
-                    "IntrBkSttlmDt": {
-                        "var": "original_date"
-                    },
-                    "SttlmInf": {
-                        "SttlmMtd": "INDA",
-                        "ClrSys": {
-                            "Cd": "ILF"
-                        }
-                    },
-                    "PmtTpInf": {
-                        "InstrPrty": "NORM",
-                        "SvcLvl": [
-                            {
-                                "Cd": "G001"
-                            }
-                        ],
-                        "LclInstrm": {
-                            "Prtry": "FI_LIQUIDITY"
-                        }
-                    },
-                    "RmtInf": {
-                        "Ustrd": [
-                            "FI to FI liquidity management",
-                            "Standard interbank transfer"
-                        ]
-                    },
-                    "Dbtr": {
-                        "FinInstnId": {
-                            "BICFI": {
-                                "var": "sender_bic"
                             },
-                            "LEI": {
-                                "var": "sender_lei"
-                            },
-                            "Nm": {
-                                "fake": [
-                                    "company_name"
-                                ]
-                            },
-                            "PstlAdr": {
-                                "Ctry": {
-                                    "fake": [
-                                        "country_code"
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    "DbtrAcct": {
-                        "Id": {
-                            "Othr": {
+                            "DbtrAcct": {
                                 "Id": {
-                                    "cat": [
-                                        "CORR-",
-                                        {
-                                            "fake": [
-                                                "i64",
-                                                100000,
-                                                999999
-                                            ]
-                                        }
-                                    ]
+                                    "Othr": {
+                                        "Id": {"cat": ["CORR-", {"fake": ["i64", 100000, 999999]}]},
+                                        "SchmeNm": {"Prtry": "CORRESPONDENT_ACCOUNT"}
+                                    }
                                 },
-                                "SchmeNm": {
-                                    "Prtry": "CORRESPONDENT_ACCOUNT"
+                                "Tp": {"Prtry": "CORR"},
+                                "Ccy": "USD"
+                            },
+                            "DbtrAgt": {"FinInstnId": {"BICFI": {"var": "sender_bic"}, "LEI": {"var": "sender_lei"}}},
+                            "IntrmyAgt1": {
+                                "FinInstnId": {"BICFI": {"fake": ["bic"]}, "Nm": "Central Clearing Bank", "PstlAdr": {"Ctry": "US"}}
+                            },
+                            "CdtrAgt": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}, "LEI": {"var": "receiver_lei"}}},
+                            "Cdtr": {
+                                "FinInstnId": {
+                                    "BICFI": {"var": "receiver_bic"},
+                                    "LEI": {"var": "receiver_lei"},
+                                    "Nm": {"fake": ["company_name"]},
+                                    "PstlAdr": {"Ctry": {"fake": ["country_code"]}}
                                 }
-                            }
-                        },
-                        "Tp": {
-                            "Prtry": "CORR"
-                        },
-                        "Ccy": "USD"
-                    },
-                    "DbtrAgt": {
-                        "FinInstnId": {
-                            "BICFI": {
-                                "var": "sender_bic"
                             },
-                            "LEI": {
-                                "var": "sender_lei"
-                            }
-                        }
-                    },
-                    "IntrmyAgt1": {
-                        "FinInstnId": {
-                            "BICFI": {
-                                "fake": [
-                                    "bic"
-                                ]
-                            },
-                            "Nm": "Central Clearing Bank",
-                            "PstlAdr": {
-                                "Ctry": "US"
-                            }
-                        }
-                    },
-                    "CdtrAgt": {
-                        "FinInstnId": {
-                            "BICFI": {
-                                "var": "receiver_bic"
-                            },
-                            "LEI": {
-                                "var": "receiver_lei"
-                            }
-                        }
-                    },
-                    "Cdtr": {
-                        "FinInstnId": {
-                            "BICFI": {
-                                "var": "receiver_bic"
-                            },
-                            "LEI": {
-                                "var": "receiver_lei"
-                            },
-                            "Nm": {
-                                "fake": [
-                                    "company_name"
-                                ]
-                            },
-                            "PstlAdr": {
-                                "Ctry": {
-                                    "fake": [
-                                        "country_code"
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    "CdtrAcct": {
-                        "Id": {
-                            "Othr": {
+                            "CdtrAcct": {
                                 "Id": {
-                                    "cat": [
-                                        "CORR-",
-                                        {
-                                            "fake": [
-                                                "i64",
-                                                100000,
-                                                999999
-                                            ]
-                                        }
-                                    ]
+                                    "Othr": {
+                                        "Id": {"cat": ["CORR-", {"fake": ["i64", 100000, 999999]}]},
+                                        "SchmeNm": {"Prtry": "CORRESPONDENT_ACCOUNT"}
+                                    }
                                 },
-                                "SchmeNm": {
-                                    "Prtry": "CORRESPONDENT_ACCOUNT"
-                                }
+                                "Tp": {"Prtry": "CORR"},
+                                "Ccy": "USD"
                             }
                         },
-                        "Tp": {
-                            "Prtry": "CORR"
+                        "Case": {
+                            "Id": {"var": "cancellation_id"},
+                            "Cretr": {"Pty": {"Nm": "Case Creator"}},
+                            "Nm": "Cancellation Case"
                         },
-                        "Ccy": "USD"
+                        "OrgnlUETR": {"var": "uetr"}
                     }
-                },
-                "Case": {
-                    "Id": {
-                        "var": "cancellation_id"
-                    },
-                    "Cretr": {
-                        "Pty": {
-                            "Nm": "Case Creator"
-                        }
-                    },
-                    "Nm": "Cancellation Case"
-                },
-                "OrgnlUETR": {
-                    "var": "uetr"
                 }
             }
         }

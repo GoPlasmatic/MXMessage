@@ -1,494 +1,171 @@
 {
     "variables": {
-        "msg_id": {
-            "cat": [
-                "MSG",
-                {
-                    "fake": [
-                        "i64",
-                        100000000000,
-                        999999999999
-                    ]
-                }
-            ]
-        },
-        "creation_datetime": {
-            "fake": [
-                "iso8601_datetime"
-            ]
-        },
-        "sender_bic": {
-            "fake": [
-                "bic"
-            ]
-        },
-        "receiver_bic": {
-            "fake": [
-                "bic"
-            ]
-        },
-        "transaction_ref": {
-            "cat": [
-                "TXN",
-                {
-                    "fake": [
-                        "i64",
-                        100000000000,
-                        999999999999
-                    ]
-                }
-            ]
-        },
-        "instruction_id": {
-            "cat": [
-                "INSTR",
-                {
-                    "fake": [
-                        "i64",
-                        10000000,
-                        99999999
-                    ]
-                }
-            ]
-        },
-        "end_to_end_id": {
-            "cat": [
-                "E2E",
-                {
-                    "fake": [
-                        "i64",
-                        100000000000,
-                        999999999999
-                    ]
-                }
-            ]
-        },
-        "uetr": {
-            "fake": [
-                "uuid"
-            ]
-        },
-        "amount": {
-            "fake": [
-                "f64",
-                1000.0,
-                8000.0
-            ]
-        },
-        "retiree_name": {
-            "fake": [
-                "name"
-            ]
-        },
-        "pension_number": {
-            "cat": [
-                "PEN-",
-                {
-                    "fake": [
-                        "i64",
-                        10000000,
-                        99999999
-                    ]
-                }
-            ]
-        },
+        "msg_id": {"cat": ["MSG", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "sender_bic": {"fake": ["bic"]},
+        "receiver_bic": {"fake": ["bic"]},
+        "transaction_ref": {"cat": ["TXN", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "instruction_id": {"cat": ["INSTR", {"fake": ["i64", 10000000, 99999999]}]},
+        "end_to_end_id": {"cat": ["E2E", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "uetr": {"fake": ["uuid"]},
+        "amount": {"fake": ["f64", 1000.0, 8000.0]},
+        "retiree_name": {"fake": ["name"]},
+        "pension_number": {"cat": ["PEN-", {"fake": ["i64", 10000000, 99999999]}]},
         "social_security": {
             "cat": [
-                {
-                    "fake": [
-                        "i64",
-                        100,
-                        999
-                    ]
-                },
+                {"fake": ["i64", 100, 999]},
                 "-",
-                {
-                    "fake": [
-                        "i64",
-                        10,
-                        99
-                    ]
-                },
+                {"fake": ["i64", 10, 99]},
                 "-",
-                {
-                    "fake": [
-                        "i64",
-                        1000,
-                        9999
-                    ]
-                }
+                {"fake": ["i64", 1000, 9999]}
             ]
         },
-        "pension_fund_name": {
-            "cat": [
-                {
-                    "fake": [
-                        "company_name"
-                    ]
-                },
-                " Pension Fund"
-            ]
-        },
+        "pension_fund_name": {"cat": [{"fake": ["company_name"]}, " Pension Fund"]},
         "payment_month": {
-            "fake": [
-                "date",
-                "%Y-%m",
-                "+0d",
-                "+0d"
-            ]
+            "fake": ["date", "%Y-%m", "+0d", "+0d"]
         }
     },
     "schema": {
-        "GrpHdr": {
-            "MsgId": {
-                "var": "msg_id"
-            },
-            "CreDtTm": {
-                "var": "creation_datetime"
-            },
-            "NbOfTxs": "1",
-            "SttlmInf": {
-                "SttlmMtd": "INDA"
-            }
+        "AppHdr": {
+            "Fr": {"FIId": {"FinInstnId": {"BICFI": {"var": "sender_bic"}}}},
+            "To": {"FIId": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}}}},
+            "BizMsgIdr": {"var": "msg_id"},
+            "MsgDefIdr": "pacs.008.001.08",
+            "BizSvc": "swift.cbprplus.01",
+            "CreDt": {"var": "creation_datetime"}
         },
-        "CdtTrfTxInf": {
-            "PmtId": {
-                "InstrId": {
-                    "var": "instruction_id"
+        "Document": {
+            "FIToFICstmrCdtTrf": {
+                "GrpHdr": {
+                    "MsgId": {"var": "msg_id"},
+                    "CreDtTm": {"var": "creation_datetime"},
+                    "NbOfTxs": "1",
+                    "SttlmInf": {"SttlmMtd": "INDA"}
                 },
-                "EndToEndId": {
-                    "var": "end_to_end_id"
-                },
-                "TxId": {
-                    "var": "transaction_ref"
-                },
-                "UETR": {
-                    "var": "uetr"
-                }
-            },
-            "PmtTpInf": {
-                "InstrPrty": "NORM",
-                "SvcLvl": [
-                    {
-                        "Cd": "CBPR"
-                    }
-                ],
-                "CtgyPurp": {
-                    "Cd": "PENS"
-                },
-                "LclInstrm": {
-                    "Prtry": "RETIREMENT_BENEFIT"
-                }
-            },
-            "IntrBkSttlmAmt": {
-                "@Ccy": "GBP",
-                "$value": {
-                    "var": "amount"
-                }
-            },
-            "IntrBkSttlmDt": {
-                "fake": [
-                    "date",
-                    "%Y-%m-%d",
-                    "+0d",
-                    "+0d"
-                ]
-            },
-            "SttlmPrty": "NORM",
-            "InstdAmt": {
-                "@Ccy": "GBP",
-                "$value": {
-                    "var": "amount"
-                }
-            },
-            "ChrgBr": "SHAR",
-            "InstgAgt": {
-                "FinInstnId": {
-                    "BICFI": {
-                        "var": "sender_bic"
+                "CdtTrfTxInf": {
+                    "PmtId": {
+                        "InstrId": {"var": "instruction_id"},
+                        "EndToEndId": {"var": "end_to_end_id"},
+                        "TxId": {"var": "transaction_ref"},
+                        "UETR": {"var": "uetr"}
                     },
-                    "LEI": {
-                        "fake": [
-                            "lei"
-                        ]
-                    }
-                }
-            },
-            "InstdAgt": {
-                "FinInstnId": {
-                    "BICFI": {
-                        "var": "receiver_bic"
+                    "PmtTpInf": {
+                        "InstrPrty": "NORM",
+                        "SvcLvl": [{"Cd": "CBPR"}],
+                        "CtgyPurp": {"Cd": "PENS"},
+                        "LclInstrm": {"Prtry": "RETIREMENT_BENEFIT"}
                     },
-                    "LEI": {
-                        "fake": [
-                            "lei"
-                        ]
-                    }
-                }
-            },
-            "Dbtr": {
-                "Nm": {
-                    "var": "pension_fund_name"
-                },
-                "PstlAdr": {
-                    "StrtNm": {
-                        "fake": [
-                            "street_name"
-                        ]
+                    "IntrBkSttlmAmt": {"@Ccy": "GBP", "$value": {"var": "amount"}},
+                    "IntrBkSttlmDt": {
+                        "fake": ["date", "%Y-%m-%d", "+0d", "+0d"]
                     },
-                    "BldgNb": {
-                        "cat": [
-                            {
-                                "fake": [
-                                    "i64",
-                                    1,
-                                    999
-                                ]
-                            }
-                        ]
-                    },
-                    "PstCd": {
-                        "fake": [
-                            "postcode"
-                        ]
-                    },
-                    "TwnNm": {
-                        "fake": [
-                            "city_name"
-                        ]
-                    },
-                    "Ctry": "GB"
-                },
-                "CtryOfRes": "GB",
-                "Id": {
-                    "OrgId": {
-                        "LEI": {
-                            "fake": [
-                                "lei"
-                            ]
+                    "SttlmPrty": "NORM",
+                    "InstdAmt": {"@Ccy": "GBP", "$value": {"var": "amount"}},
+                    "ChrgBr": "SHAR",
+                    "InstgAgt": {"FinInstnId": {"BICFI": {"var": "sender_bic"}, "LEI": {"fake": ["lei"]}}},
+                    "InstdAgt": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}, "LEI": {"fake": ["lei"]}}},
+                    "Dbtr": {
+                        "Nm": {"var": "pension_fund_name"},
+                        "PstlAdr": {
+                            "StrtNm": {"fake": ["street_name"]},
+                            "BldgNb": {"cat": [{"fake": ["i64", 1, 999]}]},
+                            "PstCd": {"fake": ["postcode"]},
+                            "TwnNm": {"fake": ["city_name"]},
+                            "Ctry": "GB"
                         },
-                        "Othr": [
-                            {
-                                "Id": {
-                                    "cat": [
-                                        "UKPEN",
-                                        {
-                                            "fake": [
-                                                "i64",
-                                                100000,
-                                                999999
-                                            ]
-                                        }
-                                    ]
-                                },
-                                "SchmeNm": {
-                                    "Prtry": "UK_PENSION_SCHEME_NUMBER"
-                                }
-                            }
-                        ]
-                    }
-                }
-            },
-            "DbtrAcct": {
-                "Id": {
-                    "IBAN": {
-                        "fake": [
-                            "iban",
-                            "GB"
-                        ]
-                    }
-                },
-                "Ccy": "GBP",
-                "Nm": "Pension Fund Disbursement Account"
-            },
-            "DbtrAgt": {
-                "FinInstnId": {
-                    "BICFI": {
-                        "var": "sender_bic"
-                    },
-                    "Nm": {
-                        "fake": [
-                            "company_name"
-                        ]
-                    },
-                    "LEI": {
-                        "fake": [
-                            "lei"
-                        ]
-                    }
-                }
-            },
-            "CdtrAgt": {
-                "FinInstnId": {
-                    "BICFI": {
-                        "var": "receiver_bic"
-                    },
-                    "Nm": {
-                        "fake": [
-                            "company_name"
-                        ]
-                    },
-                    "LEI": {
-                        "fake": [
-                            "lei"
-                        ]
-                    }
-                }
-            },
-            "Cdtr": {
-                "Nm": {
-                    "var": "retiree_name"
-                },
-                "PstlAdr": {
-                    "StrtNm": {
-                        "fake": [
-                            "street_name"
-                        ]
-                    },
-                    "BldgNb": {
-                        "cat": [
-                            {
-                                "fake": [
-                                    "i64",
-                                    1,
-                                    999
+                        "CtryOfRes": "GB",
+                        "Id": {
+                            "OrgId": {
+                                "LEI": {"fake": ["lei"]},
+                                "Othr": [
+                                    {
+                                        "Id": {"cat": ["UKPEN", {"fake": ["i64", 100000, 999999]}]},
+                                        "SchmeNm": {"Prtry": "UK_PENSION_SCHEME_NUMBER"}
+                                    }
                                 ]
                             }
-                        ]
+                        }
                     },
-                    "PstCd": {
-                        "fake": [
-                            "postcode"
-                        ]
+                    "DbtrAcct": {
+                        "Id": {"IBAN": {"fake": ["iban", "GB"]}},
+                        "Ccy": "GBP",
+                        "Nm": "Pension Fund Disbursement Account"
                     },
-                    "TwnNm": {
-                        "fake": [
-                            "city_name"
-                        ]
+                    "DbtrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {"var": "sender_bic"},
+                            "Nm": {"fake": ["company_name"]},
+                            "LEI": {"fake": ["lei"]}
+                        }
                     },
-                    "Ctry": "GB"
-                },
-                "CtryOfRes": "GB",
-                "Id": {
-                    "PrvtId": {
-                        "DtAndPlcOfBirth": {
-                            "BirthDt": {
-                                "fake": [
-                                    "date",
-                                    "%Y-%m-%d",
-                                    "-80y",
-                                    "-60y"
-                                ]
-                            },
-                            "CityOfBirth": {
-                                "fake": [
-                                    "city_name"
-                                ]
-                            },
-                            "CtryOfBirth": "GB"
+                    "CdtrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {"var": "receiver_bic"},
+                            "Nm": {"fake": ["company_name"]},
+                            "LEI": {"fake": ["lei"]}
+                        }
+                    },
+                    "Cdtr": {
+                        "Nm": {"var": "retiree_name"},
+                        "PstlAdr": {
+                            "StrtNm": {"fake": ["street_name"]},
+                            "BldgNb": {"cat": [{"fake": ["i64", 1, 999]}]},
+                            "PstCd": {"fake": ["postcode"]},
+                            "TwnNm": {"fake": ["city_name"]},
+                            "Ctry": "GB"
                         },
-                        "Othr": [
-                            {
-                                "Id": {
-                                    "var": "pension_number"
+                        "CtryOfRes": "GB",
+                        "Id": {
+                            "PrvtId": {
+                                "DtAndPlcOfBirth": {
+                                    "BirthDt": {
+                                        "fake": ["date", "%Y-%m-%d", "-80y", "-60y"]
+                                    },
+                                    "CityOfBirth": {"fake": ["city_name"]},
+                                    "CtryOfBirth": "GB"
                                 },
-                                "SchmeNm": {
-                                    "Prtry": "PENSION_NUMBER"
-                                }
+                                "Othr": [{"Id": {"var": "pension_number"}, "SchmeNm": {"Prtry": "PENSION_NUMBER"}}]
                             }
-                        ]
-                    }
-                }
-            },
-            "CdtrAcct": {
-                "Id": {
-                    "IBAN": {
-                        "fake": [
-                            "iban",
-                            "GB"
-                        ]
-                    }
-                },
-                "Ccy": "GBP",
-                "Nm": "Personal Account"
-            },
-            "Purp": {
-                "Cd": "PENS"
-            },
-            "RgltryRptg": [
-                {
-                    "Dtls": [
+                        }
+                    },
+                    "CdtrAcct": {"Id": {"IBAN": {"fake": ["iban", "GB"]}}, "Ccy": "GBP", "Nm": "Personal Account"},
+                    "Purp": {"Cd": "PENS"},
+                    "RgltryRptg": [
                         {
-                            "Tp": "BOTH",
-                            "Dt": {
-                                "fake": [
-                                    "date",
-                                    "%Y-%m-%d",
-                                    "+0d",
-                                    "+0d"
-                                ]
-                            },
-                            "Ctry": "GB",
-                            "Cd": "150",
-                            "Amt": {
-                                "@Ccy": "GBP",
-                                "$value": {
-                                    "var": "amount"
+                            "Dtls": [
+                                {
+                                    "Tp": "BOTH",
+                                    "Dt": {
+                                        "fake": ["date", "%Y-%m-%d", "+0d", "+0d"]
+                                    },
+                                    "Ctry": "GB",
+                                    "Cd": "150",
+                                    "Amt": {"@Ccy": "GBP", "$value": {"var": "amount"}},
+                                    "Inf": ["CBPR+ PENSION PAYMENT"]
                                 }
-                            },
-                            "Inf": [
-                                "CBPR+ PENSION PAYMENT"
                             ]
                         }
-                    ]
-                }
-            ],
-            "RmtInf": {
-                "Strd": [
-                    {
-                        "RfrdDocInf": [
+                    ],
+                    "RmtInf": {
+                        "Strd": [
                             {
-                                "Tp": {
-                                    "CdOrPrtry": {
-                                        "Prtry": "PENSION_STATEMENT"
+                                "RfrdDocInf": [
+                                    {
+                                        "Tp": {"CdOrPrtry": {"Prtry": "PENSION_STATEMENT"}},
+                                        "Nb": {"cat": ["STMT-", {"var": "payment_month"}]},
+                                        "RltdDt": {"var": "payment_month"}
                                     }
+                                ],
+                                "RfrdDocAmt": {"DuePyblAmt": {"@Ccy": "GBP", "$value": {"var": "amount"}}},
+                                "CdtrRefInf": {
+                                    "Tp": {"CdOrPrtry": {"Prtry": "PENSION_REFERENCE"}},
+                                    "Ref": {"var": "pension_number"}
                                 },
-                                "Nb": {
-                                    "cat": [
-                                        "STMT-",
-                                        {
-                                            "var": "payment_month"
-                                        }
-                                    ]
-                                },
-                                "RltdDt": {
-                                    "var": "payment_month"
-                                }
+                                "AddtlRmtInf": ["Generated remittance information"]
                             }
-                        ],
-                        "RfrdDocAmt": {
-                            "DuePyblAmt": {
-                                "@Ccy": "GBP",
-                                "$value": {
-                                    "var": "amount"
-                                }
-                            }
-                        },
-                        "CdtrRefInf": {
-                            "Tp": {
-                                "CdOrPrtry": {
-                                    "Prtry": "PENSION_REFERENCE"
-                                }
-                            },
-                            "Ref": {
-                                "var": "pension_number"
-                            }
-                        },
-                        "AddtlRmtInf": [
-                            "Generated remittance information"
                         ]
                     }
-                ]
+                }
             }
         }
     }

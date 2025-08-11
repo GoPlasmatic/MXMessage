@@ -1,560 +1,183 @@
 {
     "variables": {
-        "msg_id": {
-            "cat": [
-                "MSG",
-                {
-                    "fake": [
-                        "i64",
-                        100000000000,
-                        999999999999
-                    ]
-                }
-            ]
-        },
-        "creation_datetime": {
-            "fake": [
-                "iso8601_datetime"
-            ]
-        },
-        "sender_bic": {
-            "fake": [
-                "bic"
-            ]
-        },
-        "receiver_bic": {
-            "fake": [
-                "bic"
-            ]
-        },
-        "transaction_ref": {
-            "cat": [
-                "TXN",
-                {
-                    "fake": [
-                        "i64",
-                        100000000000,
-                        999999999999
-                    ]
-                }
-            ]
-        },
-        "instruction_id": {
-            "cat": [
-                "INSTR",
-                {
-                    "fake": [
-                        "i64",
-                        10000000,
-                        99999999
-                    ]
-                }
-            ]
-        },
-        "end_to_end_id": {
-            "cat": [
-                "E2E",
-                {
-                    "fake": [
-                        "i64",
-                        100000000000,
-                        999999999999
-                    ]
-                }
-            ]
-        },
-        "uetr": {
-            "fake": [
-                "uuid"
-            ]
-        },
-        "claim_amount": {
-            "fake": [
-                "f64",
-                5000.0,
-                150000.0
-            ]
-        },
-        "deductible": {
-            "fake": [
-                "f64",
-                500.0,
-                5000.0
-            ]
-        },
-        "claimant_name": {
-            "fake": [
-                "name"
-            ]
-        },
-        "insurance_company": {
-            "cat": [
-                {
-                    "fake": [
-                        "company_name"
-                    ]
-                },
-                " Insurance"
-            ]
-        },
+        "msg_id": {"cat": ["MSG", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "sender_bic": {"fake": ["bic"]},
+        "receiver_bic": {"fake": ["bic"]},
+        "transaction_ref": {"cat": ["TXN", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "instruction_id": {"cat": ["INSTR", {"fake": ["i64", 10000000, 99999999]}]},
+        "end_to_end_id": {"cat": ["E2E", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "uetr": {"fake": ["uuid"]},
+        "claim_amount": {"fake": ["f64", 5000.0, 150000.0]},
+        "deductible": {"fake": ["f64", 500.0, 5000.0]},
+        "claimant_name": {"fake": ["name"]},
+        "insurance_company": {"cat": [{"fake": ["company_name"]}, " Insurance"]},
         "policy_number": {
             "cat": [
                 "POL-",
-                {
-                    "fake": [
-                        "regex",
-                        "[A-Z]{2}"
-                    ]
-                },
+                {"fake": ["regex", "[A-Z]{2}"]},
                 "-",
-                {
-                    "fake": [
-                        "i64",
-                        10000000,
-                        99999999
-                    ]
-                }
+                {"fake": ["i64", 10000000, 99999999]}
             ]
         },
-        "claim_number": {
-            "cat": [
-                "CLM-",
-                {
-                    "fake": [
-                        "i64",
-                        2024000000,
-                        2024999999
-                    ]
-                }
-            ]
-        },
+        "claim_number": {"cat": ["CLM-", {"fake": ["i64", 2024000000, 2024999999]}]},
         "incident_date": {
-            "fake": [
-                "date",
-                "%Y-%m-%d",
-                "-60d",
-                "-10d"
-            ]
+            "fake": ["date", "%Y-%m-%d", "-60d", "-10d"]
         },
-        "claim_type": {
-            "fake": [
-                "regex",
-                "(MEDICAL|AUTO|PROPERTY|LIABILITY)"
-            ]
-        }
+        "claim_type": {"fake": ["regex", "(MEDICAL|AUTO|PROPERTY|LIABILITY)"]}
     },
     "schema": {
-        "GrpHdr": {
-            "MsgId": {
-                "var": "msg_id"
-            },
-            "CreDtTm": {
-                "var": "creation_datetime"
-            },
-            "NbOfTxs": "1",
-            "SttlmInf": {
-                "SttlmMtd": "INDA"
-            }
+        "AppHdr": {
+            "Fr": {"FIId": {"FinInstnId": {"BICFI": {"var": "sender_bic"}}}},
+            "To": {"FIId": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}}}},
+            "BizMsgIdr": {"var": "msg_id"},
+            "MsgDefIdr": "pacs.008.001.08",
+            "BizSvc": "swift.cbprplus.01",
+            "CreDt": {"var": "creation_datetime"}
         },
-        "CdtTrfTxInf": {
-            "PmtId": {
-                "InstrId": {
-                    "var": "instruction_id"
+        "Document": {
+            "FIToFICstmrCdtTrf": {
+                "GrpHdr": {
+                    "MsgId": {"var": "msg_id"},
+                    "CreDtTm": {"var": "creation_datetime"},
+                    "NbOfTxs": "1",
+                    "SttlmInf": {"SttlmMtd": "INDA"}
                 },
-                "EndToEndId": {
-                    "var": "end_to_end_id"
-                },
-                "TxId": {
-                    "var": "transaction_ref"
-                },
-                "UETR": {
-                    "var": "uetr"
-                }
-            },
-            "PmtTpInf": {
-                "InstrPrty": "HIGH",
-                "SvcLvl": [
-                    {
-                        "Cd": "CBPR"
-                    }
-                ],
-                "CtgyPurp": {
-                    "Cd": "INSU"
-                },
-                "LclInstrm": {
-                    "Prtry": {
-                        "cat": [
-                            "CLAIM_",
-                            {
-                                "var": "claim_type"
-                            }
-                        ]
-                    }
-                }
-            },
-            "IntrBkSttlmAmt": {
-                "@Ccy": "EUR",
-                "$value": {
-                    "fake": [
-                        "f64",
-                        4500.0,
-                        145000.0
-                    ]
-                }
-            },
-            "IntrBkSttlmDt": {
-                "fake": [
-                    "date",
-                    "%Y-%m-%d",
-                    "+0d",
-                    "+1d"
-                ]
-            },
-            "SttlmPrty": "HIGH",
-            "InstdAmt": {
-                "@Ccy": "EUR",
-                "$value": {
-                    "fake": [
-                        "f64",
-                        4500.0,
-                        145000.0
-                    ]
-                }
-            },
-            "XchgRate": {
-                "fake": [
-                    "f64",
-                    0.85,
-                    0.95
-                ]
-            },
-            "ChrgBr": "SHAR",
-            "ChrgsInf": [
-                {
-                    "Amt": {
-                        "@Ccy": "EUR",
-                        "$value": {
-                            "fake": [
-                                "f64",
-                                25.0,
-                                100.0
-                            ]
-                        }
+                "CdtTrfTxInf": {
+                    "PmtId": {
+                        "InstrId": {"var": "instruction_id"},
+                        "EndToEndId": {"var": "end_to_end_id"},
+                        "TxId": {"var": "transaction_ref"},
+                        "UETR": {"var": "uetr"}
                     },
-                    "Agt": {
-                        "FinInstnId": {
-                            "BICFI": {
-                                "var": "sender_bic"
-                            }
-                        }
+                    "PmtTpInf": {
+                        "InstrPrty": "HIGH",
+                        "SvcLvl": [{"Cd": "CBPR"}],
+                        "CtgyPurp": {"Cd": "INSU"},
+                        "LclInstrm": {"Prtry": {"cat": ["CLAIM_", {"var": "claim_type"}]}}
                     },
-                    "Tp": {
-                        "Prtry": "CROSS_BORDER_FEE"
-                    }
-                }
-            ],
-            "InstgAgt": {
-                "FinInstnId": {
-                    "BICFI": {
-                        "var": "sender_bic"
+                    "IntrBkSttlmAmt": {"@Ccy": "EUR", "$value": {"fake": ["f64", 4500.0, 145000.0]}},
+                    "IntrBkSttlmDt": {
+                        "fake": ["date", "%Y-%m-%d", "+0d", "+1d"]
                     },
-                    "LEI": {
-                        "fake": [
-                            "lei"
-                        ]
-                    }
-                }
-            },
-            "InstdAgt": {
-                "FinInstnId": {
-                    "BICFI": {
-                        "var": "receiver_bic"
-                    },
-                    "LEI": {
-                        "fake": [
-                            "lei"
-                        ]
-                    }
-                }
-            },
-            "Dbtr": {
-                "Nm": {
-                    "var": "insurance_company"
-                },
-                "PstlAdr": {
-                    "StrtNm": {
-                        "cat": [
-                            {
-                                "fake": [
-                                    "i64",
-                                    1,
-                                    999
-                                ]
-                            },
-                            " Insurance Plaza"
-                        ]
-                    },
-                    "PstCd": {
-                        "fake": [
-                            "postcode"
-                        ]
-                    },
-                    "TwnNm": {
-                        "fake": [
-                            "city_name"
-                        ]
-                    },
-                    "Ctry": "GB"
-                },
-                "CtryOfRes": "GB",
-                "Id": {
-                    "OrgId": {
-                        "LEI": {
-                            "fake": [
-                                "lei"
-                            ]
-                        },
-                        "Othr": [
-                            {
-                                "Id": {
-                                    "cat": [
-                                        "FCA-",
-                                        {
-                                            "fake": [
-                                                "i64",
-                                                100000,
-                                                999999
-                                            ]
-                                        }
-                                    ]
-                                },
-                                "SchmeNm": {
-                                    "Prtry": "FCA_REGISTRATION"
-                                }
-                            }
-                        ]
-                    }
-                }
-            },
-            "DbtrAcct": {
-                "Id": {
-                    "IBAN": {
-                        "fake": [
-                            "iban",
-                            "GB"
-                        ]
-                    }
-                },
-                "Ccy": "GBP",
-                "Nm": "Claims Settlement Account"
-            },
-            "DbtrAgt": {
-                "FinInstnId": {
-                    "BICFI": {
-                        "var": "sender_bic"
-                    },
-                    "Nm": {
-                        "fake": [
-                            "company_name"
-                        ]
-                    },
-                    "LEI": {
-                        "fake": [
-                            "lei"
-                        ]
-                    }
-                }
-            },
-            "CdtrAgt": {
-                "FinInstnId": {
-                    "BICFI": {
-                        "var": "receiver_bic"
-                    },
-                    "Nm": {
-                        "fake": [
-                            "company_name"
-                        ]
-                    },
-                    "LEI": {
-                        "fake": [
-                            "lei"
-                        ]
-                    }
-                }
-            },
-            "Cdtr": {
-                "Nm": {
-                    "var": "claimant_name"
-                },
-                "PstlAdr": {
-                    "StrtNm": {
-                        "fake": [
-                            "street_name"
-                        ]
-                    },
-                    "BldgNb": {
-                        "cat": [
-                            {
-                                "fake": [
-                                    "i64",
-                                    1,
-                                    999
-                                ]
-                            }
-                        ]
-                    },
-                    "PstCd": {
-                        "fake": [
-                            "postcode"
-                        ]
-                    },
-                    "TwnNm": {
-                        "fake": [
-                            "city_name"
-                        ]
-                    },
-                    "Ctry": {
-                        "fake": [
-                            "regex",
-                            "(DE|FR|IT|ES)"
-                        ]
-                    }
-                },
-                "CtryOfRes": {
-                    "fake": [
-                        "regex",
-                        "(DE|FR|IT|ES)"
-                    ]
-                },
-                "Id": {
-                    "PrvtId": {
-                        "Othr": [
-                            {
-                                "Id": {
-                                    "var": "policy_number"
-                                },
-                                "SchmeNm": {
-                                    "Prtry": "POLICY_HOLDER_ID"
-                                }
-                            }
-                        ]
-                    }
-                }
-            },
-            "CdtrAcct": {
-                "Id": {
-                    "IBAN": {
-                        "fake": [
-                            "iban",
-                            "DE"
-                        ]
-                    }
-                },
-                "Ccy": "EUR",
-                "Nm": "Personal Account"
-            },
-            "Purp": {
-                "Cd": "INSU"
-            },
-            "RgltryRptg": [
-                {
-                    "Dtls": [
+                    "SttlmPrty": "HIGH",
+                    "InstdAmt": {"@Ccy": "EUR", "$value": {"fake": ["f64", 4500.0, 145000.0]}},
+                    "XchgRate": {"fake": ["f64", 0.85, 0.95]},
+                    "ChrgBr": "SHAR",
+                    "ChrgsInf": [
                         {
-                            "Tp": "BOTH",
-                            "Dt": {
-                                "fake": [
-                                    "date",
-                                    "%Y-%m-%d",
-                                    "+0d",
-                                    "+0d"
+                            "Amt": {"@Ccy": "EUR", "$value": {"fake": ["f64", 25.0, 100.0]}},
+                            "Agt": {"FinInstnId": {"BICFI": {"var": "sender_bic"}}},
+                            "Tp": {"Prtry": "CROSS_BORDER_FEE"}
+                        }
+                    ],
+                    "InstgAgt": {"FinInstnId": {"BICFI": {"var": "sender_bic"}, "LEI": {"fake": ["lei"]}}},
+                    "InstdAgt": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}, "LEI": {"fake": ["lei"]}}},
+                    "Dbtr": {
+                        "Nm": {"var": "insurance_company"},
+                        "PstlAdr": {
+                            "StrtNm": {"cat": [{"fake": ["i64", 1, 999]}, " Insurance Plaza"]},
+                            "PstCd": {"fake": ["postcode"]},
+                            "TwnNm": {"fake": ["city_name"]},
+                            "Ctry": "GB"
+                        },
+                        "CtryOfRes": "GB",
+                        "Id": {
+                            "OrgId": {
+                                "LEI": {"fake": ["lei"]},
+                                "Othr": [
+                                    {
+                                        "Id": {"cat": ["FCA-", {"fake": ["i64", 100000, 999999]}]},
+                                        "SchmeNm": {"Prtry": "FCA_REGISTRATION"}
+                                    }
                                 ]
-                            },
-                            "Ctry": "GB",
-                            "Cd": "INSU",
-                            "Amt": {
-                                "@Ccy": "EUR",
-                                "$value": {
-                                    "fake": [
-                                        "f64",
-                                        4500.0,
-                                        145000.0
-                                    ]
+                            }
+                        }
+                    },
+                    "DbtrAcct": {
+                        "Id": {"IBAN": {"fake": ["iban", "GB"]}},
+                        "Ccy": "GBP",
+                        "Nm": "Claims Settlement Account"
+                    },
+                    "DbtrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {"var": "sender_bic"},
+                            "Nm": {"fake": ["company_name"]},
+                            "LEI": {"fake": ["lei"]}
+                        }
+                    },
+                    "CdtrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {"var": "receiver_bic"},
+                            "Nm": {"fake": ["company_name"]},
+                            "LEI": {"fake": ["lei"]}
+                        }
+                    },
+                    "Cdtr": {
+                        "Nm": {"var": "claimant_name"},
+                        "PstlAdr": {
+                            "StrtNm": {"fake": ["street_name"]},
+                            "BldgNb": {"cat": [{"fake": ["i64", 1, 999]}]},
+                            "PstCd": {"fake": ["postcode"]},
+                            "TwnNm": {"fake": ["city_name"]},
+                            "Ctry": {"fake": ["regex", "(DE|FR|IT|ES)"]}
+                        },
+                        "CtryOfRes": {"fake": ["regex", "(DE|FR|IT|ES)"]},
+                        "Id": {
+                            "PrvtId": {"Othr": [{"Id": {"var": "policy_number"}, "SchmeNm": {"Prtry": "POLICY_HOLDER_ID"}}]}
+                        }
+                    },
+                    "CdtrAcct": {"Id": {"IBAN": {"fake": ["iban", "DE"]}}, "Ccy": "EUR", "Nm": "Personal Account"},
+                    "Purp": {"Cd": "INSU"},
+                    "RgltryRptg": [
+                        {
+                            "Dtls": [
+                                {
+                                    "Tp": "BOTH",
+                                    "Dt": {
+                                        "fake": ["date", "%Y-%m-%d", "+0d", "+0d"]
+                                    },
+                                    "Ctry": "GB",
+                                    "Cd": "INSU",
+                                    "Amt": {"@Ccy": "EUR", "$value": {"fake": ["f64", 4500.0, 145000.0]}},
+                                    "Inf": ["CBPR+ CROSS-BORDER INSURANCE CLAIM"]
                                 }
-                            },
-                            "Inf": [
-                                "CBPR+ CROSS-BORDER INSURANCE CLAIM"
                             ]
                         }
-                    ]
-                }
-            ],
-            "RmtInf": {
-                "Strd": [
-                    {
-                        "RfrdDocInf": [
+                    ],
+                    "RmtInf": {
+                        "Strd": [
                             {
-                                "Tp": {
-                                    "CdOrPrtry": {
-                                        "Prtry": "INSURANCE_CLAIM"
+                                "RfrdDocInf": [
+                                    {
+                                        "Tp": {"CdOrPrtry": {"Prtry": "INSURANCE_CLAIM"}},
+                                        "Nb": {"var": "claim_number"},
+                                        "RltdDt": {"var": "incident_date"}
                                     }
-                                },
-                                "Nb": {
-                                    "var": "claim_number"
-                                },
-                                "RltdDt": {
-                                    "var": "incident_date"
-                                }
-                            }
-                        ],
-                        "RfrdDocAmt": {
-                            "DuePyblAmt": {
-                                "@Ccy": "EUR",
-                                "$value": {
-                                    "var": "claim_amount"
-                                }
-                            },
-                            "AdjstmntAmtAndRsn": [
-                                {
-                                    "Amt": {
-                                        "@Ccy": "EUR",
-                                        "$value": {
-                                            "var": "deductible"
+                                ],
+                                "RfrdDocAmt": {
+                                    "DuePyblAmt": {"@Ccy": "EUR", "$value": {"var": "claim_amount"}},
+                                    "AdjstmntAmtAndRsn": [
+                                        {
+                                            "Amt": {"@Ccy": "EUR", "$value": {"var": "deductible"}},
+                                            "CdtDbtInd": "DBIT",
+                                            "Rsn": "OTHR",
+                                            "AddtlInf": "Policy deductible"
                                         }
-                                    },
-                                    "CdtDbtInd": "DBIT",
-                                    "Rsn": "OTHR",
-                                    "AddtlInf": "Policy deductible"
-                                }
-                            ],
-                            "RmtdAmt": {
-                                "@Ccy": "EUR",
-                                "$value": {
-                                    "fake": [
-                                        "f64",
-                                        4500.0,
-                                        145000.0
-                                    ]
-                                }
+                                    ],
+                                    "RmtdAmt": {"@Ccy": "EUR", "$value": {"fake": ["f64", 4500.0, 145000.0]}}
+                                },
+                                "CdtrRefInf": {"Tp": {"CdOrPrtry": {"Prtry": "POLICY_NUMBER"}}, "Ref": {"var": "policy_number"}},
+                                "AddtlRmtInf": [
+                                    "Generated remittance information",
+                                    "Generated remittance information",
+                                    "Generated remittance information",
+                                    "Generated remittance information"
+                                ]
                             }
-                        },
-                        "CdtrRefInf": {
-                            "Tp": {
-                                "CdOrPrtry": {
-                                    "Prtry": "POLICY_NUMBER"
-                                }
-                            },
-                            "Ref": {
-                                "var": "policy_number"
-                            }
-                        },
-                        "AddtlRmtInf": [
-                            "Generated remittance information",
-                            "Generated remittance information",
-                            "Generated remittance information",
-                            "Generated remittance information"
                         ]
                     }
-                ]
+                }
             }
         }
     }

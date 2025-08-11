@@ -1,465 +1,166 @@
 {
     "variables": {
-        "msg_id": {
-            "cat": [
-                "MSG",
-                {
-                    "fake": [
-                        "i64",
-                        100000000000,
-                        999999999999
-                    ]
-                }
-            ]
-        },
-        "creation_datetime": {
-            "fake": [
-                "iso8601_datetime"
-            ]
-        },
-        "sender_bic": {
-            "fake": [
-                "bic"
-            ]
-        },
-        "receiver_bic": {
-            "fake": [
-                "bic"
-            ]
-        },
-        "transaction_ref": {
-            "cat": [
-                "TXN",
-                {
-                    "fake": [
-                        "i64",
-                        100000000000,
-                        999999999999
-                    ]
-                }
-            ]
-        },
-        "instruction_id": {
-            "cat": [
-                "INSTR",
-                {
-                    "fake": [
-                        "i64",
-                        10000000,
-                        99999999
-                    ]
-                }
-            ]
-        },
-        "end_to_end_id": {
-            "cat": [
-                "E2E",
-                {
-                    "fake": [
-                        "i64",
-                        100000000000,
-                        999999999999
-                    ]
-                }
-            ]
-        },
-        "uetr": {
-            "fake": [
-                "uuid"
-            ]
-        },
-        "benefit_amount": {
-            "fake": [
-                "f64",
-                800.0,
-                3000.0
-            ]
-        },
-        "beneficiary_name": {
-            "fake": [
-                "name"
-            ]
-        },
+        "msg_id": {"cat": ["MSG", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "sender_bic": {"fake": ["bic"]},
+        "receiver_bic": {"fake": ["bic"]},
+        "transaction_ref": {"cat": ["TXN", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "instruction_id": {"cat": ["INSTR", {"fake": ["i64", 10000000, 99999999]}]},
+        "end_to_end_id": {"cat": ["E2E", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "uetr": {"fake": ["uuid"]},
+        "benefit_amount": {"fake": ["f64", 800.0, 3000.0]},
+        "beneficiary_name": {"fake": ["name"]},
         "social_security_number": {
             "cat": [
-                {
-                    "fake": [
-                        "i64",
-                        100,
-                        999
-                    ]
-                },
+                {"fake": ["i64", 100, 999]},
                 "-",
-                {
-                    "fake": [
-                        "i64",
-                        10,
-                        99
-                    ]
-                },
+                {"fake": ["i64", 10, 99]},
                 "-",
-                {
-                    "fake": [
-                        "i64",
-                        1000,
-                        9999
-                    ]
-                }
+                {"fake": ["i64", 1000, 9999]}
             ]
         },
-        "benefit_type": {
-            "fake": [
-                "regex",
-                "(RETIREMENT|DISABILITY|SURVIVOR)"
-            ]
-        },
+        "benefit_type": {"fake": ["regex", "(RETIREMENT|DISABILITY|SURVIVOR)"]},
         "payment_month": {
-            "fake": [
-                "date",
-                "%Y-%m",
-                "+0d",
-                "+0d"
-            ]
+            "fake": ["date", "%Y-%m", "+0d", "+0d"]
         }
     },
     "schema": {
-        "GrpHdr": {
-            "MsgId": {
-                "var": "msg_id"
-            },
-            "CreDtTm": {
-                "var": "creation_datetime"
-            },
-            "NbOfTxs": "1",
-            "SttlmInf": {
-                "SttlmMtd": "INDA"
-            }
+        "AppHdr": {
+            "Fr": {"FIId": {"FinInstnId": {"BICFI": {"var": "sender_bic"}}}},
+            "To": {"FIId": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}}}},
+            "BizMsgIdr": {"var": "msg_id"},
+            "MsgDefIdr": "pacs.008.001.08",
+            "BizSvc": "swift.cbprplus.01",
+            "CreDt": {"var": "creation_datetime"}
         },
-        "CdtTrfTxInf": {
-            "PmtId": {
-                "InstrId": {
-                    "var": "instruction_id"
+        "Document": {
+            "FIToFICstmrCdtTrf": {
+                "GrpHdr": {
+                    "MsgId": {"var": "msg_id"},
+                    "CreDtTm": {"var": "creation_datetime"},
+                    "NbOfTxs": "1",
+                    "SttlmInf": {"SttlmMtd": "INDA"}
                 },
-                "EndToEndId": {
-                    "var": "end_to_end_id"
-                },
-                "TxId": {
-                    "var": "transaction_ref"
-                },
-                "UETR": {
-                    "var": "uetr"
-                }
-            },
-            "PmtTpInf": {
-                "InstrPrty": "HIGH",
-                "SvcLvl": [
-                    {
-                        "Cd": "CBPR"
-                    }
-                ],
-                "CtgyPurp": {
-                    "Cd": "SSBE"
-                },
-                "LclInstrm": {
-                    "Prtry": {
-                        "cat": [
-                            "SOCIAL_SECURITY_",
-                            {
-                                "var": "benefit_type"
-                            }
-                        ]
-                    }
-                }
-            },
-            "IntrBkSttlmAmt": {
-                "@Ccy": "USD",
-                "$value": {
-                    "var": "benefit_amount"
-                }
-            },
-            "IntrBkSttlmDt": {
-                "fake": [
-                    "date",
-                    "%Y-%m-%d",
-                    "+0d",
-                    "+0d"
-                ]
-            },
-            "SttlmPrty": "HIGH",
-            "InstdAmt": {
-                "@Ccy": "USD",
-                "$value": {
-                    "var": "benefit_amount"
-                }
-            },
-            "ChrgBr": "SHAR",
-            "InstgAgt": {
-                "FinInstnId": {
-                    "BICFI": {
-                        "var": "sender_bic"
+                "CdtTrfTxInf": {
+                    "PmtId": {
+                        "InstrId": {"var": "instruction_id"},
+                        "EndToEndId": {"var": "end_to_end_id"},
+                        "TxId": {"var": "transaction_ref"},
+                        "UETR": {"var": "uetr"}
                     },
-                    "LEI": {
-                        "fake": [
-                            "lei"
-                        ]
-                    }
-                }
-            },
-            "InstdAgt": {
-                "FinInstnId": {
-                    "BICFI": {
-                        "var": "receiver_bic"
+                    "PmtTpInf": {
+                        "InstrPrty": "HIGH",
+                        "SvcLvl": [{"Cd": "CBPR"}],
+                        "CtgyPurp": {"Cd": "SSBE"},
+                        "LclInstrm": {"Prtry": {"cat": ["SOCIAL_SECURITY_", {"var": "benefit_type"}]}}
                     },
-                    "LEI": {
-                        "fake": [
-                            "lei"
-                        ]
-                    }
-                }
-            },
-            "Dbtr": {
-                "Nm": "Social Security Administration",
-                "PstlAdr": {
-                    "StrtNm": "6401 Security Blvd",
-                    "TwnNm": "Baltimore",
-                    "CtrySubDvsn": "MD",
-                    "PstCd": "21235",
-                    "Ctry": "US"
-                },
-                "CtryOfRes": "US",
-                "Id": {
-                    "OrgId": {
-                        "Othr": [
-                            {
-                                "Id": "US-SSA",
-                                "SchmeNm": {
-                                    "Prtry": "GOVERNMENT_AGENCY"
-                                }
-                            }
-                        ]
-                    }
-                }
-            },
-            "DbtrAcct": {
-                "Id": {
-                    "Othr": {
-                        "Id": "US-TREASURY-SSA",
-                        "SchmeNm": {
-                            "Prtry": "GOVERNMENT_ACCOUNT"
-                        }
-                    }
-                },
-                "Ccy": "USD",
-                "Nm": "SSA Benefit Payment Account"
-            },
-            "DbtrAgt": {
-                "FinInstnId": {
-                    "BICFI": "FRBNUS33XXX",
-                    "Nm": "Federal Reserve Bank",
-                    "LEI": "254900HROIFWPRGM0V77"
-                }
-            },
-            "CdtrAgt": {
-                "FinInstnId": {
-                    "BICFI": {
-                        "var": "receiver_bic"
+                    "IntrBkSttlmAmt": {"@Ccy": "USD", "$value": {"var": "benefit_amount"}},
+                    "IntrBkSttlmDt": {
+                        "fake": ["date", "%Y-%m-%d", "+0d", "+0d"]
                     },
-                    "Nm": {
-                        "fake": [
-                            "company_name"
-                        ]
-                    },
-                    "LEI": {
-                        "fake": [
-                            "lei"
-                        ]
-                    }
-                }
-            },
-            "Cdtr": {
-                "Nm": {
-                    "var": "beneficiary_name"
-                },
-                "PstlAdr": {
-                    "StrtNm": {
-                        "fake": [
-                            "street_name"
-                        ]
-                    },
-                    "BldgNb": {
-                        "cat": [
-                            {
-                                "fake": [
-                                    "i64",
-                                    1,
-                                    999
-                                ]
-                            }
-                        ]
-                    },
-                    "PstCd": {
-                        "fake": [
-                            "postcode"
-                        ]
-                    },
-                    "TwnNm": {
-                        "fake": [
-                            "city_name"
-                        ]
-                    },
-                    "CtrySubDvsn": {
-                        "fake": [
-                            "state_abbr"
-                        ]
-                    },
-                    "Ctry": "US"
-                },
-                "CtryOfRes": "US",
-                "Id": {
-                    "PrvtId": {
-                        "DtAndPlcOfBirth": {
-                            "BirthDt": {
-                                "fake": [
-                                    "date",
-                                    "%Y-%m-%d",
-                                    "-90y",
-                                    "-62y"
-                                ]
-                            },
-                            "CityOfBirth": {
-                                "fake": [
-                                    "city_name"
-                                ]
-                            },
-                            "CtryOfBirth": "US"
+                    "SttlmPrty": "HIGH",
+                    "InstdAmt": {"@Ccy": "USD", "$value": {"var": "benefit_amount"}},
+                    "ChrgBr": "SHAR",
+                    "InstgAgt": {"FinInstnId": {"BICFI": {"var": "sender_bic"}, "LEI": {"fake": ["lei"]}}},
+                    "InstdAgt": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}, "LEI": {"fake": ["lei"]}}},
+                    "Dbtr": {
+                        "Nm": "Social Security Administration",
+                        "PstlAdr": {
+                            "StrtNm": "6401 Security Blvd",
+                            "TwnNm": "Baltimore",
+                            "CtrySubDvsn": "MD",
+                            "PstCd": "21235",
+                            "Ctry": "US"
                         },
-                        "Othr": [
-                            {
-                                "Id": {
-                                    "var": "social_security_number"
+                        "CtryOfRes": "US",
+                        "Id": {"OrgId": {"Othr": [{"Id": "US-SSA", "SchmeNm": {"Prtry": "GOVERNMENT_AGENCY"}}]}}
+                    },
+                    "DbtrAcct": {
+                        "Id": {"Othr": {"Id": "US-TREASURY-SSA", "SchmeNm": {"Prtry": "GOVERNMENT_ACCOUNT"}}},
+                        "Ccy": "USD",
+                        "Nm": "SSA Benefit Payment Account"
+                    },
+                    "DbtrAgt": {
+                        "FinInstnId": {"BICFI": "FRBNUS33XXX", "Nm": "Federal Reserve Bank", "LEI": "254900HROIFWPRGM0V77"}
+                    },
+                    "CdtrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {"var": "receiver_bic"},
+                            "Nm": {"fake": ["company_name"]},
+                            "LEI": {"fake": ["lei"]}
+                        }
+                    },
+                    "Cdtr": {
+                        "Nm": {"var": "beneficiary_name"},
+                        "PstlAdr": {
+                            "StrtNm": {"fake": ["street_name"]},
+                            "BldgNb": {"cat": [{"fake": ["i64", 1, 999]}]},
+                            "PstCd": {"fake": ["postcode"]},
+                            "TwnNm": {"fake": ["city_name"]},
+                            "CtrySubDvsn": {"fake": ["state_abbr"]},
+                            "Ctry": "US"
+                        },
+                        "CtryOfRes": "US",
+                        "Id": {
+                            "PrvtId": {
+                                "DtAndPlcOfBirth": {
+                                    "BirthDt": {
+                                        "fake": ["date", "%Y-%m-%d", "-90y", "-62y"]
+                                    },
+                                    "CityOfBirth": {"fake": ["city_name"]},
+                                    "CtryOfBirth": "US"
                                 },
-                                "SchmeNm": {
-                                    "Cd": "SOSE"
-                                }
+                                "Othr": [{"Id": {"var": "social_security_number"}, "SchmeNm": {"Cd": "SOSE"}}]
                             }
-                        ]
-                    }
-                }
-            },
-            "CdtrAcct": {
-                "Id": {
-                    "IBAN": {
-                        "fake": [
-                            "iban",
-                            "US"
-                        ]
-                    }
-                },
-                "Ccy": "USD",
-                "Nm": "Direct Deposit Account"
-            },
-            "Purp": {
-                "Cd": "SSBE"
-            },
-            "RgltryRptg": [
-                {
-                    "Dtls": [
+                        }
+                    },
+                    "CdtrAcct": {"Id": {"IBAN": {"fake": ["iban", "US"]}}, "Ccy": "USD", "Nm": "Direct Deposit Account"},
+                    "Purp": {"Cd": "SSBE"},
+                    "RgltryRptg": [
                         {
-                            "Tp": "CRED",
-                            "Dt": {
-                                "fake": [
-                                    "date",
-                                    "%Y-%m-%d",
-                                    "+0d",
-                                    "+0d"
-                                ]
-                            },
-                            "Ctry": "US",
-                            "Cd": "150",
-                            "Amt": {
-                                "@Ccy": "USD",
-                                "$value": {
-                                    "var": "benefit_amount"
+                            "Dtls": [
+                                {
+                                    "Tp": "CRED",
+                                    "Dt": {
+                                        "fake": ["date", "%Y-%m-%d", "+0d", "+0d"]
+                                    },
+                                    "Ctry": "US",
+                                    "Cd": "150",
+                                    "Amt": {"@Ccy": "USD", "$value": {"var": "benefit_amount"}},
+                                    "Inf": ["CBPR+ SOCIAL SECURITY BENEFIT PAYME"]
                                 }
-                            },
-                            "Inf": [
-                                "CBPR+ SOCIAL SECURITY BENEFIT PAYME"
                             ]
                         }
-                    ]
-                }
-            ],
-            "RmtInf": {
-                "Strd": [
-                    {
-                        "RfrdDocInf": [
+                    ],
+                    "RmtInf": {
+                        "Strd": [
                             {
-                                "Tp": {
-                                    "CdOrPrtry": {
-                                        "Prtry": "BENEFIT_STATEMENT"
-                                    }
-                                },
-                                "Nb": {
-                                    "cat": [
-                                        "SSA-",
-                                        {
-                                            "var": "payment_month"
-                                        },
-                                        "-",
-                                        {
-                                            "fake": [
-                                                "i64",
-                                                100000,
-                                                999999
+                                "RfrdDocInf": [
+                                    {
+                                        "Tp": {"CdOrPrtry": {"Prtry": "BENEFIT_STATEMENT"}},
+                                        "Nb": {
+                                            "cat": [
+                                                "SSA-",
+                                                {"var": "payment_month"},
+                                                "-",
+                                                {"fake": ["i64", 100000, 999999]}
                                             ]
+                                        },
+                                        "RltdDt": {
+                                            "fake": ["date", "%Y-%m-%d", "-5d", "-1d"]
                                         }
-                                    ]
-                                },
-                                "RltdDt": {
-                                    "fake": [
-                                        "date",
-                                        "%Y-%m-%d",
-                                        "-5d",
-                                        "-1d"
-                                    ]
-                                }
-                            }
-                        ],
-                        "RfrdDocAmt": {
-                            "DuePyblAmt": {
-                                "@Ccy": "USD",
-                                "$value": {
-                                    "var": "benefit_amount"
-                                }
-                            }
-                        },
-                        "CdtrRefInf": {
-                            "Tp": {
-                                "CdOrPrtry": {
-                                    "Prtry": "SSA_CLAIM_NUMBER"
-                                }
-                            },
-                            "Ref": {
-                                "cat": [
-                                    {
-                                        "var": "social_security_number"
-                                    },
-                                    "-",
-                                    {
-                                        "fake": [
-                                            "regex",
-                                            "[A-Z][0-9]"
-                                        ]
                                     }
-                                ]
+                                ],
+                                "RfrdDocAmt": {"DuePyblAmt": {"@Ccy": "USD", "$value": {"var": "benefit_amount"}}},
+                                "CdtrRefInf": {
+                                    "Tp": {"CdOrPrtry": {"Prtry": "SSA_CLAIM_NUMBER"}},
+                                    "Ref": {"cat": [{"var": "social_security_number"}, "-", {"fake": ["regex", "[A-Z][0-9]"]}]}
+                                },
+                                "AddtlRmtInf": ["Generated remittance information", "Direct deposit - Do not forward"]
                             }
-                        },
-                        "AddtlRmtInf": [
-                            "Generated remittance information",
-                            "Direct deposit - Do not forward"
                         ]
                     }
-                ]
+                }
             }
         }
     }

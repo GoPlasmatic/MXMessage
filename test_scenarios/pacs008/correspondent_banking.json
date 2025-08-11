@@ -1,546 +1,189 @@
 {
     "variables": {
-        "msg_id": {
-            "cat": [
-                "MSGCORR",
-                {
-                    "fake": [
-                        "i64",
-                        100000000,
-                        999999999
-                    ]
-                }
-            ]
-        },
-        "creation_datetime": {
-            "fake": [
-                "iso8601_datetime"
-            ]
-        },
-        "tx_id": {
-            "cat": [
-                "TXCORR",
-                {
-                    "fake": [
-                        "i64",
-                        1000000000,
-                        9999999999
-                    ]
-                }
-            ]
-        },
-        "end_to_end_id": {
-            "cat": [
-                "E2ECORR",
-                {
-                    "fake": [
-                        "i64",
-                        100000000000,
-                        999999999999
-                    ]
-                }
-            ]
-        },
-        "uetr": {
-            "fake": [
-                "uuid"
-            ]
-        },
-        "amount": {
-            "fake": [
-                "f64",
-                100000.0,
-                1000000.0
-            ]
-        },
-        "debtor_bic": {
-            "fake": [
-                "bic"
-            ]
-        },
-        "creditor_bic": {
-            "fake": [
-                "bic"
-            ]
-        },
-        "intrmdt1_bic": {
-            "fake": [
-                "bic"
-            ]
-        },
-        "intrmdt2_bic": {
-            "fake": [
-                "bic"
-            ]
-        },
-        "intrmdt1_lei": {
-            "fake": [
-                "lei"
-            ]
-        },
-        "intrmdt2_lei": {
-            "fake": [
-                "lei"
-            ]
-        }
+        "msg_id": {"cat": ["MSGCORR", {"fake": ["i64", 100000000, 999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "tx_id": {"cat": ["TXCORR", {"fake": ["i64", 1000000000, 9999999999]}]},
+        "end_to_end_id": {"cat": ["E2ECORR", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "uetr": {"fake": ["uuid"]},
+        "amount": {"fake": ["f64", 100000.0, 1000000.0]},
+        "debtor_bic": {"fake": ["bic"]},
+        "creditor_bic": {"fake": ["bic"]},
+        "intrmdt1_bic": {"fake": ["bic"]},
+        "intrmdt2_bic": {"fake": ["bic"]},
+        "intrmdt1_lei": {"fake": ["lei"]},
+        "intrmdt2_lei": {"fake": ["lei"]}
     },
     "schema": {
-        "GrpHdr": {
-            "MsgId": {
-                "var": "msg_id"
-            },
-            "CreDtTm": {
-                "var": "creation_datetime"
-            },
-            "NbOfTxs": "1",
-            "SttlmInf": {
-                "SttlmMtd": "INDA",
-                "ClrSys": {
-                    "Cd": "INC"
-                }
-            }
+        "AppHdr": {
+            "Fr": {"FIId": {"FinInstnId": {"BICFI": {"fake": ["bic"]}}}},
+            "To": {"FIId": {"FinInstnId": {"BICFI": {"fake": ["bic"]}}}},
+            "BizMsgIdr": {"var": "msg_id"},
+            "MsgDefIdr": "pacs.008.001.08",
+            "BizSvc": "swift.ug",
+            "CreDt": {"var": "creation_datetime"}
         },
-        "CdtTrfTxInf": {
-            "PmtId": {
-                "InstrId": {
-                    "var": "tx_id"
+        "Document": {
+            "FIToFICstmrCdtTrf": {
+                "GrpHdr": {
+                    "MsgId": {"var": "msg_id"},
+                    "CreDtTm": {"var": "creation_datetime"},
+                    "NbOfTxs": "1",
+                    "SttlmInf": {"SttlmMtd": "INDA", "ClrSys": {"Cd": "INC"}}
                 },
-                "EndToEndId": {
-                    "var": "end_to_end_id"
-                },
-                "TxId": {
-                    "var": "tx_id"
-                },
-                "UETR": {
-                    "var": "uetr"
-                }
-            },
-            "PmtTpInf": {
-                "InstrPrty": "NORM",
-                "SvcLvl": [
-                    {
-                        "Cd": "G001"
-                    }
-                ],
-                "CtgyPurp": {
-                    "Cd": "TRAD"
-                }
-            },
-            "IntrBkSttlmAmt": {
-                "@Ccy": "USD",
-                "$value": {
-                    "var": "amount"
-                }
-            },
-            "IntrBkSttlmDt": {
-                "fake": [
-                    "date",
-                    "%Y-%m-%d",
-                    "+1d",
-                    "+1d"
-                ]
-            },
-            "SttlmPrty": "NORM",
-            "SttlmTmIndctn": {
-                "CdtDtTm": {
-                    "fake": [
-                        "iso8601_datetime",
-                        "+1d"
-                    ]
-                }
-            },
-            "ChrgBr": "SHAR",
-            "InstgAgt": {
-                "FinInstnId": {
-                    "BICFI": {
-                        "var": "debtor_bic"
-                    }
-                }
-            },
-            "InstdAgt": {
-                "FinInstnId": {
-                    "BICFI": {
-                        "var": "intrmdt1_bic"
-                    }
-                }
-            },
-            "IntrmyAgt1": {
-                "FinInstnId": {
-                    "BICFI": {
-                        "var": "intrmdt1_bic"
+                "CdtTrfTxInf": {
+                    "PmtId": {
+                        "InstrId": {"var": "tx_id"},
+                        "EndToEndId": {"var": "end_to_end_id"},
+                        "TxId": {"var": "tx_id"},
+                        "UETR": {"var": "uetr"}
                     },
-                    "LEI": {
-                        "var": "intrmdt1_lei"
+                    "PmtTpInf": {"InstrPrty": "NORM", "SvcLvl": [{"Cd": "G001"}], "CtgyPurp": {"Cd": "TRAD"}},
+                    "IntrBkSttlmAmt": {"@Ccy": "USD", "$value": {"var": "amount"}},
+                    "IntrBkSttlmDt": {
+                        "fake": ["date", "%Y-%m-%d", "+1d", "+1d"]
                     },
-                    "Nm": {
-                        "cat": [
-                            {
-                                "fake": [
-                                    "company_name"
-                                ]
-                            },
-                            " International Bank"
-                        ]
-                    },
-                    "PstlAdr": {
-                        "Ctry": "US"
-                    }
-                }
-            },
-            "IntrmyAgt1Acct": {
-                "Id": {
-                    "Othr": {
-                        "Id": {
-                            "cat": [
-                                "NOSTRO-",
-                                {
-                                    "fake": [
-                                        "i64",
-                                        100000001,
-                                        999999999
-                                    ]
-                                }
-                            ]
-                        },
-                        "SchmeNm": {
-                            "Prtry": "NOSTRO"
+                    "SttlmPrty": "NORM",
+                    "SttlmTmIndctn": {"CdtDtTm": {"fake": ["iso8601_datetime", "+1d"]}},
+                    "ChrgBr": "SHAR",
+                    "InstgAgt": {"FinInstnId": {"BICFI": {"var": "debtor_bic"}}},
+                    "InstdAgt": {"FinInstnId": {"BICFI": {"var": "intrmdt1_bic"}}},
+                    "IntrmyAgt1": {
+                        "FinInstnId": {
+                            "BICFI": {"var": "intrmdt1_bic"},
+                            "LEI": {"var": "intrmdt1_lei"},
+                            "Nm": {"cat": [{"fake": ["company_name"]}, " International Bank"]},
+                            "PstlAdr": {"Ctry": "US"}
                         }
-                    }
-                }
-            },
-            "IntrmyAgt2": {
-                "FinInstnId": {
-                    "BICFI": {
-                        "var": "intrmdt2_bic"
                     },
-                    "LEI": {
-                        "var": "intrmdt2_lei"
-                    },
-                    "Nm": {
-                        "cat": [
-                            {
-                                "fake": [
-                                    "company_name"
-                                ]
-                            },
-                            " Correspondent Bank"
-                        ]
-                    },
-                    "PstlAdr": {
-                        "Ctry": "GB"
-                    }
-                }
-            },
-            "IntrmyAgt2Acct": {
-                "Id": {
-                    "Othr": {
+                    "IntrmyAgt1Acct": {
                         "Id": {
-                            "cat": [
-                                "VOSTRO-",
-                                {
-                                    "fake": [
-                                        "i64",
-                                        100000001,
-                                        999999999
-                                    ]
-                                }
-                            ]
-                        },
-                        "SchmeNm": {
-                            "Prtry": "VOSTRO"
-                        }
-                    }
-                }
-            },
-            "Dbtr": {
-                "Nm": {
-                    "cat": [
-                        {
-                            "fake": [
-                                "company_name"
-                            ]
-                        },
-                        " Import/Export Ltd"
-                    ]
-                },
-                "PstlAdr": {
-                    "Ctry": "CN",
-                    "AdrLine": [
-                        {
-                            "fake": [
-                                "street_address"
-                            ]
-                        },
-                        "Shanghai 200000"
-                    ]
-                },
-                "Id": {
-                    "OrgId": {
-                        "Othr": [
-                            {
-                                "Id": {
-                                    "cat": [
-                                        "CN",
-                                        {
-                                            "fake": [
-                                                "i64",
-                                                100000000000,
-                                                999999999999
-                                            ]
-                                        }
-                                    ]
-                                },
-                                "SchmeNm": {
-                                    "Cd": "TXID"
-                                }
+                            "Othr": {
+                                "Id": {"cat": ["NOSTRO-", {"fake": ["i64", 100000001, 999999999]}]},
+                                "SchmeNm": {"Prtry": "NOSTRO"}
                             }
-                        ]
-                    }
-                }
-            },
-            "DbtrAcct": {
-                "Id": {
-                    "Othr": {
+                        }
+                    },
+                    "IntrmyAgt2": {
+                        "FinInstnId": {
+                            "BICFI": {"var": "intrmdt2_bic"},
+                            "LEI": {"var": "intrmdt2_lei"},
+                            "Nm": {"cat": [{"fake": ["company_name"]}, " Correspondent Bank"]},
+                            "PstlAdr": {"Ctry": "GB"}
+                        }
+                    },
+                    "IntrmyAgt2Acct": {
                         "Id": {
-                            "cat": [
-                                {
-                                    "fake": [
-                                        "i64",
-                                        1000000000,
-                                        9999999999
-                                    ]
-                                }
-                            ]
-                        },
-                        "SchmeNm": {
-                            "Prtry": "ACCT"
-                        }
-                    }
-                },
-                "Tp": {
-                    "Cd": "CACC"
-                },
-                "Ccy": "CNY"
-            },
-            "DbtrAgt": {
-                "FinInstnId": {
-                    "BICFI": {
-                        "var": "debtor_bic"
-                    },
-                    "Nm": {
-                        "cat": [
-                            {
-                                "fake": [
-                                    "company_name"
-                                ]
-                            },
-                            " Bank of China"
-                        ]
-                    },
-                    "PstlAdr": {
-                        "Ctry": "CN"
-                    }
-                }
-            },
-            "CdtrAgt": {
-                "FinInstnId": {
-                    "BICFI": {
-                        "var": "creditor_bic"
-                    },
-                    "Nm": {
-                        "cat": [
-                            {
-                                "fake": [
-                                    "company_name"
-                                ]
-                            },
-                            " European Bank"
-                        ]
-                    },
-                    "PstlAdr": {
-                        "Ctry": "DE"
-                    }
-                }
-            },
-            "Cdtr": {
-                "Nm": {
-                    "cat": [
-                        {
-                            "fake": [
-                                "company_name"
-                            ]
-                        },
-                        " Trading GmbH"
-                    ]
-                },
-                "PstlAdr": {
-                    "Ctry": "DE",
-                    "AdrLine": [
-                        {
-                            "fake": [
-                                "street_address"
-                            ]
-                        },
-                        "20095 Hamburg"
-                    ]
-                },
-                "Id": {
-                    "OrgId": {
-                        "LEI": {
-                            "fake": [
-                                "lei"
-                            ]
-                        },
-                        "Othr": [
-                            {
-                                "Id": {
-                                    "cat": [
-                                        "DE",
-                                        {
-                                            "fake": [
-                                                "i64",
-                                                100000000,
-                                                999999999
-                                            ]
-                                        }
-                                    ]
-                                },
-                                "SchmeNm": {
-                                    "Cd": "TXID"
-                                }
+                            "Othr": {
+                                "Id": {"cat": ["VOSTRO-", {"fake": ["i64", 100000001, 999999999]}]},
+                                "SchmeNm": {"Prtry": "VOSTRO"}
                             }
-                        ]
-                    }
-                }
-            },
-            "CdtrAcct": {
-                "Id": {
-                    "IBAN": {
-                        "fake": [
-                            "iban",
-                            "DE"
-                        ]
-                    }
-                },
-                "Tp": {
-                    "Cd": "CACC"
-                }
-            },
-            "InstrForCdtrAgt": [
-                {
-                    "InstrInf": "CORRESPONDENT BANKING TRANSFER"
-                },
-                {
-                    "InstrInf": "PLEASE CREDIT WITHOUT DELAY"
-                }
-            ],
-            "InstrForNxtAgt": [
-                {
-                    "InstrInf": "PHON/+1-212-555-0100"
-                },
-                {
-                    "InstrInf": "REFERENCE: TRADE-2025-001"
-                }
-            ],
-            "Purp": {
-                "Cd": "TRAD"
-            },
-            "RgltryRptg": [
-                {
-                    "Dtls": [
-                        {
-                            "Tp": "CRED",
-                            "Dt": {
-                                "fake": [
-                                    "date",
-                                    "%Y-%m-%d",
-                                    "+1d",
-                                    "+1d"
-                                ]
-                            },
-                            "Ctry": "CN",
-                            "Cd": "150",
-                            "Amt": {
-                                "@Ccy": "USD",
-                                "$value": {
-                                    "var": "amount"
-                                }
-                            },
-                            "Inf": [
-                                "CORRESPONDENT BANKING",
-                                "INTERNATIONAL TRADE"
-                            ]
                         }
-                    ]
-                }
-            ],
-            "RmtInf": {
-                "Strd": [
-                    {
-                        "RfrdDocInf": [
-                            {
-                                "Tp": {
-                                    "CdOrPrtry": {
-                                        "Cd": "CMCN"
+                    },
+                    "Dbtr": {
+                        "Nm": {"cat": [{"fake": ["company_name"]}, " Import/Export Ltd"]},
+                        "PstlAdr": {"Ctry": "CN", "AdrLine": [{"fake": ["street_address"]}, "Shanghai 200000"]},
+                        "Id": {
+                            "OrgId": {
+                                "Othr": [
+                                    {
+                                        "Id": {"cat": ["CN", {"fake": ["i64", 100000000000, 999999999999]}]},
+                                        "SchmeNm": {"Cd": "TXID"}
                                     }
-                                },
-                                "Nb": {
-                                    "cat": [
-                                        "LC-",
-                                        {
-                                            "fake": [
-                                                "i64",
-                                                2025001,
-                                                2025999
-                                            ]
-                                        }
-                                    ]
-                                },
-                                "RltdDt": {
-                                    "fake": [
-                                        "date",
-                                        "%Y-%m-%d",
-                                        "-30d",
-                                        "-7d"
-                                    ]
-                                }
-                            },
-                            {
-                                "Tp": {
-                                    "CdOrPrtry": {
-                                        "Cd": "CINV"
-                                    }
-                                },
-                                "Nb": {
-                                    "cat": [
-                                        "INV-CN-",
-                                        {
-                                            "fake": [
-                                                "i64",
-                                                2025001,
-                                                2025999
-                                            ]
-                                        }
-                                    ]
-                                },
-                                "RltdDt": {
-                                    "fake": [
-                                        "date",
-                                        "%Y-%m-%d",
-                                        "-14d",
-                                        "-1d"
-                                    ]
-                                }
+                                ]
                             }
-                        ],
-                        "AddtlRmtInf": [
-                            "International trade settlement",
-                            "Letter of credit payment",
-                            "Goods: Industrial machinery",
-                            "Incoterms: FOB Shanghai"
+                        }
+                    },
+                    "DbtrAcct": {
+                        "Id": {
+                            "Othr": {
+                                "Id": {"cat": [{"fake": ["i64", 1000000000, 9999999999]}]},
+                                "SchmeNm": {"Prtry": "ACCT"}
+                            }
+                        },
+                        "Tp": {"Cd": "CACC"},
+                        "Ccy": "CNY"
+                    },
+                    "DbtrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {"var": "debtor_bic"},
+                            "Nm": {"cat": [{"fake": ["company_name"]}, " Bank of China"]},
+                            "PstlAdr": {"Ctry": "CN"}
+                        }
+                    },
+                    "CdtrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {"var": "creditor_bic"},
+                            "Nm": {"cat": [{"fake": ["company_name"]}, " European Bank"]},
+                            "PstlAdr": {"Ctry": "DE"}
+                        }
+                    },
+                    "Cdtr": {
+                        "Nm": {"cat": [{"fake": ["company_name"]}, " Trading GmbH"]},
+                        "PstlAdr": {"Ctry": "DE", "AdrLine": [{"fake": ["street_address"]}, "20095 Hamburg"]},
+                        "Id": {
+                            "OrgId": {
+                                "LEI": {"fake": ["lei"]},
+                                "Othr": [
+                                    {
+                                        "Id": {"cat": ["DE", {"fake": ["i64", 100000000, 999999999]}]},
+                                        "SchmeNm": {"Cd": "TXID"}
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "CdtrAcct": {"Id": {"IBAN": {"fake": ["iban", "DE"]}}, "Tp": {"Cd": "CACC"}},
+                    "InstrForCdtrAgt": [
+                        {"InstrInf": "CORRESPONDENT BANKING TRANSFER"},
+                        {"InstrInf": "PLEASE CREDIT WITHOUT DELAY"}
+                    ],
+                    "InstrForNxtAgt": [{"InstrInf": "PHON/+1-212-555-0100"}, {"InstrInf": "REFERENCE: TRADE-2025-001"}],
+                    "Purp": {"Cd": "TRAD"},
+                    "RgltryRptg": [
+                        {
+                            "Dtls": [
+                                {
+                                    "Tp": "CRED",
+                                    "Dt": {
+                                        "fake": ["date", "%Y-%m-%d", "+1d", "+1d"]
+                                    },
+                                    "Ctry": "CN",
+                                    "Cd": "150",
+                                    "Amt": {"@Ccy": "USD", "$value": {"var": "amount"}},
+                                    "Inf": ["CORRESPONDENT BANKING", "INTERNATIONAL TRADE"]
+                                }
+                            ]
+                        }
+                    ],
+                    "RmtInf": {
+                        "Strd": [
+                            {
+                                "RfrdDocInf": [
+                                    {
+                                        "Tp": {"CdOrPrtry": {"Cd": "CMCN"}},
+                                        "Nb": {"cat": ["LC-", {"fake": ["i64", 2025001, 2025999]}]},
+                                        "RltdDt": {
+                                            "fake": ["date", "%Y-%m-%d", "-30d", "-7d"]
+                                        }
+                                    },
+                                    {
+                                        "Tp": {"CdOrPrtry": {"Cd": "CINV"}},
+                                        "Nb": {"cat": ["INV-CN-", {"fake": ["i64", 2025001, 2025999]}]},
+                                        "RltdDt": {
+                                            "fake": ["date", "%Y-%m-%d", "-14d", "-1d"]
+                                        }
+                                    }
+                                ],
+                                "AddtlRmtInf": [
+                                    "International trade settlement",
+                                    "Letter of credit payment",
+                                    "Goods: Industrial machinery",
+                                    "Incoterms: FOB Shanghai"
+                                ]
+                            }
                         ]
                     }
-                ]
+                }
             }
         }
     }

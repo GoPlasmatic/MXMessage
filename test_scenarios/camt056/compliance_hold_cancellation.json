@@ -17,264 +17,112 @@
         "compliance_case": "COMPL-CASE-67890"
     },
     "schema": {
-        "Assgnmt": {
-            "Id": {
-                "var": "msg_id"
-            },
-            "Assgnr": {
-                "Agt": {
-                    "FinInstnId": {
-                        "BICFI": {
-                            "var": "sender_bic"
-                        },
-                        "LEI": {
-                            "var": "sender_lei"
-                        }
-                    }
-                }
-            },
-            "Assgne": {
-                "Agt": {
-                    "FinInstnId": {
-                        "BICFI": {
-                            "var": "receiver_bic"
-                        },
-                        "LEI": {
-                            "var": "receiver_lei"
-                        }
-                    }
-                }
-            },
-            "CreDtTm": {
-                "var": "creation_datetime"
-            }
+        "AppHdr": {
+            "Fr": {"FIId": {"FinInstnId": {"BICFI": {"var": "sender_bic"}}}},
+            "To": {"FIId": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}}}},
+            "BizMsgIdr": {"var": "msg_id"},
+            "MsgDefIdr": "camt.056.001.08",
+            "BizSvc": "swift.ug",
+            "CreDt": {"var": "creation_datetime"}
         },
-        "Undrlyg": {
-            "TxInf": {
-                "CxlId": {
-                    "var": "cancellation_id"
-                },
-                "OrgnlGrpInf": {
-                    "OrgnlMsgId": {
-                        "var": "original_msg_id"
+        "Document": {
+            "FIToFIPmtCxlReq": {
+                "Assgnmt": {
+                    "Id": {"var": "msg_id"},
+                    "Assgnr": {"Agt": {"FinInstnId": {"BICFI": {"var": "sender_bic"}, "LEI": {"var": "sender_lei"}}}},
+                    "Assgne": {
+                        "Agt": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}, "LEI": {"var": "receiver_lei"}}}
                     },
-                    "OrgnlMsgNmId": "pacs.009.001.08",
-                    "OrgnlCreDtTm": {
-                        "fake": [
-                            "iso8601_datetime",
-                            "-7d",
-                            "-3d"
-                        ]
-                    }
+                    "CreDtTm": {"var": "creation_datetime"}
                 },
-                "OrgnlInstrId": {
-                    "var": "instruction_id"
-                },
-                "OrgnlEndToEndId": {
-                    "var": "end_to_end_id"
-                },
-                "OrgnlTxId": {
-                    "var": "transaction_id"
-                },
-                "OrgnlIntrBkSttlmAmt": {
-                    "@Ccy": "USD",
-                    "$value": {
-                        "var": "amount"
-                    }
-                },
-                "OrgnlIntrBkSttlmDt": {
-                    "var": "original_date"
-                },
-                "CxlRsnInf": {
-                    "Orgtr": {
-                        "Nm": "Compliance Hold Unit",
-                        "Id": {
-                            "OrgId": {
-                                "Othr": [
-                                    {
-                                        "Id": "AML_DEPT",
-                                        "SchmeNm": {
-                                            "Cd": "BANK"
-                                        }
-                                    }
-                                ]
-                            }
-                        }
-                    },
-                    "Rsn": {
-                        "Cd": "DUPL"
-                    },
-                    "AddtlInf": [
-                        "Compliance hold - FI to FI payment",
-                        "Enhanced due diligence required",
-                        "AML investigation in progress",
-                        {
-                            "cat": [
-                                "Case reference: ",
-                                {
-                                    "var": "compliance_case"
-                                }
+                "Undrlyg": {
+                    "TxInf": {
+                        "CxlId": {"var": "cancellation_id"},
+                        "OrgnlGrpInf": {
+                            "OrgnlMsgId": {"var": "original_msg_id"},
+                            "OrgnlMsgNmId": "pacs.009.001.08",
+                            "OrgnlCreDtTm": {"fake": ["iso8601_datetime", "-7d", "-3d"]}
+                        },
+                        "OrgnlInstrId": {"var": "instruction_id"},
+                        "OrgnlEndToEndId": {"var": "end_to_end_id"},
+                        "OrgnlTxId": {"var": "transaction_id"},
+                        "OrgnlIntrBkSttlmAmt": {"@Ccy": "USD", "$value": {"var": "amount"}},
+                        "OrgnlIntrBkSttlmDt": {"var": "original_date"},
+                        "CxlRsnInf": {
+                            "Orgtr": {
+                                "Nm": "Compliance Hold Unit",
+                                "Id": {"OrgId": {"Othr": [{"Id": "AML_DEPT", "SchmeNm": {"Cd": "BANK"}}]}}
+                            },
+                            "Rsn": {"Cd": "DUPL"},
+                            "AddtlInf": [
+                                "Compliance hold - FI to FI payment",
+                                "Enhanced due diligence required",
+                                "AML investigation in progress",
+                                {"cat": ["Case reference: ", {"var": "compliance_case"}]}
                             ]
-                        }
-                    ]
-                },
-                "OrgnlTxRef": {
-                    "IntrBkSttlmAmt": {
-                        "@Ccy": "USD",
-                        "$value": {
-                            "var": "amount"
-                        }
-                    },
-                    "IntrBkSttlmDt": {
-                        "var": "original_date"
-                    },
-                    "SttlmInf": {
-                        "SttlmMtd": "INDA",
-                        "ClrSys": {
-                            "Cd": "ILF"
-                        }
-                    },
-                    "PmtTpInf": {
-                        "InstrPrty": "HIGH",
-                        "SvcLvl": [
+                        },
+                        "OrgnlTxRef": {
+                            "IntrBkSttlmAmt": {"@Ccy": "USD", "$value": {"var": "amount"}},
+                            "IntrBkSttlmDt": {"var": "original_date"},
+                            "SttlmInf": {"SttlmMtd": "INDA", "ClrSys": {"Cd": "ILF"}},
+                            "PmtTpInf": {
+                                "InstrPrty": "HIGH",
+                                "SvcLvl": [{"Cd": "G001"}],
+                                "LclInstrm": {"Prtry": "FI_TRANSFER"}
+                            },
+                            "RmtInf": {"Ustrd": ["Interbank liquidity transfer", "HOLD - Compliance review required"]},
+                            "Dbtr": {
+                                "FinInstnId": {
+                                    "BICFI": {"var": "sender_bic"},
+                                    "LEI": {"var": "sender_lei"},
+                                    "Nm": {"fake": ["company_name"]}
+                                }
+                            },
+                            "DbtrAcct": {
+                                "Id": {
+                                    "Othr": {
+                                        "Id": {"cat": ["POSITION-", {"fake": ["i64", 100000, 999999]}]},
+                                        "SchmeNm": {"Prtry": "POSITION_ACCOUNT"}
+                                    }
+                                },
+                                "Ccy": "USD"
+                            },
+                            "DbtrAgt": {"FinInstnId": {"BICFI": {"var": "sender_bic"}, "LEI": {"var": "sender_lei"}}},
+                            "CdtrAgt": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}, "LEI": {"var": "receiver_lei"}}},
+                            "Cdtr": {
+                                "FinInstnId": {
+                                    "BICFI": {"var": "receiver_bic"},
+                                    "LEI": {"var": "receiver_lei"},
+                                    "Nm": {"fake": ["company_name"]}
+                                }
+                            },
+                            "CdtrAcct": {
+                                "Id": {
+                                    "Othr": {
+                                        "Id": {"cat": ["POSITION-", {"fake": ["i64", 100000, 999999]}]},
+                                        "SchmeNm": {"Prtry": "POSITION_ACCOUNT"}
+                                    }
+                                },
+                                "Ccy": "USD"
+                            }
+                        },
+                        "SplmtryData": [
                             {
-                                "Cd": "G001"
+                                "PlcAndNm": "ComplianceHold",
+                                "Envlp": {
+                                    "Document": {
+                                        "Prtry": {"Tp": "AML_HOLD", "Id": {"var": "compliance_case"}, "Issr": "COMPLIANCE_DEPT"}
+                                    }
+                                }
                             }
                         ],
-                        "LclInstrm": {
-                            "Prtry": "FI_TRANSFER"
-                        }
-                    },
-                    "RmtInf": {
-                        "Ustrd": [
-                            "Interbank liquidity transfer",
-                            "HOLD - Compliance review required"
-                        ]
-                    },
-                    "Dbtr": {
-                        "FinInstnId": {
-                            "BICFI": {
-                                "var": "sender_bic"
-                            },
-                            "LEI": {
-                                "var": "sender_lei"
-                            },
-                            "Nm": {
-                                "fake": [
-                                    "company_name"
-                                ]
-                            }
-                        }
-                    },
-                    "DbtrAcct": {
-                        "Id": {
-                            "Othr": {
-                                "Id": {
-                                    "cat": [
-                                        "POSITION-",
-                                        {
-                                            "fake": [
-                                                "i64",
-                                                100000,
-                                                999999
-                                            ]
-                                        }
-                                    ]
-                                },
-                                "SchmeNm": {
-                                    "Prtry": "POSITION_ACCOUNT"
-                                }
-                            }
+                        "Case": {
+                            "Id": {"var": "cancellation_id"},
+                            "Cretr": {"Pty": {"Nm": "Case Creator"}},
+                            "Nm": "Cancellation Case"
                         },
-                        "Ccy": "USD"
-                    },
-                    "DbtrAgt": {
-                        "FinInstnId": {
-                            "BICFI": {
-                                "var": "sender_bic"
-                            },
-                            "LEI": {
-                                "var": "sender_lei"
-                            }
-                        }
-                    },
-                    "CdtrAgt": {
-                        "FinInstnId": {
-                            "BICFI": {
-                                "var": "receiver_bic"
-                            },
-                            "LEI": {
-                                "var": "receiver_lei"
-                            }
-                        }
-                    },
-                    "Cdtr": {
-                        "FinInstnId": {
-                            "BICFI": {
-                                "var": "receiver_bic"
-                            },
-                            "LEI": {
-                                "var": "receiver_lei"
-                            },
-                            "Nm": {
-                                "fake": [
-                                    "company_name"
-                                ]
-                            }
-                        }
-                    },
-                    "CdtrAcct": {
-                        "Id": {
-                            "Othr": {
-                                "Id": {
-                                    "cat": [
-                                        "POSITION-",
-                                        {
-                                            "fake": [
-                                                "i64",
-                                                100000,
-                                                999999
-                                            ]
-                                        }
-                                    ]
-                                },
-                                "SchmeNm": {
-                                    "Prtry": "POSITION_ACCOUNT"
-                                }
-                            }
-                        },
-                        "Ccy": "USD"
+                        "OrgnlUETR": {"var": "uetr"}
                     }
-                },
-                "SplmtryData": [
-                    {
-                        "PlcAndNm": "ComplianceHold",
-                        "Envlp": {
-                            "Document": {
-                                "Prtry": {
-                                    "Tp": "AML_HOLD",
-                                    "Id": {
-                                        "var": "compliance_case"
-                                    },
-                                    "Issr": "COMPLIANCE_DEPT"
-                                }
-                            }
-                        }
-                    }
-                ],
-                "Case": {
-                    "Id": {
-                        "var": "cancellation_id"
-                    },
-                    "Cretr": {
-                        "Pty": {
-                            "Nm": "Case Creator"
-                        }
-                    },
-                    "Nm": "Cancellation Case"
-                },
-                "OrgnlUETR": {
-                    "var": "uetr"
                 }
             }
         }

@@ -8,62 +8,43 @@
         "creditor_bic": {"fake": ["bic"]}
     },
     "schema": {
-        "GrpHdr": {
-            "MsgId": {"var": "msg_id"},
-            "CreDtTm": {"var": "creation_datetime"},
-            "NbOfTxs": "1",
-            "SttlmInf": {
-                "SttlmMtd": "INDA"
-            }
+        "AppHdr": {
+            "Fr": {"FIId": {"FinInstnId": {"BICFI": {"fake": ["bic"]}}}},
+            "To": {"FIId": {"FinInstnId": {"BICFI": {"fake": ["bic"]}}}},
+            "BizMsgIdr": {"var": "msg_id"},
+            "MsgDefIdr": "pacs.008.001.08",
+            "BizSvc": "swift.ug",
+            "CreDt": {"var": "creation_datetime"}
         },
-        "CdtTrfTxInf": {
-                "PmtId": {
-                    "InstrId": {"cat": ["INSTR", {"fake": ["i64", 1000000, 9999999]}]},
-                    "EndToEndId": {"var": "end_to_end_id"},
-                    "UETR": {"fake": ["uuid"]}
+        "Document": {
+            "FIToFICstmrCdtTrf": {
+                "GrpHdr": {
+                    "MsgId": {"var": "msg_id"},
+                    "CreDtTm": {"var": "creation_datetime"},
+                    "NbOfTxs": "1",
+                    "SttlmInf": {"SttlmMtd": "INDA"}
                 },
-                "IntrBkSttlmAmt": {
-                    "@Ccy": "EUR",
-                    "$value": {"var": "amount"}
-                },
-                "IntrBkSttlmDt": {"fake": ["date", "%Y-%m-%d", "+0d", "+0d"]},
-                "ChrgBr": "SHAR",
-                "InstgAgt": {
-                    "FinInstnId": {
-                        "BICFI": {"var": "debtor_bic"}
-                    }
-                },
-                "InstdAgt": {
-                    "FinInstnId": {
-                        "BICFI": {"var": "creditor_bic"}
-                    }
-                },
-                "Dbtr": {
-                    "Nm": {"fake": ["name"]}
-                },
-                "DbtrAcct": {
-                    "Id": {
-                        "IBAN": {"fake": ["iban"]}
-                    }
-                },
-                "DbtrAgt": {
-                    "FinInstnId": {
-                        "BICFI": {"var": "debtor_bic"}
-                    }
-                },
-                "CdtrAgt": {
-                    "FinInstnId": {
-                        "BICFI": {"var": "creditor_bic"}
-                    }
-                },
-                "Cdtr": {
-                    "Nm": {"fake": ["name"]}
-                },
-                "CdtrAcct": {
-                    "Id": {
-                        "IBAN": {"fake": ["iban"]}
-                    }
+                "CdtTrfTxInf": {
+                    "PmtId": {
+                        "InstrId": {"cat": ["INSTR", {"fake": ["i64", 1000000, 9999999]}]},
+                        "EndToEndId": {"var": "end_to_end_id"},
+                        "UETR": {"fake": ["uuid"]}
+                    },
+                    "IntrBkSttlmAmt": {"@Ccy": "EUR", "$value": {"var": "amount"}},
+                    "IntrBkSttlmDt": {
+                        "fake": ["date", "%Y-%m-%d", "+0d", "+0d"]
+                    },
+                    "ChrgBr": "SHAR",
+                    "InstgAgt": {"FinInstnId": {"BICFI": {"var": "debtor_bic"}}},
+                    "InstdAgt": {"FinInstnId": {"BICFI": {"var": "creditor_bic"}}},
+                    "Dbtr": {"Nm": {"fake": ["name"]}},
+                    "DbtrAcct": {"Id": {"IBAN": {"fake": ["iban"]}}},
+                    "DbtrAgt": {"FinInstnId": {"BICFI": {"var": "debtor_bic"}}},
+                    "CdtrAgt": {"FinInstnId": {"BICFI": {"var": "creditor_bic"}}},
+                    "Cdtr": {"Nm": {"fake": ["name"]}},
+                    "CdtrAcct": {"Id": {"IBAN": {"fake": ["iban"]}}}
                 }
+            }
         }
     }
 }

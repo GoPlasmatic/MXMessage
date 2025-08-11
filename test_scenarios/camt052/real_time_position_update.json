@@ -6,52 +6,32 @@
         "account_id": "GB29NWBK60161331926819"
     },
     "schema": {
-        "GrpHdr": {
-            "MsgId": {
-                "var": "msg_id"
-            },
-            "CreDtTm": {
-                "var": "creation_datetime"
-            }
+        "AppHdr": {
+            "Fr": {"FIId": {"FinInstnId": {"BICFI": {"fake": ["bic"]}}}},
+            "To": {"FIId": {"FinInstnId": {"BICFI": {"fake": ["bic"]}}}},
+            "BizMsgIdr": {"var": "msg_id"},
+            "MsgDefIdr": "camt.052.001.08",
+            "BizSvc": "swift.ug",
+            "CreDt": {"var": "creation_datetime"}
         },
-        "Rpt": {
-            "Id": {
-                "var": "report_id"
-            },
-            "RptPgntn": {
-                "PgNb": "1",
-                "LastPgInd": true
-            },
-            "CreDtTm": {
-                "var": "creation_datetime"
-            },
-            "Acct": {
-                "Id": {
-                    "IBAN": {
-                        "var": "account_id"
-                    }
-                },
-                "Ccy": "USD"
-            },
-            "Bal": [
-                {
-                    "Tp": {
-                        "CdOrPrtry": {
-                            "Cd": "ITAV"
+        "Document": {
+            "BkToCstmrAcctRpt": {
+                "GrpHdr": {"MsgId": {"var": "msg_id"}, "CreDtTm": {"var": "creation_datetime"}},
+                "Rpt": {
+                    "Id": {"var": "report_id"},
+                    "RptPgntn": {"PgNb": "1", "LastPgInd": true},
+                    "CreDtTm": {"var": "creation_datetime"},
+                    "Acct": {"Id": {"IBAN": {"var": "account_id"}}, "Ccy": "USD"},
+                    "Bal": [
+                        {
+                            "Tp": {"CdOrPrtry": {"Cd": "ITAV"}},
+                            "Amt": {"@Ccy": "USD", "$value": 75000.0},
+                            "CdtDbtInd": "CRDT",
+                            "Dt": {"DtTm": {"var": "creation_datetime"}}
                         }
-                    },
-                    "Amt": {
-                        "@Ccy": "USD",
-                        "$value": 75000.0
-                    },
-                    "CdtDbtInd": "CRDT",
-                    "Dt": {
-                        "DtTm": {
-                            "var": "creation_datetime"
-                        }
-                    }
+                    ]
                 }
-            ]
+            }
         }
     }
 }

@@ -1,328 +1,117 @@
 {
     "variables": {
-        "msg_id": {
-            "cat": [
-                "MSG",
-                {
-                    "fake": [
-                        "i64",
-                        100000000000,
-                        999999999999
-                    ]
-                }
-            ]
-        },
-        "creation_datetime": {
-            "fake": [
-                "iso8601_datetime"
-            ]
-        },
+        "msg_id": {"cat": ["MSG", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
         "settlement_date": "2025-01-31",
         "num_txs": 5,
-        "total_amt": {
-            "fake": [
-                "f64",
-                10000.0,
-                50000.0
-            ]
-        },
-        "instg_lei": {
-            "fake": [
-                "lei"
-            ]
-        },
-        "instd_lei": {
-            "fake": [
-                "lei"
-            ]
-        },
-        "instg_bic": {
-            "fake": [
-                "bic"
-            ]
-        },
-        "instd_bic": {
-            "fake": [
-                "bic"
-            ]
-        },
-        "instruction_id": {
-            "cat": [
-                "INSTR",
-                {
-                    "fake": [
-                        "i64",
-                        10000000,
-                        99999999
-                    ]
-                }
-            ]
-        },
-        "uetr": {
-            "fake": [
-                "uuid"
-            ]
-        },
+        "total_amt": {"fake": ["f64", 10000.0, 50000.0]},
+        "instg_lei": {"fake": ["lei"]},
+        "instd_lei": {"fake": ["lei"]},
+        "instg_bic": {"fake": ["bic"]},
+        "instd_bic": {"fake": ["bic"]},
+        "instruction_id": {"cat": ["INSTR", {"fake": ["i64", 10000000, 99999999]}]},
+        "uetr": {"fake": ["uuid"]},
         "collection_date": "2025-01-31",
-        "end_to_end_id": {
-            "cat": [
-                "E2E",
-                {
-                    "fake": [
-                        "i64",
-                        100000000000,
-                        999999999999
-                    ]
-                }
-            ]
-        },
-        "tx_id": {
-            "cat": [
-                "TX",
-                {
-                    "fake": [
-                        "i64",
-                        100000000000,
-                        999999999999
-                    ]
-                }
-            ]
-        },
-        "debtor_bic": {
-            "fake": [
-                "bic"
-            ]
-        },
-        "debtor_iban": {
-            "fake": [
-                "iban",
-                "DE"
-            ]
-        },
-        "creditor_bic": {
-            "fake": [
-                "bic"
-            ]
-        },
-        "creditor_iban": {
-            "fake": [
-                "iban",
-                "FR"
-            ]
-        }
+        "end_to_end_id": {"cat": ["E2E", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "tx_id": {"cat": ["TX", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "debtor_bic": {"fake": ["bic"]},
+        "debtor_iban": {"fake": ["iban", "DE"]},
+        "creditor_bic": {"fake": ["bic"]},
+        "creditor_iban": {"fake": ["iban", "FR"]}
     },
     "schema": {
-        "GrpHdr": {
-            "MsgId": {
-                "var": "msg_id"
-            },
-            "CreDtTm": {
-                "var": "creation_datetime"
-            },
-            "NbOfTxs": "1",
-            "SttlmInf": {
-                "SttlmMtd": "INDA"
-            }
+        "AppHdr": {
+            "Fr": {"FIId": {"FinInstnId": {"BICFI": {"fake": ["bic"]}}}},
+            "To": {"FIId": {"FinInstnId": {"BICFI": {"fake": ["bic"]}}}},
+            "BizMsgIdr": {"var": "msg_id"},
+            "MsgDefIdr": "pacs.003.001.08",
+            "BizSvc": "swift.cbprplus.01",
+            "CreDt": {"var": "creation_datetime"}
         },
-        "DrctDbtTxInf": {
-            "PmtId": {
-                "InstrId": {
-                    "var": "instruction_id"
+        "Document": {
+            "FIToFICstmrDrctDbt": {
+                "GrpHdr": {
+                    "MsgId": {"var": "msg_id"},
+                    "CreDtTm": {"var": "creation_datetime"},
+                    "NbOfTxs": "1",
+                    "SttlmInf": {"SttlmMtd": "INDA"}
                 },
-                "EndToEndId": {
-                    "var": "end_to_end_id"
-                },
-                "TxId": {
-                    "var": "tx_id"
-                },
-                "UETR": {
-                    "var": "uetr"
-                }
-            },
-            "PmtTpInf": {
-                "InstrPrty": "HIGH",
-                "SvcLvl": [
-                    {
-                        "Cd": "G001"
-                    }
-                ],
-                "LclInstrm": {
-                    "Cd": "B2B"
-                },
-                "SeqTp": "RCUR",
-                "CtgyPurp": {
-                    "Cd": "ELEC"
-                }
-            },
-            "IntrBkSttlmAmt": {
-                "@Ccy": "EUR",
-                "$value": 1000.0
-            },
-            "IntrBkSttlmDt": {
-                "var": "settlement_date"
-            },
-            "InstdAmt": {
-                "@Ccy": "EUR",
-                "$value": 1000.0
-            },
-            "ChrgBr": "DEBT",
-            "DrctDbtTx": {
-                "MndtRltdInf": {
-                    "MndtId": "ABC0000000000000",
-                    "DtOfSgntr": "2022-01-01",
-                    "AmdmntInd": false,
-                    "ElctrncSgntr": "ABC0000000000000"
-                },
-                "CdtrSchmeId": {
-                    "Id": {
-                        "PrvtId": {
-                            "Othr": [
-                                {
-                                    "Id": "ABC0000000000000",
-                                    "SchmeNm": {
-                                        "Prtry": "SEPA"
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                },
-                "PreNtfctnId": "ABC0000000000000",
-                "PreNtfctnDt": "2025-01-24"
-            },
-            "DbtrAgt": {
-                "FinInstnId": {
-                    "BICFI": {
-                        "var": "debtor_bic"
+                "DrctDbtTxInf": {
+                    "PmtId": {
+                        "InstrId": {"var": "instruction_id"},
+                        "EndToEndId": {"var": "end_to_end_id"},
+                        "TxId": {"var": "tx_id"},
+                        "UETR": {"var": "uetr"}
                     },
-                    "LEI": "SAMPLELEI123456789012"
-                }
-            },
-            "Dbtr": {
-                "Nm": "Sample Company",
-                "PstlAdr": {
-                    "Ctry": "DE",
-                    "AdrLine": [
-                        "Debtor Street 123",
-                        "City, State 12345"
-                    ]
-                },
-                "Id": {
-                    "OrgId": {
-                        "LEI": "SAMPLELEI123456789012",
-                        "Othr": [
-                            {
-                                "Id": "ABC0000000000000",
-                                "SchmeNm": {
-                                    "Prtry": "CUSTOMER_NUMBER"
-                                }
+                    "PmtTpInf": {
+                        "InstrPrty": "HIGH",
+                        "SvcLvl": [{"Cd": "G001"}],
+                        "LclInstrm": {"Cd": "B2B"},
+                        "SeqTp": "RCUR",
+                        "CtgyPurp": {"Cd": "ELEC"}
+                    },
+                    "IntrBkSttlmAmt": {"@Ccy": "EUR", "$value": 1000.0},
+                    "IntrBkSttlmDt": {"var": "settlement_date"},
+                    "InstdAmt": {"@Ccy": "EUR", "$value": 1000.0},
+                    "ChrgBr": "DEBT",
+                    "DrctDbtTx": {
+                        "MndtRltdInf": {
+                            "MndtId": "ABC0000000000000",
+                            "DtOfSgntr": "2022-01-01",
+                            "AmdmntInd": false,
+                            "ElctrncSgntr": "ABC0000000000000"
+                        },
+                        "CdtrSchmeId": {
+                            "Id": {"PrvtId": {"Othr": [{"Id": "ABC0000000000000", "SchmeNm": {"Prtry": "SEPA"}}]}}
+                        },
+                        "PreNtfctnId": "ABC0000000000000",
+                        "PreNtfctnDt": "2025-01-24"
+                    },
+                    "DbtrAgt": {"FinInstnId": {"BICFI": {"var": "debtor_bic"}, "LEI": "SAMPLELEI123456789012"}},
+                    "Dbtr": {
+                        "Nm": "Sample Company",
+                        "PstlAdr": {"Ctry": "DE", "AdrLine": ["Debtor Street 123", "City, State 12345"]},
+                        "Id": {
+                            "OrgId": {
+                                "LEI": "SAMPLELEI123456789012",
+                                "Othr": [{"Id": "ABC0000000000000", "SchmeNm": {"Prtry": "CUSTOMER_NUMBER"}}]
                             }
-                        ]
-                    }
-                }
-            },
-            "DbtrAcct": {
-                "Id": {
-                    "IBAN": {
-                        "var": "debtor_iban"
-                    }
-                },
-                "Tp": {
-                    "Cd": "CACC"
-                }
-            },
-            "CdtrAgt": {
-                "FinInstnId": {
-                    "BICFI": {
-                        "var": "creditor_bic"
+                        }
                     },
-                    "LEI": "SAMPLELEI123456789012"
-                }
-            },
-            "Cdtr": {
-                "Nm": "European Power Grid AG",
-                "PstlAdr": {
-                    "Ctry": "DE",
-                    "AdrLine": [
-                        "Energy Plaza 1",
-                        "80331 Munich"
-                    ]
-                },
-                "Id": {
-                    "OrgId": {
-                        "LEI": "SAMPLELEI123456789012"
-                    }
-                }
-            },
-            "CdtrAcct": {
-                "Id": {
-                    "IBAN": {
-                        "var": "creditor_iban"
-                    }
-                },
-                "Tp": {
-                    "Cd": "CACC"
-                }
-            },
-            "Purp": {
-                "Cd": "ELEC"
-            },
-            "RgltryRptg": [
-                {
-                    "Dtls": [
+                    "DbtrAcct": {"Id": {"IBAN": {"var": "debtor_iban"}}, "Tp": {"Cd": "CACC"}},
+                    "CdtrAgt": {"FinInstnId": {"BICFI": {"var": "creditor_bic"}, "LEI": "SAMPLELEI123456789012"}},
+                    "Cdtr": {
+                        "Nm": "European Power Grid AG",
+                        "PstlAdr": {"Ctry": "DE", "AdrLine": ["Energy Plaza 1", "80331 Munich"]},
+                        "Id": {"OrgId": {"LEI": "SAMPLELEI123456789012"}}
+                    },
+                    "CdtrAcct": {"Id": {"IBAN": {"var": "creditor_iban"}}, "Tp": {"Cd": "CACC"}},
+                    "Purp": {"Cd": "ELEC"},
+                    "RgltryRptg": [
                         {
-                            "Tp": "DEBT",
-                            "Dt": "2025-01-31",
-                            "Ctry": "DE",
-                            "Cd": "150",
-                            "Amt": {
-                                "@Ccy": "EUR",
-                                "$value": 1000.0
-                            },
-                            "Inf": [
-                                "CBPR+ ELECTRICITY UTILITY"
+                            "Dtls": [
+                                {
+                                    "Tp": "DEBT",
+                                    "Dt": "2025-01-31",
+                                    "Ctry": "DE",
+                                    "Cd": "150",
+                                    "Amt": {"@Ccy": "EUR", "$value": 1000.0},
+                                    "Inf": ["CBPR+ ELECTRICITY UTILITY"]
+                                }
                             ]
                         }
-                    ]
-                }
-            ],
-            "RmtInf": {
-                "Strd": [
-                    {
-                        "RfrdDocInf": [
+                    ],
+                    "RmtInf": {
+                        "Strd": [
                             {
-                                "Tp": {
-                                    "CdOrPrtry": {
-                                        "Cd": "CINV"
-                                    }
-                                },
-                                "Nb": "ABC0000000",
-                                "RltdDt": "2025-01-15"
+                                "RfrdDocInf": [{"Tp": {"CdOrPrtry": {"Cd": "CINV"}}, "Nb": "ABC0000000", "RltdDt": "2025-01-15"}],
+                                "AddtlRmtInf": ["Electricity bill - January 2025", "Sample Text", "Sample Text"]
                             }
-                        ],
-                        "AddtlRmtInf": [
-                            "Electricity bill - January 2025",
-                            "Sample Text",
-                            "Sample Text"
                         ]
-                    }
-                ]
-            },
-            "ReqdColltnDt": {
-                "var": "collection_date"
-            },
-            "InstgAgt": {
-                "FinInstnId": {
-                    "BICFI": {
-                        "var": "creditor_bic"
-                    }
-                }
-            },
-            "InstdAgt": {
-                "FinInstnId": {
-                    "BICFI": {
-                        "var": "debtor_bic"
-                    }
+                    },
+                    "ReqdColltnDt": {"var": "collection_date"},
+                    "InstgAgt": {"FinInstnId": {"BICFI": {"var": "creditor_bic"}}},
+                    "InstdAgt": {"FinInstnId": {"BICFI": {"var": "debtor_bic"}}}
                 }
             }
         }
