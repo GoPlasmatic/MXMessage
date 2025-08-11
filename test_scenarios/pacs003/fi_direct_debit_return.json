@@ -1,0 +1,75 @@
+{
+    "variables": {
+        "msg_id": {"cat": ["MSG", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "settlement_date": "2025-01-30",
+        "num_returns": 3,
+        "total_return_amt": {"fake": ["f64", 2000.0, 10000.0]},
+        "instg_bic": {"fake": ["bic"]},
+        "instd_bic": {"fake": ["bic"]},
+        "instruction_id": {"cat": ["INSTR", {"fake": ["i64", 10000000, 99999999]}]},
+        "uetr": {"fake": ["uuid"]},
+        "collection_date": "2025-01-30",
+        "end_to_end_id": {"cat": ["E2E", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "tx_id": {"cat": ["TX", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "debtor_bic": {"fake": ["bic"]},
+        "debtor_iban": {"fake": ["iban", "DE"]},
+        "creditor_bic": {"fake": ["bic"]},
+        "creditor_iban": {"fake": ["iban", "FR"]}
+    },
+    "schema": {
+        "AppHdr": {
+            "Fr": {"FIId": {"FinInstnId": {"BICFI": {"fake": ["bic"]}}}},
+            "To": {"FIId": {"FinInstnId": {"BICFI": {"fake": ["bic"]}}}},
+            "BizMsgIdr": {"var": "msg_id"},
+            "MsgDefIdr": "pacs.003.001.08",
+            "BizSvc": "swift.cbprplus.01",
+            "CreDt": {"var": "creation_datetime"}
+        },
+        "Document": {
+            "FIToFICstmrDrctDbt": {
+                "GrpHdr": {
+                    "MsgId": {"var": "msg_id"},
+                    "CreDtTm": {"var": "creation_datetime"},
+                    "NbOfTxs": "1",
+                    "SttlmInf": {"SttlmMtd": "INDA"}
+                },
+                "DrctDbtTxInf": {
+                    "PmtId": {
+                        "InstrId": {"var": "instruction_id"},
+                        "EndToEndId": {"var": "end_to_end_id"},
+                        "TxId": {"var": "tx_id"},
+                        "UETR": {"var": "uetr"}
+                    },
+                    "PmtTpInf": {"SvcLvl": [{"Cd": "SEPA"}], "LclInstrm": {"Cd": "CORE"}, "SeqTp": "OOFF"},
+                    "IntrBkSttlmAmt": {"@Ccy": "EUR", "$value": 1000.0},
+                    "IntrBkSttlmDt": {"var": "settlement_date"},
+                    "InstdAmt": {"@Ccy": "EUR", "$value": 1000.0},
+                    "ChrgBr": "SHAR",
+                    "DrctDbtTx": {
+                        "MndtRltdInf": {"MndtId": "ABC0000000000000", "DtOfSgntr": "2024-01-01"},
+                        "CdtrSchmeId": {
+                            "Id": {"PrvtId": {"Othr": [{"Id": "ABC0000000000000", "SchmeNm": {"Prtry": "SEPA"}}]}}
+                        }
+                    },
+                    "RtrInf": {
+                        "OrgnlBkTxCd": {"Prtry": {"Cd": "DDEB"}},
+                        "Orgtr": {"Id": {"OrgId": {"BICOrBEI": {"var": "instd_bic"}}}},
+                        "Rsn": {"Cd": "AC04"},
+                        "AddtlInf": ["Account closed", "Original DD date: 2025-01-28"]
+                    },
+                    "DbtrAgt": {"FinInstnId": {"BICFI": {"var": "debtor_bic"}}},
+                    "Dbtr": {"Nm": "John Doe", "PstlAdr": {"Ctry": "DE"}},
+                    "DbtrAcct": {"Id": {"IBAN": {"var": "debtor_iban"}}},
+                    "CdtrAgt": {"FinInstnId": {"BICFI": {"var": "creditor_bic"}}},
+                    "Cdtr": {"Nm": "Sample Company", "PstlAdr": {"Ctry": "DE"}},
+                    "CdtrAcct": {"Id": {"IBAN": {"var": "creditor_iban"}}},
+                    "RmtInf": {"Ustrd": "RETURN: Account closed - Original payment returned"},
+                    "ReqdColltnDt": {"var": "collection_date"},
+                    "InstgAgt": {"FinInstnId": {"BICFI": {"var": "creditor_bic"}}},
+                    "InstdAgt": {"FinInstnId": {"BICFI": {"var": "debtor_bic"}}}
+                }
+            }
+        }
+    }
+}

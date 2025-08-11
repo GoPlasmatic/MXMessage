@@ -1,0 +1,83 @@
+{
+    "variables": {
+        "msg_id": {"cat": ["RTN-", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "payment_id": {"cat": ["RTN-PMT-", {"fake": ["i64", 100000, 999999]}]},
+        "original_id": {"cat": ["ORIG-PMT-", {"fake": ["i64", 100000, 999999]}]},
+        "uetr": {"fake": ["uuid"]},
+        "amount": {"fake": ["f64", 50000.0, 1000000.0]},
+        "currency": {
+            "fake": ["enum", "USD", "EUR", "GBP", "JPY"]
+        },
+        "sender_bic": {"fake": ["bic"]},
+        "receiver_bic": {"fake": ["bic"]},
+        "correspondent_bic": {"fake": ["bic"]},
+        "return_reason": {
+            "fake": ["enum", "AC01", "AC04", "AG01", "AM05", "BE01", "MD07"]
+        },
+        "original_date": {
+            "fake": ["date", "%Y-%m-%d", "-5d", "-2d"]
+        }
+    },
+    "schema": {
+        "AppHdr": {
+            "Fr": {"FIId": {"FinInstnId": {"BICFI": {"var": "sender_bic"}}}},
+            "To": {"FIId": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}}}},
+            "BizMsgIdr": {"var": "msg_id"},
+            "MsgDefIdr": "pacs.009.001.08",
+            "BizSvc": "swift.cbprplus.01",
+            "CreDt": {"var": "creation_datetime"}
+        },
+        "Document": {
+            "FinInstnCdtTrf": {
+                "GrpHdr": {
+                    "MsgId": {"var": "msg_id"},
+                    "CreDtTm": {"var": "creation_datetime"},
+                    "NbOfTxs": "1",
+                    "SttlmInf": {"SttlmMtd": "INDA", "ClrSys": {"Cd": "TGT"}}
+                },
+                "CdtTrfTxInf": {
+                    "PmtId": {
+                        "InstrId": {"var": "payment_id"},
+                        "EndToEndId": {"var": "original_id"},
+                        "UETR": {"var": "uetr"}
+                    },
+                    "PmtTpInf": {"InstrPrty": "HIGH", "SvcLvl": [{"Cd": "G001"}], "LclInstrm": {"Prtry": "RETURN"}},
+                    "IntrBkSttlmAmt": {"@Ccy": {"var": "currency"}, "$value": {"var": "amount"}},
+                    "IntrBkSttlmDt": {
+                        "fake": ["date", "%Y-%m-%d", "0d", "+1d"]
+                    },
+                    "ChrgBr": "DEBT",
+                    "InstgAgt": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}}},
+                    "InstdAgt": {"FinInstnId": {"BICFI": {"var": "sender_bic"}}},
+                    "IntrmyAgt1": {"FinInstnId": {"BICFI": {"var": "correspondent_bic"}}},
+                    "Dbtr": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}}},
+                    "Cdtr": {"FinInstnId": {"BICFI": {"var": "sender_bic"}}},
+                    "RmtInf": {"Ustrd": {"cat": ["Return of payment - Original ref: ", {"var": "original_id"}]}},
+                    "SplmtryData": [
+                        {
+                            "Envlp": {
+                                "ReturnDetails": {
+                                    "ReturnType": "FULL_RETURN",
+                                    "OriginalPaymentDate": {"var": "original_date"},
+                                    "DaysInTransit": {"fake": ["i64", 2, 5]},
+                                    "ReturnPath": [{"var": "receiver_bic"}, {"var": "correspondent_bic"}, {"var": "sender_bic"}],
+                                    "CostDetails": {
+                                        "ReturnFee": {"fake": ["f64", 25.0, 100.0]},
+                                        "FXLoss": {"fake": ["f64", 0.0, 500.0]},
+                                        "TotalCost": {"fake": ["f64", 25.0, 600.0]}
+                                    },
+                                    "ReasonDetails": {
+                                        "Code": {"var": "return_reason"},
+                                        "Description": "Beneficiary account closed",
+                                        "AdditionalInfo": "No forwarding instructions available"
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}

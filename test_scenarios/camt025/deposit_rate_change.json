@@ -1,0 +1,29 @@
+{
+    "variables": {
+        "msg_id": "DEPRATE123456789",
+        "creation_datetime": "2025-01-15T10:00:00.123+00:00",
+        "orig_msg_id": "ORIG654321",
+        "msg_name_id": "camt.025.001.08"
+    },
+    "schema": {
+        "AppHdr": {
+            "Fr": {"FIId": {"FinInstnId": {"BICFI": {"fake": ["bic"]}}}},
+            "To": {"FIId": {"FinInstnId": {"BICFI": {"fake": ["bic"]}}}},
+            "BizMsgIdr": {"var": "msg_id"},
+            "MsgDefIdr": "camt.025.001.08",
+            "BizSvc": "swift.cbprplus.01",
+            "CreDt": {"var": "creation_datetime"}
+        },
+        "Document": {
+            "Rcpt": {
+                "MsgHdr": {"MsgId": {"var": "msg_id"}, "CreDtTm": {"var": "creation_datetime"}},
+                "RctDtls": [
+                    {
+                        "OrgnlMsgId": {"MsgId": {"var": "orig_msg_id"}, "MsgNmId": {"var": "msg_name_id"}},
+                        "ReqHdlg": {"Sts": {"Cd": "ACCP"}}
+                    }
+                ]
+            }
+        }
+    }
+}

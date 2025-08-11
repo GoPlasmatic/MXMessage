@@ -16,9 +16,8 @@
 //
 // You may obtain a copy of this library at
 // https://github.com/GoPlasmatic/MXMessage
-
-use crate::error::*;
-use regex::Regex;
+use crate::parse_result::{ErrorCollector, ParserConfig};
+use crate::validation::{Validate, helpers};
 use serde::{Deserialize, Serialize};
 
 // AccountIdentification4Choice1: Unique identification of an account, as assigned by the account servicer, using an identification scheme.
@@ -30,21 +29,23 @@ pub struct AccountIdentification4Choice1 {
     pub othr: Option<GenericAccountIdentification11>,
 }
 
-impl AccountIdentification4Choice1 {
-    pub fn validate(&self) -> Result<(), ValidationError> {
+impl Validate for AccountIdentification4Choice1 {
+    fn validate(&self, path: &str, config: &ParserConfig, collector: &mut ErrorCollector) {
         if let Some(ref val) = self.iban {
-            let pattern = Regex::new("[A-Z]{2,2}[0-9]{2,2}[a-zA-Z0-9]{1,30}").unwrap();
-            if !pattern.is_match(val) {
-                return Err(ValidationError::new(
-                    1005,
-                    "iban does not match the required pattern".to_string(),
-                ));
-            }
+            helpers::validate_pattern(
+                val,
+                "IBAN",
+                "[A-Z]{2,2}[0-9]{2,2}[a-zA-Z0-9]{1,30}",
+                &helpers::child_path(path, "IBAN"),
+                config,
+                collector,
+            );
         }
         if let Some(ref val) = self.othr {
-            val.validate()?
+            if config.validate_optional_fields {
+                val.validate(&helpers::child_path(path, "Othr"), config, collector);
+            }
         }
-        Ok(())
     }
 }
 
@@ -57,44 +58,40 @@ pub struct AccountSchemeName1Choice1 {
     pub prtry: Option<String>,
 }
 
-impl AccountSchemeName1Choice1 {
-    pub fn validate(&self) -> Result<(), ValidationError> {
+impl Validate for AccountSchemeName1Choice1 {
+    fn validate(&self, path: &str, config: &ParserConfig, collector: &mut ErrorCollector) {
         if let Some(ref val) = self.cd {
-            if val.chars().count() < 1 {
-                return Err(ValidationError::new(
-                    1001,
-                    "cd is shorter than the minimum length of 1".to_string(),
-                ));
-            }
-            if val.chars().count() > 4 {
-                return Err(ValidationError::new(
-                    1002,
-                    "cd exceeds the maximum length of 4".to_string(),
-                ));
-            }
+            helpers::validate_length(
+                val,
+                "Cd",
+                Some(1),
+                Some(4),
+                &helpers::child_path(path, "Cd"),
+                config,
+                collector,
+            );
         }
         if let Some(ref val) = self.prtry {
-            if val.chars().count() < 1 {
-                return Err(ValidationError::new(
-                    1001,
-                    "prtry is shorter than the minimum length of 1".to_string(),
-                ));
-            }
-            if val.chars().count() > 35 {
-                return Err(ValidationError::new(
-                    1002,
-                    "prtry exceeds the maximum length of 35".to_string(),
-                ));
-            }
-            let pattern = Regex::new("[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+").unwrap();
-            if !pattern.is_match(val) {
-                return Err(ValidationError::new(
-                    1005,
-                    "prtry does not match the required pattern".to_string(),
-                ));
-            }
+            helpers::validate_length(
+                val,
+                "Prtry",
+                Some(1),
+                Some(35),
+                &helpers::child_path(path, "Prtry"),
+                config,
+                collector,
+            );
         }
-        Ok(())
+        if let Some(ref val) = self.prtry {
+            helpers::validate_pattern(
+                val,
+                "Prtry",
+                "[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+",
+                &helpers::child_path(path, "Prtry"),
+                config,
+                collector,
+            );
+        }
     }
 }
 
@@ -105,10 +102,10 @@ pub struct BranchAndFinancialInstitutionIdentification81 {
     pub fin_instn_id: FinancialInstitutionIdentification231,
 }
 
-impl BranchAndFinancialInstitutionIdentification81 {
-    pub fn validate(&self) -> Result<(), ValidationError> {
-        self.fin_instn_id.validate()?;
-        Ok(())
+impl Validate for BranchAndFinancialInstitutionIdentification81 {
+    fn validate(&self, path: &str, config: &ParserConfig, collector: &mut ErrorCollector) {
+        self.fin_instn_id
+            .validate(&helpers::child_path(path, "FinInstnId"), config, collector);
     }
 }
 
@@ -121,10 +118,8 @@ pub struct CBPRAmount {
     pub value: f64,
 }
 
-impl CBPRAmount {
-    pub fn validate(&self) -> Result<(), ValidationError> {
-        Ok(())
-    }
+impl Validate for CBPRAmount {
+    fn validate(&self, _path: &str, _config: &ParserConfig, _collector: &mut ErrorCollector) {}
 }
 
 // CashAccount401: Specifies an alternate assumed name for the identification of the account.
@@ -142,46 +137,51 @@ pub struct CashAccount401 {
     pub prxy: Option<ProxyAccountIdentification11>,
 }
 
-impl CashAccount401 {
-    pub fn validate(&self) -> Result<(), ValidationError> {
-        self.id.validate()?;
+impl Validate for CashAccount401 {
+    fn validate(&self, path: &str, config: &ParserConfig, collector: &mut ErrorCollector) {
+        self.id
+            .validate(&helpers::child_path(path, "Id"), config, collector);
         if let Some(ref val) = self.tp {
-            val.validate()?
+            if config.validate_optional_fields {
+                val.validate(&helpers::child_path(path, "Tp"), config, collector);
+            }
         }
         if let Some(ref val) = self.ccy {
-            let pattern = Regex::new("[A-Z]{3,3}").unwrap();
-            if !pattern.is_match(val) {
-                return Err(ValidationError::new(
-                    1005,
-                    "ccy does not match the required pattern".to_string(),
-                ));
-            }
+            helpers::validate_pattern(
+                val,
+                "Ccy",
+                "[A-Z]{3,3}",
+                &helpers::child_path(path, "Ccy"),
+                config,
+                collector,
+            );
         }
         if let Some(ref val) = self.nm {
-            if val.chars().count() < 1 {
-                return Err(ValidationError::new(
-                    1001,
-                    "nm is shorter than the minimum length of 1".to_string(),
-                ));
-            }
-            if val.chars().count() > 70 {
-                return Err(ValidationError::new(
-                    1002,
-                    "nm exceeds the maximum length of 70".to_string(),
-                ));
-            }
-            let pattern = Regex::new("[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+").unwrap();
-            if !pattern.is_match(val) {
-                return Err(ValidationError::new(
-                    1005,
-                    "nm does not match the required pattern".to_string(),
-                ));
-            }
+            helpers::validate_length(
+                val,
+                "Nm",
+                Some(1),
+                Some(70),
+                &helpers::child_path(path, "Nm"),
+                config,
+                collector,
+            );
+        }
+        if let Some(ref val) = self.nm {
+            helpers::validate_pattern(
+                val,
+                "Nm",
+                "[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+",
+                &helpers::child_path(path, "Nm"),
+                config,
+                collector,
+            );
         }
         if let Some(ref val) = self.prxy {
-            val.validate()?
+            if config.validate_optional_fields {
+                val.validate(&helpers::child_path(path, "Prxy"), config, collector);
+            }
         }
-        Ok(())
     }
 }
 
@@ -194,44 +194,40 @@ pub struct CashAccountType2Choice1 {
     pub prtry: Option<String>,
 }
 
-impl CashAccountType2Choice1 {
-    pub fn validate(&self) -> Result<(), ValidationError> {
+impl Validate for CashAccountType2Choice1 {
+    fn validate(&self, path: &str, config: &ParserConfig, collector: &mut ErrorCollector) {
         if let Some(ref val) = self.cd {
-            if val.chars().count() < 1 {
-                return Err(ValidationError::new(
-                    1001,
-                    "cd is shorter than the minimum length of 1".to_string(),
-                ));
-            }
-            if val.chars().count() > 4 {
-                return Err(ValidationError::new(
-                    1002,
-                    "cd exceeds the maximum length of 4".to_string(),
-                ));
-            }
+            helpers::validate_length(
+                val,
+                "Cd",
+                Some(1),
+                Some(4),
+                &helpers::child_path(path, "Cd"),
+                config,
+                collector,
+            );
         }
         if let Some(ref val) = self.prtry {
-            if val.chars().count() < 1 {
-                return Err(ValidationError::new(
-                    1001,
-                    "prtry is shorter than the minimum length of 1".to_string(),
-                ));
-            }
-            if val.chars().count() > 35 {
-                return Err(ValidationError::new(
-                    1002,
-                    "prtry exceeds the maximum length of 35".to_string(),
-                ));
-            }
-            let pattern = Regex::new("[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+").unwrap();
-            if !pattern.is_match(val) {
-                return Err(ValidationError::new(
-                    1005,
-                    "prtry does not match the required pattern".to_string(),
-                ));
-            }
+            helpers::validate_length(
+                val,
+                "Prtry",
+                Some(1),
+                Some(35),
+                &helpers::child_path(path, "Prtry"),
+                config,
+                collector,
+            );
         }
-        Ok(())
+        if let Some(ref val) = self.prtry {
+            helpers::validate_pattern(
+                val,
+                "Prtry",
+                "[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+",
+                &helpers::child_path(path, "Prtry"),
+                config,
+                collector,
+            );
+        }
     }
 }
 
@@ -242,23 +238,19 @@ pub struct ChargeType3Choice1 {
     pub cd: Option<String>,
 }
 
-impl ChargeType3Choice1 {
-    pub fn validate(&self) -> Result<(), ValidationError> {
+impl Validate for ChargeType3Choice1 {
+    fn validate(&self, path: &str, config: &ParserConfig, collector: &mut ErrorCollector) {
         if let Some(ref val) = self.cd {
-            if val.chars().count() < 1 {
-                return Err(ValidationError::new(
-                    1001,
-                    "cd is shorter than the minimum length of 1".to_string(),
-                ));
-            }
-            if val.chars().count() > 4 {
-                return Err(ValidationError::new(
-                    1002,
-                    "cd exceeds the maximum length of 4".to_string(),
-                ));
-            }
+            helpers::validate_length(
+                val,
+                "Cd",
+                Some(1),
+                Some(4),
+                &helpers::child_path(path, "Cd"),
+                config,
+                collector,
+            );
         }
-        Ok(())
     }
 }
 
@@ -269,12 +261,13 @@ pub struct Charges4Choice1 {
     pub per_tx: Option<ChargesPerTransaction41>,
 }
 
-impl Charges4Choice1 {
-    pub fn validate(&self) -> Result<(), ValidationError> {
+impl Validate for Charges4Choice1 {
+    fn validate(&self, path: &str, config: &ParserConfig, collector: &mut ErrorCollector) {
         if let Some(ref val) = self.per_tx {
-            val.validate()?
+            if config.validate_optional_fields {
+                val.validate(&helpers::child_path(path, "PerTx"), config, collector);
+            }
         }
-        Ok(())
     }
 }
 
@@ -289,12 +282,14 @@ pub struct ChargesBreakdown11 {
     pub tp: ChargeType3Choice1,
 }
 
-impl ChargesBreakdown11 {
-    pub fn validate(&self) -> Result<(), ValidationError> {
-        self.amt.validate()?;
-        self.cdt_dbt_ind.validate()?;
-        self.tp.validate()?;
-        Ok(())
+impl Validate for ChargesBreakdown11 {
+    fn validate(&self, path: &str, config: &ParserConfig, collector: &mut ErrorCollector) {
+        self.amt
+            .validate(&helpers::child_path(path, "Amt"), config, collector);
+        self.cdt_dbt_ind
+            .validate(&helpers::child_path(path, "CdtDbtInd"), config, collector);
+        self.tp
+            .validate(&helpers::child_path(path, "Tp"), config, collector);
     }
 }
 
@@ -307,11 +302,12 @@ pub struct ChargesPaymentNotificationV02 {
     pub chrgs: Charges4Choice1,
 }
 
-impl ChargesPaymentNotificationV02 {
-    pub fn validate(&self) -> Result<(), ValidationError> {
-        self.grp_hdr.validate()?;
-        self.chrgs.validate()?;
-        Ok(())
+impl Validate for ChargesPaymentNotificationV02 {
+    fn validate(&self, path: &str, config: &ParserConfig, collector: &mut ErrorCollector) {
+        self.grp_hdr
+            .validate(&helpers::child_path(path, "GrpHdr"), config, collector);
+        self.chrgs
+            .validate(&helpers::child_path(path, "Chrgs"), config, collector);
     }
 }
 
@@ -324,31 +320,28 @@ pub struct ChargesPerTransaction41 {
     pub rcrd: Vec<ChargesPerTransactionRecord41>,
 }
 
-impl ChargesPerTransaction41 {
-    pub fn validate(&self) -> Result<(), ValidationError> {
-        if self.chrgs_id.chars().count() < 1 {
-            return Err(ValidationError::new(
-                1001,
-                "chrgs_id is shorter than the minimum length of 1".to_string(),
-            ));
-        }
-        if self.chrgs_id.chars().count() > 16 {
-            return Err(ValidationError::new(
-                1002,
-                "chrgs_id exceeds the maximum length of 16".to_string(),
-            ));
-        }
-        let pattern = Regex::new("[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+").unwrap();
-        if !pattern.is_match(&self.chrgs_id) {
-            return Err(ValidationError::new(
-                1005,
-                "chrgs_id does not match the required pattern".to_string(),
-            ));
-        }
+impl Validate for ChargesPerTransaction41 {
+    fn validate(&self, path: &str, config: &ParserConfig, collector: &mut ErrorCollector) {
+        helpers::validate_length(
+            &self.chrgs_id,
+            "ChrgsId",
+            Some(1),
+            Some(16),
+            &helpers::child_path(path, "ChrgsId"),
+            config,
+            collector,
+        );
+        helpers::validate_pattern(
+            &self.chrgs_id,
+            "ChrgsId",
+            "[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+",
+            &helpers::child_path(path, "ChrgsId"),
+            config,
+            collector,
+        );
         for item in &self.rcrd {
-            item.validate()?
+            item.validate(&helpers::child_path(path, "Rcrd"), config, collector);
         }
-        Ok(())
     }
 }
 
@@ -373,43 +366,53 @@ pub struct ChargesPerTransactionRecord41 {
     pub dbtr_agt_acct: Option<CashAccount401>,
 }
 
-impl ChargesPerTransactionRecord41 {
-    pub fn validate(&self) -> Result<(), ValidationError> {
+impl Validate for ChargesPerTransactionRecord41 {
+    fn validate(&self, path: &str, config: &ParserConfig, collector: &mut ErrorCollector) {
         if let Some(ref val) = self.rcrd_id {
-            if val.chars().count() < 1 {
-                return Err(ValidationError::new(
-                    1001,
-                    "rcrd_id is shorter than the minimum length of 1".to_string(),
-                ));
-            }
-            if val.chars().count() > 35 {
-                return Err(ValidationError::new(
-                    1002,
-                    "rcrd_id exceeds the maximum length of 35".to_string(),
-                ));
-            }
-            let pattern = Regex::new("[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+").unwrap();
-            if !pattern.is_match(val) {
-                return Err(ValidationError::new(
-                    1005,
-                    "rcrd_id does not match the required pattern".to_string(),
-                ));
-            }
+            helpers::validate_length(
+                val,
+                "RcrdId",
+                Some(1),
+                Some(35),
+                &helpers::child_path(path, "RcrdId"),
+                config,
+                collector,
+            );
         }
-        self.chrgs_rqstr.validate()?;
-        self.undrlyg_tx.validate()?;
-        self.ttl_chrgs_per_rcrd.validate()?;
+        if let Some(ref val) = self.rcrd_id {
+            helpers::validate_pattern(
+                val,
+                "RcrdId",
+                "[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+",
+                &helpers::child_path(path, "RcrdId"),
+                config,
+                collector,
+            );
+        }
+        self.chrgs_rqstr
+            .validate(&helpers::child_path(path, "ChrgsRqstr"), config, collector);
+        self.undrlyg_tx
+            .validate(&helpers::child_path(path, "UndrlygTx"), config, collector);
+        self.ttl_chrgs_per_rcrd.validate(
+            &helpers::child_path(path, "TtlChrgsPerRcrd"),
+            config,
+            collector,
+        );
         for item in &self.chrgs_brkdwn {
-            item.validate()?
+            item.validate(&helpers::child_path(path, "ChrgsBrkdwn"), config, collector);
         }
-        self.val_dt.validate()?;
+        self.val_dt
+            .validate(&helpers::child_path(path, "ValDt"), config, collector);
         if let Some(ref val) = self.dbtr_agt {
-            val.validate()?
+            if config.validate_optional_fields {
+                val.validate(&helpers::child_path(path, "DbtrAgt"), config, collector);
+            }
         }
         if let Some(ref val) = self.dbtr_agt_acct {
-            val.validate()?
+            if config.validate_optional_fields {
+                val.validate(&helpers::child_path(path, "DbtrAgtAcct"), config, collector);
+            }
         }
-        Ok(())
     }
 }
 
@@ -420,23 +423,19 @@ pub struct ClearingSystemIdentification2Choice1 {
     pub cd: Option<String>,
 }
 
-impl ClearingSystemIdentification2Choice1 {
-    pub fn validate(&self) -> Result<(), ValidationError> {
+impl Validate for ClearingSystemIdentification2Choice1 {
+    fn validate(&self, path: &str, config: &ParserConfig, collector: &mut ErrorCollector) {
         if let Some(ref val) = self.cd {
-            if val.chars().count() < 1 {
-                return Err(ValidationError::new(
-                    1001,
-                    "cd is shorter than the minimum length of 1".to_string(),
-                ));
-            }
-            if val.chars().count() > 5 {
-                return Err(ValidationError::new(
-                    1002,
-                    "cd exceeds the maximum length of 5".to_string(),
-                ));
-            }
+            helpers::validate_length(
+                val,
+                "Cd",
+                Some(1),
+                Some(5),
+                &helpers::child_path(path, "Cd"),
+                config,
+                collector,
+            );
         }
-        Ok(())
     }
 }
 
@@ -449,29 +448,27 @@ pub struct ClearingSystemMemberIdentification21 {
     pub mmb_id: String,
 }
 
-impl ClearingSystemMemberIdentification21 {
-    pub fn validate(&self) -> Result<(), ValidationError> {
-        self.clr_sys_id.validate()?;
-        if self.mmb_id.chars().count() < 1 {
-            return Err(ValidationError::new(
-                1001,
-                "mmb_id is shorter than the minimum length of 1".to_string(),
-            ));
-        }
-        if self.mmb_id.chars().count() > 28 {
-            return Err(ValidationError::new(
-                1002,
-                "mmb_id exceeds the maximum length of 28".to_string(),
-            ));
-        }
-        let pattern = Regex::new("[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+").unwrap();
-        if !pattern.is_match(&self.mmb_id) {
-            return Err(ValidationError::new(
-                1005,
-                "mmb_id does not match the required pattern".to_string(),
-            ));
-        }
-        Ok(())
+impl Validate for ClearingSystemMemberIdentification21 {
+    fn validate(&self, path: &str, config: &ParserConfig, collector: &mut ErrorCollector) {
+        self.clr_sys_id
+            .validate(&helpers::child_path(path, "ClrSysId"), config, collector);
+        helpers::validate_length(
+            &self.mmb_id,
+            "MmbId",
+            Some(1),
+            Some(28),
+            &helpers::child_path(path, "MmbId"),
+            config,
+            collector,
+        );
+        helpers::validate_pattern(
+            &self.mmb_id,
+            "MmbId",
+            "[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+",
+            &helpers::child_path(path, "MmbId"),
+            config,
+            collector,
+        );
     }
 }
 
@@ -483,9 +480,9 @@ pub enum CreditDebitCode1 {
     CodeDBIT,
 }
 
-impl CreditDebitCode1 {
-    pub fn validate(&self) -> Result<(), ValidationError> {
-        Ok(())
+impl Validate for CreditDebitCode1 {
+    fn validate(&self, _path: &str, _config: &ParserConfig, _collector: &mut ErrorCollector) {
+        // Enum validation is typically empty
     }
 }
 
@@ -496,10 +493,8 @@ pub struct DateAndDateTime2Choice1 {
     pub dt: Option<String>,
 }
 
-impl DateAndDateTime2Choice1 {
-    pub fn validate(&self) -> Result<(), ValidationError> {
-        Ok(())
-    }
+impl Validate for DateAndDateTime2Choice1 {
+    fn validate(&self, _path: &str, _config: &ParserConfig, _collector: &mut ErrorCollector) {}
 }
 
 // FinancialInstitutionIdentification231: Information that locates and identifies a specific address, as defined by postal services.
@@ -517,58 +512,59 @@ pub struct FinancialInstitutionIdentification231 {
     pub pstl_adr: Option<PostalAddress271>,
 }
 
-impl FinancialInstitutionIdentification231 {
-    pub fn validate(&self) -> Result<(), ValidationError> {
+impl Validate for FinancialInstitutionIdentification231 {
+    fn validate(&self, path: &str, config: &ParserConfig, collector: &mut ErrorCollector) {
         if let Some(ref val) = self.bicfi {
-            let pattern =
-                Regex::new("[A-Z0-9]{4,4}[A-Z]{2,2}[A-Z0-9]{2,2}([A-Z0-9]{3,3}){0,1}").unwrap();
-            if !pattern.is_match(val) {
-                return Err(ValidationError::new(
-                    1005,
-                    "bicfi does not match the required pattern".to_string(),
-                ));
-            }
+            helpers::validate_pattern(
+                val,
+                "BICFI",
+                "[A-Z0-9]{4,4}[A-Z]{2,2}[A-Z0-9]{2,2}([A-Z0-9]{3,3}){0,1}",
+                &helpers::child_path(path, "BICFI"),
+                config,
+                collector,
+            );
         }
         if let Some(ref val) = self.clr_sys_mmb_id {
-            val.validate()?
+            if config.validate_optional_fields {
+                val.validate(&helpers::child_path(path, "ClrSysMmbId"), config, collector);
+            }
         }
         if let Some(ref val) = self.lei {
-            let pattern = Regex::new("[A-Z0-9]{18,18}[0-9]{2,2}").unwrap();
-            if !pattern.is_match(val) {
-                return Err(ValidationError::new(
-                    1005,
-                    "lei does not match the required pattern".to_string(),
-                ));
-            }
+            helpers::validate_pattern(
+                val,
+                "LEI",
+                "[A-Z0-9]{18,18}[0-9]{2,2}",
+                &helpers::child_path(path, "LEI"),
+                config,
+                collector,
+            );
         }
         if let Some(ref val) = self.nm {
-            if val.chars().count() < 1 {
-                return Err(ValidationError::new(
-                    1001,
-                    "nm is shorter than the minimum length of 1".to_string(),
-                ));
-            }
-            if val.chars().count() > 140 {
-                return Err(ValidationError::new(
-                    1002,
-                    "nm exceeds the maximum length of 140".to_string(),
-                ));
-            }
-            let pattern = Regex::new(
+            helpers::validate_length(
+                val,
+                "Nm",
+                Some(1),
+                Some(140),
+                &helpers::child_path(path, "Nm"),
+                config,
+                collector,
+            );
+        }
+        if let Some(ref val) = self.nm {
+            helpers::validate_pattern(
+                val,
+                "Nm",
                 "[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]+",
-            )
-            .unwrap();
-            if !pattern.is_match(val) {
-                return Err(ValidationError::new(
-                    1005,
-                    "nm does not match the required pattern".to_string(),
-                ));
-            }
+                &helpers::child_path(path, "Nm"),
+                config,
+                collector,
+            );
         }
         if let Some(ref val) = self.pstl_adr {
-            val.validate()?
+            if config.validate_optional_fields {
+                val.validate(&helpers::child_path(path, "PstlAdr"), config, collector);
+            }
         }
-        Ok(())
     }
 }
 
@@ -583,52 +579,51 @@ pub struct GenericAccountIdentification11 {
     pub issr: Option<String>,
 }
 
-impl GenericAccountIdentification11 {
-    pub fn validate(&self) -> Result<(), ValidationError> {
-        if self.id.chars().count() < 1 {
-            return Err(ValidationError::new(
-                1001,
-                "id is shorter than the minimum length of 1".to_string(),
-            ));
-        }
-        if self.id.chars().count() > 34 {
-            return Err(ValidationError::new(
-                1002,
-                "id exceeds the maximum length of 34".to_string(),
-            ));
-        }
-        let pattern = Regex::new("([0-9a-zA-Z\\-\\?:\\(\\)\\.,'\\+ ]([0-9a-zA-Z\\-\\?:\\(\\)\\.,'\\+ ]*(/[0-9a-zA-Z\\-\\?:\\(\\)\\.,'\\+ ])?)*)").unwrap();
-        if !pattern.is_match(&self.id) {
-            return Err(ValidationError::new(
-                1005,
-                "id does not match the required pattern".to_string(),
-            ));
-        }
+impl Validate for GenericAccountIdentification11 {
+    fn validate(&self, path: &str, config: &ParserConfig, collector: &mut ErrorCollector) {
+        helpers::validate_length(
+            &self.id,
+            "Id",
+            Some(1),
+            Some(34),
+            &helpers::child_path(path, "Id"),
+            config,
+            collector,
+        );
+        helpers::validate_pattern(
+            &self.id,
+            "Id",
+            "([0-9a-zA-Z\\-\\?:\\(\\)\\.,'\\+ ]([0-9a-zA-Z\\-\\?:\\(\\)\\.,'\\+ ]*(/[0-9a-zA-Z\\-\\?:\\(\\)\\.,'\\+ ])?)*)",
+            &helpers::child_path(path, "Id"),
+            config,
+            collector,
+        );
         if let Some(ref val) = self.schme_nm {
-            val.validate()?
+            if config.validate_optional_fields {
+                val.validate(&helpers::child_path(path, "SchmeNm"), config, collector);
+            }
         }
         if let Some(ref val) = self.issr {
-            if val.chars().count() < 1 {
-                return Err(ValidationError::new(
-                    1001,
-                    "issr is shorter than the minimum length of 1".to_string(),
-                ));
-            }
-            if val.chars().count() > 35 {
-                return Err(ValidationError::new(
-                    1002,
-                    "issr exceeds the maximum length of 35".to_string(),
-                ));
-            }
-            let pattern = Regex::new("[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+").unwrap();
-            if !pattern.is_match(val) {
-                return Err(ValidationError::new(
-                    1005,
-                    "issr does not match the required pattern".to_string(),
-                ));
-            }
+            helpers::validate_length(
+                val,
+                "Issr",
+                Some(1),
+                Some(35),
+                &helpers::child_path(path, "Issr"),
+                config,
+                collector,
+            );
         }
-        Ok(())
+        if let Some(ref val) = self.issr {
+            helpers::validate_pattern(
+                val,
+                "Issr",
+                "[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+",
+                &helpers::child_path(path, "Issr"),
+                config,
+                collector,
+            );
+        }
     }
 }
 
@@ -647,40 +642,46 @@ pub struct GroupHeader1261 {
     pub chrgs_acct_ownr: Option<BranchAndFinancialInstitutionIdentification81>,
 }
 
-impl GroupHeader1261 {
-    pub fn validate(&self) -> Result<(), ValidationError> {
-        if self.msg_id.chars().count() < 1 {
-            return Err(ValidationError::new(
-                1001,
-                "msg_id is shorter than the minimum length of 1".to_string(),
-            ));
-        }
-        if self.msg_id.chars().count() > 35 {
-            return Err(ValidationError::new(
-                1002,
-                "msg_id exceeds the maximum length of 35".to_string(),
-            ));
-        }
-        let pattern = Regex::new("[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+").unwrap();
-        if !pattern.is_match(&self.msg_id) {
-            return Err(ValidationError::new(
-                1005,
-                "msg_id does not match the required pattern".to_string(),
-            ));
-        }
-        let pattern = Regex::new(".*(\\+|-)((0[0-9])|(1[0-4])):[0-5][0-9]").unwrap();
-        if !pattern.is_match(&self.cre_dt_tm) {
-            return Err(ValidationError::new(
-                1005,
-                "cre_dt_tm does not match the required pattern".to_string(),
-            ));
-        }
-        self.ttl_chrgs.validate()?;
-        self.chrgs_acct.validate()?;
+impl Validate for GroupHeader1261 {
+    fn validate(&self, path: &str, config: &ParserConfig, collector: &mut ErrorCollector) {
+        helpers::validate_length(
+            &self.msg_id,
+            "MsgId",
+            Some(1),
+            Some(35),
+            &helpers::child_path(path, "MsgId"),
+            config,
+            collector,
+        );
+        helpers::validate_pattern(
+            &self.msg_id,
+            "MsgId",
+            "[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+",
+            &helpers::child_path(path, "MsgId"),
+            config,
+            collector,
+        );
+        helpers::validate_pattern(
+            &self.cre_dt_tm,
+            "CreDtTm",
+            ".*(\\+|-)((0[0-9])|(1[0-4])):[0-5][0-9]",
+            &helpers::child_path(path, "CreDtTm"),
+            config,
+            collector,
+        );
+        self.ttl_chrgs
+            .validate(&helpers::child_path(path, "TtlChrgs"), config, collector);
+        self.chrgs_acct
+            .validate(&helpers::child_path(path, "ChrgsAcct"), config, collector);
         if let Some(ref val) = self.chrgs_acct_ownr {
-            val.validate()?
+            if config.validate_optional_fields {
+                val.validate(
+                    &helpers::child_path(path, "ChrgsAcctOwnr"),
+                    config,
+                    collector,
+                );
+            }
         }
-        Ok(())
     }
 }
 
@@ -719,356 +720,316 @@ pub struct PostalAddress271 {
     pub adr_line: Option<Vec<String>>,
 }
 
-impl PostalAddress271 {
-    pub fn validate(&self) -> Result<(), ValidationError> {
+impl Validate for PostalAddress271 {
+    fn validate(&self, path: &str, config: &ParserConfig, collector: &mut ErrorCollector) {
         if let Some(ref val) = self.dept {
-            if val.chars().count() < 1 {
-                return Err(ValidationError::new(
-                    1001,
-                    "dept is shorter than the minimum length of 1".to_string(),
-                ));
-            }
-            if val.chars().count() > 70 {
-                return Err(ValidationError::new(
-                    1002,
-                    "dept exceeds the maximum length of 70".to_string(),
-                ));
-            }
-            let pattern = Regex::new(
+            helpers::validate_length(
+                val,
+                "Dept",
+                Some(1),
+                Some(70),
+                &helpers::child_path(path, "Dept"),
+                config,
+                collector,
+            );
+        }
+        if let Some(ref val) = self.dept {
+            helpers::validate_pattern(
+                val,
+                "Dept",
                 "[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]+",
-            )
-            .unwrap();
-            if !pattern.is_match(val) {
-                return Err(ValidationError::new(
-                    1005,
-                    "dept does not match the required pattern".to_string(),
-                ));
-            }
+                &helpers::child_path(path, "Dept"),
+                config,
+                collector,
+            );
         }
         if let Some(ref val) = self.sub_dept {
-            if val.chars().count() < 1 {
-                return Err(ValidationError::new(
-                    1001,
-                    "sub_dept is shorter than the minimum length of 1".to_string(),
-                ));
-            }
-            if val.chars().count() > 70 {
-                return Err(ValidationError::new(
-                    1002,
-                    "sub_dept exceeds the maximum length of 70".to_string(),
-                ));
-            }
-            let pattern = Regex::new(
+            helpers::validate_length(
+                val,
+                "SubDept",
+                Some(1),
+                Some(70),
+                &helpers::child_path(path, "SubDept"),
+                config,
+                collector,
+            );
+        }
+        if let Some(ref val) = self.sub_dept {
+            helpers::validate_pattern(
+                val,
+                "SubDept",
                 "[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]+",
-            )
-            .unwrap();
-            if !pattern.is_match(val) {
-                return Err(ValidationError::new(
-                    1005,
-                    "sub_dept does not match the required pattern".to_string(),
-                ));
-            }
+                &helpers::child_path(path, "SubDept"),
+                config,
+                collector,
+            );
         }
         if let Some(ref val) = self.strt_nm {
-            if val.chars().count() < 1 {
-                return Err(ValidationError::new(
-                    1001,
-                    "strt_nm is shorter than the minimum length of 1".to_string(),
-                ));
-            }
-            if val.chars().count() > 70 {
-                return Err(ValidationError::new(
-                    1002,
-                    "strt_nm exceeds the maximum length of 70".to_string(),
-                ));
-            }
-            let pattern = Regex::new(
+            helpers::validate_length(
+                val,
+                "StrtNm",
+                Some(1),
+                Some(70),
+                &helpers::child_path(path, "StrtNm"),
+                config,
+                collector,
+            );
+        }
+        if let Some(ref val) = self.strt_nm {
+            helpers::validate_pattern(
+                val,
+                "StrtNm",
                 "[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]+",
-            )
-            .unwrap();
-            if !pattern.is_match(val) {
-                return Err(ValidationError::new(
-                    1005,
-                    "strt_nm does not match the required pattern".to_string(),
-                ));
-            }
+                &helpers::child_path(path, "StrtNm"),
+                config,
+                collector,
+            );
         }
         if let Some(ref val) = self.bldg_nb {
-            if val.chars().count() < 1 {
-                return Err(ValidationError::new(
-                    1001,
-                    "bldg_nb is shorter than the minimum length of 1".to_string(),
-                ));
-            }
-            if val.chars().count() > 16 {
-                return Err(ValidationError::new(
-                    1002,
-                    "bldg_nb exceeds the maximum length of 16".to_string(),
-                ));
-            }
-            let pattern = Regex::new(
+            helpers::validate_length(
+                val,
+                "BldgNb",
+                Some(1),
+                Some(16),
+                &helpers::child_path(path, "BldgNb"),
+                config,
+                collector,
+            );
+        }
+        if let Some(ref val) = self.bldg_nb {
+            helpers::validate_pattern(
+                val,
+                "BldgNb",
                 "[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]+",
-            )
-            .unwrap();
-            if !pattern.is_match(val) {
-                return Err(ValidationError::new(
-                    1005,
-                    "bldg_nb does not match the required pattern".to_string(),
-                ));
-            }
+                &helpers::child_path(path, "BldgNb"),
+                config,
+                collector,
+            );
         }
         if let Some(ref val) = self.bldg_nm {
-            if val.chars().count() < 1 {
-                return Err(ValidationError::new(
-                    1001,
-                    "bldg_nm is shorter than the minimum length of 1".to_string(),
-                ));
-            }
-            if val.chars().count() > 35 {
-                return Err(ValidationError::new(
-                    1002,
-                    "bldg_nm exceeds the maximum length of 35".to_string(),
-                ));
-            }
-            let pattern = Regex::new(
+            helpers::validate_length(
+                val,
+                "BldgNm",
+                Some(1),
+                Some(35),
+                &helpers::child_path(path, "BldgNm"),
+                config,
+                collector,
+            );
+        }
+        if let Some(ref val) = self.bldg_nm {
+            helpers::validate_pattern(
+                val,
+                "BldgNm",
                 "[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]+",
-            )
-            .unwrap();
-            if !pattern.is_match(val) {
-                return Err(ValidationError::new(
-                    1005,
-                    "bldg_nm does not match the required pattern".to_string(),
-                ));
-            }
+                &helpers::child_path(path, "BldgNm"),
+                config,
+                collector,
+            );
         }
         if let Some(ref val) = self.flr {
-            if val.chars().count() < 1 {
-                return Err(ValidationError::new(
-                    1001,
-                    "flr is shorter than the minimum length of 1".to_string(),
-                ));
-            }
-            if val.chars().count() > 70 {
-                return Err(ValidationError::new(
-                    1002,
-                    "flr exceeds the maximum length of 70".to_string(),
-                ));
-            }
-            let pattern = Regex::new(
+            helpers::validate_length(
+                val,
+                "Flr",
+                Some(1),
+                Some(70),
+                &helpers::child_path(path, "Flr"),
+                config,
+                collector,
+            );
+        }
+        if let Some(ref val) = self.flr {
+            helpers::validate_pattern(
+                val,
+                "Flr",
                 "[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]+",
-            )
-            .unwrap();
-            if !pattern.is_match(val) {
-                return Err(ValidationError::new(
-                    1005,
-                    "flr does not match the required pattern".to_string(),
-                ));
-            }
+                &helpers::child_path(path, "Flr"),
+                config,
+                collector,
+            );
         }
         if let Some(ref val) = self.pst_bx {
-            if val.chars().count() < 1 {
-                return Err(ValidationError::new(
-                    1001,
-                    "pst_bx is shorter than the minimum length of 1".to_string(),
-                ));
-            }
-            if val.chars().count() > 16 {
-                return Err(ValidationError::new(
-                    1002,
-                    "pst_bx exceeds the maximum length of 16".to_string(),
-                ));
-            }
-            let pattern = Regex::new(
+            helpers::validate_length(
+                val,
+                "PstBx",
+                Some(1),
+                Some(16),
+                &helpers::child_path(path, "PstBx"),
+                config,
+                collector,
+            );
+        }
+        if let Some(ref val) = self.pst_bx {
+            helpers::validate_pattern(
+                val,
+                "PstBx",
                 "[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]+",
-            )
-            .unwrap();
-            if !pattern.is_match(val) {
-                return Err(ValidationError::new(
-                    1005,
-                    "pst_bx does not match the required pattern".to_string(),
-                ));
-            }
+                &helpers::child_path(path, "PstBx"),
+                config,
+                collector,
+            );
         }
         if let Some(ref val) = self.room {
-            if val.chars().count() < 1 {
-                return Err(ValidationError::new(
-                    1001,
-                    "room is shorter than the minimum length of 1".to_string(),
-                ));
-            }
-            if val.chars().count() > 70 {
-                return Err(ValidationError::new(
-                    1002,
-                    "room exceeds the maximum length of 70".to_string(),
-                ));
-            }
-            let pattern = Regex::new(
+            helpers::validate_length(
+                val,
+                "Room",
+                Some(1),
+                Some(70),
+                &helpers::child_path(path, "Room"),
+                config,
+                collector,
+            );
+        }
+        if let Some(ref val) = self.room {
+            helpers::validate_pattern(
+                val,
+                "Room",
                 "[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]+",
-            )
-            .unwrap();
-            if !pattern.is_match(val) {
-                return Err(ValidationError::new(
-                    1005,
-                    "room does not match the required pattern".to_string(),
-                ));
-            }
+                &helpers::child_path(path, "Room"),
+                config,
+                collector,
+            );
         }
         if let Some(ref val) = self.pst_cd {
-            if val.chars().count() < 1 {
-                return Err(ValidationError::new(
-                    1001,
-                    "pst_cd is shorter than the minimum length of 1".to_string(),
-                ));
-            }
-            if val.chars().count() > 16 {
-                return Err(ValidationError::new(
-                    1002,
-                    "pst_cd exceeds the maximum length of 16".to_string(),
-                ));
-            }
-            let pattern = Regex::new(
+            helpers::validate_length(
+                val,
+                "PstCd",
+                Some(1),
+                Some(16),
+                &helpers::child_path(path, "PstCd"),
+                config,
+                collector,
+            );
+        }
+        if let Some(ref val) = self.pst_cd {
+            helpers::validate_pattern(
+                val,
+                "PstCd",
                 "[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]+",
-            )
-            .unwrap();
-            if !pattern.is_match(val) {
-                return Err(ValidationError::new(
-                    1005,
-                    "pst_cd does not match the required pattern".to_string(),
-                ));
-            }
+                &helpers::child_path(path, "PstCd"),
+                config,
+                collector,
+            );
         }
         if let Some(ref val) = self.twn_nm {
-            if val.chars().count() < 1 {
-                return Err(ValidationError::new(
-                    1001,
-                    "twn_nm is shorter than the minimum length of 1".to_string(),
-                ));
-            }
-            if val.chars().count() > 35 {
-                return Err(ValidationError::new(
-                    1002,
-                    "twn_nm exceeds the maximum length of 35".to_string(),
-                ));
-            }
-            let pattern = Regex::new(
+            helpers::validate_length(
+                val,
+                "TwnNm",
+                Some(1),
+                Some(35),
+                &helpers::child_path(path, "TwnNm"),
+                config,
+                collector,
+            );
+        }
+        if let Some(ref val) = self.twn_nm {
+            helpers::validate_pattern(
+                val,
+                "TwnNm",
                 "[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]+",
-            )
-            .unwrap();
-            if !pattern.is_match(val) {
-                return Err(ValidationError::new(
-                    1005,
-                    "twn_nm does not match the required pattern".to_string(),
-                ));
-            }
+                &helpers::child_path(path, "TwnNm"),
+                config,
+                collector,
+            );
         }
         if let Some(ref val) = self.twn_lctn_nm {
-            if val.chars().count() < 1 {
-                return Err(ValidationError::new(
-                    1001,
-                    "twn_lctn_nm is shorter than the minimum length of 1".to_string(),
-                ));
-            }
-            if val.chars().count() > 35 {
-                return Err(ValidationError::new(
-                    1002,
-                    "twn_lctn_nm exceeds the maximum length of 35".to_string(),
-                ));
-            }
-            let pattern = Regex::new(
+            helpers::validate_length(
+                val,
+                "TwnLctnNm",
+                Some(1),
+                Some(35),
+                &helpers::child_path(path, "TwnLctnNm"),
+                config,
+                collector,
+            );
+        }
+        if let Some(ref val) = self.twn_lctn_nm {
+            helpers::validate_pattern(
+                val,
+                "TwnLctnNm",
                 "[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]+",
-            )
-            .unwrap();
-            if !pattern.is_match(val) {
-                return Err(ValidationError::new(
-                    1005,
-                    "twn_lctn_nm does not match the required pattern".to_string(),
-                ));
-            }
+                &helpers::child_path(path, "TwnLctnNm"),
+                config,
+                collector,
+            );
         }
         if let Some(ref val) = self.dstrct_nm {
-            if val.chars().count() < 1 {
-                return Err(ValidationError::new(
-                    1001,
-                    "dstrct_nm is shorter than the minimum length of 1".to_string(),
-                ));
-            }
-            if val.chars().count() > 35 {
-                return Err(ValidationError::new(
-                    1002,
-                    "dstrct_nm exceeds the maximum length of 35".to_string(),
-                ));
-            }
-            let pattern = Regex::new(
+            helpers::validate_length(
+                val,
+                "DstrctNm",
+                Some(1),
+                Some(35),
+                &helpers::child_path(path, "DstrctNm"),
+                config,
+                collector,
+            );
+        }
+        if let Some(ref val) = self.dstrct_nm {
+            helpers::validate_pattern(
+                val,
+                "DstrctNm",
                 "[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]+",
-            )
-            .unwrap();
-            if !pattern.is_match(val) {
-                return Err(ValidationError::new(
-                    1005,
-                    "dstrct_nm does not match the required pattern".to_string(),
-                ));
-            }
+                &helpers::child_path(path, "DstrctNm"),
+                config,
+                collector,
+            );
         }
         if let Some(ref val) = self.ctry_sub_dvsn {
-            if val.chars().count() < 1 {
-                return Err(ValidationError::new(
-                    1001,
-                    "ctry_sub_dvsn is shorter than the minimum length of 1".to_string(),
-                ));
-            }
-            if val.chars().count() > 35 {
-                return Err(ValidationError::new(
-                    1002,
-                    "ctry_sub_dvsn exceeds the maximum length of 35".to_string(),
-                ));
-            }
-            let pattern = Regex::new(
+            helpers::validate_length(
+                val,
+                "CtrySubDvsn",
+                Some(1),
+                Some(35),
+                &helpers::child_path(path, "CtrySubDvsn"),
+                config,
+                collector,
+            );
+        }
+        if let Some(ref val) = self.ctry_sub_dvsn {
+            helpers::validate_pattern(
+                val,
+                "CtrySubDvsn",
                 "[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]+",
-            )
-            .unwrap();
-            if !pattern.is_match(val) {
-                return Err(ValidationError::new(
-                    1005,
-                    "ctry_sub_dvsn does not match the required pattern".to_string(),
-                ));
-            }
+                &helpers::child_path(path, "CtrySubDvsn"),
+                config,
+                collector,
+            );
         }
         if let Some(ref val) = self.ctry {
-            let pattern = Regex::new("[A-Z]{2,2}").unwrap();
-            if !pattern.is_match(val) {
-                return Err(ValidationError::new(
-                    1005,
-                    "ctry does not match the required pattern".to_string(),
-                ));
+            helpers::validate_pattern(
+                val,
+                "Ctry",
+                "[A-Z]{2,2}",
+                &helpers::child_path(path, "Ctry"),
+                config,
+                collector,
+            );
+        }
+        if let Some(ref vec) = self.adr_line {
+            for item in vec {
+                helpers::validate_length(
+                    item,
+                    "AdrLine",
+                    Some(1),
+                    Some(70),
+                    &helpers::child_path(path, "AdrLine"),
+                    config,
+                    collector,
+                );
             }
         }
         if let Some(ref vec) = self.adr_line {
             for item in vec {
-                if item.chars().count() < 1 {
-                    return Err(ValidationError::new(
-                        1001,
-                        "adr_line is shorter than the minimum length of 1".to_string(),
-                    ));
-                }
-                if item.chars().count() > 70 {
-                    return Err(ValidationError::new(
-                        1002,
-                        "adr_line exceeds the maximum length of 70".to_string(),
-                    ));
-                }
-                let pattern = Regex::new(
+                helpers::validate_pattern(
+                    item,
+                    "AdrLine",
                     "[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]+",
-                )
-                .unwrap();
-                if !pattern.is_match(&item) {
-                    return Err(ValidationError::new(
-                        1005,
-                        "adr_line does not match the required pattern".to_string(),
-                    ));
-                }
+                    &helpers::child_path(path, "AdrLine"),
+                    config,
+                    collector,
+                );
             }
         }
-        Ok(())
     }
 }
 
@@ -1081,33 +1042,30 @@ pub struct ProxyAccountIdentification11 {
     pub id: String,
 }
 
-impl ProxyAccountIdentification11 {
-    pub fn validate(&self) -> Result<(), ValidationError> {
+impl Validate for ProxyAccountIdentification11 {
+    fn validate(&self, path: &str, config: &ParserConfig, collector: &mut ErrorCollector) {
         if let Some(ref val) = self.tp {
-            val.validate()?
+            if config.validate_optional_fields {
+                val.validate(&helpers::child_path(path, "Tp"), config, collector);
+            }
         }
-        if self.id.chars().count() < 1 {
-            return Err(ValidationError::new(
-                1001,
-                "id is shorter than the minimum length of 1".to_string(),
-            ));
-        }
-        if self.id.chars().count() > 320 {
-            return Err(ValidationError::new(
-                1002,
-                "id exceeds the maximum length of 320".to_string(),
-            ));
-        }
-        let pattern =
-            Regex::new("[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]+")
-                .unwrap();
-        if !pattern.is_match(&self.id) {
-            return Err(ValidationError::new(
-                1005,
-                "id does not match the required pattern".to_string(),
-            ));
-        }
-        Ok(())
+        helpers::validate_length(
+            &self.id,
+            "Id",
+            Some(1),
+            Some(320),
+            &helpers::child_path(path, "Id"),
+            config,
+            collector,
+        );
+        helpers::validate_pattern(
+            &self.id,
+            "Id",
+            "[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]+",
+            &helpers::child_path(path, "Id"),
+            config,
+            collector,
+        );
     }
 }
 
@@ -1120,44 +1078,40 @@ pub struct ProxyAccountType1Choice1 {
     pub prtry: Option<String>,
 }
 
-impl ProxyAccountType1Choice1 {
-    pub fn validate(&self) -> Result<(), ValidationError> {
+impl Validate for ProxyAccountType1Choice1 {
+    fn validate(&self, path: &str, config: &ParserConfig, collector: &mut ErrorCollector) {
         if let Some(ref val) = self.cd {
-            if val.chars().count() < 1 {
-                return Err(ValidationError::new(
-                    1001,
-                    "cd is shorter than the minimum length of 1".to_string(),
-                ));
-            }
-            if val.chars().count() > 4 {
-                return Err(ValidationError::new(
-                    1002,
-                    "cd exceeds the maximum length of 4".to_string(),
-                ));
-            }
+            helpers::validate_length(
+                val,
+                "Cd",
+                Some(1),
+                Some(4),
+                &helpers::child_path(path, "Cd"),
+                config,
+                collector,
+            );
         }
         if let Some(ref val) = self.prtry {
-            if val.chars().count() < 1 {
-                return Err(ValidationError::new(
-                    1001,
-                    "prtry is shorter than the minimum length of 1".to_string(),
-                ));
-            }
-            if val.chars().count() > 35 {
-                return Err(ValidationError::new(
-                    1002,
-                    "prtry exceeds the maximum length of 35".to_string(),
-                ));
-            }
-            let pattern = Regex::new("[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+").unwrap();
-            if !pattern.is_match(val) {
-                return Err(ValidationError::new(
-                    1005,
-                    "prtry does not match the required pattern".to_string(),
-                ));
-            }
+            helpers::validate_length(
+                val,
+                "Prtry",
+                Some(1),
+                Some(35),
+                &helpers::child_path(path, "Prtry"),
+                config,
+                collector,
+            );
         }
-        Ok(())
+        if let Some(ref val) = self.prtry {
+            helpers::validate_pattern(
+                val,
+                "Prtry",
+                "[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+",
+                &helpers::child_path(path, "Prtry"),
+                config,
+                collector,
+            );
+        }
     }
 }
 
@@ -1173,18 +1127,20 @@ pub struct TotalCharges71 {
     pub cdt_dbt_ind: CreditDebitCode1,
 }
 
-impl TotalCharges71 {
-    pub fn validate(&self) -> Result<(), ValidationError> {
-        let pattern = Regex::new("[0-9]{1,15}").unwrap();
-        if !pattern.is_match(&self.nb_of_chrgs_rcrds) {
-            return Err(ValidationError::new(
-                1005,
-                "nb_of_chrgs_rcrds does not match the required pattern".to_string(),
-            ));
-        }
-        self.ttl_chrgs_amt.validate()?;
-        self.cdt_dbt_ind.validate()?;
-        Ok(())
+impl Validate for TotalCharges71 {
+    fn validate(&self, path: &str, config: &ParserConfig, collector: &mut ErrorCollector) {
+        helpers::validate_pattern(
+            &self.nb_of_chrgs_rcrds,
+            "NbOfChrgsRcrds",
+            "[0-9]{1,15}",
+            &helpers::child_path(path, "NbOfChrgsRcrds"),
+            config,
+            collector,
+        );
+        self.ttl_chrgs_amt
+            .validate(&helpers::child_path(path, "TtlChrgsAmt"), config, collector);
+        self.cdt_dbt_ind
+            .validate(&helpers::child_path(path, "CdtDbtInd"), config, collector);
     }
 }
 
@@ -1200,18 +1156,20 @@ pub struct TotalCharges81 {
     pub cdt_dbt_ind: CreditDebitCode1,
 }
 
-impl TotalCharges81 {
-    pub fn validate(&self) -> Result<(), ValidationError> {
-        let pattern = Regex::new("[0-9]{1,15}").unwrap();
-        if !pattern.is_match(&self.nb_of_chrgs_brkdwn_itms) {
-            return Err(ValidationError::new(
-                1005,
-                "nb_of_chrgs_brkdwn_itms does not match the required pattern".to_string(),
-            ));
-        }
-        self.ttl_chrgs_amt.validate()?;
-        self.cdt_dbt_ind.validate()?;
-        Ok(())
+impl Validate for TotalCharges81 {
+    fn validate(&self, path: &str, config: &ParserConfig, collector: &mut ErrorCollector) {
+        helpers::validate_pattern(
+            &self.nb_of_chrgs_brkdwn_itms,
+            "NbOfChrgsBrkdwnItms",
+            "[0-9]{1,15}",
+            &helpers::child_path(path, "NbOfChrgsBrkdwnItms"),
+            config,
+            collector,
+        );
+        self.ttl_chrgs_amt
+            .validate(&helpers::child_path(path, "TtlChrgsAmt"), config, collector);
+        self.cdt_dbt_ind
+            .validate(&helpers::child_path(path, "CdtDbtInd"), config, collector);
     }
 }
 
@@ -1246,271 +1204,269 @@ pub struct TransactionReferences71 {
     pub prcg_id: Option<String>,
 }
 
-impl TransactionReferences71 {
-    pub fn validate(&self) -> Result<(), ValidationError> {
+impl Validate for TransactionReferences71 {
+    fn validate(&self, path: &str, config: &ParserConfig, collector: &mut ErrorCollector) {
         if let Some(ref val) = self.msg_id {
-            if val.chars().count() < 1 {
-                return Err(ValidationError::new(
-                    1001,
-                    "msg_id is shorter than the minimum length of 1".to_string(),
-                ));
-            }
-            if val.chars().count() > 35 {
-                return Err(ValidationError::new(
-                    1002,
-                    "msg_id exceeds the maximum length of 35".to_string(),
-                ));
-            }
-            let pattern = Regex::new("[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+").unwrap();
-            if !pattern.is_match(val) {
-                return Err(ValidationError::new(
-                    1005,
-                    "msg_id does not match the required pattern".to_string(),
-                ));
-            }
+            helpers::validate_length(
+                val,
+                "MsgId",
+                Some(1),
+                Some(35),
+                &helpers::child_path(path, "MsgId"),
+                config,
+                collector,
+            );
+        }
+        if let Some(ref val) = self.msg_id {
+            helpers::validate_pattern(
+                val,
+                "MsgId",
+                "[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+",
+                &helpers::child_path(path, "MsgId"),
+                config,
+                collector,
+            );
         }
         if let Some(ref val) = self.msg_nm_id {
-            if val.chars().count() < 1 {
-                return Err(ValidationError::new(
-                    1001,
-                    "msg_nm_id is shorter than the minimum length of 1".to_string(),
-                ));
-            }
-            if val.chars().count() > 35 {
-                return Err(ValidationError::new(
-                    1002,
-                    "msg_nm_id exceeds the maximum length of 35".to_string(),
-                ));
-            }
-            let pattern = Regex::new("[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+").unwrap();
-            if !pattern.is_match(val) {
-                return Err(ValidationError::new(
-                    1005,
-                    "msg_nm_id does not match the required pattern".to_string(),
-                ));
-            }
+            helpers::validate_length(
+                val,
+                "MsgNmId",
+                Some(1),
+                Some(35),
+                &helpers::child_path(path, "MsgNmId"),
+                config,
+                collector,
+            );
+        }
+        if let Some(ref val) = self.msg_nm_id {
+            helpers::validate_pattern(
+                val,
+                "MsgNmId",
+                "[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+",
+                &helpers::child_path(path, "MsgNmId"),
+                config,
+                collector,
+            );
         }
         if let Some(ref val) = self.acct_svcr_ref {
-            if val.chars().count() < 1 {
-                return Err(ValidationError::new(
-                    1001,
-                    "acct_svcr_ref is shorter than the minimum length of 1".to_string(),
-                ));
-            }
-            if val.chars().count() > 35 {
-                return Err(ValidationError::new(
-                    1002,
-                    "acct_svcr_ref exceeds the maximum length of 35".to_string(),
-                ));
-            }
-            let pattern = Regex::new("[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+").unwrap();
-            if !pattern.is_match(val) {
-                return Err(ValidationError::new(
-                    1005,
-                    "acct_svcr_ref does not match the required pattern".to_string(),
-                ));
-            }
+            helpers::validate_length(
+                val,
+                "AcctSvcrRef",
+                Some(1),
+                Some(35),
+                &helpers::child_path(path, "AcctSvcrRef"),
+                config,
+                collector,
+            );
+        }
+        if let Some(ref val) = self.acct_svcr_ref {
+            helpers::validate_pattern(
+                val,
+                "AcctSvcrRef",
+                "[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+",
+                &helpers::child_path(path, "AcctSvcrRef"),
+                config,
+                collector,
+            );
         }
         if let Some(ref val) = self.pmt_inf_id {
-            if val.chars().count() < 1 {
-                return Err(ValidationError::new(
-                    1001,
-                    "pmt_inf_id is shorter than the minimum length of 1".to_string(),
-                ));
-            }
-            if val.chars().count() > 35 {
-                return Err(ValidationError::new(
-                    1002,
-                    "pmt_inf_id exceeds the maximum length of 35".to_string(),
-                ));
-            }
-            let pattern = Regex::new("[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+").unwrap();
-            if !pattern.is_match(val) {
-                return Err(ValidationError::new(
-                    1005,
-                    "pmt_inf_id does not match the required pattern".to_string(),
-                ));
-            }
+            helpers::validate_length(
+                val,
+                "PmtInfId",
+                Some(1),
+                Some(35),
+                &helpers::child_path(path, "PmtInfId"),
+                config,
+                collector,
+            );
+        }
+        if let Some(ref val) = self.pmt_inf_id {
+            helpers::validate_pattern(
+                val,
+                "PmtInfId",
+                "[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+",
+                &helpers::child_path(path, "PmtInfId"),
+                config,
+                collector,
+            );
         }
         if let Some(ref val) = self.instr_id {
-            if val.chars().count() < 1 {
-                return Err(ValidationError::new(
-                    1001,
-                    "instr_id is shorter than the minimum length of 1".to_string(),
-                ));
-            }
-            if val.chars().count() > 16 {
-                return Err(ValidationError::new(
-                    1002,
-                    "instr_id exceeds the maximum length of 16".to_string(),
-                ));
-            }
-            let pattern = Regex::new("[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+").unwrap();
-            if !pattern.is_match(val) {
-                return Err(ValidationError::new(
-                    1005,
-                    "instr_id does not match the required pattern".to_string(),
-                ));
-            }
+            helpers::validate_length(
+                val,
+                "InstrId",
+                Some(1),
+                Some(16),
+                &helpers::child_path(path, "InstrId"),
+                config,
+                collector,
+            );
+        }
+        if let Some(ref val) = self.instr_id {
+            helpers::validate_pattern(
+                val,
+                "InstrId",
+                "[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+",
+                &helpers::child_path(path, "InstrId"),
+                config,
+                collector,
+            );
         }
         if let Some(ref val) = self.end_to_end_id {
-            if val.chars().count() < 1 {
-                return Err(ValidationError::new(
-                    1001,
-                    "end_to_end_id is shorter than the minimum length of 1".to_string(),
-                ));
-            }
-            if val.chars().count() > 35 {
-                return Err(ValidationError::new(
-                    1002,
-                    "end_to_end_id exceeds the maximum length of 35".to_string(),
-                ));
-            }
-            let pattern = Regex::new("[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+").unwrap();
-            if !pattern.is_match(val) {
-                return Err(ValidationError::new(
-                    1005,
-                    "end_to_end_id does not match the required pattern".to_string(),
-                ));
-            }
+            helpers::validate_length(
+                val,
+                "EndToEndId",
+                Some(1),
+                Some(35),
+                &helpers::child_path(path, "EndToEndId"),
+                config,
+                collector,
+            );
+        }
+        if let Some(ref val) = self.end_to_end_id {
+            helpers::validate_pattern(
+                val,
+                "EndToEndId",
+                "[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+",
+                &helpers::child_path(path, "EndToEndId"),
+                config,
+                collector,
+            );
         }
         if let Some(ref val) = self.uetr {
-            let pattern =
-                Regex::new("[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}")
-                    .unwrap();
-            if !pattern.is_match(val) {
-                return Err(ValidationError::new(
-                    1005,
-                    "uetr does not match the required pattern".to_string(),
-                ));
-            }
+            helpers::validate_pattern(
+                val,
+                "UETR",
+                "[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}",
+                &helpers::child_path(path, "UETR"),
+                config,
+                collector,
+            );
         }
         if let Some(ref val) = self.tx_id {
-            if val.chars().count() < 1 {
-                return Err(ValidationError::new(
-                    1001,
-                    "tx_id is shorter than the minimum length of 1".to_string(),
-                ));
-            }
-            if val.chars().count() > 35 {
-                return Err(ValidationError::new(
-                    1002,
-                    "tx_id exceeds the maximum length of 35".to_string(),
-                ));
-            }
-            let pattern = Regex::new("[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+").unwrap();
-            if !pattern.is_match(val) {
-                return Err(ValidationError::new(
-                    1005,
-                    "tx_id does not match the required pattern".to_string(),
-                ));
-            }
+            helpers::validate_length(
+                val,
+                "TxId",
+                Some(1),
+                Some(35),
+                &helpers::child_path(path, "TxId"),
+                config,
+                collector,
+            );
+        }
+        if let Some(ref val) = self.tx_id {
+            helpers::validate_pattern(
+                val,
+                "TxId",
+                "[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+",
+                &helpers::child_path(path, "TxId"),
+                config,
+                collector,
+            );
         }
         if let Some(ref val) = self.mndt_id {
-            if val.chars().count() < 1 {
-                return Err(ValidationError::new(
-                    1001,
-                    "mndt_id is shorter than the minimum length of 1".to_string(),
-                ));
-            }
-            if val.chars().count() > 35 {
-                return Err(ValidationError::new(
-                    1002,
-                    "mndt_id exceeds the maximum length of 35".to_string(),
-                ));
-            }
-            let pattern = Regex::new("[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+").unwrap();
-            if !pattern.is_match(val) {
-                return Err(ValidationError::new(
-                    1005,
-                    "mndt_id does not match the required pattern".to_string(),
-                ));
-            }
+            helpers::validate_length(
+                val,
+                "MndtId",
+                Some(1),
+                Some(35),
+                &helpers::child_path(path, "MndtId"),
+                config,
+                collector,
+            );
+        }
+        if let Some(ref val) = self.mndt_id {
+            helpers::validate_pattern(
+                val,
+                "MndtId",
+                "[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+",
+                &helpers::child_path(path, "MndtId"),
+                config,
+                collector,
+            );
         }
         if let Some(ref val) = self.chq_nb {
-            if val.chars().count() < 1 {
-                return Err(ValidationError::new(
-                    1001,
-                    "chq_nb is shorter than the minimum length of 1".to_string(),
-                ));
-            }
-            if val.chars().count() > 35 {
-                return Err(ValidationError::new(
-                    1002,
-                    "chq_nb exceeds the maximum length of 35".to_string(),
-                ));
-            }
-            let pattern = Regex::new("[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+").unwrap();
-            if !pattern.is_match(val) {
-                return Err(ValidationError::new(
-                    1005,
-                    "chq_nb does not match the required pattern".to_string(),
-                ));
-            }
+            helpers::validate_length(
+                val,
+                "ChqNb",
+                Some(1),
+                Some(35),
+                &helpers::child_path(path, "ChqNb"),
+                config,
+                collector,
+            );
+        }
+        if let Some(ref val) = self.chq_nb {
+            helpers::validate_pattern(
+                val,
+                "ChqNb",
+                "[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+",
+                &helpers::child_path(path, "ChqNb"),
+                config,
+                collector,
+            );
         }
         if let Some(ref val) = self.acct_ownr_tx_id {
-            if val.chars().count() < 1 {
-                return Err(ValidationError::new(
-                    1001,
-                    "acct_ownr_tx_id is shorter than the minimum length of 1".to_string(),
-                ));
-            }
-            if val.chars().count() > 35 {
-                return Err(ValidationError::new(
-                    1002,
-                    "acct_ownr_tx_id exceeds the maximum length of 35".to_string(),
-                ));
-            }
-            let pattern = Regex::new("[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+").unwrap();
-            if !pattern.is_match(val) {
-                return Err(ValidationError::new(
-                    1005,
-                    "acct_ownr_tx_id does not match the required pattern".to_string(),
-                ));
-            }
+            helpers::validate_length(
+                val,
+                "AcctOwnrTxId",
+                Some(1),
+                Some(35),
+                &helpers::child_path(path, "AcctOwnrTxId"),
+                config,
+                collector,
+            );
+        }
+        if let Some(ref val) = self.acct_ownr_tx_id {
+            helpers::validate_pattern(
+                val,
+                "AcctOwnrTxId",
+                "[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+",
+                &helpers::child_path(path, "AcctOwnrTxId"),
+                config,
+                collector,
+            );
         }
         if let Some(ref val) = self.acct_svcr_tx_id {
-            if val.chars().count() < 1 {
-                return Err(ValidationError::new(
-                    1001,
-                    "acct_svcr_tx_id is shorter than the minimum length of 1".to_string(),
-                ));
-            }
-            if val.chars().count() > 35 {
-                return Err(ValidationError::new(
-                    1002,
-                    "acct_svcr_tx_id exceeds the maximum length of 35".to_string(),
-                ));
-            }
-            let pattern = Regex::new("[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+").unwrap();
-            if !pattern.is_match(val) {
-                return Err(ValidationError::new(
-                    1005,
-                    "acct_svcr_tx_id does not match the required pattern".to_string(),
-                ));
-            }
+            helpers::validate_length(
+                val,
+                "AcctSvcrTxId",
+                Some(1),
+                Some(35),
+                &helpers::child_path(path, "AcctSvcrTxId"),
+                config,
+                collector,
+            );
+        }
+        if let Some(ref val) = self.acct_svcr_tx_id {
+            helpers::validate_pattern(
+                val,
+                "AcctSvcrTxId",
+                "[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+",
+                &helpers::child_path(path, "AcctSvcrTxId"),
+                config,
+                collector,
+            );
         }
         if let Some(ref val) = self.prcg_id {
-            if val.chars().count() < 1 {
-                return Err(ValidationError::new(
-                    1001,
-                    "prcg_id is shorter than the minimum length of 1".to_string(),
-                ));
-            }
-            if val.chars().count() > 35 {
-                return Err(ValidationError::new(
-                    1002,
-                    "prcg_id exceeds the maximum length of 35".to_string(),
-                ));
-            }
-            let pattern = Regex::new("[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+").unwrap();
-            if !pattern.is_match(val) {
-                return Err(ValidationError::new(
-                    1005,
-                    "prcg_id does not match the required pattern".to_string(),
-                ));
-            }
+            helpers::validate_length(
+                val,
+                "PrcgId",
+                Some(1),
+                Some(35),
+                &helpers::child_path(path, "PrcgId"),
+                config,
+                collector,
+            );
         }
-        Ok(())
+        if let Some(ref val) = self.prcg_id {
+            helpers::validate_pattern(
+                val,
+                "PrcgId",
+                "[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+",
+                &helpers::child_path(path, "PrcgId"),
+                config,
+                collector,
+            );
+        }
     }
 }

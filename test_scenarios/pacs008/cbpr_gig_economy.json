@@ -1,0 +1,175 @@
+{
+    "variables": {
+        "msg_id": {"cat": ["MSG", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "sender_bic": {"fake": ["bic"]},
+        "receiver_bic": {"fake": ["bic"]},
+        "transaction_ref": {"cat": ["TXN", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "instruction_id": {"cat": ["INSTR", {"fake": ["i64", 10000000, 99999999]}]},
+        "end_to_end_id": {"cat": ["E2E", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "uetr": {"fake": ["uuid"]},
+        "gross_amount": {"fake": ["f64", 100.0, 3000.0]},
+        "platform_fee": {"fake": ["f64", 10.0, 300.0]},
+        "freelancer_name": {"fake": ["name"]},
+        "platform_name": {"cat": [{"fake": ["company_name"]}, " Freelance Platform"]},
+        "job_id": {"cat": ["JOB-", {"fake": ["i64", 1000000, 9999999]}]},
+        "freelancer_id": {"cat": ["FL-", {"fake": ["i64", 100000, 999999]}]},
+        "tax_withheld": {"fake": ["f64", 0.0, 200.0]}
+    },
+    "schema": {
+        "AppHdr": {
+            "Fr": {"FIId": {"FinInstnId": {"BICFI": {"var": "sender_bic"}}}},
+            "To": {"FIId": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}}}},
+            "BizMsgIdr": {"var": "msg_id"},
+            "MsgDefIdr": "pacs.008.001.08",
+            "BizSvc": "swift.cbprplus.01",
+            "CreDt": {"var": "creation_datetime"}
+        },
+        "Document": {
+            "FIToFICstmrCdtTrf": {
+                "GrpHdr": {
+                    "MsgId": {"var": "msg_id"},
+                    "CreDtTm": {"var": "creation_datetime"},
+                    "NbOfTxs": "1",
+                    "SttlmInf": {"SttlmMtd": "INDA"}
+                },
+                "CdtTrfTxInf": {
+                    "PmtId": {
+                        "InstrId": {"var": "instruction_id"},
+                        "EndToEndId": {"var": "end_to_end_id"},
+                        "TxId": {"var": "transaction_ref"},
+                        "UETR": {"var": "uetr"}
+                    },
+                    "PmtTpInf": {
+                        "InstrPrty": "NORM",
+                        "SvcLvl": [{"Cd": "CBPR"}],
+                        "CtgyPurp": {"Cd": "SALA"},
+                        "LclInstrm": {"Prtry": "GIG_ECONOMY_PAYMENT"}
+                    },
+                    "IntrBkSttlmAmt": {"@Ccy": "EUR", "$value": {"fake": ["f64", 80.0, 2500.0]}},
+                    "IntrBkSttlmDt": {
+                        "fake": ["date", "%Y-%m-%d", "+0d", "+1d"]
+                    },
+                    "SttlmPrty": "NORM",
+                    "InstdAmt": {"@Ccy": "EUR", "$value": {"fake": ["f64", 80.0, 2500.0]}},
+                    "ChrgBr": "SHAR",
+                    "InstgAgt": {"FinInstnId": {"BICFI": {"var": "sender_bic"}, "LEI": {"fake": ["lei"]}}},
+                    "InstdAgt": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}, "LEI": {"fake": ["lei"]}}},
+                    "Dbtr": {
+                        "Nm": {"var": "platform_name"},
+                        "PstlAdr": {
+                            "StrtNm": {"cat": [{"fake": ["i64", 1, 999]}, " Innovation Street"]},
+                            "PstCd": {"fake": ["postcode"]},
+                            "TwnNm": {"fake": ["city_name"]},
+                            "Ctry": "IE"
+                        },
+                        "CtryOfRes": "IE",
+                        "Id": {
+                            "OrgId": {
+                                "LEI": {"fake": ["lei"]},
+                                "Othr": [
+                                    {
+                                        "Id": {"cat": ["IE", {"fake": ["i64", 1000000, 9999999]}, {"fake": ["regex", "[A-Z]"]}]},
+                                        "SchmeNm": {"Prtry": "IE_COMPANY_NUMBER"}
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "DbtrAcct": {
+                        "Id": {"IBAN": {"fake": ["iban", "IE"]}},
+                        "Ccy": "EUR",
+                        "Nm": "Platform Payout Account"
+                    },
+                    "DbtrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {"var": "sender_bic"},
+                            "Nm": {"fake": ["company_name"]},
+                            "LEI": {"fake": ["lei"]}
+                        }
+                    },
+                    "CdtrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {"var": "receiver_bic"},
+                            "Nm": {"fake": ["company_name"]},
+                            "LEI": {"fake": ["lei"]}
+                        }
+                    },
+                    "Cdtr": {
+                        "Nm": {"var": "freelancer_name"},
+                        "PstlAdr": {
+                            "StrtNm": {"fake": ["street_name"]},
+                            "BldgNb": {"cat": [{"fake": ["i64", 1, 999]}]},
+                            "PstCd": {"fake": ["postcode"]},
+                            "TwnNm": {"fake": ["city_name"]},
+                            "Ctry": {"fake": ["regex", "(PT|ES|IT|GR)"]}
+                        },
+                        "CtryOfRes": {"fake": ["regex", "(PT|ES|IT|GR)"]},
+                        "Id": {
+                            "PrvtId": {
+                                "Othr": [
+                                    {"Id": {"var": "freelancer_id"}, "SchmeNm": {"Prtry": "PLATFORM_USER_ID"}},
+                                    {
+                                        "Id": {"cat": [{"fake": ["regex", "[A-Z]{2}"]}, {"fake": ["i64", 100000000, 999999999]}]},
+                                        "SchmeNm": {"Prtry": "EU_VAT_NUMBER"}
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "CdtrAcct": {
+                        "Id": {"IBAN": {"fake": ["iban", "PT"]}},
+                        "Ccy": "EUR",
+                        "Nm": "Freelancer Business Account"
+                    },
+                    "Purp": {"Cd": "SALA"},
+                    "RgltryRptg": [
+                        {
+                            "Dtls": [
+                                {
+                                    "Tp": "BOTH",
+                                    "Dt": {
+                                        "fake": ["date", "%Y-%m-%d", "+0d", "+0d"]
+                                    },
+                                    "Ctry": "IE",
+                                    "Cd": "150",
+                                    "Amt": {"@Ccy": "EUR", "$value": {"var": "gross_amount"}},
+                                    "Inf": ["CBPR+ GIG ECONOMY PAYMENT"]
+                                }
+                            ]
+                        }
+                    ],
+                    "RmtInf": {
+                        "Strd": [
+                            {
+                                "RfrdDocInf": [
+                                    {
+                                        "Tp": {"CdOrPrtry": {"Prtry": "GIG_JOB_INVOICE"}},
+                                        "Nb": {"cat": ["INV-", {"var": "job_id"}]},
+                                        "RltdDt": {
+                                            "fake": ["date", "%Y-%m-%d", "-7d", "-1d"]
+                                        }
+                                    }
+                                ],
+                                "RfrdDocAmt": {
+                                    "DuePyblAmt": {"@Ccy": "EUR", "$value": {"fake": ["f64", 80.0, 2500.0]}},
+                                    "TaxAmt": [{"Amt": {"@Ccy": "EUR", "$value": {"var": "tax_withheld"}}}],
+                                    "AdjstmntAmtAndRsn": [
+                                        {
+                                            "Amt": {"@Ccy": "EUR", "$value": {"var": "platform_fee"}},
+                                            "CdtDbtInd": "DBIT",
+                                            "Rsn": "COMM",
+                                            "AddtlInf": "Platform service fee"
+                                        }
+                                    ]
+                                },
+                                "CdtrRefInf": {"Tp": {"CdOrPrtry": {"Prtry": "JOB_REFERENCE"}}, "Ref": {"var": "job_id"}},
+                                "AddtlRmtInf": ["Generated remittance information", "Generated remittance information"]
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+    }
+}

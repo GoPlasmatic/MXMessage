@@ -1,0 +1,22 @@
+{
+    "message_type": "pain.008",
+    "description": "Customer Direct Debit Initiation - Scenarios mapped from MT107",
+    "scenarios": [
+        {
+            "file": "authorized_bulk_collection.json",
+            "description": "Bulk direct debit collection with proper authorization"
+        },
+        {
+            "file": "general_direct_debit_basic.json",
+            "description": "Basic single direct debit transaction"
+        },
+        {
+            "file": "return_processing.json",
+            "description": "Direct debit return processing scenario"
+        },
+        {
+            "file": "unauthorized_debit_processing.json",
+            "description": "Processing of unauthorized debit with dispute handling"
+        }
+    ]
+}

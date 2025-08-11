@@ -1,0 +1,157 @@
+{
+    "variables": {
+        "msg_id": {"cat": ["MSG", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "sender_bic": {"fake": ["bic"]},
+        "receiver_bic": {"fake": ["bic"]},
+        "transaction_ref": {"cat": ["TXN", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "instruction_id": {"cat": ["INSTR", {"fake": ["i64", 10000000, 99999999]}]},
+        "end_to_end_id": {"cat": ["E2E", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "uetr": {"fake": ["uuid"]},
+        "amount": {"fake": ["f64", 100000.0, 50000000.0]},
+        "intermediary1_bic": {"fake": ["bic"]},
+        "intermediary2_bic": {"fake": ["bic"]},
+        "intermediary3_bic": {"fake": ["bic"]},
+        "sender_lei": {"fake": ["lei"]},
+        "receiver_lei": {"fake": ["lei"]},
+        "intermediary1_lei": {"fake": ["lei"]},
+        "intermediary2_lei": {"fake": ["lei"]}
+    },
+    "schema": {
+        "AppHdr": {
+            "Fr": {
+                "FIId": {"FinInstnId": {"BICFI": {"var": "sender_bic"}, "LEI": {"var": "sender_lei"}}}
+            },
+            "To": {
+                "FIId": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}, "LEI": {"var": "receiver_lei"}}}
+            },
+            "BizMsgIdr": {"var": "msg_id"},
+            "MsgDefIdr": "pacs.009.001.08",
+            "BizSvc": "swift.cbprplus.01",
+            "CreDt": {"var": "creation_datetime"}
+        },
+        "Document": {
+            "FinInstnCdtTrf": {
+                "GrpHdr": {
+                    "MsgId": {"var": "msg_id"},
+                    "CreDtTm": {"var": "creation_datetime"},
+                    "NbOfTxs": "1",
+                    "SttlmInf": {"SttlmMtd": "INDA"}
+                },
+                "CdtTrfTxInf": {
+                    "PmtId": {
+                        "InstrId": {"var": "instruction_id"},
+                        "EndToEndId": {"var": "end_to_end_id"},
+                        "TxId": {"var": "transaction_ref"},
+                        "UETR": {"var": "uetr"}
+                    },
+                    "PmtTpInf": {
+                        "InstrPrty": "HIGH",
+                        "SvcLvl": [{"Cd": "G001"}],
+                        "LclInstrm": {"Prtry": "COMPLEX_ROUTING"}
+                    },
+                    "IntrBkSttlmAmt": {"@Ccy": "USD", "$value": {"var": "amount"}},
+                    "IntrBkSttlmDt": {
+                        "fake": ["date", "%Y-%m-%d", "+0d", "+1d"]
+                    },
+                    "SttlmPrty": "HIGH",
+                    "InstgAgt": {"FinInstnId": {"BICFI": {"var": "sender_bic"}, "LEI": {"var": "sender_lei"}}},
+                    "InstdAgt": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}, "LEI": {"var": "receiver_lei"}}},
+                    "IntrmyAgt1": {
+                        "FinInstnId": {
+                            "BICFI": {"var": "intermediary1_bic"},
+                            "LEI": {"var": "intermediary1_lei"},
+                            "Nm": {"cat": [{"fake": ["company_name"]}, " Correspondent Bank"]},
+                            "PstlAdr": {"Ctry": "US"}
+                        }
+                    },
+                    "IntrmyAgt1Acct": {
+                        "Id": {
+                            "Othr": {"Id": {"cat": ["CORR-", {"fake": ["i64", 100000, 999999]}]}, "SchmeNm": {"Cd": "BBAN"}}
+                        }
+                    },
+                    "IntrmyAgt2": {
+                        "FinInstnId": {
+                            "BICFI": {"var": "intermediary2_bic"},
+                            "LEI": {"var": "intermediary2_lei"},
+                            "Nm": {"cat": [{"fake": ["company_name"]}, " Regional Hub"]},
+                            "PstlAdr": {"Ctry": {"fake": ["regex", "(SG|HK|JP)"]}}
+                        }
+                    },
+                    "IntrmyAgt2Acct": {
+                        "Id": {
+                            "Othr": {"Id": {"cat": ["HUB-", {"fake": ["i64", 100000, 999999]}]}, "SchmeNm": {"Cd": "BBAN"}}
+                        }
+                    },
+                    "IntrmyAgt3": {
+                        "FinInstnId": {
+                            "BICFI": {"var": "intermediary3_bic"},
+                            "Nm": {"cat": [{"fake": ["company_name"]}, " Local Correspondent"]},
+                            "PstlAdr": {"Ctry": {"fake": ["regex", "(CN|IN|BR)"]}}
+                        }
+                    },
+                    "Dbtr": {
+                        "FinInstnId": {
+                            "BICFI": {"var": "sender_bic"},
+                            "LEI": {"var": "sender_lei"},
+                            "Nm": {"fake": ["company_name"]}
+                        }
+                    },
+                    "DbtrAcct": {
+                        "Id": {
+                            "Othr": {
+                                "Id": {"cat": ["NOSTRO-", {"fake": ["i64", 100000, 999999]}]},
+                                "SchmeNm": {"Prtry": "NOSTRO_ACCOUNT"}
+                            }
+                        },
+                        "Ccy": "USD"
+                    },
+                    "DbtrAgt": {"FinInstnId": {"BICFI": {"var": "sender_bic"}, "LEI": {"var": "sender_lei"}}},
+                    "CdtrAgt": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}, "LEI": {"var": "receiver_lei"}}},
+                    "Cdtr": {
+                        "FinInstnId": {
+                            "BICFI": {"var": "receiver_bic"},
+                            "LEI": {"var": "receiver_lei"},
+                            "Nm": {"fake": ["company_name"]}
+                        }
+                    },
+                    "CdtrAcct": {
+                        "Id": {
+                            "Othr": {
+                                "Id": {"cat": ["VOSTRO-", {"fake": ["i64", 100000, 999999]}]},
+                                "SchmeNm": {"Prtry": "VOSTRO_ACCOUNT"}
+                            }
+                        },
+                        "Ccy": "USD"
+                    },
+                    "InstrForCdtrAgt": [{"Cd": "PHOB", "InstrInf": "ROUTE THROUGH INTERMEDIARIES AS SPECIFIED"}],
+                    "InstrForNxtAgt": [{"InstrInf": "CBPR+ COMPLIANT ROUTING"}],
+                    "RgltryRptg": [
+                        {
+                            "Dtls": [
+                                {
+                                    "Tp": "BOTH",
+                                    "Dt": {
+                                        "fake": ["date", "%Y-%m-%d", "+0d", "+0d"]
+                                    },
+                                    "Ctry": "US",
+                                    "Cd": "COMPLEX",
+                                    "Amt": {"@Ccy": "USD", "$value": {"var": "amount"}},
+                                    "Inf": ["CBPR+ COMPLEX ROUTING COVER"]
+                                }
+                            ]
+                        }
+                    ],
+                    "SplmtryData": [
+                        {
+                            "PlcAndNm": "RoutingDetails",
+                            "Envlp": {
+                                "Document": {"Xprtn": "2099-12-31", "Prtry": {"Tp": "ROUTING_CHAIN", "Id": "MULTI_HOP_COVER"}}
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}

@@ -17,14 +17,31 @@
 // You may obtain a copy of this library at
 // https://github.com/GoPlasmatic/MXMessage
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct ValidationError {
     pub code: u32,
     pub message: String,
+    pub field: Option<String>,
+    pub path: Option<String>,
 }
 
 impl ValidationError {
     pub fn new(code: u32, message: String) -> Self {
-        ValidationError { code, message }
+        ValidationError {
+            code,
+            message,
+            field: None,
+            path: None,
+        }
+    }
+
+    pub fn with_field(mut self, field: String) -> Self {
+        self.field = Some(field);
+        self
+    }
+
+    pub fn with_path(mut self, path: String) -> Self {
+        self.path = Some(path);
+        self
     }
 }

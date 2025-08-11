@@ -1,0 +1,84 @@
+{
+    "variables": {
+        "msg_id": "MSG123456789",
+        "creation_datetime": "2025-01-15T10:00:00.123+00:00",
+        "original_msg_id": "ORIG-123456789",
+        "uetr": "a1234567-b123-4123-8123-123456789012",
+        "transaction_id": "TXN123456789",
+        "instruction_id": "INSTR12345678",
+        "end_to_end_id": "E2E123456789",
+        "amount": 10000.0,
+        "cancellation_id": "CANC-123456789",
+        "sender_bic": "BANKUS33XXX",
+        "receiver_bic": "BANKGB22XXX",
+        "sender_lei": "54930084UKLVMY22DS16",
+        "receiver_lei": "213800QILIUD4ROSUO03",
+        "original_date": "2025-01-14"
+    },
+    "schema": {
+        "AppHdr": {
+            "Fr": {"FIId": {"FinInstnId": {"BICFI": {"var": "sender_bic"}}}},
+            "To": {"FIId": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}}}},
+            "BizMsgIdr": {"var": "msg_id"},
+            "MsgDefIdr": "camt.056.001.08",
+            "BizSvc": "swift.cbprplus.01",
+            "CreDt": {"var": "creation_datetime"}
+        },
+        "Document": {
+            "FIToFIPmtCxlReq": {
+                "Assgnmt": {
+                    "Id": {"var": "msg_id"},
+                    "Assgnr": {"Agt": {"FinInstnId": {"BICFI": {"var": "sender_bic"}}}},
+                    "Assgne": {"Agt": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}}}},
+                    "CreDtTm": {"var": "creation_datetime"}
+                },
+                "Undrlyg": {
+                    "TxInf": {
+                        "CxlId": {"var": "cancellation_id"},
+                        "OrgnlGrpInf": {
+                            "OrgnlMsgId": {"var": "original_msg_id"},
+                            "OrgnlMsgNmId": "pacs.008.001.08",
+                            "OrgnlCreDtTm": {"fake": ["iso8601_datetime", "-5d", "-2d"]}
+                        },
+                        "OrgnlInstrId": {"var": "instruction_id"},
+                        "OrgnlEndToEndId": {"var": "end_to_end_id"},
+                        "OrgnlTxId": {"var": "transaction_id"},
+                        "OrgnlIntrBkSttlmAmt": {"@Ccy": "USD", "$value": {"var": "amount"}},
+                        "OrgnlIntrBkSttlmDt": {"var": "original_date"},
+                        "CxlRsnInf": {
+                            "Orgtr": {
+                                "Nm": "Customer Service Department",
+                                "Id": {"OrgId": {"AnyBIC": {"var": "sender_bic"}}}
+                            },
+                            "Rsn": {"Cd": "CUST"},
+                            "AddtlInf": [
+                                "Standard cancellation request",
+                                "Customer instruction to cancel payment",
+                                "Payment not yet settled"
+                            ]
+                        },
+                        "OrgnlTxRef": {
+                            "IntrBkSttlmAmt": {"@Ccy": "USD", "$value": {"var": "amount"}},
+                            "IntrBkSttlmDt": {"var": "original_date"},
+                            "SttlmInf": {"SttlmMtd": "INDA"},
+                            "PmtTpInf": {"InstrPrty": "NORM", "SvcLvl": [{"Cd": "SEPA"}]},
+                            "RmtInf": {"Ustrd": ["Standard payment transfer"]},
+                            "Dbtr": {"Nm": {"var": "debtor_name"}, "PstlAdr": {"Ctry": {"fake": ["country_code"]}}},
+                            "DbtrAcct": {"Id": {"IBAN": {"fake": ["iban"]}}},
+                            "DbtrAgt": {"FinInstnId": {"BICFI": {"var": "sender_bic"}}},
+                            "CdtrAgt": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}}},
+                            "Cdtr": {"Nm": {"var": "creditor_name"}, "PstlAdr": {"Ctry": {"fake": ["country_code"]}}},
+                            "CdtrAcct": {"Id": {"IBAN": {"fake": ["iban"]}}}
+                        },
+                        "Case": {
+                            "Id": {"var": "cancellation_id"},
+                            "Cretr": {"Pty": {"Nm": "Case Creator"}},
+                            "Nm": "Cancellation Case"
+                        },
+                        "OrgnlUETR": {"var": "uetr"}
+                    }
+                }
+            }
+        }
+    }
+}

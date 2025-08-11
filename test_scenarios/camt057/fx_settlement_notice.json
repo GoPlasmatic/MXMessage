@@ -1,0 +1,71 @@
+{
+    "variables": {
+        "msg_id": "MSG123456789",
+        "creation_datetime": "2025-01-15T10:00:00.123+00:00",
+        "expected_datetime": "2025-01-15T14:00:00.123+00:00",
+        "sender_bic": "BANKUS33XXX",
+        "receiver_bic": "BANKGB22XXX",
+        "amount": 10000.0,
+        "currency": "USD",
+        "ordering_name": "John Smith",
+        "ordering_address": "123 Main Street",
+        "ordering_country": "US",
+        "beneficiary_account": "GB29NWBK60161331926819",
+        "beneficiary_name": "Jane Doe",
+        "payment_reference": "PMT-123456",
+        "remittance_info": "Payment for services",
+        "sender_reference": "SNDREF-123456",
+        "notification_id": "NOTIF-123456",
+        "reference": "REF-123456",
+        "ordering_customer": "ABC Corporation",
+        "purpose_code": "GDDS",
+        "batch_id": "BATCH-456789",
+        "number_of_transactions": 5,
+        "fx_rate": 1.2345,
+        "base_currency": "EUR",
+        "fx_reference": "FX-REF-789012",
+        "security_id": "US0378331005",
+        "quantity": 100,
+        "settlement_date": "2025-01-16",
+        "debtor_account": "US64SVBKUS6S1234567890",
+        "intermediary_bank": "CHASGB2LXXX"
+    },
+    "schema": {
+        "AppHdr": {
+            "Fr": {"FIId": {"FinInstnId": {"BICFI": {"var": "sender_bic"}}}},
+            "To": {"FIId": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}}}},
+            "BizMsgIdr": {"var": "msg_id"},
+            "MsgDefIdr": "camt.057.001.06",
+            "BizSvc": "swift.cbprplus.01",
+            "CreDt": {"var": "creation_datetime"}
+        },
+        "Document": {
+            "NtfctnToRcv": {
+                "Ntfctn": {
+                    "Id": "NOTIF-123456",
+                    "Acct": {"Id": {"IBAN": "GB29NWBK60161331926819"}},
+                    "Itm": [
+                        {
+                            "Id": "PMT-123456",
+                            "XpctdValDt": "2025-01-15T14:00:00.123+00:00",
+                            "Amt": {"@Ccy": "USD", "$value": 10000.0},
+                            "RmtInf": {
+                                "Ustrd": ["FX Settlement - Deal MISSING_deal_reference"],
+                                "Strd": [
+                                    {
+                                        "AddtlRmtInf": [
+                                            "Buy MISSING_buy_currency MISSING_buy_amount",
+                                            "Sell MISSING_sell_currency MISSING_sell_amount",
+                                            "Rate: MISSING_exchange_rate"
+                                        ]
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                },
+                "GrpHdr": {"MsgId": "MSG123456789", "CreDtTm": "2025-01-15T10:00:00.123+00:00"}
+            }
+        }
+    }
+}

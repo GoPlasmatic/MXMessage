@@ -1,0 +1,179 @@
+{
+    "variables": {
+        "msg_id": {"cat": ["MSG", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "sender_bic": {"fake": ["bic"]},
+        "receiver_bic": {"fake": ["bic"]},
+        "transaction_ref": {"cat": ["TXN", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "instruction_id": {"cat": ["INSTR", {"fake": ["i64", 10000000, 99999999]}]},
+        "end_to_end_id": {"cat": ["E2E", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "uetr": {"fake": ["uuid"]},
+        "interest_amount": {"fake": ["f64", 1000.0, 100000.0]},
+        "withholding_tax": {"fake": ["f64", 0.0, 30000.0]},
+        "bond_issuer": {"fake": ["company_name"]},
+        "bondholder_name": {"fake": ["name"]},
+        "isin": {"cat": ["XS", {"fake": ["regex", "[0-9]{10}"]}]},
+        "coupon_rate": {"fake": ["f64", 2.0, 8.0]},
+        "payment_frequency": {"fake": ["regex", "(ANNUAL|SEMI-ANNUAL|QUARTERLY)"]},
+        "maturity_date": {
+            "fake": ["date", "%Y-%m-%d", "+365d", "+3650d"]
+        }
+    },
+    "schema": {
+        "AppHdr": {
+            "Fr": {"FIId": {"FinInstnId": {"BICFI": {"var": "sender_bic"}}}},
+            "To": {"FIId": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}}}},
+            "BizMsgIdr": {"var": "msg_id"},
+            "MsgDefIdr": "pacs.008.001.08",
+            "BizSvc": "swift.cbprplus.01",
+            "CreDt": {"var": "creation_datetime"}
+        },
+        "Document": {
+            "FIToFICstmrCdtTrf": {
+                "GrpHdr": {
+                    "MsgId": {"var": "msg_id"},
+                    "CreDtTm": {"var": "creation_datetime"},
+                    "NbOfTxs": "1",
+                    "SttlmInf": {"SttlmMtd": "INDA"}
+                },
+                "CdtTrfTxInf": {
+                    "PmtId": {
+                        "InstrId": {"var": "instruction_id"},
+                        "EndToEndId": {"var": "end_to_end_id"},
+                        "TxId": {"var": "transaction_ref"},
+                        "UETR": {"var": "uetr"}
+                    },
+                    "PmtTpInf": {
+                        "InstrPrty": "NORM",
+                        "SvcLvl": [{"Cd": "CBPR"}],
+                        "CtgyPurp": {"Cd": "INTE"},
+                        "LclInstrm": {"Cd": "BOND"}
+                    },
+                    "IntrBkSttlmAmt": {"@Ccy": "USD", "$value": {"fake": ["f64", 700.0, 70000.0]}},
+                    "IntrBkSttlmDt": {
+                        "fake": ["date", "%Y-%m-%d", "+0d", "+0d"]
+                    },
+                    "SttlmPrty": "NORM",
+                    "InstdAmt": {"@Ccy": "USD", "$value": {"fake": ["f64", 700.0, 70000.0]}},
+                    "ChrgBr": "SHAR",
+                    "InstgAgt": {"FinInstnId": {"BICFI": {"var": "sender_bic"}, "LEI": {"fake": ["lei"]}}},
+                    "InstdAgt": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}, "LEI": {"fake": ["lei"]}}},
+                    "Dbtr": {
+                        "Nm": {"var": "bond_issuer"},
+                        "PstlAdr": {
+                            "StrtNm": {"cat": [{"fake": ["i64", 1, 999]}, " Financial Center"]},
+                            "PstCd": {"fake": ["postcode"]},
+                            "TwnNm": {"fake": ["city_name"]},
+                            "Ctry": "LU"
+                        },
+                        "CtryOfRes": "LU",
+                        "Id": {
+                            "OrgId": {
+                                "LEI": {"fake": ["lei"]},
+                                "Othr": [
+                                    {
+                                        "Id": {"cat": ["LU-B", {"fake": ["i64", 100000, 999999]}]},
+                                        "SchmeNm": {"Prtry": "LUXEMBOURG_RCS"}
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "DbtrAcct": {
+                        "Id": {"IBAN": {"fake": ["iban", "LU"]}},
+                        "Ccy": "USD",
+                        "Nm": "Bond Interest Payment Account"
+                    },
+                    "DbtrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {"var": "sender_bic"},
+                            "Nm": {"cat": [{"fake": ["company_name"]}, " Paying Agent"]},
+                            "LEI": {"fake": ["lei"]}
+                        }
+                    },
+                    "CdtrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {"var": "receiver_bic"},
+                            "Nm": {"fake": ["company_name"]},
+                            "LEI": {"fake": ["lei"]}
+                        }
+                    },
+                    "Cdtr": {
+                        "Nm": {"var": "bondholder_name"},
+                        "PstlAdr": {
+                            "StrtNm": {"fake": ["street_name"]},
+                            "BldgNb": {"cat": [{"fake": ["i64", 1, 999]}]},
+                            "PstCd": {"fake": ["postcode"]},
+                            "TwnNm": {"fake": ["city_name"]},
+                            "Ctry": {"fake": ["regex", "(US|GB|JP|SG)"]}
+                        },
+                        "CtryOfRes": {"fake": ["regex", "(US|GB|JP|SG)"]},
+                        "Id": {
+                            "PrvtId": {
+                                "Othr": [
+                                    {
+                                        "Id": {"cat": ["BH-", {"fake": ["i64", 10000000, 99999999]}]},
+                                        "SchmeNm": {"Prtry": "BONDHOLDER_ID"}
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "CdtrAcct": {"Id": {"IBAN": {"fake": ["iban", "US"]}}, "Ccy": "USD", "Nm": "Securities Account"},
+                    "Purp": {"Cd": "INTE"},
+                    "RgltryRptg": [
+                        {
+                            "Dtls": [
+                                {
+                                    "Tp": "BOTH",
+                                    "Dt": {
+                                        "fake": ["date", "%Y-%m-%d", "+0d", "+0d"]
+                                    },
+                                    "Ctry": "LU",
+                                    "Cd": "305",
+                                    "Amt": {"@Ccy": "USD", "$value": {"var": "interest_amount"}},
+                                    "Inf": ["CBPR+ BOND INTEREST PAYMENT"]
+                                }
+                            ]
+                        }
+                    ],
+                    "RmtInf": {
+                        "Strd": [
+                            {
+                                "RfrdDocInf": [
+                                    {
+                                        "Tp": {"CdOrPrtry": {"Prtry": "BOND_COUPON"}},
+                                        "Nb": {
+                                            "cat": [
+                                                {"var": "isin"},
+                                                "-COUPON-",
+                                                {
+                                                    "fake": ["date", "%Y%m%d", "+0d", "+0d"]
+                                                }
+                                            ]
+                                        },
+                                        "RltdDt": {
+                                            "fake": ["date", "%Y-%m-%d", "+0d", "+0d"]
+                                        }
+                                    }
+                                ],
+                                "RfrdDocAmt": {
+                                    "DuePyblAmt": {"@Ccy": "USD", "$value": {"var": "interest_amount"}},
+                                    "TaxAmt": [{"Amt": {"@Ccy": "USD", "$value": {"var": "withholding_tax"}}}],
+                                    "RmtdAmt": {"@Ccy": "USD", "$value": {"fake": ["f64", 700.0, 70000.0]}}
+                                },
+                                "CdtrRefInf": {"Tp": {"CdOrPrtry": {"Prtry": "ISIN"}}, "Ref": {"var": "isin"}},
+                                "AddtlRmtInf": [
+                                    "Generated remittance information",
+                                    "Generated remittance information",
+                                    "Generated remittance information",
+                                    "Generated remittance information"
+                                ]
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+    }
+}

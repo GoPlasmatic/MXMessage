@@ -1,0 +1,35 @@
+{
+    "message_type": "pain.001.001.09",
+    "description": "Customer Credit Transfer Initiation",
+    "scenarios": [
+        {
+            "file": "standard.json",
+            "description": "Standard customer credit transfer initiation"
+        },
+        {
+            "file": "minimal.json",
+            "description": "Minimal credit transfer with only required fields"
+        },
+        {
+            "file": "bulk_payment.json",
+            "description": "Bulk payment with multiple transactions"
+        },
+        {
+            "file": "cbpr_corporate_bulk.json",
+            "description": "CBPR+ compliant corporate bulk payment"
+        },
+        {
+            "file": "cbpr_payroll.json",
+            "description": "CBPR+ compliant payroll batch payment"
+        },
+        {
+            "file": "cbpr_supplier_batch.json",
+            "description": "CBPR+ compliant supplier batch payment"
+        },
+        {"file": "multi_currency.json", "description": "Multi-currency payment batch"},
+        {"file": "salary_payment.json", "description": "Monthly salary payment batch"},
+        {"file": "scheduled_payment.json", "description": "Scheduled future-dated payment"},
+        {"file": "urgent_payment.json", "description": "Urgent priority payment"},
+        {"file": "vendor_payment.json", "description": "Vendor/supplier payment batch"}
+    ]
+}

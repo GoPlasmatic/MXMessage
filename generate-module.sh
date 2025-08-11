@@ -66,12 +66,16 @@ for f in `find $output_directory -iname "*.rs" -type f -print`; do
     sed -i '' '/^\/\/ document \.\.\./,/^}$/d' "$f"
     # Remove the empty impl block that follows
     sed -i '' '/^impl document {$/,/^}$/d' "$f"
+    # Remove Validate impl for document
+    sed -i '' '/^impl Validate for document {$/,/^}$/d' "$f"
 
 
     # Use sed to remove the app_hdr struct pattern
     sed -i '' '/^\/\/ app_hdr \.\.\./,/^}$/d' "$f"
     # Remove the empty impl block that follows
     sed -i '' '/^impl app_hdr {$/,/^}$/d' "$f"
+    # Remove Validate impl for app_hdr
+    sed -i '' '/^impl Validate for app_hdr {$/,/^}$/d' "$f"
 
 
     # Replace serde rename AppHdr with flatten for XML serialization

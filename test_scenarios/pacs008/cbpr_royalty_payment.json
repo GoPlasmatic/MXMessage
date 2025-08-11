@@ -1,0 +1,172 @@
+{
+    "variables": {
+        "msg_id": {"cat": ["MSG", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "sender_bic": {"fake": ["bic"]},
+        "receiver_bic": {"fake": ["bic"]},
+        "transaction_ref": {"cat": ["TXN", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "instruction_id": {"cat": ["INSTR", {"fake": ["i64", 10000000, 99999999]}]},
+        "end_to_end_id": {"cat": ["E2E", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "uetr": {"fake": ["uuid"]},
+        "gross_amount": {"fake": ["f64", 10000.0, 100000.0]},
+        "withholding_rate": 0.15,
+        "artist_name": {"fake": ["name"]},
+        "publisher_name": {"cat": [{"fake": ["company_name"]}, " Entertainment Ltd"]},
+        "work_title": {
+            "cat": [
+                {"fake": ["word"]},
+                " ",
+                {"fake": ["word"]},
+                " - Album"
+            ]
+        },
+        "royalty_period": {
+            "fake": ["date", "%Y-Q%q", "-3M", "-0M"]
+        },
+        "isrc_code": {"cat": ["ISRC-", {"fake": ["regex", "[A-Z]{2}-[A-Z0-9]{3}-[0-9]{2}-[0-9]{5}"]}]}
+    },
+    "schema": {
+        "AppHdr": {
+            "Fr": {"FIId": {"FinInstnId": {"BICFI": {"var": "sender_bic"}}}},
+            "To": {"FIId": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}}}},
+            "BizMsgIdr": {"var": "msg_id"},
+            "MsgDefIdr": "pacs.008.001.08",
+            "BizSvc": "swift.cbprplus.01",
+            "CreDt": {"var": "creation_datetime"}
+        },
+        "Document": {
+            "FIToFICstmrCdtTrf": {
+                "GrpHdr": {
+                    "MsgId": {"var": "msg_id"},
+                    "CreDtTm": {"var": "creation_datetime"},
+                    "NbOfTxs": "1",
+                    "SttlmInf": {"SttlmMtd": "INDA"}
+                },
+                "CdtTrfTxInf": {
+                    "PmtId": {
+                        "InstrId": {"var": "instruction_id"},
+                        "EndToEndId": {"var": "end_to_end_id"},
+                        "TxId": {"var": "transaction_ref"},
+                        "UETR": {"var": "uetr"}
+                    },
+                    "PmtTpInf": {
+                        "InstrPrty": "NORM",
+                        "SvcLvl": [{"Cd": "CBPR"}],
+                        "CtgyPurp": {"Cd": "INTC"},
+                        "LclInstrm": {"Prtry": "ROYALTY_PAYMENT"}
+                    },
+                    "IntrBkSttlmAmt": {"@Ccy": "USD", "$value": {"fake": ["f64", 8500.0, 85000.0]}},
+                    "IntrBkSttlmDt": {
+                        "fake": ["date", "%Y-%m-%d", "+0d", "+0d"]
+                    },
+                    "SttlmPrty": "NORM",
+                    "InstdAmt": {"@Ccy": "USD", "$value": {"fake": ["f64", 8500.0, 85000.0]}},
+                    "ChrgBr": "DEBT",
+                    "InstgAgt": {"FinInstnId": {"BICFI": {"var": "sender_bic"}, "LEI": {"fake": ["lei"]}}},
+                    "InstdAgt": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}, "LEI": {"fake": ["lei"]}}},
+                    "Dbtr": {
+                        "Nm": {"var": "publisher_name"},
+                        "PstlAdr": {
+                            "StrtNm": {"cat": [{"fake": ["i64", 1, 999]}, " Music Row"]},
+                            "PstCd": {"fake": ["postcode"]},
+                            "TwnNm": "Nashville",
+                            "CtrySubDvsn": "TN",
+                            "Ctry": "US"
+                        },
+                        "CtryOfRes": "US",
+                        "Id": {
+                            "OrgId": {
+                                "LEI": {"fake": ["lei"]},
+                                "Othr": [
+                                    {
+                                        "Id": {"cat": [{"fake": ["i64", 10, 99]}, "-", {"fake": ["i64", 1000000, 9999999]}]},
+                                        "SchmeNm": {"Cd": "TXID"}
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "DbtrAcct": {
+                        "Id": {"IBAN": {"fake": ["iban", "US"]}},
+                        "Ccy": "USD",
+                        "Nm": "Royalty Distribution Account"
+                    },
+                    "DbtrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {"var": "sender_bic"},
+                            "Nm": {"fake": ["company_name"]},
+                            "LEI": {"fake": ["lei"]}
+                        }
+                    },
+                    "CdtrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {"var": "receiver_bic"},
+                            "Nm": {"fake": ["company_name"]},
+                            "LEI": {"fake": ["lei"]}
+                        }
+                    },
+                    "Cdtr": {
+                        "Nm": {"var": "artist_name"},
+                        "PstlAdr": {
+                            "StrtNm": {"fake": ["street_name"]},
+                            "BldgNb": {"cat": [{"fake": ["i64", 1, 999]}]},
+                            "PstCd": {"fake": ["postcode"]},
+                            "TwnNm": {"fake": ["city_name"]},
+                            "Ctry": "GB"
+                        },
+                        "CtryOfRes": "GB",
+                        "Id": {
+                            "PrvtId": {
+                                "Othr": [
+                                    {
+                                        "Id": {"cat": ["ISWC-T-", {"fake": ["i64", 100000000, 999999999]}]},
+                                        "SchmeNm": {"Prtry": "INTL_STANDARD_MUSICAL_WORK_CODE"}
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "CdtrAcct": {"Id": {"IBAN": {"fake": ["iban", "GB"]}}, "Ccy": "USD", "Nm": "Artist Royalty Account"},
+                    "Purp": {"Cd": "INTC"},
+                    "RgltryRptg": [
+                        {
+                            "Dtls": [
+                                {
+                                    "Tp": "BOTH",
+                                    "Dt": {
+                                        "fake": ["date", "%Y-%m-%d", "+0d", "+0d"]
+                                    },
+                                    "Ctry": "US",
+                                    "Cd": "150",
+                                    "Amt": {"@Ccy": "USD", "$value": {"var": "gross_amount"}},
+                                    "Inf": ["CBPR+ ROYALTY PAYMENT WITH WITHHOLD"]
+                                }
+                            ]
+                        }
+                    ],
+                    "RmtInf": {
+                        "Strd": [
+                            {
+                                "RfrdDocInf": [
+                                    {
+                                        "Tp": {"CdOrPrtry": {"Prtry": "ROYALTY_STATEMENT"}},
+                                        "Nb": {"cat": ["STMT-", {"var": "royalty_period"}]},
+                                        "RltdDt": {
+                                            "fake": ["date", "%Y-%m-%d", "-30d", "-1d"]
+                                        }
+                                    }
+                                ],
+                                "RfrdDocAmt": {
+                                    "DuePyblAmt": {"@Ccy": "USD", "$value": {"fake": ["f64", 8500.0, 85000.0]}},
+                                    "TaxAmt": [{"Amt": {"@Ccy": "USD", "$value": {"fake": ["f64", 1500.0, 15000.0]}}}]
+                                },
+                                "CdtrRefInf": {"Tp": {"CdOrPrtry": {"Prtry": "WORK_IDENTIFIER"}}, "Ref": {"var": "isrc_code"}},
+                                "AddtlRmtInf": ["Generated remittance information", "Generated remittance information"]
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+    }
+}

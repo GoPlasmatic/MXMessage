@@ -1,0 +1,110 @@
+{
+    "variables": {
+        "msg_id": {"cat": ["MSG", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "settlement_date": "2025-01-30",
+        "num_txs": 6,
+        "total_amt": {"fake": ["f64", 5000.0, 25000.0]},
+        "instg_lei": {"fake": ["lei"]},
+        "instd_lei": {"fake": ["lei"]},
+        "instg_bic": {"fake": ["bic"]},
+        "instd_bic": {"fake": ["bic"]},
+        "instruction_id": {"cat": ["INSTR", {"fake": ["i64", 10000000, 99999999]}]},
+        "uetr": {"fake": ["uuid"]},
+        "collection_date": "2025-01-30",
+        "end_to_end_id": {"cat": ["E2E", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "tx_id": {"cat": ["TX", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "debtor_bic": {"fake": ["bic"]},
+        "debtor_iban": {"fake": ["iban", "DE"]},
+        "creditor_bic": {"fake": ["bic"]},
+        "creditor_iban": {"fake": ["iban", "FR"]}
+    },
+    "schema": {
+        "AppHdr": {
+            "Fr": {"FIId": {"FinInstnId": {"BICFI": {"fake": ["bic"]}}}},
+            "To": {"FIId": {"FinInstnId": {"BICFI": {"fake": ["bic"]}}}},
+            "BizMsgIdr": {"var": "msg_id"},
+            "MsgDefIdr": "pacs.003.001.08",
+            "BizSvc": "swift.cbprplus.01",
+            "CreDt": {"var": "creation_datetime"}
+        },
+        "Document": {
+            "FIToFICstmrDrctDbt": {
+                "GrpHdr": {
+                    "MsgId": {"var": "msg_id"},
+                    "CreDtTm": {"var": "creation_datetime"},
+                    "NbOfTxs": "1",
+                    "SttlmInf": {"SttlmMtd": "INDA"}
+                },
+                "DrctDbtTxInf": {
+                    "PmtId": {
+                        "InstrId": {"var": "instruction_id"},
+                        "EndToEndId": {"var": "end_to_end_id"},
+                        "TxId": {"var": "tx_id"},
+                        "UETR": {"var": "uetr"}
+                    },
+                    "PmtTpInf": {
+                        "InstrPrty": "NORM",
+                        "SvcLvl": [{"Cd": "G001"}],
+                        "LclInstrm": {"Cd": "CORE"},
+                        "SeqTp": "RCUR",
+                        "CtgyPurp": {"Cd": "OTHR"}
+                    },
+                    "IntrBkSttlmAmt": {"@Ccy": "EUR", "$value": 1000.0},
+                    "IntrBkSttlmDt": {"var": "settlement_date"},
+                    "InstdAmt": {"@Ccy": "EUR", "$value": 1000.0},
+                    "ChrgBr": "SHAR",
+                    "DrctDbtTx": {
+                        "MndtRltdInf": {
+                            "MndtId": "ABC0000000000000",
+                            "DtOfSgntr": "2024-06-01",
+                            "AmdmntInd": false,
+                            "ElctrncSgntr": "ABC0000000000000"
+                        },
+                        "CdtrSchmeId": {
+                            "Id": {"PrvtId": {"Othr": [{"Id": "ABC0000000000000", "SchmeNm": {"Prtry": "SEPA"}}]}}
+                        }
+                    },
+                    "DbtrAgt": {"FinInstnId": {"BICFI": {"var": "debtor_bic"}}},
+                    "Dbtr": {
+                        "Nm": "John Doe",
+                        "PstlAdr": {"Ctry": "DE", "AdrLine": ["Debtor Street 123", "City, State 12345"]},
+                        "Id": {
+                            "PrvtId": {"Othr": [{"Id": "ABC0000000000000", "SchmeNm": {"Prtry": "CUSTOMER_ID"}}]}
+                        }
+                    },
+                    "DbtrAcct": {"Id": {"IBAN": {"var": "debtor_iban"}}},
+                    "CdtrAgt": {"FinInstnId": {"BICFI": {"var": "creditor_bic"}, "LEI": "SAMPLELEI123456789012"}},
+                    "Cdtr": {
+                        "Nm": "StreamFlix Media Services",
+                        "PstlAdr": {"Ctry": "DE", "AdrLine": ["Media Tower", "10115 Berlin"]},
+                        "Id": {"OrgId": {"LEI": "SAMPLELEI123456789012"}}
+                    },
+                    "CdtrAcct": {"Id": {"IBAN": {"var": "creditor_iban"}}, "Tp": {"Cd": "CACC"}},
+                    "Purp": {"Cd": "OTHR"},
+                    "RgltryRptg": [
+                        {
+                            "Dtls": [
+                                {
+                                    "Tp": "DEBT",
+                                    "Dt": "2025-01-30",
+                                    "Ctry": "DE",
+                                    "Cd": "150",
+                                    "Amt": {"@Ccy": "EUR", "$value": 1000.0},
+                                    "Inf": ["CBPR+ STREAMING SUBSCRIPTION"]
+                                }
+                            ]
+                        }
+                    ],
+                    "RmtInf": {
+                        "Ustrd": "Monthly streaming subscription - Premium",
+                        "Strd": [{"AddtlRmtInf": ["4K/UHD streaming", "4 simultaneous screens"]}]
+                    },
+                    "ReqdColltnDt": {"var": "collection_date"},
+                    "InstgAgt": {"FinInstnId": {"BICFI": {"var": "creditor_bic"}}},
+                    "InstdAgt": {"FinInstnId": {"BICFI": {"var": "debtor_bic"}}}
+                }
+            }
+        }
+    }
+}

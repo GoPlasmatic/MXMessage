@@ -1,0 +1,186 @@
+{
+    "variables": {
+        "msg_id": {"cat": ["MSG", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "sender_bic": {"fake": ["bic"]},
+        "receiver_bic": {"fake": ["bic"]},
+        "transaction_ref": {"cat": ["TXN", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "instruction_id": {"cat": ["INSTR", {"fake": ["i64", 10000000, 99999999]}]},
+        "end_to_end_id": {"cat": ["E2E", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "uetr": {"fake": ["uuid"]},
+        "remittance_amount": {"fake": ["f64", 100.0, 5000.0]},
+        "sender_name": {"fake": ["name"]},
+        "recipient_name": {"fake": ["name"]},
+        "exchange_rate": {"fake": ["f64", 75.0, 85.0]},
+        "remittance_purpose": {"fake": ["regex", "(FAMILY_SUPPORT|EDUCATION|MEDICAL|PROPERTY)"]},
+        "mtcn": {"cat": [{"fake": ["i64", 1000000000, 9999999999]}]},
+        "sender_country": "US",
+        "recipient_country": "IN"
+    },
+    "schema": {
+        "AppHdr": {
+            "Fr": {"FIId": {"FinInstnId": {"BICFI": {"var": "sender_bic"}}}},
+            "To": {"FIId": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}}}},
+            "BizMsgIdr": {"var": "msg_id"},
+            "MsgDefIdr": "pacs.008.001.08",
+            "BizSvc": "swift.cbprplus.01",
+            "CreDt": {"var": "creation_datetime"}
+        },
+        "Document": {
+            "FIToFICstmrCdtTrf": {
+                "GrpHdr": {
+                    "MsgId": {"var": "msg_id"},
+                    "CreDtTm": {"var": "creation_datetime"},
+                    "NbOfTxs": "1",
+                    "SttlmInf": {"SttlmMtd": "INDA"}
+                },
+                "CdtTrfTxInf": {
+                    "PmtId": {
+                        "InstrId": {"var": "instruction_id"},
+                        "EndToEndId": {"var": "end_to_end_id"},
+                        "TxId": {"var": "transaction_ref"},
+                        "UETR": {"var": "uetr"}
+                    },
+                    "PmtTpInf": {
+                        "InstrPrty": "HIGH",
+                        "SvcLvl": [{"Cd": "CBPR"}],
+                        "CtgyPurp": {"Cd": "CASH"},
+                        "LclInstrm": {"Prtry": "REMITTANCE_CORRIDOR"}
+                    },
+                    "IntrBkSttlmAmt": {"@Ccy": "USD", "$value": {"var": "remittance_amount"}},
+                    "IntrBkSttlmDt": {
+                        "fake": ["date", "%Y-%m-%d", "+0d", "+0d"]
+                    },
+                    "SttlmPrty": "HIGH",
+                    "InstdAmt": {"@Ccy": "USD", "$value": {"var": "remittance_amount"}},
+                    "XchgRate": {"var": "exchange_rate"},
+                    "ChrgBr": "DEBT",
+                    "ChrgsInf": [
+                        {
+                            "Amt": {"@Ccy": "USD", "$value": {"fake": ["f64", 5.0, 50.0]}},
+                            "Agt": {"FinInstnId": {"BICFI": {"var": "sender_bic"}}},
+                            "Tp": {"Prtry": "REMITTANCE_FEE"}
+                        }
+                    ],
+                    "InstgAgt": {"FinInstnId": {"BICFI": {"var": "sender_bic"}, "LEI": {"fake": ["lei"]}}},
+                    "InstdAgt": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}, "LEI": {"fake": ["lei"]}}},
+                    "IntrmyAgt1": {
+                        "FinInstnId": {
+                            "BICFI": {"fake": ["bic"]},
+                            "Nm": "Correspondent Bank India",
+                            "LEI": {"fake": ["lei"]}
+                        }
+                    },
+                    "Dbtr": {
+                        "Nm": {"var": "sender_name"},
+                        "PstlAdr": {
+                            "StrtNm": {"fake": ["street_name"]},
+                            "BldgNb": {"cat": [{"fake": ["i64", 1, 999]}]},
+                            "PstCd": {"fake": ["postcode"]},
+                            "TwnNm": {"fake": ["city_name"]},
+                            "CtrySubDvsn": {"fake": ["state_abbr"]},
+                            "Ctry": {"var": "sender_country"}
+                        },
+                        "CtryOfRes": {"var": "sender_country"},
+                        "Id": {
+                            "PrvtId": {
+                                "Othr": [
+                                    {"Id": {"fake": ["regex", "[A-Z][0-9]{8}"]}, "SchmeNm": {"Prtry": "PASSPORT_NUMBER"}}
+                                ]
+                            }
+                        }
+                    },
+                    "DbtrAcct": {
+                        "Id": {
+                            "Othr": {"Id": {"cat": [{"fake": ["i64", 100000000, 999999999]}]}, "SchmeNm": {"Cd": "BBAN"}}
+                        },
+                        "Ccy": "USD",
+                        "Nm": "Checking Account"
+                    },
+                    "DbtrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {"var": "sender_bic"},
+                            "Nm": {"fake": ["company_name"]},
+                            "LEI": {"fake": ["lei"]}
+                        }
+                    },
+                    "CdtrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {"var": "receiver_bic"},
+                            "Nm": {"cat": [{"fake": ["company_name"]}, " Bank India"]},
+                            "LEI": {"fake": ["lei"]}
+                        }
+                    },
+                    "Cdtr": {
+                        "Nm": {"var": "recipient_name"},
+                        "PstlAdr": {
+                            "StrtNm": {"fake": ["street_name"]},
+                            "BldgNb": {"cat": [{"fake": ["i64", 1, 999]}]},
+                            "PstCd": {"fake": ["regex", "[0-9]{6}"]},
+                            "TwnNm": {"fake": ["city_name"]},
+                            "CtrySubDvsn": {"fake": ["regex", "(Maharashtra|Karnataka|Tamil Nadu|Delhi|Gujarat)"]},
+                            "Ctry": {"var": "recipient_country"}
+                        },
+                        "CtryOfRes": {"var": "recipient_country"},
+                        "Id": {
+                            "PrvtId": {
+                                "Othr": [
+                                    {"Id": {"fake": ["regex", "[A-Z]{5}[0-9]{4}[A-Z]"]}, "SchmeNm": {"Prtry": "PAN_CARD"}}
+                                ]
+                            }
+                        }
+                    },
+                    "CdtrAcct": {
+                        "Id": {
+                            "Othr": {
+                                "Id": {"cat": [{"fake": ["i64", 10000000000, 99999999999]}]},
+                                "SchmeNm": {"Prtry": "INDIAN_ACCOUNT_NUMBER"}
+                            }
+                        },
+                        "Ccy": "INR",
+                        "Nm": "Savings Account"
+                    },
+                    "Purp": {"Cd": "CASH", "Prtry": {"var": "remittance_purpose"}},
+                    "RgltryRptg": [
+                        {
+                            "Dtls": [
+                                {
+                                    "Tp": "BOTH",
+                                    "Dt": {
+                                        "fake": ["date", "%Y-%m-%d", "+0d", "+0d"]
+                                    },
+                                    "Ctry": {"var": "sender_country"},
+                                    "Cd": "REMIT",
+                                    "Amt": {"@Ccy": "USD", "$value": {"var": "remittance_amount"}},
+                                    "Inf": ["CBPR+ REMITTANCE CORRIDOR US-IN"]
+                                }
+                            ]
+                        }
+                    ],
+                    "RmtInf": {
+                        "Strd": [
+                            {
+                                "RfrdDocInf": [
+                                    {
+                                        "Tp": {"CdOrPrtry": {"Prtry": "REMITTANCE_TRACKING"}},
+                                        "Nb": {"cat": ["MTCN-", {"var": "mtcn"}]},
+                                        "RltdDt": {
+                                            "fake": ["date", "%Y-%m-%d", "+0d", "+0d"]
+                                        }
+                                    }
+                                ],
+                                "CdtrRefInf": {"Tp": {"CdOrPrtry": {"Prtry": "MTCN"}}, "Ref": {"cat": [{"var": "mtcn"}]}},
+                                "AddtlRmtInf": [
+                                    "Generated remittance information",
+                                    "Generated remittance information",
+                                    "Generated remittance information",
+                                    "Liberalized Remittance Scheme (LRS) compliant"
+                                ]
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+    }
+}

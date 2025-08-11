@@ -1,0 +1,49 @@
+{
+    "variables": {
+        "msg_id": "MSG123456789",
+        "creation_datetime": "2025-01-15T10:00:00.123+00:00",
+        "sender_bic": "BANKUS33XXX",
+        "receiver_bic": "BANKGB22XXX",
+        "account_iban": "GB29NWBK60161331926819",
+        "account_currency": "USD",
+        "account_name": "John Smith",
+        "statement_date": "2025-01-14",
+        "request_reference": "REF-123456",
+        "from_date": "2025-01-01",
+        "to_date": "2025-01-14",
+        "customer_id": "CUST-123456",
+        "account1_iban": "GB29NWBK60161331926819",
+        "account2_iban": "DE89370400440532013000",
+        "account3_iban": "FR1420041010050500013M02606",
+        "account_owner": "ABC Corporation"
+    },
+    "schema": {
+        "AppHdr": {
+            "Fr": {"FIId": {"FinInstnId": {"BICFI": {"var": "sender_bic"}}}},
+            "To": {"FIId": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}}}},
+            "BizMsgIdr": {"var": "msg_id"},
+            "MsgDefIdr": "camt.060.001.05",
+            "BizSvc": "swift.cbprplus.01",
+            "CreDt": {"var": "creation_datetime"}
+        },
+        "Document": {
+            "AcctRptgReq": {
+                "GrpHdr": {
+                    "MsgId": "MSG123456789",
+                    "CreDtTm": "2025-01-15T10:00:00.123+00:00",
+                    "MsgSndr": {"Agt": {"FinInstnId": {"BICFI": "BANKUS33XXX"}}},
+                    "MsgRcpt": {"Agt": {"FinInstnId": {"BICFI": "BANKGB22XXX"}}}
+                },
+                "RptgReq": [
+                    {
+                        "Id": "REF-123456",
+                        "ReqdMsgNmId": "camt.053.001.08",
+                        "Acct": {"Id": {"IBAN": "GB29NWBK60161331926819"}, "Ccy": "USD", "Nm": "John Smith"},
+                        "AcctOwnr": {"Nm": "John Smith"},
+                        "RptgPrd": {"FrToDt": {"FrDt": "2025-01-01", "ToDt": "2025-01-14"}, "Tp": "ALLL"}
+                    }
+                ]
+            }
+        }
+    }
+}

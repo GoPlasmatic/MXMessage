@@ -1,0 +1,131 @@
+{
+    "variables": {
+        "msg_id": {"cat": ["MSGCHAR", {"fake": ["i64", 100000000, 999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "tx_id": {"cat": ["TXCHAR", {"fake": ["i64", 1000000000, 9999999999]}]},
+        "end_to_end_id": {"cat": ["E2ECHAR", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "uetr": {"fake": ["uuid"]},
+        "amount": {"fake": ["f64", 100.0, 100000.0]},
+        "donor_name": {"fake": ["name"]},
+        "charity_name": {"cat": [{"fake": ["company_name"]}, " Foundation"]},
+        "charity_lei": {"fake": ["lei"]},
+        "debtor_bic": {"fake": ["bic"]},
+        "creditor_bic": {"fake": ["bic"]}
+    },
+    "schema": {
+        "AppHdr": {
+            "Fr": {"FIId": {"FinInstnId": {"BICFI": {"fake": ["bic"]}}}},
+            "To": {"FIId": {"FinInstnId": {"BICFI": {"fake": ["bic"]}}}},
+            "BizMsgIdr": {"var": "msg_id"},
+            "MsgDefIdr": "pacs.008.001.08",
+            "BizSvc": "swift.cbprplus.01",
+            "CreDt": {"var": "creation_datetime"}
+        },
+        "Document": {
+            "FIToFICstmrCdtTrf": {
+                "GrpHdr": {
+                    "MsgId": {"var": "msg_id"},
+                    "CreDtTm": {"var": "creation_datetime"},
+                    "NbOfTxs": "1",
+                    "SttlmInf": {"SttlmMtd": "INDA", "ClrSys": {"Cd": "RTG"}}
+                },
+                "CdtTrfTxInf": {
+                    "PmtId": {
+                        "InstrId": {"var": "tx_id"},
+                        "EndToEndId": {"var": "end_to_end_id"},
+                        "TxId": {"var": "tx_id"},
+                        "UETR": {"var": "uetr"}
+                    },
+                    "PmtTpInf": {"InstrPrty": "NORM", "SvcLvl": [{"Cd": "G001"}], "CtgyPurp": {"Cd": "CHAR"}},
+                    "IntrBkSttlmAmt": {"@Ccy": "EUR", "$value": {"var": "amount"}},
+                    "IntrBkSttlmDt": {
+                        "fake": ["date", "%Y-%m-%d", "+0d", "+0d"]
+                    },
+                    "SttlmPrty": "NORM",
+                    "SttlmTmIndctn": {"CdtDtTm": {"fake": ["iso8601_datetime"]}},
+                    "ChrgBr": "DEBT",
+                    "InstgAgt": {"FinInstnId": {"BICFI": {"var": "debtor_bic"}}},
+                    "InstdAgt": {"FinInstnId": {"BICFI": {"var": "creditor_bic"}}},
+                    "Dbtr": {
+                        "Nm": {"var": "donor_name"},
+                        "PstlAdr": {
+                            "Ctry": {"fake": ["country_code"]},
+                            "AdrLine": [
+                                {"fake": ["street_address"]},
+                                {
+                                    "cat": [
+                                        {"fake": ["city_name"]},
+                                        ", ",
+                                        {"fake": ["state_abbr"]},
+                                        " ",
+                                        {"fake": ["postcode"]}
+                                    ]
+                                }
+                            ]
+                        },
+                        "Id": {
+                            "PrvtId": {
+                                "DtAndPlcOfBirth": {
+                                    "BirthDt": {
+                                        "fake": ["date", "%Y-%m-%d", "-80y", "-18y"]
+                                    },
+                                    "CityOfBirth": {"fake": ["city_name"]},
+                                    "CtryOfBirth": {"fake": ["country_code"]}
+                                },
+                                "Othr": [
+                                    {
+                                        "Id": {"cat": ["DONOR-", {"fake": ["i64", 1000001, 9999999]}]},
+                                        "SchmeNm": {"Prtry": "DONOR_ID"}
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "DbtrAcct": {"Id": {"IBAN": {"fake": ["iban"]}}, "Tp": {"Cd": "CACC"}},
+                    "DbtrAgt": {"FinInstnId": {"BICFI": {"var": "debtor_bic"}}},
+                    "CdtrAgt": {"FinInstnId": {"BICFI": {"var": "creditor_bic"}}},
+                    "Cdtr": {
+                        "Nm": {"var": "charity_name"},
+                        "PstlAdr": {"Ctry": "CH", "AdrLine": ["Charity House", "8001 Zurich"]},
+                        "Id": {
+                            "OrgId": {
+                                "LEI": {"var": "charity_lei"},
+                                "Othr": [{"Id": "CHE-999.999.999", "SchmeNm": {"Prtry": "TAX_EXEMPT_ID"}}]
+                            }
+                        }
+                    },
+                    "CdtrAcct": {"Id": {"IBAN": {"fake": ["iban", "CH"]}}, "Tp": {"Cd": "CACC"}},
+                    "Purp": {"Cd": "CHAR"},
+                    "RgltryRptg": [
+                        {
+                            "Dtls": [
+                                {
+                                    "Tp": "CRED",
+                                    "Dt": {
+                                        "fake": ["date", "%Y-%m-%d", "+0d", "+0d"]
+                                    },
+                                    "Ctry": {"fake": ["country_code"]},
+                                    "Cd": "150",
+                                    "Amt": {"@Ccy": "EUR", "$value": {"var": "amount"}},
+                                    "Inf": ["CBPR+ CHARITABLE DONATION"]
+                                }
+                            ]
+                        }
+                    ],
+                    "RmtInf": {
+                        "Ustrd": "Annual charitable contribution",
+                        "Strd": [
+                            {
+                                "AddtlRmtInf": [
+                                    "Tax deductible donation",
+                                    "Campaign: Education for All",
+                                    "Thank you for your generosity"
+                                ]
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+    }
+}

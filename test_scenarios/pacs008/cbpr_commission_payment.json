@@ -1,0 +1,169 @@
+{
+    "variables": {
+        "msg_id": {"cat": ["MSGCOMM", {"fake": ["i64", 100000000, 999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "tx_id": {"cat": ["TXCOMM", {"fake": ["i64", 1000000000, 9999999999]}]},
+        "end_to_end_id": {"cat": ["E2ECOMM", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "uetr": {"fake": ["uuid"]},
+        "commission_amt": {"fake": ["f64", 1000.0, 50000.0]},
+        "agent_name": {"fake": ["name"]},
+        "company_lei": {"fake": ["lei"]},
+        "debtor_bic": {"fake": ["bic"]},
+        "creditor_bic": {"fake": ["bic"]},
+        "instg_lei": {"fake": ["lei"]},
+        "instd_lei": {"fake": ["lei"]}
+    },
+    "schema": {
+        "AppHdr": {
+            "Fr": {"FIId": {"FinInstnId": {"BICFI": {"fake": ["bic"]}}}},
+            "To": {"FIId": {"FinInstnId": {"BICFI": {"fake": ["bic"]}}}},
+            "BizMsgIdr": {"var": "msg_id"},
+            "MsgDefIdr": "pacs.008.001.08",
+            "BizSvc": "swift.cbprplus.01",
+            "CreDt": {"var": "creation_datetime"}
+        },
+        "Document": {
+            "FIToFICstmrCdtTrf": {
+                "GrpHdr": {
+                    "MsgId": {"var": "msg_id"},
+                    "CreDtTm": {"var": "creation_datetime"},
+                    "NbOfTxs": "1",
+                    "SttlmInf": {"SttlmMtd": "INDA", "ClrSys": {"Cd": "TGT"}}
+                },
+                "CdtTrfTxInf": {
+                    "PmtId": {
+                        "InstrId": {"var": "tx_id"},
+                        "EndToEndId": {"var": "end_to_end_id"},
+                        "TxId": {"var": "tx_id"},
+                        "UETR": {"var": "uetr"}
+                    },
+                    "PmtTpInf": {"InstrPrty": "NORM", "SvcLvl": [{"Cd": "G001"}], "CtgyPurp": {"Cd": "COMM"}},
+                    "IntrBkSttlmAmt": {"@Ccy": "USD", "$value": {"var": "commission_amt"}},
+                    "IntrBkSttlmDt": {
+                        "fake": ["date", "%Y-%m-%d", "+0d", "+0d"]
+                    },
+                    "SttlmPrty": "NORM",
+                    "SttlmTmIndctn": {"CdtDtTm": {"fake": ["iso8601_datetime"]}},
+                    "ChrgBr": "SHAR",
+                    "InstgAgt": {"FinInstnId": {"BICFI": {"var": "debtor_bic"}, "LEI": {"var": "instg_lei"}}},
+                    "InstdAgt": {"FinInstnId": {"BICFI": {"var": "creditor_bic"}, "LEI": {"var": "instd_lei"}}},
+                    "Dbtr": {
+                        "Nm": {"cat": [{"fake": ["company_name"]}, " Corp"]},
+                        "PstlAdr": {
+                            "Ctry": "US",
+                            "AdrLine": [
+                                {"fake": ["street_address"]},
+                                {
+                                    "cat": [
+                                        {"fake": ["city_name"]},
+                                        ", ",
+                                        {"fake": ["state_abbr"]},
+                                        " ",
+                                        {"fake": ["postcode"]}
+                                    ]
+                                }
+                            ]
+                        },
+                        "Id": {
+                            "OrgId": {
+                                "LEI": {"var": "company_lei"},
+                                "Othr": [
+                                    {
+                                        "Id": {
+                                            "cat": [
+                                                "EIN-",
+                                                {"fake": ["i64", 10, 99]},
+                                                "-",
+                                                {"fake": ["i64", 1000000, 9999999]}
+                                            ]
+                                        },
+                                        "SchmeNm": {"Cd": "TXID"}
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "DbtrAcct": {
+                        "Id": {
+                            "Othr": {"Id": {"cat": [{"fake": ["i64", 100000000, 999999999]}]}, "SchmeNm": {"Prtry": "ACCT"}}
+                        },
+                        "Tp": {"Cd": "CACC"},
+                        "Ccy": "USD"
+                    },
+                    "DbtrAgt": {"FinInstnId": {"BICFI": {"var": "debtor_bic"}, "LEI": {"var": "instg_lei"}}},
+                    "CdtrAgt": {"FinInstnId": {"BICFI": {"var": "creditor_bic"}, "LEI": {"var": "instd_lei"}}},
+                    "Cdtr": {
+                        "Nm": {"var": "agent_name"},
+                        "PstlAdr": {
+                            "Ctry": {"fake": ["country_code"]},
+                            "AdrLine": [{"fake": ["street_address"]}, {"fake": ["city_name"]}]
+                        },
+                        "Id": {
+                            "PrvtId": {
+                                "Othr": [
+                                    {
+                                        "Id": {"cat": ["AGENT-", {"fake": ["i64", 100001, 999999]}]},
+                                        "SchmeNm": {"Prtry": "AGENT_ID"}
+                                    },
+                                    {
+                                        "Id": {"cat": ["1099-", {"fake": ["i64", 100000001, 999999999]}]},
+                                        "SchmeNm": {"Cd": "TXID"}
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "CdtrAcct": {"Id": {"IBAN": {"fake": ["iban"]}}, "Tp": {"Cd": "CACC"}},
+                    "Purp": {"Cd": "COMM"},
+                    "RgltryRptg": [
+                        {
+                            "Dtls": [
+                                {
+                                    "Tp": "CRED",
+                                    "Dt": {
+                                        "fake": ["date", "%Y-%m-%d", "+0d", "+0d"]
+                                    },
+                                    "Ctry": "US",
+                                    "Cd": "150",
+                                    "Amt": {"@Ccy": "USD", "$value": {"var": "commission_amt"}},
+                                    "Inf": ["CBPR+ COMMISSION PAYMENT", "1099 REPORTABLE"]
+                                }
+                            ]
+                        }
+                    ],
+                    "RmtInf": {
+                        "Strd": [
+                            {
+                                "RfrdDocInf": [
+                                    {
+                                        "Tp": {"CdOrPrtry": {"Prtry": "COMMISSION_STATEMENT"}},
+                                        "Nb": {
+                                            "cat": [
+                                                "COMM-",
+                                                {"fake": ["i64", 202501, 202512]},
+                                                "-",
+                                                {"fake": ["i64", 1001, 9999]}
+                                            ]
+                                        },
+                                        "RltdDt": {
+                                            "fake": ["date", "%Y-%m-%d", "-30d", "-1d"]
+                                        }
+                                    }
+                                ],
+                                "RfrdDocAmt": {
+                                    "DuePyblAmt": {"@Ccy": "USD", "$value": {"var": "commission_amt"}},
+                                    "TaxAmt": [{"Amt": {"@Ccy": "USD", "$value": {"fake": ["f64", 0.0, 0.0]}}}]
+                                },
+                                "AddtlRmtInf": [
+                                    "Sales commission - Q4 2024",
+                                    "Commission rate: 5%",
+                                    "Generated remittance information"
+                                ]
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+    }
+}

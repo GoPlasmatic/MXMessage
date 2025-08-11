@@ -1,0 +1,68 @@
+{
+    "variables": {
+        "msg_id": "MSG123456789",
+        "creation_datetime": "2025-01-15T10:00:00.123+00:00",
+        "original_msg_id": "ORIG-123456789",
+        "uetr": "a1234567-b123-4123-8123-123456789012",
+        "transaction_id": "TXN123456789",
+        "instruction_id": "INSTR12345678",
+        "end_to_end_id": "E2E123456789",
+        "amount": 10000.0,
+        "cancellation_id": "CANC-123456789",
+        "sender_bic": "BANKUS33XXX",
+        "receiver_bic": "BANKGB22XXX",
+        "sender_lei": "54930084UKLVMY22DS16",
+        "receiver_lei": "213800QILIUD4ROSUO03",
+        "original_date": "2025-01-14"
+    },
+    "schema": {
+        "AppHdr": {
+            "Fr": {
+                "FIId": {"FinInstnId": {"BICFI": {"var": "sender_bic"}, "LEI": {"var": "sender_lei"}}}
+            },
+            "To": {
+                "FIId": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}, "LEI": {"var": "receiver_lei"}}}
+            },
+            "BizMsgIdr": {"var": "msg_id"},
+            "MsgDefIdr": "camt.056.001.08",
+            "BizSvc": "swift.cbprplus.01",
+            "CreDt": {"var": "creation_datetime"}
+        },
+        "Document": {
+            "FIToFIPmtCxlReq": {
+                "Assgnmt": {
+                    "Id": "MSG123456789",
+                    "Assgnr": {"Agt": {"FinInstnId": {"BICFI": "BANKUS33XXX", "LEI": "54930084UKLVMY22DS16"}}},
+                    "Assgne": {"Agt": {"FinInstnId": {"BICFI": "BANKGB22XXX", "LEI": "213800QILIUD4ROSUO03"}}},
+                    "CreDtTm": "2025-01-15T10:00:00.123+00:00"
+                },
+                "Undrlyg": {
+                    "TxInf": {
+                        "CxlId": "CANC-123456789",
+                        "Case": {
+                            "Id": "CASE-123456789",
+                            "Cretr": {"Pty": {"Nm": "Case Creator"}},
+                            "Nm": "Cancellation Case"
+                        },
+                        "OrgnlGrpInf": {
+                            "OrgnlMsgId": "ORIG-123456789",
+                            "OrgnlMsgNmId": "pacs.008.001.08",
+                            "OrgnlCreDtTm": "2025-01-14T10:00:00.123+00:00"
+                        },
+                        "OrgnlInstrId": "INSTR12345678",
+                        "OrgnlEndToEndId": "E2E123456789",
+                        "OrgnlTxId": "TXN123456789",
+                        "OrgnlUETR": "a1234567-b123-4123-8123-123456789012",
+                        "OrgnlIntrBkSttlmAmt": {"@Ccy": "USD", "$value": 10000.0},
+                        "OrgnlIntrBkSttlmDt": "2025-01-14",
+                        "CxlRsnInf": {
+                            "Orgtr": {"Nm": "Compliance Department"},
+                            "Rsn": {"Cd": "CUST"},
+                            "AddtlInf": ["Customer requested cancellation", "CBPR+ compliant cancellation request"]
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

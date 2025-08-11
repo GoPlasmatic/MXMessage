@@ -1,0 +1,38 @@
+{
+    "message_type": "pacs.003",
+    "description": "FI to FI Customer Direct Debit - Scenarios mapped from MT104",
+    "scenarios": [
+        {
+            "file": "fi_direct_debit_basic.json",
+            "description": "Basic FI to FI direct debit transaction"
+        },
+        {
+            "file": "fi_direct_debit_cbpr.json",
+            "description": "CBPR+ compliant FI to FI direct debit"
+        },
+        {
+            "file": "fi_direct_debit_multiple.json",
+            "description": "Multiple direct debit transactions in one message"
+        },
+        {
+            "file": "fi_direct_debit_recurring.json",
+            "description": "Recurring direct debit transactions"
+        },
+        {
+            "file": "fi_direct_debit_return.json",
+            "description": "Direct debit return processing"
+        },
+        {
+            "file": "cbpr_insurance_collection.json",
+            "description": "CBPR+ insurance premium collection"
+        },
+        {
+            "file": "cbpr_subscription_collection.json",
+            "description": "CBPR+ subscription service collection"
+        },
+        {
+            "file": "cbpr_utility_collection.json",
+            "description": "CBPR+ utility bill collection"
+        }
+    ]
+}

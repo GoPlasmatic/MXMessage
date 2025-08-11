@@ -1,0 +1,61 @@
+{
+    "variables": {
+        "msg_id": {"cat": ["MSGMULTI", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "company_name": {"fake": ["company_name"]},
+        "pmt_inf_id": {"cat": ["MULTICCY", {"fake": ["i64", 10000000, 99999999]}]},
+        "execution_date": "2024-12-20",
+        "debtor_name": {"fake": ["company_name"]},
+        "debtor_iban": {"fake": ["iban", "DE"]},
+        "debtor_bic": {"fake": ["bic"]},
+        "amount_eur": {"fake": ["f64", 50000.0, 100000.0]},
+        "amount_usd": {"fake": ["f64", 60000.0, 120000.0]},
+        "amount_gbp": {"fake": ["f64", 40000.0, 80000.0]},
+        "amount_chf": {"fake": ["f64", 45000.0, 90000.0]},
+        "amount_jpy": {"fake": ["f64", 5000000.0, 10000000.0]}
+    },
+    "schema": {
+        "AppHdr": {
+            "Fr": {"FIId": {"FinInstnId": {"BICFI": {"fake": ["bic"]}}}},
+            "To": {"FIId": {"FinInstnId": {"BICFI": {"fake": ["bic"]}}}},
+            "BizMsgIdr": {"var": "msg_id"},
+            "MsgDefIdr": "pain.001.001.09",
+            "BizSvc": "swift.cbprplus.01",
+            "CreDt": {"var": "creation_datetime"}
+        },
+        "Document": {
+            "CstmrCdtTrfInitn": {
+                "GrpHdr": {
+                    "MsgId": {"var": "msg_id"},
+                    "CreDtTm": {"var": "creation_datetime"},
+                    "NbOfTxs": "1",
+                    "InitgPty": {"Nm": {"var": "company_name"}, "Id": {"OrgId": {"AnyBIC": {"var": "debtor_bic"}}}}
+                },
+                "PmtInf": {
+                    "PmtInfId": {"var": "pmt_inf_id"},
+                    "PmtMtd": "TRF",
+                    "BtchBookg": false,
+                    "PmtTpInf": {"InstrPrty": "NORM", "SvcLvl": [{"Cd": "G001"}]},
+                    "ReqdExctnDt": {"Dt": {"var": "execution_date"}},
+                    "Dbtr": {"Nm": {"var": "debtor_name"}, "PstlAdr": {"Ctry": "DE"}},
+                    "DbtrAcct": {"Id": {"IBAN": {"var": "debtor_iban"}}, "Tp": {"Cd": "CACC"}},
+                    "DbtrAgt": {"FinInstnId": {"BICFI": {"var": "debtor_bic"}}},
+                    "CdtTrfTxInf": {
+                        "PmtId": {
+                            "InstrId": {"cat": ["MCCYEUR", {"fake": ["i64", 100001, 999999]}]},
+                            "EndToEndId": {"cat": ["E2EMCCY", {"fake": ["i64", 100000000000, 999999999999]}]},
+                            "UETR": {"fake": ["uuid"]}
+                        },
+                        "Amt": {"InstdAmt": {"@Ccy": "EUR", "$value": {"var": "amount_eur"}}},
+                        "XchgRateInf": {"UnitCcy": "EUR", "XchgRate": 1.0, "RateTp": "SPOT"},
+                        "CdtrAgt": {"FinInstnId": {"BICFI": {"fake": ["bic"]}}},
+                        "Cdtr": {"Nm": {"fake": ["company_name"]}, "PstlAdr": {"Ctry": "FR"}},
+                        "CdtrAcct": {"Id": {"IBAN": {"fake": ["iban", "FR"]}}},
+                        "Purp": {"Cd": "TREA"},
+                        "RmtInf": {"Ustrd": "EUR Payment - Treasury Transfer"}
+                    }
+                }
+            }
+        }
+    }
+}

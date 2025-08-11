@@ -1,0 +1,390 @@
+// XML Serialization and Deserialization utilities for MX Messages
+
+use crate::mx_envelope::MxEnvelope;
+use quick_xml::events::{BytesDecl, BytesEnd, BytesStart, BytesText, Event};
+use quick_xml::writer::Writer;
+use quick_xml::{de::from_str as xml_from_str, se::to_string as xml_to_string};
+use serde::{Deserialize, Serialize};
+use std::error::Error;
+use std::fmt;
+use std::io::Cursor;
+
+/// Configuration for XML serialization
+#[derive(Debug, Clone)]
+pub struct XmlConfig {
+    /// Whether to include XML declaration
+    pub include_declaration: bool,
+    /// Whether to format with indentation
+    pub pretty_print: bool,
+    /// Indentation string (e.g., "  " for 2 spaces)
+    pub indent: String,
+    /// Whether to include schema location
+    pub include_schema_location: bool,
+}
+
+impl Default for XmlConfig {
+    fn default() -> Self {
+        Self {
+            include_declaration: true,
+            pretty_print: true,
+            indent: "  ".to_string(),
+            include_schema_location: false,
+        }
+    }
+}
+
+/// Error type for XML operations
+#[derive(Debug)]
+pub enum XmlError {
+    SerializationError(String),
+    DeserializationError(String),
+    ValidationError(String),
+}
+
+impl fmt::Display for XmlError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            XmlError::SerializationError(msg) => write!(f, "XML Serialization Error: {msg}"),
+            XmlError::DeserializationError(msg) => write!(f, "XML Deserialization Error: {msg}"),
+            XmlError::ValidationError(msg) => write!(f, "XML Validation Error: {msg}"),
+        }
+    }
+}
+
+impl Error for XmlError {}
+
+/// Serialize any MX message to complete XML with envelope
+pub fn to_mx_xml<H, D>(
+    message: D,
+    header: H,
+    message_type: &str,
+    config: Option<XmlConfig>,
+) -> Result<String, XmlError>
+where
+    H: Serialize,
+    D: Serialize,
+{
+    let config = config.unwrap_or_default();
+
+    // Determine the namespace based on message type
+    let document_namespace = get_namespace_for_message_type(message_type);
+
+    // Create the envelope
+    let envelope = MxEnvelope::new(header, message, document_namespace);
+
+    // Use custom XML writer for proper formatting
+    if config.pretty_print {
+        format_mx_xml(&envelope, &config)
+    } else {
+        // Use quick-xml for compact output
+        xml_to_string(&envelope).map_err(|e| XmlError::SerializationError(e.to_string()))
+    }
+}
+
+/// Parse complete MX XML with envelope
+pub fn from_mx_xml<H, D>(xml: &str) -> Result<MxEnvelope<H, D>, XmlError>
+where
+    H: for<'de> Deserialize<'de>,
+    D: for<'de> Deserialize<'de>,
+{
+    xml_from_str(xml).map_err(|e| XmlError::DeserializationError(e.to_string()))
+}
+
+/// Format MX XML with proper indentation and structure
+fn format_mx_xml<H, D>(envelope: &MxEnvelope<H, D>, config: &XmlConfig) -> Result<String, XmlError>
+where
+    H: Serialize,
+    D: Serialize,
+{
+    let mut writer = Writer::new_with_indent(Cursor::new(Vec::new()), b' ', config.indent.len());
+
+    // Write XML declaration
+    if config.include_declaration {
+        writer
+            .write_event(Event::Decl(BytesDecl::new("1.0", Some("UTF-8"), None)))
+            .map_err(|e| XmlError::SerializationError(e.to_string()))?;
+    }
+
+    // Start envelope element without namespace (just a wrapper)
+    let envelope_elem = BytesStart::new("Envelope");
+    writer
+        .write_event(Event::Start(envelope_elem))
+        .map_err(|e| XmlError::SerializationError(e.to_string()))?;
+
+    // Write AppHdr with its namespace
+    let mut app_hdr_elem = BytesStart::new("AppHdr");
+    app_hdr_elem.push_attribute(("xmlns", "urn:iso:std:iso:20022:tech:xsd:head.001.001.02"));
+
+    writer
+        .write_event(Event::Start(app_hdr_elem))
+        .map_err(|e| XmlError::SerializationError(e.to_string()))?;
+
+    // Serialize the AppHdr content (without the wrapper element)
+    let app_hdr_xml = xml_to_string(&envelope.app_hdr)
+        .map_err(|e| XmlError::SerializationError(e.to_string()))?;
+
+    // Extract just the inner content (remove XML declaration and AppHdr wrapper tags)
+    let app_hdr_xml = app_hdr_xml
+        .trim_start_matches("<?xml version=\"1.0\" encoding=\"UTF-8\"?>")
+        .trim();
+
+    // Remove the opening and closing AppHdr tags to get just the content
+    let app_hdr_inner = if app_hdr_xml.starts_with("<AppHdr>") {
+        app_hdr_xml
+            .trim_start_matches("<AppHdr>")
+            .trim_end_matches("</AppHdr>")
+    } else if app_hdr_xml.starts_with("<AppHdr") {
+        // Handle case where AppHdr might have attributes
+        if let Some(pos) = app_hdr_xml.find('>') {
+            let content = &app_hdr_xml[pos + 1..];
+            content.trim_end_matches("</AppHdr>")
+        } else {
+            app_hdr_xml
+        }
+    } else {
+        app_hdr_xml
+    };
+
+    writer
+        .write_event(Event::Text(BytesText::from_escaped(app_hdr_inner)))
+        .map_err(|e| XmlError::SerializationError(e.to_string()))?;
+
+    // Close AppHdr
+    writer
+        .write_event(Event::End(BytesEnd::new("AppHdr")))
+        .map_err(|e| XmlError::SerializationError(e.to_string()))?;
+
+    // Write Document with its namespace
+    let mut doc_elem = BytesStart::new("Document");
+    if let Some(ref xmlns) = envelope.document.xmlns {
+        doc_elem.push_attribute(("xmlns", xmlns.as_str()));
+    }
+
+    writer
+        .write_event(Event::Start(doc_elem))
+        .map_err(|e| XmlError::SerializationError(e.to_string()))?;
+
+    // Write the actual message content
+    let message_xml = xml_to_string(&envelope.document.message)
+        .map_err(|e| XmlError::SerializationError(e.to_string()))?;
+
+    // Remove the XML declaration from the inner serialization if present
+    let message_xml = message_xml
+        .trim_start_matches("<?xml version=\"1.0\" encoding=\"UTF-8\"?>")
+        .trim();
+
+    writer
+        .write_event(Event::Text(BytesText::from_escaped(message_xml)))
+        .map_err(|e| XmlError::SerializationError(e.to_string()))?;
+
+    // Close Document
+    writer
+        .write_event(Event::End(BytesEnd::new("Document")))
+        .map_err(|e| XmlError::SerializationError(e.to_string()))?;
+
+    // Close Envelope
+    writer
+        .write_event(Event::End(BytesEnd::new("Envelope")))
+        .map_err(|e| XmlError::SerializationError(e.to_string()))?;
+
+    let result = writer.into_inner().into_inner();
+    String::from_utf8(result).map_err(|e| XmlError::SerializationError(e.to_string()))
+}
+
+/// Get the appropriate namespace for a message type
+fn get_namespace_for_message_type(message_type: &str) -> String {
+    let namespace = match message_type {
+        "pacs.008" | "pacs.008.001.08" => "urn:iso:std:iso:20022:tech:xsd:pacs.008.001.08",
+        "pacs.009" | "pacs.009.001.08" => "urn:iso:std:iso:20022:tech:xsd:pacs.009.001.08",
+        "pacs.003" | "pacs.003.001.08" => "urn:iso:std:iso:20022:tech:xsd:pacs.003.001.08",
+        "pacs.002" | "pacs.002.001.10" => "urn:iso:std:iso:20022:tech:xsd:pacs.002.001.10",
+        "pain.001" | "pain.001.001.09" => "urn:iso:std:iso:20022:tech:xsd:pain.001.001.09",
+        "pain.008" | "pain.008.001.08" => "urn:iso:std:iso:20022:tech:xsd:pain.008.001.08",
+        "camt.052" | "camt.052.001.08" => "urn:iso:std:iso:20022:tech:xsd:camt.052.001.08",
+        "camt.053" | "camt.053.001.08" => "urn:iso:std:iso:20022:tech:xsd:camt.053.001.08",
+        "camt.054" | "camt.054.001.08" => "urn:iso:std:iso:20022:tech:xsd:camt.054.001.08",
+        "camt.056" | "camt.056.001.08" => "urn:iso:std:iso:20022:tech:xsd:camt.056.001.08",
+        "camt.057" | "camt.057.001.06" => "urn:iso:std:iso:20022:tech:xsd:camt.057.001.06",
+        "camt.060" | "camt.060.001.05" => "urn:iso:std:iso:20022:tech:xsd:camt.060.001.05",
+        "camt.027" | "camt.027.001.07" => "urn:iso:std:iso:20022:tech:xsd:camt.027.001.07",
+        "camt.029" | "camt.029.001.09" => "urn:iso:std:iso:20022:tech:xsd:camt.029.001.09",
+        _ => {
+            return format!("urn:iso:std:iso:20022:tech:xsd:{message_type}");
+        }
+    };
+    namespace.to_string()
+}
+
+/// Helper function to create XML for a specific message type
+pub fn create_pacs008_xml<D: Serialize>(
+    message: D,
+    from_bic: String,
+    to_bic: String,
+    business_msg_id: String,
+) -> Result<String, XmlError> {
+    use crate::header::bah_pacs_008_001_08::{
+        BranchAndFinancialInstitutionIdentification62, BusinessApplicationHeaderV02,
+        FinancialInstitutionIdentification182, Party44Choice1,
+    };
+
+    let header = BusinessApplicationHeaderV02 {
+        char_set: None,
+        fr: Party44Choice1 {
+            fi_id: Some(BranchAndFinancialInstitutionIdentification62 {
+                fin_instn_id: FinancialInstitutionIdentification182 {
+                    bicfi: from_bic,
+                    clr_sys_mmb_id: None,
+                    lei: None,
+                },
+            }),
+        },
+        to: Party44Choice1 {
+            fi_id: Some(BranchAndFinancialInstitutionIdentification62 {
+                fin_instn_id: FinancialInstitutionIdentification182 {
+                    bicfi: to_bic,
+                    clr_sys_mmb_id: None,
+                    lei: None,
+                },
+            }),
+        },
+        biz_msg_idr: business_msg_id,
+        msg_def_idr: "pacs.008.001.08".to_string(),
+        biz_svc: "swift.ug".to_string(),
+        mkt_prctc: None,
+        cre_dt: chrono::Utc::now()
+            .format("%Y-%m-%dT%H:%M:%S%.3fZ")
+            .to_string(),
+        cpy_dplct: None,
+        pssbl_dplct: None,
+        prty: None,
+        rltd: None,
+    };
+
+    to_mx_xml(message, header, "pacs.008", None)
+}
+
+/// Helper function to create XML for pain.001 message
+pub fn create_pain001_xml<D: Serialize>(
+    message: D,
+    from_bic: String,
+    to_bic: String,
+    business_msg_id: String,
+) -> Result<String, XmlError> {
+    use crate::header::bah_pain_001_001_09::{
+        BranchAndFinancialInstitutionIdentification64, BusinessApplicationHeaderV02,
+        FinancialInstitutionIdentification183, Party44Choice1,
+    };
+
+    let header = BusinessApplicationHeaderV02 {
+        char_set: None,
+        fr: Party44Choice1 {
+            fi_id: Some(BranchAndFinancialInstitutionIdentification64 {
+                fin_instn_id: FinancialInstitutionIdentification183 {
+                    bicfi: from_bic,
+                    clr_sys_mmb_id: None,
+                    lei: None,
+                },
+            }),
+        },
+        to: Party44Choice1 {
+            fi_id: Some(BranchAndFinancialInstitutionIdentification64 {
+                fin_instn_id: FinancialInstitutionIdentification183 {
+                    bicfi: to_bic,
+                    clr_sys_mmb_id: None,
+                    lei: None,
+                },
+            }),
+        },
+        biz_msg_idr: business_msg_id,
+        msg_def_idr: "pain.001.001.09".to_string(),
+        biz_svc: "swift.ug".to_string(),
+        mkt_prctc: None,
+        cre_dt: chrono::Utc::now()
+            .format("%Y-%m-%dT%H:%M:%S%.3fZ")
+            .to_string(),
+        cpy_dplct: None,
+        pssbl_dplct: None,
+        prty: None,
+        rltd: None,
+    };
+
+    to_mx_xml(message, header, "pain.001", None)
+}
+
+/// Helper function to create XML for camt.053 message
+pub fn create_camt053_xml<D: Serialize>(
+    message: D,
+    from_bic: String,
+    to_bic: String,
+    business_msg_id: String,
+) -> Result<String, XmlError> {
+    use crate::header::bah_camt_053_001_08::{
+        BranchAndFinancialInstitutionIdentification63, BusinessApplicationHeaderV02,
+        FinancialInstitutionIdentification182, Party44Choice1,
+    };
+
+    let header = BusinessApplicationHeaderV02 {
+        char_set: None,
+        fr: Party44Choice1 {
+            fi_id: Some(BranchAndFinancialInstitutionIdentification63 {
+                fin_instn_id: FinancialInstitutionIdentification182 {
+                    bicfi: from_bic,
+                    clr_sys_mmb_id: None,
+                    lei: None,
+                },
+            }),
+        },
+        to: Party44Choice1 {
+            fi_id: Some(BranchAndFinancialInstitutionIdentification63 {
+                fin_instn_id: FinancialInstitutionIdentification182 {
+                    bicfi: to_bic,
+                    clr_sys_mmb_id: None,
+                    lei: None,
+                },
+            }),
+        },
+        biz_msg_idr: business_msg_id,
+        msg_def_idr: "camt.053.001.08".to_string(),
+        biz_svc: "swift.ug".to_string(),
+        mkt_prctc: None,
+        cre_dt: chrono::Utc::now()
+            .format("%Y-%m-%dT%H:%M:%S%.3fZ")
+            .to_string(),
+        cpy_dplct: None,
+        pssbl_dplct: None,
+        prty: None,
+        rltd: None,
+    };
+
+    to_mx_xml(message, header, "camt.053", None)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_namespace_lookup() {
+        assert_eq!(
+            get_namespace_for_message_type("pacs.008"),
+            "urn:iso:std:iso:20022:tech:xsd:pacs.008.001.08"
+        );
+        assert_eq!(
+            get_namespace_for_message_type("pain.001"),
+            "urn:iso:std:iso:20022:tech:xsd:pain.001.001.09"
+        );
+        assert_eq!(
+            get_namespace_for_message_type("camt.053"),
+            "urn:iso:std:iso:20022:tech:xsd:camt.053.001.08"
+        );
+    }
+
+    #[test]
+    fn test_xml_config_default() {
+        let config = XmlConfig::default();
+        assert!(config.include_declaration);
+        assert!(config.pretty_print);
+        assert_eq!(config.indent, "  ");
+        assert!(!config.include_schema_location);
+    }
+}

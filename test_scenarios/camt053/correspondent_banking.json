@@ -1,0 +1,37 @@
+{
+    "variables": {
+        "msg_id": "CORRMSG123456789",
+        "creation_datetime": "2025-01-15T10:00:00.123+00:00",
+        "stmt_id": "CORRSTMT123456789",
+        "account_id": "GB29NWBK60161331926819"
+    },
+    "schema": {
+        "AppHdr": {
+            "Fr": {"FIId": {"FinInstnId": {"BICFI": {"fake": ["bic"]}}}},
+            "To": {"FIId": {"FinInstnId": {"BICFI": {"fake": ["bic"]}}}},
+            "BizMsgIdr": {"var": "msg_id"},
+            "MsgDefIdr": "camt.053.001.08",
+            "BizSvc": "swift.cbprplus.01",
+            "CreDt": {"var": "creation_datetime"}
+        },
+        "Document": {
+            "BkToCstmrStmt": {
+                "GrpHdr": {"MsgId": {"var": "msg_id"}, "CreDtTm": {"var": "creation_datetime"}},
+                "Stmt": {
+                    "Id": {"var": "stmt_id"},
+                    "StmtPgntn": {"PgNb": "1", "LastPgInd": true},
+                    "CreDtTm": {"var": "creation_datetime"},
+                    "Acct": {"Id": {"IBAN": {"var": "account_id"}}, "Tp": {"Cd": "NREX"}, "Ccy": "USD"},
+                    "Bal": [
+                        {
+                            "Tp": {"CdOrPrtry": {"Cd": "CLBD"}},
+                            "Amt": {"@Ccy": "USD", "$value": 500000.0},
+                            "CdtDbtInd": "CRDT",
+                            "Dt": {"Dt": "2025-01-15"}
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}

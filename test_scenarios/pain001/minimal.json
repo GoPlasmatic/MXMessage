@@ -1,0 +1,47 @@
+{
+    "variables": {
+        "msg_id": {"cat": ["MSGMIN", {"fake": ["i64", 1000000, 9999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "pmt_inf_id": {"cat": ["PMT", {"fake": ["i64", 100000, 999999]}]},
+        "execution_date": "2024-12-20",
+        "end_to_end_id": {"cat": ["E2E", {"fake": ["i64", 1000000, 9999999]}]},
+        "amount": {"fake": ["f64", 100.0, 1000.0]},
+        "debtor_iban": {"fake": ["iban", "DE"]},
+        "creditor_iban": {"fake": ["iban", "FR"]}
+    },
+    "schema": {
+        "AppHdr": {
+            "Fr": {"FIId": {"FinInstnId": {"BICFI": {"fake": ["bic"]}}}},
+            "To": {"FIId": {"FinInstnId": {"BICFI": {"fake": ["bic"]}}}},
+            "BizMsgIdr": {"var": "msg_id"},
+            "MsgDefIdr": "pain.001.001.09",
+            "BizSvc": "swift.cbprplus.01",
+            "CreDt": {"var": "creation_datetime"}
+        },
+        "Document": {
+            "CstmrCdtTrfInitn": {
+                "GrpHdr": {
+                    "MsgId": {"var": "msg_id"},
+                    "CreDtTm": {"var": "creation_datetime"},
+                    "NbOfTxs": "1",
+                    "InitgPty": {"Nm": "Minimal Corp"}
+                },
+                "PmtInf": {
+                    "PmtInfId": {"var": "pmt_inf_id"},
+                    "PmtMtd": "TRF",
+                    "ReqdExctnDt": {"Dt": {"var": "execution_date"}},
+                    "Dbtr": {"Nm": "Simple Debtor Company"},
+                    "DbtrAcct": {"Id": {"IBAN": {"var": "debtor_iban"}}},
+                    "DbtrAgt": {"FinInstnId": {"BICFI": "DEUTDEFFXXX"}},
+                    "CdtTrfTxInf": {
+                        "PmtId": {"EndToEndId": {"var": "end_to_end_id"}, "UETR": {"fake": ["uuid"]}},
+                        "Amt": {"InstdAmt": {"@Ccy": "EUR", "$value": {"var": "amount"}}},
+                        "CdtrAgt": {"FinInstnId": {"BICFI": "BNPAFRPPXXX"}},
+                        "Cdtr": {"Nm": "Simple Creditor Company"},
+                        "CdtrAcct": {"Id": {"IBAN": {"var": "creditor_iban"}}}
+                    }
+                }
+            }
+        }
+    }
+}

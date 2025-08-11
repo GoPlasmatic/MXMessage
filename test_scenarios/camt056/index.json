@@ -1,0 +1,42 @@
+{
+    "message_type": "camt.056.001.08",
+    "description": "FI to FI Payment Cancellation Request",
+    "scenarios": [
+        {
+            "file": "cbpr_cancellation_request.json",
+            "description": "CBPR+ compliant cancellation request (MT192)"
+        },
+        {
+            "file": "fraud_prevention_cancellation.json",
+            "description": "Cancellation due to fraud detection (MT192)"
+        },
+        {
+            "file": "regulatory_compliance_cancellation.json",
+            "description": "Cancellation for regulatory compliance (MT192)"
+        },
+        {
+            "file": "request_cancellation.json",
+            "description": "Standard cancellation request (MT192)"
+        },
+        {
+            "file": "urgent_cancellation.json",
+            "description": "Urgent cancellation request (MT192)"
+        },
+        {
+            "file": "compliance_hold_cancellation.json",
+            "description": "Cancellation due to compliance hold (MT292)"
+        },
+        {
+            "file": "fi_cancellation_request.json",
+            "description": "FI to FI standard cancellation (MT292)"
+        },
+        {
+            "file": "system_error_cancellation.json",
+            "description": "Cancellation due to system error (MT292)"
+        },
+        {
+            "file": "wrong_beneficiary_cancellation.json",
+            "description": "Cancellation due to wrong beneficiary (MT292)"
+        }
+    ]
+}

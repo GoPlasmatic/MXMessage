@@ -1,0 +1,74 @@
+{
+    "variables": {
+        "msg_id": {"cat": ["UNRES-INTM-", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "payment_id": {"cat": ["PMT-UNRES-", {"fake": ["i64", 100000, 999999]}]},
+        "uetr": {"fake": ["uuid"]},
+        "amount": {"fake": ["f64", 50000.0, 500000.0]},
+        "currency": {
+            "fake": ["enum", "USD", "EUR", "GBP"]
+        },
+        "sender_bic": {"fake": ["bic"]},
+        "intermediary_bic": "XXXXUS33XXX",
+        "receiver_bic": {"fake": ["bic"]},
+        "ordering_customer": {"fake": ["company_name"]},
+        "ordering_account": {"fake": ["iban"]},
+        "beneficiary_customer": {"fake": ["company_name"]},
+        "beneficiary_account": {"fake": ["iban"]},
+        "beneficiary_country": {"fake": ["country_code"]}
+    },
+    "schema": {
+        "AppHdr": {
+            "Fr": {"FIId": {"FinInstnId": {"BICFI": {"var": "sender_bic"}}}},
+            "To": {"FIId": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}}}},
+            "BizMsgIdr": {"var": "msg_id"},
+            "MsgDefIdr": "pacs.008.001.08",
+            "BizSvc": "swift.cbprplus.01",
+            "CreDt": {"var": "creation_datetime"}
+        },
+        "Document": {
+            "FIToFICstmrCdtTrf": {
+                "GrpHdr": {
+                    "MsgId": {"var": "msg_id"},
+                    "CreDtTm": {"var": "creation_datetime"},
+                    "NbOfTxs": "1",
+                    "SttlmInf": {"SttlmMtd": "INDA"}
+                },
+                "CdtTrfTxInf": {
+                    "PmtId": {
+                        "InstrId": {"var": "payment_id"},
+                        "EndToEndId": {"var": "payment_id"},
+                        "UETR": {"var": "uetr"}
+                    },
+                    "PmtTpInf": {"InstrPrty": "HIGH", "SvcLvl": [{"Cd": "G001"}]},
+                    "IntrBkSttlmAmt": {"@Ccy": {"var": "currency"}, "$value": {"var": "amount"}},
+                    "IntrBkSttlmDt": {
+                        "fake": ["date", "%Y-%m-%d", "+1d", "+2d"]
+                    },
+                    "InstdAmt": {"@Ccy": {"var": "currency"}, "$value": {"var": "amount"}},
+                    "ChrgBr": "SHAR",
+                    "IntrmyAgt1": {
+                        "FinInstnId": {
+                            "BICFI": {"var": "intermediary_bic"},
+                            "Nm": "UNRESOLVED INTERMEDIARY BANK",
+                            "PstlAdr": {"Ctry": "US"}
+                        }
+                    },
+                    "IntrmyAgt1Acct": {"Id": {"Othr": {"Id": "PENDING_RESOLUTION"}}},
+                    "Dbtr": {"Nm": {"var": "ordering_customer"}},
+                    "DbtrAcct": {"Id": {"IBAN": {"var": "ordering_account"}}},
+                    "DbtrAgt": {"FinInstnId": {"BICFI": {"var": "sender_bic"}}},
+                    "CdtrAgt": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}}},
+                    "Cdtr": {
+                        "Nm": {"var": "beneficiary_customer"},
+                        "PstlAdr": {"Ctry": {"var": "beneficiary_country"}}
+                    },
+                    "CdtrAcct": {"Id": {"IBAN": {"var": "beneficiary_account"}}},
+                    "RmtInf": {"Ustrd": "Payment with unresolved intermediary bank routing"},
+                    "InstgAgt": {"FinInstnId": {"BICFI": {"fake": ["bic"]}}},
+                    "InstdAgt": {"FinInstnId": {"BICFI": {"fake": ["bic"]}}}
+                }
+            }
+        }
+    }
+}

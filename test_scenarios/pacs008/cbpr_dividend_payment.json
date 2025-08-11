@@ -1,0 +1,143 @@
+{
+    "variables": {
+        "msg_id": {"cat": ["MSGDIV", {"fake": ["i64", 100000000, 999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "tx_id": {"cat": ["TXDIV", {"fake": ["i64", 1000000000, 9999999999]}]},
+        "end_to_end_id": {"cat": ["E2EDIV", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "uetr": {"fake": ["uuid"]},
+        "dividend_amt": {"fake": ["f64", 100.0, 50000.0]},
+        "shareholder_name": {"fake": ["name"]},
+        "company_lei": {"fake": ["lei"]},
+        "debtor_bic": {"fake": ["bic"]},
+        "creditor_bic": {"fake": ["bic"]},
+        "instg_lei": {"fake": ["lei"]},
+        "instd_lei": {"fake": ["lei"]},
+        "shares_owned": {"fake": ["i64", 100, 100000]},
+        "dividend_per_share": {"fake": ["f64", 0.1, 2.5]}
+    },
+    "schema": {
+        "AppHdr": {
+            "Fr": {"FIId": {"FinInstnId": {"BICFI": {"fake": ["bic"]}}}},
+            "To": {"FIId": {"FinInstnId": {"BICFI": {"fake": ["bic"]}}}},
+            "BizMsgIdr": {"var": "msg_id"},
+            "MsgDefIdr": "pacs.008.001.08",
+            "BizSvc": "swift.cbprplus.01",
+            "CreDt": {"var": "creation_datetime"}
+        },
+        "Document": {
+            "FIToFICstmrCdtTrf": {
+                "GrpHdr": {
+                    "MsgId": {"var": "msg_id"},
+                    "CreDtTm": {"var": "creation_datetime"},
+                    "NbOfTxs": "1",
+                    "SttlmInf": {"SttlmMtd": "INDA", "ClrSys": {"Cd": "RTG"}}
+                },
+                "CdtTrfTxInf": {
+                    "PmtId": {
+                        "InstrId": {"var": "tx_id"},
+                        "EndToEndId": {"var": "end_to_end_id"},
+                        "TxId": {"var": "tx_id"},
+                        "UETR": {"var": "uetr"}
+                    },
+                    "PmtTpInf": {"InstrPrty": "NORM", "SvcLvl": [{"Cd": "G001"}], "CtgyPurp": {"Cd": "DIVI"}},
+                    "IntrBkSttlmAmt": {"@Ccy": "EUR", "$value": {"var": "dividend_amt"}},
+                    "IntrBkSttlmDt": {
+                        "fake": ["date", "%Y-%m-%d", "+0d", "+0d"]
+                    },
+                    "SttlmPrty": "NORM",
+                    "SttlmTmIndctn": {"CdtDtTm": {"fake": ["iso8601_datetime"]}},
+                    "ChrgBr": "DEBT",
+                    "InstgAgt": {"FinInstnId": {"BICFI": {"var": "debtor_bic"}, "LEI": {"var": "instg_lei"}}},
+                    "InstdAgt": {"FinInstnId": {"BICFI": {"var": "creditor_bic"}, "LEI": {"var": "instd_lei"}}},
+                    "Dbtr": {
+                        "Nm": {"cat": [{"fake": ["company_name"]}, " AG"]},
+                        "PstlAdr": {"Ctry": "DE", "AdrLine": ["Corporate Headquarters", "60325 Frankfurt am Main"]},
+                        "Id": {
+                            "OrgId": {
+                                "LEI": {"var": "company_lei"},
+                                "Othr": [
+                                    {"Id": "DE123456789", "SchmeNm": {"Cd": "TXID"}},
+                                    {"Id": "ISIN-DE0001234567", "SchmeNm": {"Prtry": "ISIN"}}
+                                ]
+                            }
+                        }
+                    },
+                    "DbtrAcct": {
+                        "Id": {"IBAN": {"fake": ["iban", "DE"]}},
+                        "Tp": {"Cd": "CACC"},
+                        "Nm": "Dividend Distribution Account"
+                    },
+                    "DbtrAgt": {"FinInstnId": {"BICFI": {"var": "debtor_bic"}, "LEI": {"var": "instg_lei"}}},
+                    "CdtrAgt": {"FinInstnId": {"BICFI": {"var": "creditor_bic"}, "LEI": {"var": "instd_lei"}}},
+                    "Cdtr": {
+                        "Nm": {"var": "shareholder_name"},
+                        "PstlAdr": {
+                            "Ctry": {"fake": ["country_code"]},
+                            "AdrLine": [
+                                {"fake": ["street_address"]},
+                                {"cat": [{"fake": ["postcode"]}, " ", {"fake": ["city_name"]}]}
+                            ]
+                        },
+                        "Id": {
+                            "PrvtId": {
+                                "DtAndPlcOfBirth": {
+                                    "BirthDt": {
+                                        "fake": ["date", "%Y-%m-%d", "-80y", "-18y"]
+                                    },
+                                    "CityOfBirth": {"fake": ["city_name"]},
+                                    "CtryOfBirth": {"fake": ["country_code"]}
+                                },
+                                "Othr": [
+                                    {
+                                        "Id": {"cat": ["SH-", {"fake": ["i64", 1000001, 9999999]}]},
+                                        "SchmeNm": {"Prtry": "SHAREHOLDER_ID"}
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "CdtrAcct": {"Id": {"IBAN": {"fake": ["iban"]}}, "Tp": {"Cd": "CACC"}},
+                    "Purp": {"Cd": "DIVI"},
+                    "RgltryRptg": [
+                        {
+                            "Dtls": [
+                                {
+                                    "Tp": "CRED",
+                                    "Dt": {
+                                        "fake": ["date", "%Y-%m-%d", "+0d", "+0d"]
+                                    },
+                                    "Ctry": "DE",
+                                    "Cd": "150",
+                                    "Amt": {"@Ccy": "EUR", "$value": {"var": "dividend_amt"}},
+                                    "Inf": ["CBPR+ DIVIDEND PAYMENT", "WITHHOLDING TAX DEDUCTED"]
+                                }
+                            ]
+                        }
+                    ],
+                    "RmtInf": {
+                        "Strd": [
+                            {
+                                "RfrdDocInf": [
+                                    {
+                                        "Tp": {"CdOrPrtry": {"Prtry": "DIVIDEND_STATEMENT"}},
+                                        "Nb": {"cat": ["DIV-2025-Q", {"fake": ["i64", 1, 4]}]},
+                                        "RltdDt": {
+                                            "fake": ["date", "%Y-%m-%d", "-7d", "-1d"]
+                                        }
+                                    }
+                                ],
+                                "AddtlRmtInf": [
+                                    "Annual dividend payment - FY 2024",
+                                    "Generated remittance information",
+                                    "Generated remittance information",
+                                    "Generated remittance information",
+                                    "Withholding tax (25%): Deducted at source"
+                                ]
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+    }
+}

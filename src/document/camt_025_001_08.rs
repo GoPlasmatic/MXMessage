@@ -16,9 +16,8 @@
 //
 // You may obtain a copy of this library at
 // https://github.com/GoPlasmatic/MXMessage
-
-use crate::error::*;
-use regex::Regex;
+use crate::parse_result::{ErrorCollector, ParserConfig};
+use crate::validation::{Validate, helpers};
 use serde::{Deserialize, Serialize};
 
 // MessageHeader91: Date and time at which the message was created.
@@ -30,35 +29,33 @@ pub struct MessageHeader91 {
     pub cre_dt_tm: String,
 }
 
-impl MessageHeader91 {
-    pub fn validate(&self) -> Result<(), ValidationError> {
-        if self.msg_id.chars().count() < 1 {
-            return Err(ValidationError::new(
-                1001,
-                "msg_id is shorter than the minimum length of 1".to_string(),
-            ));
-        }
-        if self.msg_id.chars().count() > 35 {
-            return Err(ValidationError::new(
-                1002,
-                "msg_id exceeds the maximum length of 35".to_string(),
-            ));
-        }
-        let pattern = Regex::new("[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+").unwrap();
-        if !pattern.is_match(&self.msg_id) {
-            return Err(ValidationError::new(
-                1005,
-                "msg_id does not match the required pattern".to_string(),
-            ));
-        }
-        let pattern = Regex::new(".*(\\+|-)((0[0-9])|(1[0-4])):[0-5][0-9]").unwrap();
-        if !pattern.is_match(&self.cre_dt_tm) {
-            return Err(ValidationError::new(
-                1005,
-                "cre_dt_tm does not match the required pattern".to_string(),
-            ));
-        }
-        Ok(())
+impl Validate for MessageHeader91 {
+    fn validate(&self, path: &str, config: &ParserConfig, collector: &mut ErrorCollector) {
+        helpers::validate_length(
+            &self.msg_id,
+            "MsgId",
+            Some(1),
+            Some(35),
+            &helpers::child_path(path, "MsgId"),
+            config,
+            collector,
+        );
+        helpers::validate_pattern(
+            &self.msg_id,
+            "MsgId",
+            "[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+",
+            &helpers::child_path(path, "MsgId"),
+            config,
+            collector,
+        );
+        helpers::validate_pattern(
+            &self.cre_dt_tm,
+            "CreDtTm",
+            ".*(\\+|-)((0[0-9])|(1[0-4])):[0-5][0-9]",
+            &helpers::child_path(path, "CreDtTm"),
+            config,
+            collector,
+        );
     }
 }
 
@@ -71,47 +68,42 @@ pub struct OriginalMessageAndIssuer11 {
     pub msg_nm_id: String,
 }
 
-impl OriginalMessageAndIssuer11 {
-    pub fn validate(&self) -> Result<(), ValidationError> {
-        if self.msg_id.chars().count() < 1 {
-            return Err(ValidationError::new(
-                1001,
-                "msg_id is shorter than the minimum length of 1".to_string(),
-            ));
-        }
-        if self.msg_id.chars().count() > 35 {
-            return Err(ValidationError::new(
-                1002,
-                "msg_id exceeds the maximum length of 35".to_string(),
-            ));
-        }
-        let pattern = Regex::new("[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+").unwrap();
-        if !pattern.is_match(&self.msg_id) {
-            return Err(ValidationError::new(
-                1005,
-                "msg_id does not match the required pattern".to_string(),
-            ));
-        }
-        if self.msg_nm_id.chars().count() < 1 {
-            return Err(ValidationError::new(
-                1001,
-                "msg_nm_id is shorter than the minimum length of 1".to_string(),
-            ));
-        }
-        if self.msg_nm_id.chars().count() > 35 {
-            return Err(ValidationError::new(
-                1002,
-                "msg_nm_id exceeds the maximum length of 35".to_string(),
-            ));
-        }
-        let pattern = Regex::new("[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+").unwrap();
-        if !pattern.is_match(&self.msg_nm_id) {
-            return Err(ValidationError::new(
-                1005,
-                "msg_nm_id does not match the required pattern".to_string(),
-            ));
-        }
-        Ok(())
+impl Validate for OriginalMessageAndIssuer11 {
+    fn validate(&self, path: &str, config: &ParserConfig, collector: &mut ErrorCollector) {
+        helpers::validate_length(
+            &self.msg_id,
+            "MsgId",
+            Some(1),
+            Some(35),
+            &helpers::child_path(path, "MsgId"),
+            config,
+            collector,
+        );
+        helpers::validate_pattern(
+            &self.msg_id,
+            "MsgId",
+            "[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+",
+            &helpers::child_path(path, "MsgId"),
+            config,
+            collector,
+        );
+        helpers::validate_length(
+            &self.msg_nm_id,
+            "MsgNmId",
+            Some(1),
+            Some(35),
+            &helpers::child_path(path, "MsgNmId"),
+            config,
+            collector,
+        );
+        helpers::validate_pattern(
+            &self.msg_nm_id,
+            "MsgNmId",
+            "[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+",
+            &helpers::child_path(path, "MsgNmId"),
+            config,
+            collector,
+        );
     }
 }
 
@@ -124,11 +116,12 @@ pub struct Receipt61 {
     pub req_hdlg: RequestHandling31,
 }
 
-impl Receipt61 {
-    pub fn validate(&self) -> Result<(), ValidationError> {
-        self.orgnl_msg_id.validate()?;
-        self.req_hdlg.validate()?;
-        Ok(())
+impl Validate for Receipt61 {
+    fn validate(&self, path: &str, config: &ParserConfig, collector: &mut ErrorCollector) {
+        self.orgnl_msg_id
+            .validate(&helpers::child_path(path, "OrgnlMsgId"), config, collector);
+        self.req_hdlg
+            .validate(&helpers::child_path(path, "ReqHdlg"), config, collector);
     }
 }
 
@@ -141,13 +134,13 @@ pub struct ReceiptV08 {
     pub rct_dtls: Vec<Receipt61>,
 }
 
-impl ReceiptV08 {
-    pub fn validate(&self) -> Result<(), ValidationError> {
-        self.msg_hdr.validate()?;
+impl Validate for ReceiptV08 {
+    fn validate(&self, path: &str, config: &ParserConfig, collector: &mut ErrorCollector) {
+        self.msg_hdr
+            .validate(&helpers::child_path(path, "MsgHdr"), config, collector);
         for item in &self.rct_dtls {
-            item.validate()?
+            item.validate(&helpers::child_path(path, "RctDtls"), config, collector);
         }
-        Ok(())
     }
 }
 
@@ -160,13 +153,15 @@ pub struct RequestHandling31 {
     pub sts_rsn: Option<StatusReasonInformation141>,
 }
 
-impl RequestHandling31 {
-    pub fn validate(&self) -> Result<(), ValidationError> {
-        self.sts.validate()?;
+impl Validate for RequestHandling31 {
+    fn validate(&self, path: &str, config: &ParserConfig, collector: &mut ErrorCollector) {
+        self.sts
+            .validate(&helpers::child_path(path, "Sts"), config, collector);
         if let Some(ref val) = self.sts_rsn {
-            val.validate()?
+            if config.validate_optional_fields {
+                val.validate(&helpers::child_path(path, "StsRsn"), config, collector);
+            }
         }
-        Ok(())
     }
 }
 
@@ -177,23 +172,19 @@ pub struct RequestStatus1Choice1 {
     pub cd: Option<String>,
 }
 
-impl RequestStatus1Choice1 {
-    pub fn validate(&self) -> Result<(), ValidationError> {
+impl Validate for RequestStatus1Choice1 {
+    fn validate(&self, path: &str, config: &ParserConfig, collector: &mut ErrorCollector) {
         if let Some(ref val) = self.cd {
-            if val.chars().count() < 1 {
-                return Err(ValidationError::new(
-                    1001,
-                    "cd is shorter than the minimum length of 1".to_string(),
-                ));
-            }
-            if val.chars().count() > 4 {
-                return Err(ValidationError::new(
-                    1002,
-                    "cd exceeds the maximum length of 4".to_string(),
-                ));
-            }
+            helpers::validate_length(
+                val,
+                "Cd",
+                Some(1),
+                Some(4),
+                &helpers::child_path(path, "Cd"),
+                config,
+                collector,
+            );
         }
-        Ok(())
     }
 }
 
@@ -204,23 +195,19 @@ pub struct StatusReason6Choice1 {
     pub cd: Option<String>,
 }
 
-impl StatusReason6Choice1 {
-    pub fn validate(&self) -> Result<(), ValidationError> {
+impl Validate for StatusReason6Choice1 {
+    fn validate(&self, path: &str, config: &ParserConfig, collector: &mut ErrorCollector) {
         if let Some(ref val) = self.cd {
-            if val.chars().count() < 1 {
-                return Err(ValidationError::new(
-                    1001,
-                    "cd is shorter than the minimum length of 1".to_string(),
-                ));
-            }
-            if val.chars().count() > 4 {
-                return Err(ValidationError::new(
-                    1002,
-                    "cd exceeds the maximum length of 4".to_string(),
-                ));
-            }
+            helpers::validate_length(
+                val,
+                "Cd",
+                Some(1),
+                Some(4),
+                &helpers::child_path(path, "Cd"),
+                config,
+                collector,
+            );
         }
-        Ok(())
     }
 }
 
@@ -235,34 +222,37 @@ pub struct StatusReasonInformation141 {
     pub addtl_inf: Option<Vec<String>>,
 }
 
-impl StatusReasonInformation141 {
-    pub fn validate(&self) -> Result<(), ValidationError> {
+impl Validate for StatusReasonInformation141 {
+    fn validate(&self, path: &str, config: &ParserConfig, collector: &mut ErrorCollector) {
         if let Some(ref val) = self.rsn {
-            val.validate()?
+            if config.validate_optional_fields {
+                val.validate(&helpers::child_path(path, "Rsn"), config, collector);
+            }
         }
         if let Some(ref vec) = self.addtl_inf {
             for item in vec {
-                if item.chars().count() < 1 {
-                    return Err(ValidationError::new(
-                        1001,
-                        "addtl_inf is shorter than the minimum length of 1".to_string(),
-                    ));
-                }
-                if item.chars().count() > 105 {
-                    return Err(ValidationError::new(
-                        1002,
-                        "addtl_inf exceeds the maximum length of 105".to_string(),
-                    ));
-                }
-                let pattern = Regex::new("[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+").unwrap();
-                if !pattern.is_match(&item) {
-                    return Err(ValidationError::new(
-                        1005,
-                        "addtl_inf does not match the required pattern".to_string(),
-                    ));
-                }
+                helpers::validate_length(
+                    item,
+                    "AddtlInf",
+                    Some(1),
+                    Some(105),
+                    &helpers::child_path(path, "AddtlInf"),
+                    config,
+                    collector,
+                );
             }
         }
-        Ok(())
+        if let Some(ref vec) = self.addtl_inf {
+            for item in vec {
+                helpers::validate_pattern(
+                    item,
+                    "AddtlInf",
+                    "[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+",
+                    &helpers::child_path(path, "AddtlInf"),
+                    config,
+                    collector,
+                );
+            }
+        }
     }
 }
