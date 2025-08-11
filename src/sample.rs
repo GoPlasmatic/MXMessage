@@ -22,8 +22,7 @@ use crate::scenario_config::{
     ScenarioConfig, find_scenario_by_name_with_config, find_scenario_for_message_type_with_config,
 };
 use crate::xml::to_mx_xml;
-use fake::Fake;
-use rand::Rng;
+use datafake_rs::DataGenerator;
 use serde_json::{Value, json};
 
 type Result<T> = std::result::Result<T, ValidationError>;
@@ -66,7 +65,7 @@ pub fn generate_sample_xml(
         find_scenario_for_message_type_with_config(message_type, config)?
     };
 
-    // Process the scenario to generate complete envelope
+    // Process the scenario to generate complete envelope using datafake-rs
     let envelope_data = generate_envelope_from_scenario(&scenario_json)?;
 
     // Convert envelope to XML based on message type
@@ -136,10 +135,23 @@ where
 // Private implementation functions
 // ============================================================================
 
-/// Generate complete envelope from scenario JSON
+/// Generate complete envelope from scenario JSON using datafake-rs
 fn generate_envelope_from_scenario(scenario: &Value) -> Result<Value> {
-    let mut rng = rand::thread_rng();
+    // Convert the scenario format to datafake-rs compatible format
+    let datafake_config = convert_to_datafake_config(scenario)?;
 
+    // Create a DataGenerator from the config
+    let generator = DataGenerator::from_value(datafake_config)
+        .map_err(|e| ValidationError::new(9997, format!("Failed to create generator: {e}")))?;
+
+    // Generate the data
+    generator
+        .generate()
+        .map_err(|e| ValidationError::new(9997, format!("Failed to generate data: {e}")))
+}
+
+/// Convert scenario JSON to datafake-rs compatible configuration
+fn convert_to_datafake_config(scenario: &Value) -> Result<Value> {
     // Extract variables and schema
     let variables = scenario.get("variables").ok_or_else(|| {
         ValidationError::new(9997, "Scenario missing 'variables' section".to_string())
@@ -149,35 +161,174 @@ fn generate_envelope_from_scenario(scenario: &Value) -> Result<Value> {
         ValidationError::new(9997, "Scenario missing 'schema' section".to_string())
     })?;
 
-    // Generate variables
-    let mut generated_vars = serde_json::Map::new();
-    if let Value::Object(vars) = variables {
-        for (key, spec) in vars {
-            let value = generate_value(spec, &mut rng)?;
-            generated_vars.insert(key.clone(), value);
-        }
-    }
+    // Convert the configuration to datafake-rs format
+    // Variables section stays mostly the same, but we need to ensure compatibility
+    let converted_variables = convert_variables(variables)?;
 
-    // Process complete schema with AppHdr and Document
-    let app_hdr = schema.get("AppHdr").ok_or_else(|| {
-        ValidationError::new(9997, "Scenario schema missing 'AppHdr' section".to_string())
-    })?;
-
-    let document = schema.get("Document").ok_or_else(|| {
-        ValidationError::new(
-            9997,
-            "Scenario schema missing 'Document' section".to_string(),
-        )
-    })?;
-
-    // Process both header and document with generated variables
-    let processed_app_hdr = process_schema_value(app_hdr, &generated_vars)?;
-    let processed_document = process_schema_value(document, &generated_vars)?;
+    // Schema section needs to be processed to handle special cases
+    let converted_schema = convert_schema(schema)?;
 
     Ok(json!({
-        "AppHdr": processed_app_hdr,
-        "Document": processed_document
+        "variables": converted_variables,
+        "schema": converted_schema
     }))
+}
+
+/// Convert variables section to datafake-rs compatible format
+fn convert_variables(variables: &Value) -> Result<Value> {
+    match variables {
+        Value::Object(vars) => {
+            let mut converted = serde_json::Map::new();
+
+            for (key, spec) in vars {
+                let converted_spec = convert_variable_spec(spec)?;
+                converted.insert(key.clone(), converted_spec);
+            }
+
+            Ok(Value::Object(converted))
+        }
+        _ => Ok(variables.clone()),
+    }
+}
+
+/// Convert a single variable specification
+fn convert_variable_spec(spec: &Value) -> Result<Value> {
+    match spec {
+        Value::Object(obj) => {
+            // Handle cat operations - datafake-rs supports these natively
+            if obj.contains_key("cat") {
+                return Ok(spec.clone());
+            }
+
+            // Handle fake operations - ensure compatibility with datafake-rs
+            if let Some(fake_spec) = obj.get("fake") {
+                if let Value::Array(fake_arr) = fake_spec {
+                    // Map our custom fake types to datafake-rs supported types
+                    if let Some(Value::String(fake_type)) = fake_arr.first() {
+                        let mapped_spec = map_fake_type(fake_type, &fake_arr[1..])?;
+                        return Ok(mapped_spec);
+                    }
+                }
+                return Ok(spec.clone());
+            }
+
+            // Handle pick operations - convert to fake enum
+            if let Some(Value::Array(options)) = obj.get("pick") {
+                // Convert pick to a fake enum operation
+                let mut fake_array = vec![json!("enum")];
+                for option in options {
+                    fake_array.push(option.clone());
+                }
+                return Ok(json!({"fake": fake_array}));
+            }
+
+            Ok(spec.clone())
+        }
+        Value::String(_) | Value::Number(_) | Value::Bool(_) | Value::Null => {
+            // Static values pass through
+            Ok(spec.clone())
+        }
+        _ => Ok(spec.clone()),
+    }
+}
+
+/// Map custom fake types to datafake-rs supported types
+fn map_fake_type(fake_type: &str, args: &[Value]) -> Result<Value> {
+    // Most fake types are compatible, but we need to handle some special cases
+    match fake_type {
+        // ISO datetime is a custom type in our implementation
+        "iso8601_datetime" => {
+            // Since datafake-rs doesn't have datetime support, generate a static ISO datetime
+            let now = chrono::Utc::now();
+            Ok(json!(now.to_rfc3339()))
+        }
+        // Currency code needs mapping
+        "currency_code" => {
+            // Use enum with common currency codes
+            Ok(json!({"fake": ["enum", "EUR", "USD", "GBP", "CHF", "JPY", "CAD", "AUD"]}))
+        }
+        // IBAN generation with country code
+        "iban" => {
+            let country = args.first().and_then(|v| v.as_str()).unwrap_or("DE");
+            Ok(json!({"fake": ["iban", country]}))
+        }
+        // BIC code generation
+        "bic" => Ok(json!({"fake": ["bic"]})),
+        // LEI code generation
+        "lei" => Ok(json!({"fake": ["lei"]})),
+        // Alphanumeric with length
+        "alphanumeric" => {
+            let min_len = args.first().and_then(|v| v.as_u64()).unwrap_or(10);
+            let max_len = args.get(1).and_then(|v| v.as_u64()).unwrap_or(min_len);
+            Ok(json!({"fake": ["alphanumeric", min_len, max_len]}))
+        }
+        // Words generation
+        "words" => {
+            let min = args.first().and_then(|v| v.as_u64()).unwrap_or(1);
+            let max = args.get(1).and_then(|v| v.as_u64()).unwrap_or(3);
+            Ok(json!({"fake": ["words", min, max]}))
+        }
+        // Regex patterns - pass through as-is, datafake-rs now supports it
+        "regex" => {
+            let mut fake_array = vec![json!("regex")];
+            for arg in args {
+                fake_array.push(arg.clone());
+            }
+            Ok(json!({"fake": fake_array}))
+        }
+        // Pass through other types as-is, datafake-rs supports most common ones
+        _ => {
+            let mut fake_array = vec![json!(fake_type)];
+            for arg in args {
+                fake_array.push(arg.clone());
+            }
+            Ok(json!({"fake": fake_array}))
+        }
+    }
+}
+
+/// Convert schema section to datafake-rs compatible format
+fn convert_schema(schema: &Value) -> Result<Value> {
+    process_schema_value(schema)
+}
+
+/// Process schema value recursively
+fn process_schema_value(value: &Value) -> Result<Value> {
+    match value {
+        Value::Object(obj) => {
+            let mut result = serde_json::Map::new();
+
+            for (key, val) in obj {
+                // Handle special keys
+                if key == "@Ccy" {
+                    // This is an attribute in XML, keep as-is
+                    result.insert(key.clone(), process_schema_value(val)?);
+                } else if key == "$value" {
+                    // This is the element value in XML, keep as-is
+                    result.insert(key.clone(), process_schema_value(val)?);
+                } else if key == "var" {
+                    // Variable reference, keep as-is (datafake-rs supports this)
+                    return Ok(value.clone());
+                } else if key == "fake" || key == "cat" || key == "pick" {
+                    // These are datafake-rs operations, process the spec
+                    return convert_variable_spec(value);
+                } else {
+                    // Regular field, process recursively
+                    result.insert(key.clone(), process_schema_value(val)?);
+                }
+            }
+
+            Ok(Value::Object(result))
+        }
+        Value::Array(arr) => {
+            let mut result = Vec::new();
+            for item in arr {
+                result.push(process_schema_value(item)?);
+            }
+            Ok(Value::Array(result))
+        }
+        _ => Ok(value.clone()),
+    }
 }
 
 /// Extract document from envelope for backward compatibility
@@ -487,290 +638,5 @@ fn envelope_to_xml(envelope: Value, message_type: &str) -> Result<String> {
             9997,
             format!("Unsupported message type: {message_type}"),
         )),
-    }
-}
-
-/// Generate a value based on specification
-fn generate_value(spec: &Value, rng: &mut impl Rng) -> Result<Value> {
-    match spec {
-        Value::Object(obj) => {
-            if let Some(fake_spec) = obj.get("fake") {
-                if let Value::Array(fake_arr) = fake_spec {
-                    if let Some(Value::String(fake_type)) = fake_arr.first() {
-                        return generate_fake_value(fake_type, &fake_arr[1..], rng);
-                    }
-                }
-            } else if let Some(cat_spec) = obj.get("cat") {
-                if let Value::Array(parts) = cat_spec {
-                    // If only one element and it's an object, evaluate it directly
-                    if parts.len() == 1 {
-                        if let Some(Value::Object(_)) = parts.first() {
-                            let generated = generate_value(&parts[0], rng)?;
-                            // Convert numbers to strings for single element cat
-                            if let Value::Number(n) = generated {
-                                return Ok(Value::String(n.to_string()));
-                            }
-                            return Ok(generated);
-                        }
-                    }
-
-                    let mut result = String::new();
-                    for part in parts {
-                        match part {
-                            Value::String(s) => result.push_str(s),
-                            Value::Object(_) => {
-                                let generated = generate_value(part, rng)?;
-                                if let Value::String(s) = generated {
-                                    result.push_str(&s);
-                                } else if let Value::Number(n) = generated {
-                                    result.push_str(&n.to_string());
-                                } else {
-                                    result.push_str(&generated.to_string());
-                                }
-                            }
-                            _ => result.push_str(&part.to_string()),
-                        }
-                    }
-                    return Ok(Value::String(result));
-                }
-            } else if let Some(Value::Array(options)) = obj.get("pick") {
-                let idx = rng.gen_range(0..options.len());
-                return Ok(options[idx].clone());
-            }
-        }
-        _ => return Ok(spec.clone()),
-    }
-
-    Ok(spec.clone())
-}
-
-/// Generate fake values based on type
-fn generate_fake_value(fake_type: &str, args: &[Value], rng: &mut impl Rng) -> Result<Value> {
-    use fake::faker::address::en::{CityName, CountryName, PostCode, StreetName};
-    use fake::faker::company::en::CompanyName;
-    use fake::faker::lorem::en::Word;
-
-    match fake_type {
-        "bic" => {
-            // Generate a realistic BIC code
-            let letters: String = (0..4).map(|_| rng.gen_range(b'A'..=b'Z') as char).collect();
-            let country: String = (0..2).map(|_| rng.gen_range(b'A'..=b'Z') as char).collect();
-            let location: String = (0..2).map(|_| rng.gen_range(b'A'..=b'Z') as char).collect();
-            let branch = if rng.gen_bool(0.5) {
-                "XXX".to_string()
-            } else {
-                (0..3).map(|_| rng.gen_range(b'0'..=b'9') as char).collect()
-            };
-            Ok(Value::String(format!(
-                "{letters}{country}{location}{branch}"
-            )))
-        }
-        "uuid" => Ok(Value::String(uuid::Uuid::new_v4().to_string())),
-        "i64" => {
-            let min = args.first().and_then(|v| v.as_i64()).unwrap_or(0);
-            let max = args.get(1).and_then(|v| v.as_i64()).unwrap_or(i64::MAX);
-            Ok(Value::Number(rng.gen_range(min..=max).into()))
-        }
-        "f64" => {
-            let min = args.first().and_then(|v| v.as_f64()).unwrap_or(0.0);
-            let max = args.get(1).and_then(|v| v.as_f64()).unwrap_or(f64::MAX);
-            let value = rng.gen_range(min..=max);
-            // Round to 2 decimal places for currency amounts
-            let rounded = (value * 100.0).round() / 100.0;
-            Ok(json!(rounded))
-        }
-        "currency_code" => {
-            let codes = ["EUR", "USD", "GBP", "CHF", "JPY", "CAD", "AUD"];
-            Ok(Value::String(
-                codes[rng.gen_range(0..codes.len())].to_string(),
-            ))
-        }
-        "iso8601_datetime" => {
-            let now = chrono::Utc::now();
-            Ok(Value::String(now.to_rfc3339()))
-        }
-        "company_name" => Ok(Value::String(CompanyName().fake())),
-        "country_name" => Ok(Value::String(CountryName().fake())),
-        "word" => Ok(Value::String(Word().fake())),
-        "words" => {
-            let min = args.first().and_then(|v| v.as_u64()).unwrap_or(1) as usize;
-            let max = args.get(1).and_then(|v| v.as_u64()).unwrap_or(3) as usize;
-            let count = rng.gen_range(min..=max);
-            let words: Vec<String> = (0..count).map(|_| Word().fake()).collect();
-            Ok(Value::String(words.join(" ")))
-        }
-        "iban" => {
-            let country = args.first().and_then(|v| v.as_str()).unwrap_or("DE");
-            // Generate a simple IBAN-like string
-            let check = format!("{:02}", rng.gen_range(10..99));
-            let account: String = (0..18).map(|_| rng.gen_range(0..10).to_string()).collect();
-            Ok(Value::String(format!("{country}{check}{account}")))
-        }
-        "lei" => {
-            // Generate a realistic LEI (18 uppercase alphanumeric + 2 check digits)
-            let chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-            let lei: String = (0..18)
-                .map(|_| chars.chars().nth(rng.gen_range(0..chars.len())).unwrap())
-                .collect();
-            let check = format!("{:02}", rng.gen_range(10..99));
-            Ok(Value::String(format!("{lei}{check}")))
-        }
-        "alphanumeric" => {
-            // Generate alphanumeric string of specified length
-            let min_len = args.first().and_then(|v| v.as_u64()).unwrap_or(10) as usize;
-            let max_len = args
-                .get(1)
-                .and_then(|v| v.as_u64())
-                .unwrap_or(min_len as u64) as usize;
-            let len = if min_len == max_len {
-                min_len
-            } else {
-                rng.gen_range(min_len..=max_len)
-            };
-            let chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-            let result: String = (0..len)
-                .map(|_| chars.chars().nth(rng.gen_range(0..chars.len())).unwrap())
-                .collect();
-            Ok(Value::String(result))
-        }
-        "country_code" => {
-            let codes = [
-                "US", "GB", "DE", "FR", "IT", "ES", "NL", "BE", "CH", "AT", "SE", "NO", "DK", "FI",
-                "IE", "PT", "GR", "PL", "CZ", "HU",
-            ];
-            Ok(Value::String(
-                codes[rng.gen_range(0..codes.len())].to_string(),
-            ))
-        }
-        "postal_code" => Ok(Value::String(PostCode().fake())),
-        "postcode" => Ok(Value::String(PostCode().fake())),
-        "street_address" => Ok(Value::String(StreetName().fake())),
-        "street_name" => Ok(Value::String(StreetName().fake())),
-        "city" => Ok(Value::String(CityName().fake())),
-        "city_name" => Ok(Value::String(CityName().fake())),
-        "date" => {
-            // Generate date in specified format
-            let format = args.first().and_then(|v| v.as_str()).unwrap_or("%Y-%m-%d");
-            let _start_offset = args.get(1).and_then(|v| v.as_str()).unwrap_or("0d");
-            let _end_offset = args.get(2).and_then(|v| v.as_str()).unwrap_or("0d");
-
-            // For simplicity, generate today's date
-            let now = chrono::Utc::now();
-            Ok(Value::String(now.format(format).to_string()))
-        }
-        "enum" => {
-            // Handle enum type: pick one of the provided options
-            if !args.is_empty() {
-                let idx = rng.gen_range(0..args.len());
-                Ok(args[idx].clone())
-            } else {
-                Ok(Value::String("ENUM_NO_OPTIONS".to_string()))
-            }
-        }
-        "regex" => {
-            // Handle regex patterns that define a set of options
-            if let Some(Value::String(pattern)) = args.first() {
-                // Simple handling for common patterns
-                if pattern.starts_with('(') && pattern.ends_with(')') {
-                    // Extract options from pattern like "(GB|DE|FR|SG|HK)"
-                    let inner = &pattern[1..pattern.len() - 1];
-                    let options: Vec<&str> = inner.split('|').collect();
-                    if !options.is_empty() {
-                        let idx = rng.gen_range(0..options.len());
-                        return Ok(Value::String(options[idx].to_string()));
-                    }
-                }
-            }
-            Ok(Value::String("REGEX_PATTERN".to_string()))
-        }
-        "email" => {
-            // Generate a realistic email address
-            let first_names = [
-                "john",
-                "jane",
-                "admin",
-                "info",
-                "support",
-                "treasury",
-                "compliance",
-            ];
-            let domains = ["example.com", "company.com", "corp.com", "bank.com"];
-            let first = first_names[rng.gen_range(0..first_names.len())];
-            let domain = domains[rng.gen_range(0..domains.len())];
-            Ok(Value::String(format!("{first}@{domain}")))
-        }
-        "phone_number" => {
-            // Generate a phone number
-            let area = rng.gen_range(200..999);
-            let prefix = rng.gen_range(200..999);
-            let line = rng.gen_range(1000..9999);
-            Ok(Value::String(format!("+1-{area}-{prefix}-{line}")))
-        }
-        "state_abbr" => {
-            // US state abbreviations
-            let states = ["CA", "NY", "TX", "FL", "IL", "PA", "OH", "GA", "NC", "MI"];
-            Ok(Value::String(
-                states[rng.gen_range(0..states.len())].to_string(),
-            ))
-        }
-        "time" => {
-            // Generate time in HH:MM:SS format
-            let hour = rng.gen_range(0..24);
-            let minute = rng.gen_range(0..60);
-            let second = rng.gen_range(0..60);
-            Ok(Value::String(format!("{hour:02}:{minute:02}:{second:02}")))
-        }
-        _ => Ok(Value::String(format!("FAKE_{}", fake_type.to_uppercase()))),
-    }
-}
-
-/// Process schema value with variable substitution
-fn process_schema_value(value: &Value, vars: &serde_json::Map<String, Value>) -> Result<Value> {
-    match value {
-        Value::Object(obj) => {
-            // Check if this is a variable reference first
-            if let Some(Value::String(var_name)) = obj.get("var") {
-                if let Some(var_value) = vars.get(var_name) {
-                    return Ok(var_value.clone());
-                }
-            }
-
-            // Handle cat spec with variable resolution
-            if let Some(Value::Array(parts)) = obj.get("cat") {
-                // Process each part to resolve variables
-                let resolved_parts: Vec<Value> = parts
-                    .iter()
-                    .map(|part| process_schema_value(part, vars))
-                    .collect::<Result<Vec<_>>>()?;
-                let resolved_obj = json!({"cat": resolved_parts});
-                let mut rng = rand::thread_rng();
-                return generate_value(&resolved_obj, &mut rng);
-            }
-
-            // Check if this object itself is a fake/pick spec
-            if obj.contains_key("fake") || obj.contains_key("pick") {
-                // This is a generator spec, generate it
-                let mut rng = rand::thread_rng();
-                return generate_value(value, &mut rng);
-            }
-
-            let mut result = serde_json::Map::new();
-
-            // Otherwise process each field
-            for (key, val) in obj {
-                if key != "var" {
-                    result.insert(key.clone(), process_schema_value(val, vars)?);
-                }
-            }
-            Ok(Value::Object(result))
-        }
-        Value::Array(arr) => {
-            let mut result = Vec::new();
-            for item in arr {
-                result.push(process_schema_value(item, vars)?);
-            }
-            Ok(Value::Array(result))
-        }
-        _ => Ok(value.clone()),
     }
 }

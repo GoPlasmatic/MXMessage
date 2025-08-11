@@ -207,10 +207,10 @@ pub struct Party50Choice1 {
 
 impl Validate for Party50Choice1 {
     fn validate(&self, path: &str, config: &ParserConfig, collector: &mut ErrorCollector) {
-        if let Some(ref val) = self.agt {
-            if config.validate_optional_fields {
-                val.validate(&helpers::child_path(path, "Agt"), config, collector);
-            }
+        if let Some(ref val) = self.agt
+            && config.validate_optional_fields
+        {
+            val.validate(&helpers::child_path(path, "Agt"), config, collector);
         }
     }
 }

@@ -157,10 +157,10 @@ impl Validate for RequestHandling31 {
     fn validate(&self, path: &str, config: &ParserConfig, collector: &mut ErrorCollector) {
         self.sts
             .validate(&helpers::child_path(path, "Sts"), config, collector);
-        if let Some(ref val) = self.sts_rsn {
-            if config.validate_optional_fields {
-                val.validate(&helpers::child_path(path, "StsRsn"), config, collector);
-            }
+        if let Some(ref val) = self.sts_rsn
+            && config.validate_optional_fields
+        {
+            val.validate(&helpers::child_path(path, "StsRsn"), config, collector);
         }
     }
 }
@@ -224,10 +224,10 @@ pub struct StatusReasonInformation141 {
 
 impl Validate for StatusReasonInformation141 {
     fn validate(&self, path: &str, config: &ParserConfig, collector: &mut ErrorCollector) {
-        if let Some(ref val) = self.rsn {
-            if config.validate_optional_fields {
-                val.validate(&helpers::child_path(path, "Rsn"), config, collector);
-            }
+        if let Some(ref val) = self.rsn
+            && config.validate_optional_fields
+        {
+            val.validate(&helpers::child_path(path, "Rsn"), config, collector);
         }
         if let Some(ref vec) = self.addtl_inf {
             for item in vec {

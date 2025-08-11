@@ -41,10 +41,10 @@ impl Validate for AccountIdentification4Choice1 {
                 collector,
             );
         }
-        if let Some(ref val) = self.othr {
-            if config.validate_optional_fields {
-                val.validate(&helpers::child_path(path, "Othr"), config, collector);
-            }
+        if let Some(ref val) = self.othr
+            && config.validate_optional_fields
+        {
+            val.validate(&helpers::child_path(path, "Othr"), config, collector);
         }
     }
 }
@@ -141,10 +141,10 @@ impl Validate for CashAccount381 {
     fn validate(&self, path: &str, config: &ParserConfig, collector: &mut ErrorCollector) {
         self.id
             .validate(&helpers::child_path(path, "Id"), config, collector);
-        if let Some(ref val) = self.tp {
-            if config.validate_optional_fields {
-                val.validate(&helpers::child_path(path, "Tp"), config, collector);
-            }
+        if let Some(ref val) = self.tp
+            && config.validate_optional_fields
+        {
+            val.validate(&helpers::child_path(path, "Tp"), config, collector);
         }
         if let Some(ref val) = self.ccy {
             helpers::validate_pattern(
@@ -177,10 +177,10 @@ impl Validate for CashAccount381 {
                 collector,
             );
         }
-        if let Some(ref val) = self.prxy {
-            if config.validate_optional_fields {
-                val.validate(&helpers::child_path(path, "Prxy"), config, collector);
-            }
+        if let Some(ref val) = self.prxy
+            && config.validate_optional_fields
+        {
+            val.validate(&helpers::child_path(path, "Prxy"), config, collector);
         }
     }
 }
@@ -455,210 +455,210 @@ impl Validate for CreditTransferTransaction391 {
     fn validate(&self, path: &str, config: &ParserConfig, collector: &mut ErrorCollector) {
         self.pmt_id
             .validate(&helpers::child_path(path, "PmtId"), config, collector);
-        if let Some(ref val) = self.pmt_tp_inf {
-            if config.validate_optional_fields {
-                val.validate(&helpers::child_path(path, "PmtTpInf"), config, collector);
-            }
+        if let Some(ref val) = self.pmt_tp_inf
+            && config.validate_optional_fields
+        {
+            val.validate(&helpers::child_path(path, "PmtTpInf"), config, collector);
         }
         self.intr_bk_sttlm_amt.validate(
             &helpers::child_path(path, "IntrBkSttlmAmt"),
             config,
             collector,
         );
-        if let Some(ref val) = self.sttlm_prty {
-            if config.validate_optional_fields {
-                val.validate(&helpers::child_path(path, "SttlmPrty"), config, collector);
-            }
+        if let Some(ref val) = self.sttlm_prty
+            && config.validate_optional_fields
+        {
+            val.validate(&helpers::child_path(path, "SttlmPrty"), config, collector);
         }
-        if let Some(ref val) = self.sttlm_tm_indctn {
-            if config.validate_optional_fields {
-                val.validate(
-                    &helpers::child_path(path, "SttlmTmIndctn"),
-                    config,
-                    collector,
-                );
-            }
+        if let Some(ref val) = self.sttlm_tm_indctn
+            && config.validate_optional_fields
+        {
+            val.validate(
+                &helpers::child_path(path, "SttlmTmIndctn"),
+                config,
+                collector,
+            );
         }
-        if let Some(ref val) = self.sttlm_tm_req {
-            if config.validate_optional_fields {
-                val.validate(&helpers::child_path(path, "SttlmTmReq"), config, collector);
-            }
+        if let Some(ref val) = self.sttlm_tm_req
+            && config.validate_optional_fields
+        {
+            val.validate(&helpers::child_path(path, "SttlmTmReq"), config, collector);
         }
-        if let Some(ref val) = self.instd_amt {
-            if config.validate_optional_fields {
-                val.validate(&helpers::child_path(path, "InstdAmt"), config, collector);
-            }
+        if let Some(ref val) = self.instd_amt
+            && config.validate_optional_fields
+        {
+            val.validate(&helpers::child_path(path, "InstdAmt"), config, collector);
         }
         self.chrg_br
             .validate(&helpers::child_path(path, "ChrgBr"), config, collector);
-        if let Some(ref vec) = self.chrgs_inf {
-            if config.validate_optional_fields {
-                for item in vec {
-                    item.validate(&helpers::child_path(path, "ChrgsInf"), config, collector);
-                }
+        if let Some(ref vec) = self.chrgs_inf
+            && config.validate_optional_fields
+        {
+            for item in vec {
+                item.validate(&helpers::child_path(path, "ChrgsInf"), config, collector);
             }
         }
-        if let Some(ref val) = self.prvs_instg_agt1 {
-            if config.validate_optional_fields {
-                val.validate(
-                    &helpers::child_path(path, "PrvsInstgAgt1"),
-                    config,
-                    collector,
-                );
-            }
+        if let Some(ref val) = self.prvs_instg_agt1
+            && config.validate_optional_fields
+        {
+            val.validate(
+                &helpers::child_path(path, "PrvsInstgAgt1"),
+                config,
+                collector,
+            );
         }
-        if let Some(ref val) = self.prvs_instg_agt1_acct {
-            if config.validate_optional_fields {
-                val.validate(
-                    &helpers::child_path(path, "PrvsInstgAgt1Acct"),
-                    config,
-                    collector,
-                );
-            }
+        if let Some(ref val) = self.prvs_instg_agt1_acct
+            && config.validate_optional_fields
+        {
+            val.validate(
+                &helpers::child_path(path, "PrvsInstgAgt1Acct"),
+                config,
+                collector,
+            );
         }
-        if let Some(ref val) = self.prvs_instg_agt2 {
-            if config.validate_optional_fields {
-                val.validate(
-                    &helpers::child_path(path, "PrvsInstgAgt2"),
-                    config,
-                    collector,
-                );
-            }
+        if let Some(ref val) = self.prvs_instg_agt2
+            && config.validate_optional_fields
+        {
+            val.validate(
+                &helpers::child_path(path, "PrvsInstgAgt2"),
+                config,
+                collector,
+            );
         }
-        if let Some(ref val) = self.prvs_instg_agt2_acct {
-            if config.validate_optional_fields {
-                val.validate(
-                    &helpers::child_path(path, "PrvsInstgAgt2Acct"),
-                    config,
-                    collector,
-                );
-            }
+        if let Some(ref val) = self.prvs_instg_agt2_acct
+            && config.validate_optional_fields
+        {
+            val.validate(
+                &helpers::child_path(path, "PrvsInstgAgt2Acct"),
+                config,
+                collector,
+            );
         }
-        if let Some(ref val) = self.prvs_instg_agt3 {
-            if config.validate_optional_fields {
-                val.validate(
-                    &helpers::child_path(path, "PrvsInstgAgt3"),
-                    config,
-                    collector,
-                );
-            }
+        if let Some(ref val) = self.prvs_instg_agt3
+            && config.validate_optional_fields
+        {
+            val.validate(
+                &helpers::child_path(path, "PrvsInstgAgt3"),
+                config,
+                collector,
+            );
         }
-        if let Some(ref val) = self.prvs_instg_agt3_acct {
-            if config.validate_optional_fields {
-                val.validate(
-                    &helpers::child_path(path, "PrvsInstgAgt3Acct"),
-                    config,
-                    collector,
-                );
-            }
+        if let Some(ref val) = self.prvs_instg_agt3_acct
+            && config.validate_optional_fields
+        {
+            val.validate(
+                &helpers::child_path(path, "PrvsInstgAgt3Acct"),
+                config,
+                collector,
+            );
         }
         self.instg_agt
             .validate(&helpers::child_path(path, "InstgAgt"), config, collector);
         self.instd_agt
             .validate(&helpers::child_path(path, "InstdAgt"), config, collector);
-        if let Some(ref val) = self.intrmy_agt1 {
-            if config.validate_optional_fields {
-                val.validate(&helpers::child_path(path, "IntrmyAgt1"), config, collector);
-            }
+        if let Some(ref val) = self.intrmy_agt1
+            && config.validate_optional_fields
+        {
+            val.validate(&helpers::child_path(path, "IntrmyAgt1"), config, collector);
         }
-        if let Some(ref val) = self.intrmy_agt1_acct {
-            if config.validate_optional_fields {
-                val.validate(
-                    &helpers::child_path(path, "IntrmyAgt1Acct"),
-                    config,
-                    collector,
-                );
-            }
+        if let Some(ref val) = self.intrmy_agt1_acct
+            && config.validate_optional_fields
+        {
+            val.validate(
+                &helpers::child_path(path, "IntrmyAgt1Acct"),
+                config,
+                collector,
+            );
         }
-        if let Some(ref val) = self.intrmy_agt2 {
-            if config.validate_optional_fields {
-                val.validate(&helpers::child_path(path, "IntrmyAgt2"), config, collector);
-            }
+        if let Some(ref val) = self.intrmy_agt2
+            && config.validate_optional_fields
+        {
+            val.validate(&helpers::child_path(path, "IntrmyAgt2"), config, collector);
         }
-        if let Some(ref val) = self.intrmy_agt2_acct {
-            if config.validate_optional_fields {
-                val.validate(
-                    &helpers::child_path(path, "IntrmyAgt2Acct"),
-                    config,
-                    collector,
-                );
-            }
+        if let Some(ref val) = self.intrmy_agt2_acct
+            && config.validate_optional_fields
+        {
+            val.validate(
+                &helpers::child_path(path, "IntrmyAgt2Acct"),
+                config,
+                collector,
+            );
         }
-        if let Some(ref val) = self.intrmy_agt3 {
-            if config.validate_optional_fields {
-                val.validate(&helpers::child_path(path, "IntrmyAgt3"), config, collector);
-            }
+        if let Some(ref val) = self.intrmy_agt3
+            && config.validate_optional_fields
+        {
+            val.validate(&helpers::child_path(path, "IntrmyAgt3"), config, collector);
         }
-        if let Some(ref val) = self.intrmy_agt3_acct {
-            if config.validate_optional_fields {
-                val.validate(
-                    &helpers::child_path(path, "IntrmyAgt3Acct"),
-                    config,
-                    collector,
-                );
-            }
+        if let Some(ref val) = self.intrmy_agt3_acct
+            && config.validate_optional_fields
+        {
+            val.validate(
+                &helpers::child_path(path, "IntrmyAgt3Acct"),
+                config,
+                collector,
+            );
         }
-        if let Some(ref val) = self.ultmt_dbtr {
-            if config.validate_optional_fields {
-                val.validate(&helpers::child_path(path, "UltmtDbtr"), config, collector);
-            }
+        if let Some(ref val) = self.ultmt_dbtr
+            && config.validate_optional_fields
+        {
+            val.validate(&helpers::child_path(path, "UltmtDbtr"), config, collector);
         }
-        if let Some(ref val) = self.initg_pty {
-            if config.validate_optional_fields {
-                val.validate(&helpers::child_path(path, "InitgPty"), config, collector);
-            }
+        if let Some(ref val) = self.initg_pty
+            && config.validate_optional_fields
+        {
+            val.validate(&helpers::child_path(path, "InitgPty"), config, collector);
         }
         self.dbtr
             .validate(&helpers::child_path(path, "Dbtr"), config, collector);
-        if let Some(ref val) = self.dbtr_acct {
-            if config.validate_optional_fields {
-                val.validate(&helpers::child_path(path, "DbtrAcct"), config, collector);
-            }
+        if let Some(ref val) = self.dbtr_acct
+            && config.validate_optional_fields
+        {
+            val.validate(&helpers::child_path(path, "DbtrAcct"), config, collector);
         }
         self.dbtr_agt
             .validate(&helpers::child_path(path, "DbtrAgt"), config, collector);
-        if let Some(ref val) = self.dbtr_agt_acct {
-            if config.validate_optional_fields {
-                val.validate(&helpers::child_path(path, "DbtrAgtAcct"), config, collector);
-            }
+        if let Some(ref val) = self.dbtr_agt_acct
+            && config.validate_optional_fields
+        {
+            val.validate(&helpers::child_path(path, "DbtrAgtAcct"), config, collector);
         }
         self.cdtr_agt
             .validate(&helpers::child_path(path, "CdtrAgt"), config, collector);
-        if let Some(ref val) = self.cdtr_agt_acct {
-            if config.validate_optional_fields {
-                val.validate(&helpers::child_path(path, "CdtrAgtAcct"), config, collector);
-            }
+        if let Some(ref val) = self.cdtr_agt_acct
+            && config.validate_optional_fields
+        {
+            val.validate(&helpers::child_path(path, "CdtrAgtAcct"), config, collector);
         }
         self.cdtr
             .validate(&helpers::child_path(path, "Cdtr"), config, collector);
         self.cdtr_acct
             .validate(&helpers::child_path(path, "CdtrAcct"), config, collector);
-        if let Some(ref val) = self.ultmt_cdtr {
-            if config.validate_optional_fields {
-                val.validate(&helpers::child_path(path, "UltmtCdtr"), config, collector);
+        if let Some(ref val) = self.ultmt_cdtr
+            && config.validate_optional_fields
+        {
+            val.validate(&helpers::child_path(path, "UltmtCdtr"), config, collector);
+        }
+        if let Some(ref val) = self.purp
+            && config.validate_optional_fields
+        {
+            val.validate(&helpers::child_path(path, "Purp"), config, collector);
+        }
+        if let Some(ref vec) = self.rgltry_rptg
+            && config.validate_optional_fields
+        {
+            for item in vec {
+                item.validate(&helpers::child_path(path, "RgltryRptg"), config, collector);
             }
         }
-        if let Some(ref val) = self.purp {
-            if config.validate_optional_fields {
-                val.validate(&helpers::child_path(path, "Purp"), config, collector);
-            }
+        if let Some(ref val) = self.rltd_rmt_inf
+            && config.validate_optional_fields
+        {
+            val.validate(&helpers::child_path(path, "RltdRmtInf"), config, collector);
         }
-        if let Some(ref vec) = self.rgltry_rptg {
-            if config.validate_optional_fields {
-                for item in vec {
-                    item.validate(&helpers::child_path(path, "RgltryRptg"), config, collector);
-                }
-            }
-        }
-        if let Some(ref val) = self.rltd_rmt_inf {
-            if config.validate_optional_fields {
-                val.validate(&helpers::child_path(path, "RltdRmtInf"), config, collector);
-            }
-        }
-        if let Some(ref val) = self.rmt_inf {
-            if config.validate_optional_fields {
-                val.validate(&helpers::child_path(path, "RmtInf"), config, collector);
-            }
+        if let Some(ref val) = self.rmt_inf
+            && config.validate_optional_fields
+        {
+            val.validate(&helpers::child_path(path, "RmtInf"), config, collector);
         }
     }
 }
@@ -766,10 +766,10 @@ impl Validate for FinancialInstitutionIdentification181 {
             config,
             collector,
         );
-        if let Some(ref val) = self.clr_sys_mmb_id {
-            if config.validate_optional_fields {
-                val.validate(&helpers::child_path(path, "ClrSysMmbId"), config, collector);
-            }
+        if let Some(ref val) = self.clr_sys_mmb_id
+            && config.validate_optional_fields
+        {
+            val.validate(&helpers::child_path(path, "ClrSysMmbId"), config, collector);
         }
         if let Some(ref val) = self.lei {
             helpers::validate_pattern(
@@ -814,10 +814,10 @@ impl Validate for GenericAccountIdentification11 {
             config,
             collector,
         );
-        if let Some(ref val) = self.schme_nm {
-            if config.validate_optional_fields {
-                val.validate(&helpers::child_path(path, "SchmeNm"), config, collector);
-            }
+        if let Some(ref val) = self.schme_nm
+            && config.validate_optional_fields
+        {
+            val.validate(&helpers::child_path(path, "SchmeNm"), config, collector);
         }
         if let Some(ref val) = self.issr {
             helpers::validate_length(
@@ -873,10 +873,10 @@ impl Validate for GenericOrganisationIdentification11 {
             config,
             collector,
         );
-        if let Some(ref val) = self.schme_nm {
-            if config.validate_optional_fields {
-                val.validate(&helpers::child_path(path, "SchmeNm"), config, collector);
-            }
+        if let Some(ref val) = self.schme_nm
+            && config.validate_optional_fields
+        {
+            val.validate(&helpers::child_path(path, "SchmeNm"), config, collector);
         }
         if let Some(ref val) = self.issr {
             helpers::validate_length(
@@ -988,10 +988,10 @@ impl Validate for GenericPersonIdentification11 {
             config,
             collector,
         );
-        if let Some(ref val) = self.schme_nm {
-            if config.validate_optional_fields {
-                val.validate(&helpers::child_path(path, "SchmeNm"), config, collector);
-            }
+        if let Some(ref val) = self.schme_nm
+            && config.validate_optional_fields
+        {
+            val.validate(&helpers::child_path(path, "SchmeNm"), config, collector);
         }
         if let Some(ref val) = self.issr {
             helpers::validate_length(
@@ -1223,11 +1223,11 @@ impl Validate for OrganisationIdentification291 {
                 collector,
             );
         }
-        if let Some(ref vec) = self.othr {
-            if config.validate_optional_fields {
-                for item in vec {
-                    item.validate(&helpers::child_path(path, "Othr"), config, collector);
-                }
+        if let Some(ref vec) = self.othr
+            && config.validate_optional_fields
+        {
+            for item in vec {
+                item.validate(&helpers::child_path(path, "Othr"), config, collector);
             }
         }
     }
@@ -1266,11 +1266,11 @@ impl Validate for OrganisationIdentification292 {
                 collector,
             );
         }
-        if let Some(ref vec) = self.othr {
-            if config.validate_optional_fields {
-                for item in vec {
-                    item.validate(&helpers::child_path(path, "Othr"), config, collector);
-                }
+        if let Some(ref vec) = self.othr
+            && config.validate_optional_fields
+        {
+            for item in vec {
+                item.validate(&helpers::child_path(path, "Othr"), config, collector);
             }
         }
     }
@@ -1356,15 +1356,15 @@ pub struct Party38Choice1 {
 
 impl Validate for Party38Choice1 {
     fn validate(&self, path: &str, config: &ParserConfig, collector: &mut ErrorCollector) {
-        if let Some(ref val) = self.org_id {
-            if config.validate_optional_fields {
-                val.validate(&helpers::child_path(path, "OrgId"), config, collector);
-            }
+        if let Some(ref val) = self.org_id
+            && config.validate_optional_fields
+        {
+            val.validate(&helpers::child_path(path, "OrgId"), config, collector);
         }
-        if let Some(ref val) = self.prvt_id {
-            if config.validate_optional_fields {
-                val.validate(&helpers::child_path(path, "PrvtId"), config, collector);
-            }
+        if let Some(ref val) = self.prvt_id
+            && config.validate_optional_fields
+        {
+            val.validate(&helpers::child_path(path, "PrvtId"), config, collector);
         }
     }
 }
@@ -1380,15 +1380,15 @@ pub struct Party38Choice2 {
 
 impl Validate for Party38Choice2 {
     fn validate(&self, path: &str, config: &ParserConfig, collector: &mut ErrorCollector) {
-        if let Some(ref val) = self.org_id {
-            if config.validate_optional_fields {
-                val.validate(&helpers::child_path(path, "OrgId"), config, collector);
-            }
+        if let Some(ref val) = self.org_id
+            && config.validate_optional_fields
+        {
+            val.validate(&helpers::child_path(path, "OrgId"), config, collector);
         }
-        if let Some(ref val) = self.prvt_id {
-            if config.validate_optional_fields {
-                val.validate(&helpers::child_path(path, "PrvtId"), config, collector);
-            }
+        if let Some(ref val) = self.prvt_id
+            && config.validate_optional_fields
+        {
+            val.validate(&helpers::child_path(path, "PrvtId"), config, collector);
         }
     }
 }
@@ -1429,15 +1429,15 @@ impl Validate for PartyIdentification1351 {
                 collector,
             );
         }
-        if let Some(ref val) = self.pstl_adr {
-            if config.validate_optional_fields {
-                val.validate(&helpers::child_path(path, "PstlAdr"), config, collector);
-            }
+        if let Some(ref val) = self.pstl_adr
+            && config.validate_optional_fields
+        {
+            val.validate(&helpers::child_path(path, "PstlAdr"), config, collector);
         }
-        if let Some(ref val) = self.id {
-            if config.validate_optional_fields {
-                val.validate(&helpers::child_path(path, "Id"), config, collector);
-            }
+        if let Some(ref val) = self.id
+            && config.validate_optional_fields
+        {
+            val.validate(&helpers::child_path(path, "Id"), config, collector);
         }
         if let Some(ref val) = self.ctry_of_res {
             helpers::validate_pattern(
@@ -1488,15 +1488,15 @@ impl Validate for PartyIdentification1352 {
                 collector,
             );
         }
-        if let Some(ref val) = self.pstl_adr {
-            if config.validate_optional_fields {
-                val.validate(&helpers::child_path(path, "PstlAdr"), config, collector);
-            }
+        if let Some(ref val) = self.pstl_adr
+            && config.validate_optional_fields
+        {
+            val.validate(&helpers::child_path(path, "PstlAdr"), config, collector);
         }
-        if let Some(ref val) = self.id {
-            if config.validate_optional_fields {
-                val.validate(&helpers::child_path(path, "Id"), config, collector);
-            }
+        if let Some(ref val) = self.id
+            && config.validate_optional_fields
+        {
+            val.validate(&helpers::child_path(path, "Id"), config, collector);
         }
         if let Some(ref val) = self.ctry_of_res {
             helpers::validate_pattern(
@@ -1547,15 +1547,15 @@ impl Validate for PartyIdentification1353 {
                 collector,
             );
         }
-        if let Some(ref val) = self.pstl_adr {
-            if config.validate_optional_fields {
-                val.validate(&helpers::child_path(path, "PstlAdr"), config, collector);
-            }
+        if let Some(ref val) = self.pstl_adr
+            && config.validate_optional_fields
+        {
+            val.validate(&helpers::child_path(path, "PstlAdr"), config, collector);
         }
-        if let Some(ref val) = self.id {
-            if config.validate_optional_fields {
-                val.validate(&helpers::child_path(path, "Id"), config, collector);
-            }
+        if let Some(ref val) = self.id
+            && config.validate_optional_fields
+        {
+            val.validate(&helpers::child_path(path, "Id"), config, collector);
         }
         if let Some(ref val) = self.ctry_of_res {
             helpers::validate_pattern(
@@ -1692,32 +1692,32 @@ pub struct PaymentTypeInformation281 {
 
 impl Validate for PaymentTypeInformation281 {
     fn validate(&self, path: &str, config: &ParserConfig, collector: &mut ErrorCollector) {
-        if let Some(ref val) = self.instr_prty {
-            if config.validate_optional_fields {
-                val.validate(&helpers::child_path(path, "InstrPrty"), config, collector);
+        if let Some(ref val) = self.instr_prty
+            && config.validate_optional_fields
+        {
+            val.validate(&helpers::child_path(path, "InstrPrty"), config, collector);
+        }
+        if let Some(ref val) = self.clr_chanl
+            && config.validate_optional_fields
+        {
+            val.validate(&helpers::child_path(path, "ClrChanl"), config, collector);
+        }
+        if let Some(ref vec) = self.svc_lvl
+            && config.validate_optional_fields
+        {
+            for item in vec {
+                item.validate(&helpers::child_path(path, "SvcLvl"), config, collector);
             }
         }
-        if let Some(ref val) = self.clr_chanl {
-            if config.validate_optional_fields {
-                val.validate(&helpers::child_path(path, "ClrChanl"), config, collector);
-            }
+        if let Some(ref val) = self.lcl_instrm
+            && config.validate_optional_fields
+        {
+            val.validate(&helpers::child_path(path, "LclInstrm"), config, collector);
         }
-        if let Some(ref vec) = self.svc_lvl {
-            if config.validate_optional_fields {
-                for item in vec {
-                    item.validate(&helpers::child_path(path, "SvcLvl"), config, collector);
-                }
-            }
-        }
-        if let Some(ref val) = self.lcl_instrm {
-            if config.validate_optional_fields {
-                val.validate(&helpers::child_path(path, "LclInstrm"), config, collector);
-            }
-        }
-        if let Some(ref val) = self.ctgy_purp {
-            if config.validate_optional_fields {
-                val.validate(&helpers::child_path(path, "CtgyPurp"), config, collector);
-            }
+        if let Some(ref val) = self.ctgy_purp
+            && config.validate_optional_fields
+        {
+            val.validate(&helpers::child_path(path, "CtgyPurp"), config, collector);
         }
     }
 }
@@ -1733,20 +1733,20 @@ pub struct PersonIdentification131 {
 
 impl Validate for PersonIdentification131 {
     fn validate(&self, path: &str, config: &ParserConfig, collector: &mut ErrorCollector) {
-        if let Some(ref val) = self.dt_and_plc_of_birth {
-            if config.validate_optional_fields {
-                val.validate(
-                    &helpers::child_path(path, "DtAndPlcOfBirth"),
-                    config,
-                    collector,
-                );
-            }
+        if let Some(ref val) = self.dt_and_plc_of_birth
+            && config.validate_optional_fields
+        {
+            val.validate(
+                &helpers::child_path(path, "DtAndPlcOfBirth"),
+                config,
+                collector,
+            );
         }
-        if let Some(ref vec) = self.othr {
-            if config.validate_optional_fields {
-                for item in vec {
-                    item.validate(&helpers::child_path(path, "Othr"), config, collector);
-                }
+        if let Some(ref vec) = self.othr
+            && config.validate_optional_fields
+        {
+            for item in vec {
+                item.validate(&helpers::child_path(path, "Othr"), config, collector);
             }
         }
     }
@@ -1763,20 +1763,20 @@ pub struct PersonIdentification132 {
 
 impl Validate for PersonIdentification132 {
     fn validate(&self, path: &str, config: &ParserConfig, collector: &mut ErrorCollector) {
-        if let Some(ref val) = self.dt_and_plc_of_birth {
-            if config.validate_optional_fields {
-                val.validate(
-                    &helpers::child_path(path, "DtAndPlcOfBirth"),
-                    config,
-                    collector,
-                );
-            }
+        if let Some(ref val) = self.dt_and_plc_of_birth
+            && config.validate_optional_fields
+        {
+            val.validate(
+                &helpers::child_path(path, "DtAndPlcOfBirth"),
+                config,
+                collector,
+            );
         }
-        if let Some(ref vec) = self.othr {
-            if config.validate_optional_fields {
-                for item in vec {
-                    item.validate(&helpers::child_path(path, "Othr"), config, collector);
-                }
+        if let Some(ref vec) = self.othr
+            && config.validate_optional_fields
+        {
+            for item in vec {
+                item.validate(&helpers::child_path(path, "Othr"), config, collector);
             }
         }
     }
@@ -2586,10 +2586,10 @@ pub struct ProxyAccountIdentification11 {
 
 impl Validate for ProxyAccountIdentification11 {
     fn validate(&self, path: &str, config: &ParserConfig, collector: &mut ErrorCollector) {
-        if let Some(ref val) = self.tp {
-            if config.validate_optional_fields {
-                val.validate(&helpers::child_path(path, "Tp"), config, collector);
-            }
+        if let Some(ref val) = self.tp
+            && config.validate_optional_fields
+        {
+            val.validate(&helpers::child_path(path, "Tp"), config, collector);
         }
         helpers::validate_length(
             &self.id,
@@ -2738,25 +2738,25 @@ pub struct RegulatoryReporting31 {
 
 impl Validate for RegulatoryReporting31 {
     fn validate(&self, path: &str, config: &ParserConfig, collector: &mut ErrorCollector) {
-        if let Some(ref val) = self.dbt_cdt_rptg_ind {
-            if config.validate_optional_fields {
-                val.validate(
-                    &helpers::child_path(path, "DbtCdtRptgInd"),
-                    config,
-                    collector,
-                );
-            }
+        if let Some(ref val) = self.dbt_cdt_rptg_ind
+            && config.validate_optional_fields
+        {
+            val.validate(
+                &helpers::child_path(path, "DbtCdtRptgInd"),
+                config,
+                collector,
+            );
         }
-        if let Some(ref val) = self.authrty {
-            if config.validate_optional_fields {
-                val.validate(&helpers::child_path(path, "Authrty"), config, collector);
-            }
+        if let Some(ref val) = self.authrty
+            && config.validate_optional_fields
+        {
+            val.validate(&helpers::child_path(path, "Authrty"), config, collector);
         }
-        if let Some(ref vec) = self.dtls {
-            if config.validate_optional_fields {
-                for item in vec {
-                    item.validate(&helpers::child_path(path, "Dtls"), config, collector);
-                }
+        if let Some(ref vec) = self.dtls
+            && config.validate_optional_fields
+        {
+            for item in vec {
+                item.validate(&helpers::child_path(path, "Dtls"), config, collector);
             }
         }
     }
@@ -2845,11 +2845,11 @@ impl Validate for RemittanceLocation71 {
                 collector,
             );
         }
-        if let Some(ref vec) = self.rmt_lctn_dtls {
-            if config.validate_optional_fields {
-                for item in vec {
-                    item.validate(&helpers::child_path(path, "RmtLctnDtls"), config, collector);
-                }
+        if let Some(ref vec) = self.rmt_lctn_dtls
+            && config.validate_optional_fields
+        {
+            for item in vec {
+                item.validate(&helpers::child_path(path, "RmtLctnDtls"), config, collector);
             }
         }
     }
@@ -2891,10 +2891,10 @@ impl Validate for RemittanceLocationData11 {
                 collector,
             );
         }
-        if let Some(ref val) = self.pstl_adr {
-            if config.validate_optional_fields {
-                val.validate(&helpers::child_path(path, "PstlAdr"), config, collector);
-            }
+        if let Some(ref val) = self.pstl_adr
+            && config.validate_optional_fields
+        {
+            val.validate(&helpers::child_path(path, "PstlAdr"), config, collector);
         }
     }
 }
@@ -3014,64 +3014,64 @@ impl Validate for SettlementInstruction71 {
     fn validate(&self, path: &str, config: &ParserConfig, collector: &mut ErrorCollector) {
         self.sttlm_mtd
             .validate(&helpers::child_path(path, "SttlmMtd"), config, collector);
-        if let Some(ref val) = self.sttlm_acct {
-            if config.validate_optional_fields {
-                val.validate(&helpers::child_path(path, "SttlmAcct"), config, collector);
-            }
+        if let Some(ref val) = self.sttlm_acct
+            && config.validate_optional_fields
+        {
+            val.validate(&helpers::child_path(path, "SttlmAcct"), config, collector);
         }
-        if let Some(ref val) = self.instg_rmbrsmnt_agt {
-            if config.validate_optional_fields {
-                val.validate(
-                    &helpers::child_path(path, "InstgRmbrsmntAgt"),
-                    config,
-                    collector,
-                );
-            }
+        if let Some(ref val) = self.instg_rmbrsmnt_agt
+            && config.validate_optional_fields
+        {
+            val.validate(
+                &helpers::child_path(path, "InstgRmbrsmntAgt"),
+                config,
+                collector,
+            );
         }
-        if let Some(ref val) = self.instg_rmbrsmnt_agt_acct {
-            if config.validate_optional_fields {
-                val.validate(
-                    &helpers::child_path(path, "InstgRmbrsmntAgtAcct"),
-                    config,
-                    collector,
-                );
-            }
+        if let Some(ref val) = self.instg_rmbrsmnt_agt_acct
+            && config.validate_optional_fields
+        {
+            val.validate(
+                &helpers::child_path(path, "InstgRmbrsmntAgtAcct"),
+                config,
+                collector,
+            );
         }
-        if let Some(ref val) = self.instd_rmbrsmnt_agt {
-            if config.validate_optional_fields {
-                val.validate(
-                    &helpers::child_path(path, "InstdRmbrsmntAgt"),
-                    config,
-                    collector,
-                );
-            }
+        if let Some(ref val) = self.instd_rmbrsmnt_agt
+            && config.validate_optional_fields
+        {
+            val.validate(
+                &helpers::child_path(path, "InstdRmbrsmntAgt"),
+                config,
+                collector,
+            );
         }
-        if let Some(ref val) = self.instd_rmbrsmnt_agt_acct {
-            if config.validate_optional_fields {
-                val.validate(
-                    &helpers::child_path(path, "InstdRmbrsmntAgtAcct"),
-                    config,
-                    collector,
-                );
-            }
+        if let Some(ref val) = self.instd_rmbrsmnt_agt_acct
+            && config.validate_optional_fields
+        {
+            val.validate(
+                &helpers::child_path(path, "InstdRmbrsmntAgtAcct"),
+                config,
+                collector,
+            );
         }
-        if let Some(ref val) = self.thrd_rmbrsmnt_agt {
-            if config.validate_optional_fields {
-                val.validate(
-                    &helpers::child_path(path, "ThrdRmbrsmntAgt"),
-                    config,
-                    collector,
-                );
-            }
+        if let Some(ref val) = self.thrd_rmbrsmnt_agt
+            && config.validate_optional_fields
+        {
+            val.validate(
+                &helpers::child_path(path, "ThrdRmbrsmntAgt"),
+                config,
+                collector,
+            );
         }
-        if let Some(ref val) = self.thrd_rmbrsmnt_agt_acct {
-            if config.validate_optional_fields {
-                val.validate(
-                    &helpers::child_path(path, "ThrdRmbrsmntAgtAcct"),
-                    config,
-                    collector,
-                );
-            }
+        if let Some(ref val) = self.thrd_rmbrsmnt_agt_acct
+            && config.validate_optional_fields
+        {
+            val.validate(
+                &helpers::child_path(path, "ThrdRmbrsmntAgtAcct"),
+                config,
+                collector,
+            );
         }
     }
 }
@@ -3223,10 +3223,10 @@ impl Validate for StructuredRegulatoryReporting31 {
                 collector,
             );
         }
-        if let Some(ref val) = self.amt {
-            if config.validate_optional_fields {
-                val.validate(&helpers::child_path(path, "Amt"), config, collector);
-            }
+        if let Some(ref val) = self.amt
+            && config.validate_optional_fields
+        {
+            val.validate(&helpers::child_path(path, "Amt"), config, collector);
         }
         if let Some(ref vec) = self.inf {
             for item in vec {

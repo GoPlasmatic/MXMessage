@@ -43,41 +43,41 @@ pub mod helpers {
     ) -> bool {
         let mut valid = true;
 
-        if let Some(min_len) = min {
-            if value.chars().count() < min_len {
-                let error = ValidationError::new(
-                    1001,
-                    format!("{field_name} is shorter than the minimum length of {min_len}"),
-                )
-                .with_field(field_name.to_string())
-                .with_path(path.to_string());
+        if let Some(min_len) = min
+            && value.chars().count() < min_len
+        {
+            let error = ValidationError::new(
+                1001,
+                format!("{field_name} is shorter than the minimum length of {min_len}"),
+            )
+            .with_field(field_name.to_string())
+            .with_path(path.to_string());
 
-                if config.fail_fast {
-                    collector.add_critical_error(error);
-                    return false;
-                } else {
-                    collector.add_error(error);
-                    valid = false;
-                }
+            if config.fail_fast {
+                collector.add_critical_error(error);
+                return false;
+            } else {
+                collector.add_error(error);
+                valid = false;
             }
         }
 
-        if let Some(max_len) = max {
-            if value.chars().count() > max_len {
-                let error = ValidationError::new(
-                    1002,
-                    format!("{field_name} exceeds the maximum length of {max_len}"),
-                )
-                .with_field(field_name.to_string())
-                .with_path(path.to_string());
+        if let Some(max_len) = max
+            && value.chars().count() > max_len
+        {
+            let error = ValidationError::new(
+                1002,
+                format!("{field_name} exceeds the maximum length of {max_len}"),
+            )
+            .with_field(field_name.to_string())
+            .with_path(path.to_string());
 
-                if config.fail_fast {
-                    collector.add_critical_error(error);
-                    return false;
-                } else {
-                    collector.add_error(error);
-                    valid = false;
-                }
+            if config.fail_fast {
+                collector.add_critical_error(error);
+                return false;
+            } else {
+                collector.add_error(error);
+                valid = false;
             }
         }
 

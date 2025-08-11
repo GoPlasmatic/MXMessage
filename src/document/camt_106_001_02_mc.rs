@@ -41,10 +41,10 @@ impl Validate for AccountIdentification4Choice1 {
                 collector,
             );
         }
-        if let Some(ref val) = self.othr {
-            if config.validate_optional_fields {
-                val.validate(&helpers::child_path(path, "Othr"), config, collector);
-            }
+        if let Some(ref val) = self.othr
+            && config.validate_optional_fields
+        {
+            val.validate(&helpers::child_path(path, "Othr"), config, collector);
         }
     }
 }
@@ -141,10 +141,10 @@ impl Validate for CashAccount401 {
     fn validate(&self, path: &str, config: &ParserConfig, collector: &mut ErrorCollector) {
         self.id
             .validate(&helpers::child_path(path, "Id"), config, collector);
-        if let Some(ref val) = self.tp {
-            if config.validate_optional_fields {
-                val.validate(&helpers::child_path(path, "Tp"), config, collector);
-            }
+        if let Some(ref val) = self.tp
+            && config.validate_optional_fields
+        {
+            val.validate(&helpers::child_path(path, "Tp"), config, collector);
         }
         if let Some(ref val) = self.ccy {
             helpers::validate_pattern(
@@ -177,10 +177,10 @@ impl Validate for CashAccount401 {
                 collector,
             );
         }
-        if let Some(ref val) = self.prxy {
-            if config.validate_optional_fields {
-                val.validate(&helpers::child_path(path, "Prxy"), config, collector);
-            }
+        if let Some(ref val) = self.prxy
+            && config.validate_optional_fields
+        {
+            val.validate(&helpers::child_path(path, "Prxy"), config, collector);
         }
     }
 }
@@ -263,10 +263,10 @@ pub struct Charges3Choice1 {
 
 impl Validate for Charges3Choice1 {
     fn validate(&self, path: &str, config: &ParserConfig, collector: &mut ErrorCollector) {
-        if let Some(ref val) = self.per_tx {
-            if config.validate_optional_fields {
-                val.validate(&helpers::child_path(path, "PerTx"), config, collector);
-            }
+        if let Some(ref val) = self.per_tx
+            && config.validate_optional_fields
+        {
+            val.validate(&helpers::child_path(path, "PerTx"), config, collector);
         }
     }
 }
@@ -401,24 +401,24 @@ impl Validate for ChargesPerTransactionRecord31 {
         for item in &self.chrgs_brkdwn {
             item.validate(&helpers::child_path(path, "ChrgsBrkdwn"), config, collector);
         }
-        if let Some(ref val) = self.dbtr_agt {
-            if config.validate_optional_fields {
-                val.validate(&helpers::child_path(path, "DbtrAgt"), config, collector);
-            }
+        if let Some(ref val) = self.dbtr_agt
+            && config.validate_optional_fields
+        {
+            val.validate(&helpers::child_path(path, "DbtrAgt"), config, collector);
         }
-        if let Some(ref val) = self.dbtr_agt_acct {
-            if config.validate_optional_fields {
-                val.validate(&helpers::child_path(path, "DbtrAgtAcct"), config, collector);
-            }
+        if let Some(ref val) = self.dbtr_agt_acct
+            && config.validate_optional_fields
+        {
+            val.validate(&helpers::child_path(path, "DbtrAgtAcct"), config, collector);
         }
-        if let Some(ref val) = self.instr_for_instd_agt {
-            if config.validate_optional_fields {
-                val.validate(
-                    &helpers::child_path(path, "InstrForInstdAgt"),
-                    config,
-                    collector,
-                );
-            }
+        if let Some(ref val) = self.instr_for_instd_agt
+            && config.validate_optional_fields
+        {
+            val.validate(
+                &helpers::child_path(path, "InstrForInstdAgt"),
+                config,
+                collector,
+            );
         }
     }
 }
@@ -520,10 +520,10 @@ impl Validate for FinancialInstitutionIdentification231 {
                 collector,
             );
         }
-        if let Some(ref val) = self.clr_sys_mmb_id {
-            if config.validate_optional_fields {
-                val.validate(&helpers::child_path(path, "ClrSysMmbId"), config, collector);
-            }
+        if let Some(ref val) = self.clr_sys_mmb_id
+            && config.validate_optional_fields
+        {
+            val.validate(&helpers::child_path(path, "ClrSysMmbId"), config, collector);
         }
         if let Some(ref val) = self.lei {
             helpers::validate_pattern(
@@ -556,10 +556,10 @@ impl Validate for FinancialInstitutionIdentification231 {
                 collector,
             );
         }
-        if let Some(ref val) = self.pstl_adr {
-            if config.validate_optional_fields {
-                val.validate(&helpers::child_path(path, "PstlAdr"), config, collector);
-            }
+        if let Some(ref val) = self.pstl_adr
+            && config.validate_optional_fields
+        {
+            val.validate(&helpers::child_path(path, "PstlAdr"), config, collector);
         }
     }
 }
@@ -594,10 +594,10 @@ impl Validate for GenericAccountIdentification11 {
             config,
             collector,
         );
-        if let Some(ref val) = self.schme_nm {
-            if config.validate_optional_fields {
-                val.validate(&helpers::child_path(path, "SchmeNm"), config, collector);
-            }
+        if let Some(ref val) = self.schme_nm
+            && config.validate_optional_fields
+        {
+            val.validate(&helpers::child_path(path, "SchmeNm"), config, collector);
         }
         if let Some(ref val) = self.issr {
             helpers::validate_length(
@@ -667,23 +667,23 @@ impl Validate for GroupHeader1151 {
         );
         self.ttl_chrgs
             .validate(&helpers::child_path(path, "TtlChrgs"), config, collector);
-        if let Some(ref val) = self.chrgs_acct_agt {
-            if config.validate_optional_fields {
-                val.validate(
-                    &helpers::child_path(path, "ChrgsAcctAgt"),
-                    config,
-                    collector,
-                );
-            }
+        if let Some(ref val) = self.chrgs_acct_agt
+            && config.validate_optional_fields
+        {
+            val.validate(
+                &helpers::child_path(path, "ChrgsAcctAgt"),
+                config,
+                collector,
+            );
         }
-        if let Some(ref val) = self.chrgs_acct_agt_acct {
-            if config.validate_optional_fields {
-                val.validate(
-                    &helpers::child_path(path, "ChrgsAcctAgtAcct"),
-                    config,
-                    collector,
-                );
-            }
+        if let Some(ref val) = self.chrgs_acct_agt_acct
+            && config.validate_optional_fields
+        {
+            val.validate(
+                &helpers::child_path(path, "ChrgsAcctAgtAcct"),
+                config,
+                collector,
+            );
         }
     }
 }
@@ -1091,10 +1091,10 @@ pub struct ProxyAccountIdentification11 {
 
 impl Validate for ProxyAccountIdentification11 {
     fn validate(&self, path: &str, config: &ParserConfig, collector: &mut ErrorCollector) {
-        if let Some(ref val) = self.tp {
-            if config.validate_optional_fields {
-                val.validate(&helpers::child_path(path, "Tp"), config, collector);
-            }
+        if let Some(ref val) = self.tp
+            && config.validate_optional_fields
+        {
+            val.validate(&helpers::child_path(path, "Tp"), config, collector);
         }
         helpers::validate_length(
             &self.id,
