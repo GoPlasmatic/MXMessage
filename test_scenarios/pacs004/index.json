@@ -1,0 +1,31 @@
+{
+    "message_type": "pacs.004.001.09",
+    "description": "Payment Return",
+    "scenarios": [
+        {"file": "standard.json", "description": "Standard payment return"},
+        {
+            "file": "insufficient_funds.json",
+            "description": "Return due to insufficient funds"
+        },
+        {"file": "account_closed.json", "description": "Return due to account closed"},
+        {
+            "file": "cbpr_compliant_return.json",
+            "description": "CBPR+ compliant payment return"
+        },
+        {
+            "file": "regulatory_return.json",
+            "description": "Return due to regulatory compliance"
+        },
+        {"file": "fraud_prevention.json", "description": "Return due to fraud prevention"},
+        {
+            "file": "technical_error.json",
+            "description": "Return due to technical processing error"
+        },
+        {
+            "file": "wrong_beneficiary.json",
+            "description": "Return due to wrong beneficiary details"
+        },
+        {"file": "duplicate_payment.json", "description": "Return of duplicate payment"},
+        {"file": "customer_request.json", "description": "Return at customer request"}
+    ]
+}

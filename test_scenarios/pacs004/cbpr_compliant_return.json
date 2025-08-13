@@ -1,0 +1,200 @@
+{
+    "variables": {
+        "msg_id": {"cat": ["RTN", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "sender_bic": {"fake": ["bic"]},
+        "receiver_bic": {"fake": ["bic"]},
+        "orgnl_msg_id": {"cat": ["MSG", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "orgnl_instr_id": {"cat": ["INSTR", {"fake": ["i64", 10000000, 99999999]}]},
+        "orgnl_end_to_end_id": {"cat": ["E2E", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "orgnl_tx_id": {"cat": ["TXN", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "orgnl_uetr": {"fake": ["uuid"]},
+        "rtr_id": {"cat": ["RTR", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "currency": "USD",
+        "amount": {"fake": ["f64", 100000.0, 5000000.0]},
+        "debtor_iban": {"fake": ["iban", "CH"]},
+        "creditor_iban": {"fake": ["iban", "SG"]},
+        "debtor_lei": {"fake": ["lei"]},
+        "creditor_lei": {"fake": ["lei"]}
+    },
+    "schema": {
+        "AppHdr": {
+            "Fr": {"FIId": {"FinInstnId": {"BICFI": {"var": "sender_bic"}, "LEI": {"fake": ["lei"]}}}},
+            "To": {"FIId": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}, "LEI": {"fake": ["lei"]}}}},
+            "BizMsgIdr": {"var": "msg_id"},
+            "MsgDefIdr": "pacs.004.001.09",
+            "BizSvc": "swift.cbprplus.01",
+            "CreDt": {"var": "creation_datetime"},
+            "CpyDplct": "CODU"
+        },
+        "Document": {
+            "PmtRtr": {
+                "GrpHdr": {
+                    "MsgId": {"var": "msg_id"},
+                    "CreDtTm": {"var": "creation_datetime"},
+                    "NbOfTxs": "1",
+                    "TtlRtrdIntrBkSttlmAmt": {"@Ccy": {"var": "currency"}, "$value": {"var": "amount"}},
+                    "SttlmInf": {"SttlmMtd": "INDA", "ClrSys": {"Cd": "CHC"}}
+                },
+                "TxInf": {
+                    "RtrId": {"var": "rtr_id"},
+                    "OrgnlGrpInf": {
+                        "OrgnlMsgId": {"var": "orgnl_msg_id"},
+                        "OrgnlMsgNmId": "pacs.008.001.08",
+                        "OrgnlCreDtTm": {"fake": ["iso8601_datetime"]}
+                    },
+                    "OrgnlInstrId": {"var": "orgnl_instr_id"},
+                    "OrgnlEndToEndId": {"var": "orgnl_end_to_end_id"},
+                    "OrgnlTxId": {"var": "orgnl_tx_id"},
+                    "OrgnlUETR": {"var": "orgnl_uetr"},
+                    "OrgnlIntrBkSttlmAmt": {"@Ccy": {"var": "currency"}, "$value": {"var": "amount"}},
+                    "RtrdIntrBkSttlmAmt": {"@Ccy": {"var": "currency"}, "$value": {"var": "amount"}},
+                    "IntrBkSttlmDt": {"fake": ["date"]},
+                    "SttlmPrty": "NORM",
+                    "ChrgBr": "SHAR",
+                    "ChrgsInf": [
+                        {
+                            "Amt": {"@Ccy": "USD", "$value": {"fake": ["f64", 25.0, 100.0]}},
+                            "Agt": {"FinInstnId": {"BICFI": {"var": "sender_bic"}}}
+                        }
+                    ],
+                    "InstgAgt": {
+                        "FinInstnId": {
+                            "BICFI": {"var": "receiver_bic"},
+                            "LEI": {"fake": ["lei"]},
+                            "Nm": {"fake": ["company_name"]}
+                        }
+                    },
+                    "InstdAgt": {
+                        "FinInstnId": {
+                            "BICFI": {"var": "sender_bic"},
+                            "LEI": {"fake": ["lei"]},
+                            "Nm": {"fake": ["company_name"]}
+                        }
+                    },
+                    "RtrChain": {
+                        "DbtrAgt": {
+                            "FinInstnId": {
+                                "BICFI": {"var": "sender_bic"},
+                                "LEI": {"fake": ["lei"]},
+                                "Nm": {"fake": ["company_name"]},
+                                "PstlAdr": {
+                                    "StrtNm": {"fake": ["street_name"]},
+                                    "BldgNb": {"cat": [{"fake": ["i64", 1, 999]}]},
+                                    "PstCd": {"fake": ["postcode"]},
+                                    "TwnNm": {"fake": ["city_name"]},
+                                    "Ctry": "CH"
+                                }
+                            }
+                        },
+                        "CdtrAgt": {
+                            "FinInstnId": {
+                                "BICFI": {"var": "receiver_bic"},
+                                "LEI": {"fake": ["lei"]},
+                                "Nm": {"fake": ["company_name"]},
+                                "PstlAdr": {
+                                    "StrtNm": {"fake": ["street_name"]},
+                                    "BldgNb": {"cat": [{"fake": ["i64", 1, 999]}]},
+                                    "PstCd": {"fake": ["postcode"]},
+                                    "TwnNm": {"fake": ["city_name"]},
+                                    "Ctry": "SG"
+                                }
+                            }
+                        },
+                        "Dbtr": {
+                            "Nm": {"fake": ["company_name"]},
+                            "PstlAdr": {
+                                "StrtNm": {"fake": ["street_name"]},
+                                "BldgNb": {"cat": [{"fake": ["i64", 1, 999]}]},
+                                "PstCd": {"fake": ["postcode"]},
+                                "TwnNm": {"fake": ["city_name"]},
+                                "Ctry": "CH"
+                            },
+                            "Id": {
+                                "OrgId": {
+                                    "LEI": {"var": "debtor_lei"},
+                                    "Othr": {"Id": {"cat": ["REG", {"fake": ["i64", 100000, 999999]}]}, "SchmeNm": {"Cd": "TXID"}}
+                                }
+                            },
+                            "CtryOfRes": "CH"
+                        },
+                        "DbtrAcct": {
+                            "Id": {"IBAN": {"var": "debtor_iban"}},
+                            "Tp": {"Cd": "CACC"},
+                            "Ccy": {"var": "currency"},
+                            "Nm": "Corporate Trading Account"
+                        },
+                        "UltmtDbtr": {"Nm": {"fake": ["company_name"]}, "Id": {"OrgId": {"LEI": {"fake": ["lei"]}}}},
+                        "Cdtr": {
+                            "Nm": {"fake": ["company_name"]},
+                            "PstlAdr": {
+                                "StrtNm": {"fake": ["street_name"]},
+                                "BldgNb": {"cat": [{"fake": ["i64", 1, 999]}]},
+                                "PstCd": {"fake": ["postcode"]},
+                                "TwnNm": {"fake": ["city_name"]},
+                                "Ctry": "SG"
+                            },
+                            "Id": {
+                                "OrgId": {
+                                    "LEI": {"var": "creditor_lei"},
+                                    "Othr": {"Id": {"cat": ["REG", {"fake": ["i64", 100000, 999999]}]}, "SchmeNm": {"Cd": "TXID"}}
+                                }
+                            },
+                            "CtryOfRes": "SG"
+                        },
+                        "CdtrAcct": {
+                            "Id": {"IBAN": {"var": "creditor_iban"}},
+                            "Tp": {"Cd": "CACC"},
+                            "Ccy": {"var": "currency"},
+                            "Nm": "Corporate Operations Account"
+                        },
+                        "UltmtCdtr": {"Nm": {"fake": ["company_name"]}, "Id": {"OrgId": {"LEI": {"fake": ["lei"]}}}}
+                    },
+                    "RtrRsnInf": {
+                        "Orgtr": {"Nm": "Compliance Department", "Id": {"OrgId": {"LEI": {"fake": ["lei"]}}}},
+                        "Rsn": {"Cd": "RR03"},
+                        "AddtlInf": [
+                            "Missing regulatory information",
+                            "Required purpose code not provided",
+                            "CBPR+ compliance check failed"
+                        ]
+                    },
+                    "OrgnlTxRef": {
+                        "IntrBkSttlmAmt": {"@Ccy": {"var": "currency"}, "$value": {"var": "amount"}},
+                        "IntrBkSttlmDt": {"fake": ["date"]},
+                        "SttlmInf": {"SttlmMtd": "INDA", "ClrSys": {"Cd": "CHC"}},
+                        "PmtTpInf": {
+                            "InstrPrty": "NORM",
+                            "SvcLvl": [{"Cd": "G001"}],
+                            "LclInstrm": {"Cd": "INST"},
+                            "CtgyPurp": {"Cd": "SUPP"}
+                        },
+                        "RmtInf": {
+                            "Ustrd": {
+                                "cat": [
+                                    "Cross-border trade settlement - Invoice ",
+                                    {"fake": ["word"]},
+                                    "-",
+                                    {"fake": ["i64", 2024001, 2024999]}
+                                ]
+                            },
+                            "Strd": [
+                                {
+                                    "RfrdDocInf": [
+                                        {
+                                            "Tp": {"CdOrPrtry": {"Cd": "CINV"}},
+                                            "Nb": {"cat": ["INV", {"fake": ["i64", 10000, 99999]}]},
+                                            "RltdDt": {"fake": ["date"]}
+                                        }
+                                    ],
+                                    "RfrdDocAmt": {"DuePyblAmt": {"@Ccy": {"var": "currency"}, "$value": {"var": "amount"}}}
+                                }
+                            ]
+                        },
+                        "Purp": {"Cd": "GDDS"}
+                    }
+                }
+            }
+        }
+    }
+}

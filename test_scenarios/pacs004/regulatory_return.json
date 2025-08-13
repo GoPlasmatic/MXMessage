@@ -1,0 +1,94 @@
+{
+    "variables": {
+        "msg_id": {"cat": ["RTN", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "sender_bic": {"fake": ["bic"]},
+        "receiver_bic": {"fake": ["bic"]},
+        "orgnl_msg_id": {"cat": ["MSG", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "orgnl_instr_id": {"cat": ["INSTR", {"fake": ["i64", 10000000, 99999999]}]},
+        "orgnl_end_to_end_id": {"cat": ["E2E", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "orgnl_tx_id": {"cat": ["TXN", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "orgnl_uetr": {"fake": ["uuid"]},
+        "rtr_id": {"cat": ["RTR", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "currency": "USD",
+        "amount": {"fake": ["f64", 500000.0, 10000000.0]},
+        "debtor_iban": {"fake": ["iban", "AE"]},
+        "creditor_iban": {"fake": ["iban", "US"]}
+    },
+    "schema": {
+        "AppHdr": {
+            "Fr": {"FIId": {"FinInstnId": {"BICFI": {"var": "sender_bic"}}}},
+            "To": {"FIId": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}}}},
+            "BizMsgIdr": {"var": "msg_id"},
+            "MsgDefIdr": "pacs.004.001.09",
+            "BizSvc": "swift.cbprplus.01",
+            "CreDt": {"var": "creation_datetime"}
+        },
+        "Document": {
+            "PmtRtr": {
+                "GrpHdr": {
+                    "MsgId": {"var": "msg_id"},
+                    "CreDtTm": {"var": "creation_datetime"},
+                    "NbOfTxs": "1",
+                    "TtlRtrdIntrBkSttlmAmt": {"@Ccy": {"var": "currency"}, "$value": {"var": "amount"}},
+                    "SttlmInf": {"SttlmMtd": "INDA"}
+                },
+                "TxInf": {
+                    "RtrId": {"var": "rtr_id"},
+                    "OrgnlGrpInf": {"OrgnlMsgId": {"var": "orgnl_msg_id"}, "OrgnlMsgNmId": "pacs.008.001.08"},
+                    "OrgnlInstrId": {"var": "orgnl_instr_id"},
+                    "OrgnlEndToEndId": {"var": "orgnl_end_to_end_id"},
+                    "OrgnlTxId": {"var": "orgnl_tx_id"},
+                    "OrgnlUETR": {"var": "orgnl_uetr"},
+                    "OrgnlIntrBkSttlmAmt": {"@Ccy": {"var": "currency"}, "$value": {"var": "amount"}},
+                    "RtrdIntrBkSttlmAmt": {"@Ccy": {"var": "currency"}, "$value": {"var": "amount"}},
+                    "ChrgBr": "SHAR",
+                    "InstgAgt": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}}},
+                    "InstdAgt": {"FinInstnId": {"BICFI": {"var": "sender_bic"}}},
+                    "RtrChain": {
+                        "DbtrAgt": {"FinInstnId": {"BICFI": {"var": "sender_bic"}, "Nm": {"fake": ["company_name"]}}},
+                        "CdtrAgt": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}, "Nm": {"fake": ["company_name"]}}},
+                        "Dbtr": {
+                            "Nm": {"fake": ["company_name"]},
+                            "PstlAdr": {
+                                "StrtNm": {"fake": ["street_name"]},
+                                "BldgNb": {"cat": [{"fake": ["i64", 1, 999]}]},
+                                "PstCd": {"fake": ["postcode"]},
+                                "TwnNm": {"fake": ["city_name"]},
+                                "Ctry": "AE"
+                            },
+                            "Id": {
+                                "OrgId": {
+                                    "Othr": {"Id": {"cat": ["AE", {"fake": ["i64", 1000000, 9999999]}]}, "SchmeNm": {"Cd": "TXID"}}
+                                }
+                            }
+                        },
+                        "DbtrAcct": {"Id": {"IBAN": {"var": "debtor_iban"}}},
+                        "Cdtr": {
+                            "Nm": {"fake": ["company_name"]},
+                            "PstlAdr": {
+                                "StrtNm": {"fake": ["street_name"]},
+                                "BldgNb": {"cat": [{"fake": ["i64", 1, 999]}]},
+                                "PstCd": {"fake": ["postcode"]},
+                                "TwnNm": {"fake": ["city_name"]},
+                                "Ctry": "US",
+                                "CtrySubDvsn": "CA"
+                            }
+                        },
+                        "CdtrAcct": {"Id": {"IBAN": {"var": "creditor_iban"}}}
+                    },
+                    "RtrRsnInf": {
+                        "Orgtr": {"Nm": "Regulatory Compliance Unit"},
+                        "Rsn": {"Cd": "RR04"},
+                        "AddtlInf": [
+                            "Regulatory hold - OFAC screening required",
+                            "Transaction flagged for enhanced due diligence",
+                            "Awaiting additional KYC documentation"
+                        ]
+                    },
+                    "IntrBkSttlmDt": {"fake": ["date"]}
+                }
+            }
+        }
+    }
+}
