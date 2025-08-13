@@ -48,7 +48,7 @@
                         "EndToEndId": {"var": "lc_number"},
                         "UETR": {"var": "uetr"}
                     },
-                    "PmtTpInf": {"InstrPrty": "HIGH", "SvcLvl": [{"Cd": "G001"}], "CtgyPurp": {"Cd": "TRAD"}},
+                    "PmtTpInf": {"InstrPrty": "HIGH", "SvcLvl": [{"Cd": "G001"}], "CtgyPurp": {"Cd": "INTC"}},
                     "IntrBkSttlmAmt": {"@Ccy": {"var": "currency"}, "$value": {"var": "amount"}},
                     "IntrBkSttlmDt": {
                         "fake": ["date", "%Y-%m-%d", "0d", "0d"]

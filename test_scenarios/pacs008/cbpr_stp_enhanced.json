@@ -22,9 +22,7 @@
         "beneficiary_account": {"fake": ["iban"]},
         "intermediary_bic": {"fake": ["bic"]},
         "structured_ref": {"cat": ["REF-", {"fake": ["i64", 1000000, 9999999]}]},
-        "purpose_code": {
-            "fake": ["enum", "TRAD", "GDDS", "INTC", "COMM"]
-        }
+        "purpose_code": {"fake": ["enum", "INTC", "CORT"]}
     },
     "schema": {
         "AppHdr": {

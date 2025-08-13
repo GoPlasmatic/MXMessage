@@ -44,7 +44,7 @@
                     "PmtTpInf": {
                         "InstrPrty": "HIGH",
                         "SvcLvl": [{"Cd": "CBPR"}],
-                        "CtgyPurp": {"Cd": "CASH"},
+                        "CtgyPurp": {"Cd": "INTC"},
                         "LclInstrm": {"Prtry": "REMITTANCE_CORRIDOR"}
                     },
                     "IntrBkSttlmAmt": {"@Ccy": "USD", "$value": {"var": "remittance_amount"}},

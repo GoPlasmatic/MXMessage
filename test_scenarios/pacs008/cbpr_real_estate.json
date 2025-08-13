@@ -52,7 +52,7 @@
                     "PmtTpInf": {
                         "InstrPrty": "HIGH",
                         "SvcLvl": [{"Cd": "CBPR"}],
-                        "CtgyPurp": {"Cd": "TRAD"},
+                        "CtgyPurp": {"Cd": "INTC"},
                         "LclInstrm": {"Prtry": "REAL_ESTATE_PURCHASE"}
                     },
                     "IntrBkSttlmAmt": {"@Ccy": "CAD", "$value": {"var": "purchase_price"}},

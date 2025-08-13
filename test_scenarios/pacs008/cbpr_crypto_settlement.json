@@ -43,7 +43,7 @@
                     "PmtTpInf": {
                         "InstrPrty": "HIGH",
                         "SvcLvl": [{"Cd": "CBPR"}],
-                        "CtgyPurp": {"Cd": "CASH"},
+                        "CtgyPurp": {"Cd": "INTC"},
                         "LclInstrm": {"Prtry": "CRYPTO_SETTLEMENT"}
                     },
                     "IntrBkSttlmAmt": {"@Ccy": "USD", "$value": {"var": "fiat_amount"}},

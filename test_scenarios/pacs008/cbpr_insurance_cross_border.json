@@ -53,7 +53,7 @@
                     "PmtTpInf": {
                         "InstrPrty": "HIGH",
                         "SvcLvl": [{"Cd": "CBPR"}],
-                        "CtgyPurp": {"Cd": "INSU"},
+                        "CtgyPurp": {"Cd": "INTC"},
                         "LclInstrm": {"Prtry": {"cat": ["CLAIM_", {"var": "claim_type"}]}}
                     },
                     "IntrBkSttlmAmt": {"@Ccy": "EUR", "$value": {"fake": ["f64", 4500.0, 145000.0]}},

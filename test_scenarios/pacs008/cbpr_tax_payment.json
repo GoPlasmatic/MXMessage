@@ -43,7 +43,7 @@
                     "PmtTpInf": {
                         "InstrPrty": "HIGH",
                         "SvcLvl": [{"Cd": "CBPR"}],
-                        "CtgyPurp": {"Cd": "TAXS"},
+                        "CtgyPurp": {"Cd": "INTC"},
                         "LclInstrm": {"Prtry": "CORPORATE_TAX"}
                     },
                     "IntrBkSttlmAmt": {"@Ccy": "USD", "$value": {"var": "amount"}},

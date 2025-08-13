@@ -39,7 +39,7 @@
                         "TxId": {"var": "transaction_ref"},
                         "UETR": {"var": "uetr"}
                     },
-                    "PmtTpInf": {"InstrPrty": "HIGH", "SvcLvl": [{"Cd": "CBPR"}], "CtgyPurp": {"Cd": "TRAD"}},
+                    "PmtTpInf": {"InstrPrty": "HIGH", "SvcLvl": [{"Cd": "CBPR"}], "CtgyPurp": {"Cd": "INTC"}},
                     "IntrBkSttlmAmt": {"@Ccy": "USD", "$value": {"var": "amount"}},
                     "IntrBkSttlmDt": {
                         "fake": ["date", "%Y-%m-%d", "+0d", "+0d"]

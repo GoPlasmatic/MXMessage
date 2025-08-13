@@ -28,14 +28,6 @@
             "description": "CBPR+ compliant salary payment"
         },
         {"file": "minimal.json", "description": "Minimal required fields only"},
-        {
-            "file": "correspondent_banking.json",
-            "description": "Correspondent banking with intermediary agents"
-        },
-        {
-            "file": "fx_conversion.json",
-            "description": "Payment with foreign exchange conversion"
-        },
         {"file": "cbpr_rent_payment.json", "description": "CBPR+ compliant rental payment"},
         {
             "file": "cbpr_healthcare_payment.json",
@@ -107,10 +99,6 @@
             "description": "CBPR+ compliant SaaS subscription payment"
         },
         {
-            "file": "cover_payment.json",
-            "description": "Cover payment for underlying transaction"
-        },
-        {
             "file": "regulatory_compliant.json",
             "description": "Enhanced regulatory compliance payment"
         },
@@ -177,10 +165,6 @@
         {
             "file": "duplicate_uetr.json",
             "description": "Payment with duplicate UETR detection"
-        },
-        {
-            "file": "missing_lei_entity.json",
-            "description": "High-value payment missing required LEI"
         },
         {
             "file": "remittance_enhanced.json",

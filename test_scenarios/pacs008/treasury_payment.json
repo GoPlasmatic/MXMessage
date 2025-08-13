@@ -40,7 +40,7 @@
                     "PmtTpInf": {
                         "InstrPrty": "NORM",
                         "SvcLvl": [{"Cd": "SEPA"}],
-                        "CtgyPurp": {"Cd": "TREA"},
+                        "CtgyPurp": {"Cd": "INTC"},
                         "LclInstrm": {"Prtry": "INTERCOMPANY_TRANSFER"}
                     },
                     "IntrBkSttlmAmt": {"@Ccy": "EUR", "$value": {"var": "amount"}},

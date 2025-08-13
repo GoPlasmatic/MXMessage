@@ -43,7 +43,7 @@
                     "PmtTpInf": {
                         "InstrPrty": "HIGH",
                         "SvcLvl": [{"Cd": "CBPR"}],
-                        "CtgyPurp": {"Cd": "EDUC"},
+                        "CtgyPurp": {"Cd": "INTC"},
                         "LclInstrm": {"Prtry": "INTERNATIONAL_EDUCATION"}
                     },
                     "IntrBkSttlmAmt": {"@Ccy": "USD", "$value": {"var": "tuition_amount"}},

@@ -44,7 +44,7 @@
                     "PmtTpInf": {
                         "InstrPrty": "NORM",
                         "SvcLvl": [{"Cd": "CBPR"}],
-                        "CtgyPurp": {"Cd": "INPC"},
+                        "CtgyPurp": {"Cd": "INTC"},
                         "LclInstrm": {"Prtry": "FUND_SUBSCRIPTION"}
                     },
                     "IntrBkSttlmAmt": {"@Ccy": "USD", "$value": {"var": "investment_amount"}},
