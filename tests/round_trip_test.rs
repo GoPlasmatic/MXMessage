@@ -760,9 +760,7 @@ fn parse_and_validate_mx_message(
             }
         }
         "pacs.004" => {
-            match serde_json::from_value::<pacs_004_001_09::PaymentReturnV09>(
-                json_value.clone(),
-            ) {
+            match serde_json::from_value::<pacs_004_001_09::PaymentReturnV09>(json_value.clone()) {
                 Ok(mx_msg) => {
                     if let Err(errors) = validate_message(&mx_msg) {
                         if debug_mode {
@@ -786,7 +784,7 @@ fn parse_and_validate_mx_message(
                         }
                         Err(e) => Err(ValidationOrSerializationError::Serialization(format!(
                             "XML serialization error: {e:?}"
-                        )))
+                        ))),
                     }
                 }
                 Err(e) => {
@@ -1201,17 +1199,15 @@ fn parse_xml_back_to_json(
                 }
             }
         }
-        "pacs.004" => {
-            match xml_from_str::<pacs_004_001_09::PaymentReturnV09>(xml_string) {
-                Ok(mx_msg) => Ok(serde_json::to_value(&mx_msg).unwrap()),
-                Err(e) => {
-                    if debug_mode {
-                        eprintln!("\n[Test {test_index}] Failed to parse XML for pacs.004: {e:?}");
-                    }
-                    Err(format!("XML parse error: {e:?}"))
+        "pacs.004" => match xml_from_str::<pacs_004_001_09::PaymentReturnV09>(xml_string) {
+            Ok(mx_msg) => Ok(serde_json::to_value(&mx_msg).unwrap()),
+            Err(e) => {
+                if debug_mode {
+                    eprintln!("\n[Test {test_index}] Failed to parse XML for pacs.004: {e:?}");
                 }
+                Err(format!("XML parse error: {e:?}"))
             }
-        }
+        },
         "pacs.002" => {
             match xml_from_str::<pacs_002_001_10::FIToFIPaymentStatusReportV10>(xml_string) {
                 Ok(mx_msg) => Ok(serde_json::to_value(&mx_msg).unwrap()),
