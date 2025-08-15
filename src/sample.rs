@@ -364,6 +364,9 @@ fn get_document_root_element(message_type: &str) -> String {
         "camt056" => "FIToFIPmtCxlReq",
         "camt057" => "NtfctnToRcv",
         "camt060" => "AcctRptgReq",
+        "camt107" => "ChqPresntmntNtfctn",
+        "camt108" => "ChqCxlOrStopReq",
+        "camt109" => "ChqCxlOrStopRpt",
         _ => "Document", // Fallback
     }
     .to_string()
@@ -650,6 +653,63 @@ fn envelope_to_xml(envelope: Value, message_type: &str) -> Result<String> {
             })?;
 
             to_mx_xml(&message, header, "camt.060", None)
+                .map_err(|e| ValidationError::new(9997, format!("Failed to generate XML: {e}")))
+        }
+        "camt107" => {
+            use crate::document::camt_107_001_01::ChequePresentmentNotificationV01;
+            use crate::header::bah_camt_107_001_01::BusinessApplicationHeaderV02;
+
+            let header: BusinessApplicationHeaderV02 =
+                serde_json::from_value(envelope["AppHdr"].clone()).map_err(|e| {
+                    ValidationError::new(9997, format!("Failed to parse camt107 header: {e}"))
+                })?;
+
+            let message: ChequePresentmentNotificationV01 = serde_json::from_value(
+                envelope["Document"]["ChqPresntmntNtfctn"].clone(),
+            )
+            .map_err(|e| {
+                ValidationError::new(9997, format!("Failed to parse camt107 document: {e}"))
+            })?;
+
+            to_mx_xml(&message, header, "camt.107", None)
+                .map_err(|e| ValidationError::new(9997, format!("Failed to generate XML: {e}")))
+        }
+        "camt108" => {
+            use crate::document::camt_108_001_01::ChequeCancellationOrStopRequestV01;
+            use crate::header::bah_camt_108_001_01::BusinessApplicationHeaderV02;
+
+            let header: BusinessApplicationHeaderV02 =
+                serde_json::from_value(envelope["AppHdr"].clone()).map_err(|e| {
+                    ValidationError::new(9997, format!("Failed to parse camt108 header: {e}"))
+                })?;
+
+            let message: ChequeCancellationOrStopRequestV01 = serde_json::from_value(
+                envelope["Document"]["ChqCxlOrStopReq"].clone(),
+            )
+            .map_err(|e| {
+                ValidationError::new(9997, format!("Failed to parse camt108 document: {e}"))
+            })?;
+
+            to_mx_xml(&message, header, "camt.108", None)
+                .map_err(|e| ValidationError::new(9997, format!("Failed to generate XML: {e}")))
+        }
+        "camt109" => {
+            use crate::document::camt_109_001_01::ChequeCancellationOrStopReportV01;
+            use crate::header::bah_camt_109_001_01::BusinessApplicationHeaderV02;
+
+            let header: BusinessApplicationHeaderV02 =
+                serde_json::from_value(envelope["AppHdr"].clone()).map_err(|e| {
+                    ValidationError::new(9997, format!("Failed to parse camt109 header: {e}"))
+                })?;
+
+            let message: ChequeCancellationOrStopReportV01 = serde_json::from_value(
+                envelope["Document"]["ChqCxlOrStopRpt"].clone(),
+            )
+            .map_err(|e| {
+                ValidationError::new(9997, format!("Failed to parse camt109 document: {e}"))
+            })?;
+
+            to_mx_xml(&message, header, "camt.109", None)
                 .map_err(|e| ValidationError::new(9997, format!("Failed to generate XML: {e}")))
         }
         _ => Err(ValidationError::new(

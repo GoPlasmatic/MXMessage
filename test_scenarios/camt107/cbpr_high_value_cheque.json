@@ -1,0 +1,106 @@
+{
+    "variables": {
+        "msg_id": {"cat": ["HVCHQ", {"fake": ["i64", 100000000, 999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "instr_id": {"cat": ["HVINSTR", {"fake": ["i64", 1000000000, 9999999999]}]},
+        "cheque_number": {"cat": ["MGR", {"fake": ["i64", 5000000, 9999999]}]},
+        "amount": {"fake": ["f64", 1000000.0, 5000000.0]},
+        "payer_lei": {"fake": ["lei"]},
+        "payee_lei": {"fake": ["lei"]},
+        "drawer_bic": {"fake": ["bic"]},
+        "payee_bic": {"fake": ["bic"]},
+        "instg_lei": {"fake": ["lei"]},
+        "instd_lei": {"fake": ["lei"]}
+    },
+    "schema": {
+        "AppHdr": {
+            "Fr": {"FIId": {"FinInstnId": {"BICFI": {"fake": ["bic"]}}}},
+            "To": {"FIId": {"FinInstnId": {"BICFI": {"fake": ["bic"]}}}},
+            "BizMsgIdr": {"var": "msg_id"},
+            "MsgDefIdr": "camt.107.001.01",
+            "BizSvc": "swift.cbprplus.01",
+            "CreDt": {"var": "creation_datetime"}
+        },
+        "Document": {
+            "ChqPresntmntNtfctn": {
+                "GrpHdr": {"MsgId": {"var": "msg_id"}, "CreDtTm": {"var": "creation_datetime"}, "NbOfChqs": "1"},
+                "Chq": {
+                    "InstrId": {"var": "instr_id"},
+                    "ChqNb": {"var": "cheque_number"},
+                    "IsseDt": {
+                        "fake": ["date", "%Y-%m-%d", "-10d", "-1d"]
+                    },
+                    "Amt": {"@Ccy": "EUR", "$value": {"var": "amount"}},
+                    "ValDt": {
+                        "Dt": {
+                            "fake": ["date", "%Y-%m-%d", "+0d", "+2d"]
+                        }
+                    },
+                    "Pyer": {
+                        "Nm": {"fake": ["company_name"]},
+                        "PstlAdr": {
+                            "Ctry": "DE",
+                            "AdrLine": [
+                                {"fake": ["street_address"]},
+                                {"cat": [{"fake": ["postcode"]}, " ", {"fake": ["city_name"]}]}
+                            ]
+                        },
+                        "Id": {
+                            "OrgId": {
+                                "LEI": {"var": "payer_lei"},
+                                "Othr": [
+                                    {
+                                        "Id": {"cat": ["DE", {"fake": ["i64", 100000000, 999999999]}]},
+                                        "SchmeNm": {"Cd": "TXID"}
+                                    }
+                                ]
+                            }
+                        },
+                        "CtryOfRes": "DE"
+                    },
+                    "PyerAcct": {"Id": {"IBAN": {"fake": ["iban", "DE"]}}, "Tp": {"Cd": "CACC"}, "Ccy": "EUR"},
+                    "DrwrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {"var": "drawer_bic"},
+                            "ClrSysMmbId": {"ClrSysId": {"Cd": "TGT"}, "MmbId": {"var": "drawer_bic"}},
+                            "LEI": {"var": "instg_lei"}
+                        }
+                    },
+                    "Pyee": {
+                        "Nm": {"fake": ["company_name"]},
+                        "PstlAdr": {
+                            "Ctry": "SG",
+                            "AdrLine": [{"fake": ["street_address"]}, {"cat": ["Singapore ", {"fake": ["postcode"]}]}]
+                        },
+                        "Id": {
+                            "OrgId": {
+                                "LEI": {"var": "payee_lei"},
+                                "Othr": [
+                                    {
+                                        "Id": {"cat": ["SG", {"fake": ["i64", 100000000, 999999999]}, "A"]},
+                                        "SchmeNm": {"Cd": "TXID"}
+                                    }
+                                ]
+                            }
+                        },
+                        "CtryOfRes": "SG"
+                    },
+                    "PyeeAcct": {
+                        "Id": {
+                            "Othr": {"Id": {"cat": [{"fake": ["i64", 1000000000, 9999999999]}]}, "SchmeNm": {"Cd": "BBAN"}}
+                        },
+                        "Tp": {"Cd": "CACC"},
+                        "Ccy": "SGD"
+                    },
+                    "PyeeAgt": {
+                        "FinInstnId": {
+                            "BICFI": {"var": "payee_bic"},
+                            "ClrSysMmbId": {"ClrSysId": {"Cd": "MEPS"}, "MmbId": {"cat": [{"fake": ["i64", 1000, 9999]}]}},
+                            "LEI": {"var": "instd_lei"}
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1144,6 +1144,96 @@ fn parse_and_validate_mx_message(
                 }
             }
         }
+        "camt.107" => {
+            match serde_json::from_value::<camt_107_001_01::ChequePresentmentNotificationV01>(
+                json_value.clone(),
+            ) {
+                Ok(mx_msg) => {
+                    if let Err(errors) = validate_message(&mx_msg) {
+                        return Err(ValidationOrSerializationError::Validation(errors));
+                    }
+
+                    match xml_to_string(&mx_msg) {
+                        Ok(xml) => {
+                            let mx_json = serde_json::to_value(&mx_msg).unwrap();
+                            Ok((mx_json, xml))
+                        }
+                        Err(e) => Err(ValidationOrSerializationError::Serialization(format!(
+                            "XML serialization error: {e:?}"
+                        ))),
+                    }
+                }
+                Err(e) => {
+                    if debug_mode {
+                        eprintln!("\n[Test {test_index}] Failed to parse camt.107: {e:?}");
+                    }
+                    Err(ValidationOrSerializationError::Validation(vec![format!(
+                        "Parse error: {:?}",
+                        e
+                    )]))
+                }
+            }
+        }
+        "camt.108" => {
+            match serde_json::from_value::<camt_108_001_01::ChequeCancellationOrStopRequestV01>(
+                json_value.clone(),
+            ) {
+                Ok(mx_msg) => {
+                    if let Err(errors) = validate_message(&mx_msg) {
+                        return Err(ValidationOrSerializationError::Validation(errors));
+                    }
+
+                    match xml_to_string(&mx_msg) {
+                        Ok(xml) => {
+                            let mx_json = serde_json::to_value(&mx_msg).unwrap();
+                            Ok((mx_json, xml))
+                        }
+                        Err(e) => Err(ValidationOrSerializationError::Serialization(format!(
+                            "XML serialization error: {e:?}"
+                        ))),
+                    }
+                }
+                Err(e) => {
+                    if debug_mode {
+                        eprintln!("\n[Test {test_index}] Failed to parse camt.108: {e:?}");
+                    }
+                    Err(ValidationOrSerializationError::Validation(vec![format!(
+                        "Parse error: {:?}",
+                        e
+                    )]))
+                }
+            }
+        }
+        "camt.109" => {
+            match serde_json::from_value::<camt_109_001_01::ChequeCancellationOrStopReportV01>(
+                json_value.clone(),
+            ) {
+                Ok(mx_msg) => {
+                    if let Err(errors) = validate_message(&mx_msg) {
+                        return Err(ValidationOrSerializationError::Validation(errors));
+                    }
+
+                    match xml_to_string(&mx_msg) {
+                        Ok(xml) => {
+                            let mx_json = serde_json::to_value(&mx_msg).unwrap();
+                            Ok((mx_json, xml))
+                        }
+                        Err(e) => Err(ValidationOrSerializationError::Serialization(format!(
+                            "XML serialization error: {e:?}"
+                        ))),
+                    }
+                }
+                Err(e) => {
+                    if debug_mode {
+                        eprintln!("\n[Test {test_index}] Failed to parse camt.109: {e:?}");
+                    }
+                    Err(ValidationOrSerializationError::Validation(vec![format!(
+                        "Parse error: {:?}",
+                        e
+                    )]))
+                }
+            }
+        }
         _ => {
             // For other message types, add support as needed
             Err(ValidationOrSerializationError::Validation(vec![format!(
@@ -1323,6 +1413,39 @@ fn parse_xml_back_to_json(
                 Err(e) => {
                     if debug_mode {
                         eprintln!("\n[Test {test_index}] Failed to parse XML for camt.060: {e:?}");
+                    }
+                    Err(format!("XML parse error: {e:?}"))
+                }
+            }
+        }
+        "camt.107" => {
+            match xml_from_str::<camt_107_001_01::ChequePresentmentNotificationV01>(xml_string) {
+                Ok(mx_msg) => Ok(serde_json::to_value(&mx_msg).unwrap()),
+                Err(e) => {
+                    if debug_mode {
+                        eprintln!("\n[Test {test_index}] Failed to parse XML for camt.107: {e:?}");
+                    }
+                    Err(format!("XML parse error: {e:?}"))
+                }
+            }
+        }
+        "camt.108" => {
+            match xml_from_str::<camt_108_001_01::ChequeCancellationOrStopRequestV01>(xml_string) {
+                Ok(mx_msg) => Ok(serde_json::to_value(&mx_msg).unwrap()),
+                Err(e) => {
+                    if debug_mode {
+                        eprintln!("\n[Test {test_index}] Failed to parse XML for camt.108: {e:?}");
+                    }
+                    Err(format!("XML parse error: {e:?}"))
+                }
+            }
+        }
+        "camt.109" => {
+            match xml_from_str::<camt_109_001_01::ChequeCancellationOrStopReportV01>(xml_string) {
+                Ok(mx_msg) => Ok(serde_json::to_value(&mx_msg).unwrap()),
+                Err(e) => {
+                    if debug_mode {
+                        eprintln!("\n[Test {test_index}] Failed to parse XML for camt.109: {e:?}");
                     }
                     Err(format!("XML parse error: {e:?}"))
                 }

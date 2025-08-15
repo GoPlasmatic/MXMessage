@@ -1,0 +1,92 @@
+{
+    "variables": {
+        "msg_id": {"cat": ["TRCHQ", {"fake": ["i64", 100000000, 999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "instr_id": {"cat": ["TRINSTR", {"fake": ["i64", 1000000000, 9999999999]}]},
+        "cheque_number": {"cat": ["UST", {"fake": ["i64", 2025000000, 2025999999]}]},
+        "amount": {"fake": ["f64", 100000.0, 500000.0]},
+        "drawer_bic": {"fake": ["bic"]},
+        "payee_bic": {"fake": ["bic"]}
+    },
+    "schema": {
+        "AppHdr": {
+            "Fr": {"FIId": {"FinInstnId": {"BICFI": {"fake": ["bic"]}}}},
+            "To": {"FIId": {"FinInstnId": {"BICFI": {"fake": ["bic"]}}}},
+            "BizMsgIdr": {"var": "msg_id"},
+            "MsgDefIdr": "camt.107.001.01",
+            "BizSvc": "swift.cbprplus.01",
+            "CreDt": {"var": "creation_datetime"}
+        },
+        "Document": {
+            "ChqPresntmntNtfctn": {
+                "GrpHdr": {"MsgId": {"var": "msg_id"}, "CreDtTm": {"var": "creation_datetime"}, "NbOfChqs": "1"},
+                "Chq": {
+                    "InstrId": {"var": "instr_id"},
+                    "ChqNb": {"var": "cheque_number"},
+                    "IsseDt": {
+                        "fake": ["date", "%Y-%m-%d", "-60d", "-30d"]
+                    },
+                    "Amt": {"@Ccy": "USD", "$value": {"var": "amount"}},
+                    "ValDt": {
+                        "Dt": {
+                            "fake": ["date", "%Y-%m-%d", "+15d", "+30d"]
+                        }
+                    },
+                    "Pyer": {
+                        "Nm": "United States Treasury",
+                        "PstlAdr": {"Ctry": "US", "AdrLine": ["1500 Pennsylvania Avenue NW", "Washington, DC 20220"]},
+                        "Id": {"OrgId": {"Othr": [{"Id": "UST-GENERAL-001", "SchmeNm": {"Cd": "CUST"}}]}},
+                        "CtryOfRes": "US"
+                    },
+                    "PyerAcct": {
+                        "Id": {"Othr": {"Id": "UST-MAIN-001", "SchmeNm": {"Cd": "CUST"}}},
+                        "Tp": {"Cd": "GOVT"},
+                        "Ccy": "USD"
+                    },
+                    "DrwrAgt": {
+                        "FinInstnId": {
+                            "BICFI": "FRNYUS33XXX",
+                            "ClrSysMmbId": {"ClrSysId": {"Cd": "USABA"}, "MmbId": "021001208"},
+                            "Nm": "Federal Reserve Bank of New York"
+                        }
+                    },
+                    "Pyee": {
+                        "Nm": {"fake": ["company_name"]},
+                        "PstlAdr": {
+                            "Ctry": "CA",
+                            "AdrLine": [
+                                {"fake": ["street_address"]},
+                                {"cat": [{"fake": ["city_name"]}, ", ON ", {"fake": ["postcode"]}]}
+                            ]
+                        },
+                        "Id": {
+                            "OrgId": {
+                                "Othr": [
+                                    {
+                                        "Id": {"cat": [{"fake": ["i64", 100000000, 999999999]}, "RC0001"]},
+                                        "SchmeNm": {"Cd": "TXID"}
+                                    }
+                                ]
+                            }
+                        },
+                        "CtryOfRes": "CA"
+                    },
+                    "PyeeAcct": {
+                        "Id": {
+                            "Othr": {"Id": {"cat": ["MSA-", {"fake": ["i64", 100000, 999999]}]}, "SchmeNm": {"Cd": "BBAN"}}
+                        },
+                        "Tp": {"Cd": "GOVT"},
+                        "Ccy": "CAD"
+                    },
+                    "PyeeAgt": {
+                        "FinInstnId": {
+                            "BICFI": {"var": "payee_bic"},
+                            "ClrSysMmbId": {"ClrSysId": {"Cd": "CACPA"}, "MmbId": {"fake": ["i64", 100000000, 999999999]}},
+                            "LEI": {"fake": ["lei"]}
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,21 @@
+{
+    "message_type": "camt.108",
+    "description": "Cheque Cancellation or Stop Request - Used to request the cancellation or stop payment of one or more cheques",
+    "scenarios": [
+        {
+            "file": "cbpr_fraud_stop_request.json",
+            "name": "CBPR+ Fraud Prevention Stop Request",
+            "description": "Urgent cheque stop request due to suspected fraud with CBPR+ compliance"
+        },
+        {
+            "file": "cbpr_lost_cheque_cancellation.json",
+            "name": "CBPR+ Lost Cheque Cancellation",
+            "description": "Cancellation request for lost cross-border cheque with CBPR+ compliance"
+        },
+        {
+            "file": "cbpr_duplicate_stop_request.json",
+            "name": "CBPR+ Duplicate Cheque Stop Request",
+            "description": "Stop payment request for duplicate cheque issuance with CBPR+ compliance"
+        }
+    ]
+}

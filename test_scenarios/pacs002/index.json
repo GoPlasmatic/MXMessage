@@ -1,46 +1,15 @@
 {
     "message_type": "pacs.002.001.10",
-    "description": "Payment Status Report",
+    "description": "Payment Status Report - RJCT Status Only (CBPR+ Compliant)",
+    "note": "Per CBPR+ specification, pacs.002 to MT transformation only supports RJCT (Rejected) status. Non-RJCT statuses (ACSC, PDNG, ACCP) are not supported for MT199/MT299 transformation.",
     "scenarios": [
         {
-            "file": "cheque_collection_advice.json",
-            "description": "Advice of successful cheque collection (MT110)"
-        },
-        {
-            "file": "foreign_cheque_collection.json",
-            "description": "Collection of foreign currency cheque (MT110)"
-        },
-        {
             "file": "returned_cheque_advice.json",
-            "description": "Advice of returned cheque (MT110)"
-        },
-        {
-            "file": "single_cheque_advice.json",
-            "description": "Single cheque collection advice (MT110)"
-        },
-        {
-            "file": "duplicate_cheque_stop.json",
-            "description": "Stop payment request for duplicate cheque (MT111)"
-        },
-        {
-            "file": "fraud_prevention_stop.json",
-            "description": "Stop payment for fraud prevention (MT111)"
-        },
-        {
-            "file": "lost_cheque_stop.json",
-            "description": "Stop payment for lost cheque (MT111)"
-        },
-        {
-            "file": "stop_payment_accepted.json",
-            "description": "Stop payment request accepted (MT112)"
-        },
-        {
-            "file": "stop_payment_pending.json",
-            "description": "Stop payment request pending (MT112)"
+            "description": "Advice of returned cheque with RJCT status - transforms to MT199/MT299 REJT"
         },
         {
             "file": "stop_payment_rejected.json",
-            "description": "Stop payment request rejected (MT112)"
+            "description": "Stop payment request rejected with RJCT status - transforms to MT199/MT299 REJT"
         }
     ]
 }

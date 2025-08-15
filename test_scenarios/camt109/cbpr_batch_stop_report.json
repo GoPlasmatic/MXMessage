@@ -1,0 +1,46 @@
+{
+    "variables": {
+        "msg_id": {"cat": ["BTCH", {"fake": ["i64", 100000000, 999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "instr_id": {"cat": ["BATCH", {"fake": ["i64", 1000000000, 9999999999]}]},
+        "orig_instr_id": {"cat": ["DUPSTOP", {"fake": ["i64", 1000000000, 9999999999]}]},
+        "cheque_number": {"cat": ["CHQ", {"fake": ["i64", 888000000, 888999999]}]},
+        "amount": {"fake": ["f64", 50000.0, 100000.0]},
+        "drawer_bic": {"fake": ["bic"]}
+    },
+    "schema": {
+        "AppHdr": {
+            "Fr": {"FIId": {"FinInstnId": {"BICFI": {"fake": ["bic"]}}}},
+            "To": {"FIId": {"FinInstnId": {"BICFI": {"fake": ["bic"]}}}},
+            "BizMsgIdr": {"var": "msg_id"},
+            "MsgDefIdr": "camt.109.001.01",
+            "BizSvc": "swift.cbprplus.01",
+            "CreDt": {"var": "creation_datetime"}
+        },
+        "Document": {
+            "ChqCxlOrStopRpt": {
+                "GrpHdr": {"MsgId": {"var": "msg_id"}, "CreDtTm": {"var": "creation_datetime"}, "NbOfChqs": "1"},
+                "Chq": {
+                    "InstrId": {"var": "instr_id"},
+                    "OrgnlInstrId": {"var": "orig_instr_id"},
+                    "ChqNb": {"var": "cheque_number"},
+                    "IsseDt": {
+                        "fake": ["date", "%Y-%m-%d", "-10d", "-5d"]
+                    },
+                    "Amt": {"@Ccy": "USD", "$value": {"var": "amount"}},
+                    "DrwrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {"var": "drawer_bic"},
+                            "ClrSysMmbId": {
+                                "ClrSysId": {"Cd": "USABA"},
+                                "MmbId": {"cat": [{"fake": ["i64", 100000000, 999999999]}]}
+                            },
+                            "LEI": {"fake": ["lei"]}
+                        }
+                    },
+                    "ChqCxlOrStopSts": {"Sts": {"Cd": "ACCR"}, "AddtlInf": "Batch stop payment successfully processed"}
+                }
+            }
+        }
+    }
+}

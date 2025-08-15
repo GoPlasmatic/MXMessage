@@ -33,8 +33,7 @@
                     "MsgId": {"var": "msg_id"},
                     "CreDtTm": {"var": "creation_datetime"},
                     "NbOfTxs": "1",
-                    "TtlRtrdIntrBkSttlmAmt": {"@Ccy": {"var": "currency"}, "$value": {"var": "amount"}},
-                    "SttlmInf": {"SttlmMtd": "INDA", "ClrSys": {"Cd": "CHC"}}
+                    "SttlmInf": {"SttlmMtd": "INDA"}
                 },
                 "TxInf": {
                     "RtrId": {"var": "rtr_id"},
@@ -162,7 +161,7 @@
                     "OrgnlTxRef": {
                         "IntrBkSttlmAmt": {"@Ccy": {"var": "currency"}, "$value": {"var": "amount"}},
                         "IntrBkSttlmDt": {"fake": ["date"]},
-                        "SttlmInf": {"SttlmMtd": "INDA", "ClrSys": {"Cd": "CHC"}},
+                        "SttlmInf": {"SttlmMtd": "INDA"},
                         "PmtTpInf": {
                             "InstrPrty": "NORM",
                             "SvcLvl": [{"Cd": "G001"}],

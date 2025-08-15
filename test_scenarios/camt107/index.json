@@ -1,0 +1,26 @@
+{
+    "message_type": "camt.107",
+    "description": "Cheque Presentment Notification - Used to notify the presentment of cheques for clearing and settlement",
+    "scenarios": [
+        {
+            "file": "minimal.json",
+            "name": "Minimal Cheque Presentment",
+            "description": "Minimal cheque presentment notification for testing"
+        },
+        {
+            "file": "cbpr_cross_border_cheque.json",
+            "name": "CBPR+ Cross-Border Cheque Presentment",
+            "description": "Cross-border cheque presentment notification compliant with CBPR+ standards"
+        },
+        {
+            "file": "cbpr_high_value_cheque.json",
+            "name": "CBPR+ High Value Cheque Presentment",
+            "description": "High value corporate cheque presentment with enhanced CBPR+ compliance"
+        },
+        {
+            "file": "cbpr_treasury_cheque.json",
+            "name": "CBPR+ Treasury Cheque Presentment",
+            "description": "Government treasury cheque presentment with CBPR+ compliance"
+        }
+    ]
+}

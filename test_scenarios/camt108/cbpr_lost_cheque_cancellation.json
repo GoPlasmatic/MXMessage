@@ -1,0 +1,110 @@
+{
+    "variables": {
+        "msg_id": {"cat": ["CXLREQ", {"fake": ["i64", 100000000, 999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "instr_id": {"cat": ["CXLINSTR", {"fake": ["i64", 1000000000, 9999999999]}]},
+        "cheque_number": {"cat": ["EU", {"fake": ["i64", 2025000000, 2025999999]}]},
+        "amount": {"fake": ["f64", 200000.0, 300000.0]},
+        "payer_lei": {"fake": ["lei"]},
+        "payee_lei": {"fake": ["lei"]},
+        "drawer_bic": {"fake": ["bic"]},
+        "payee_bic": {"fake": ["bic"]}
+    },
+    "schema": {
+        "AppHdr": {
+            "Fr": {"FIId": {"FinInstnId": {"BICFI": {"fake": ["bic"]}}}},
+            "To": {"FIId": {"FinInstnId": {"BICFI": {"fake": ["bic"]}}}},
+            "BizMsgIdr": {"var": "msg_id"},
+            "MsgDefIdr": "camt.108.001.01",
+            "BizSvc": "swift.cbprplus.01",
+            "CreDt": {"var": "creation_datetime"}
+        },
+        "Document": {
+            "ChqCxlOrStopReq": {
+                "GrpHdr": {"MsgId": {"var": "msg_id"}, "CreDtTm": {"var": "creation_datetime"}, "NbOfChqs": "1"},
+                "Chq": {
+                    "InstrId": {"var": "instr_id"},
+                    "OrgnlInstrId": {"cat": ["ORIG", {"fake": ["i64", 100000000, 999999999]}]},
+                    "ChqNb": {"var": "cheque_number"},
+                    "IsseDt": {
+                        "fake": ["date", "%Y-%m-%d", "-15d", "-10d"]
+                    },
+                    "Amt": {"@Ccy": "EUR", "$value": {"var": "amount"}},
+                    "Pyer": {
+                        "Nm": {"fake": ["company_name"]},
+                        "PstlAdr": {
+                            "Ctry": "DE",
+                            "AdrLine": [
+                                {"fake": ["street_address"]},
+                                {"cat": [{"fake": ["postcode"]}, " ", {"fake": ["city_name"]}]}
+                            ]
+                        },
+                        "Id": {
+                            "OrgId": {
+                                "LEI": {"var": "payer_lei"},
+                                "Othr": [
+                                    {
+                                        "Id": {"cat": ["DE", {"fake": ["i64", 100000000, 999999999]}]},
+                                        "SchmeNm": {"Cd": "TXID"}
+                                    }
+                                ]
+                            }
+                        },
+                        "CtryOfRes": "DE"
+                    },
+                    "PyerAcct": {"Id": {"IBAN": {"fake": ["iban", "DE"]}}, "Tp": {"Cd": "CACC"}, "Ccy": "EUR"},
+                    "DrwrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {"var": "drawer_bic"},
+                            "ClrSysMmbId": {"ClrSysId": {"Cd": "TGT"}, "MmbId": {"var": "drawer_bic"}},
+                            "LEI": {"fake": ["lei"]}
+                        }
+                    },
+                    "Pyee": {
+                        "Nm": {"fake": ["company_name"]},
+                        "PstlAdr": {
+                            "Ctry": "JP",
+                            "AdrLine": [
+                                {"fake": ["street_address"]},
+                                {"cat": [{"fake": ["city_name"]}, " ", {"fake": ["postcode"]}]}
+                            ]
+                        },
+                        "Id": {
+                            "OrgId": {
+                                "LEI": {"var": "payee_lei"},
+                                "Othr": [
+                                    {
+                                        "Id": {"cat": ["JP", {"fake": ["i64", 1000000000, 9999999999]}]},
+                                        "SchmeNm": {"Cd": "TXID"}
+                                    }
+                                ]
+                            }
+                        },
+                        "CtryOfRes": "JP"
+                    },
+                    "PyeeAcct": {
+                        "Id": {
+                            "Othr": {
+                                "Id": {"cat": ["JP", {"fake": ["i64", 100000000000, 999999999999]}]},
+                                "SchmeNm": {"Cd": "BBAN"}
+                            }
+                        },
+                        "Tp": {"Cd": "CACC"},
+                        "Ccy": "JPY"
+                    },
+                    "PyeeAgt": {
+                        "FinInstnId": {
+                            "BICFI": {"var": "payee_bic"},
+                            "ClrSysMmbId": {"ClrSysId": {"Cd": "BOJNET"}, "MmbId": {"fake": ["i64", 1000, 9999]}},
+                            "LEI": {"fake": ["lei"]}
+                        }
+                    },
+                    "ChqCxlOrStopRsn": {
+                        "Rsn": {"Cd": "LOST"},
+                        "AddtlInf": "Certified cheque lost in international mail transit"
+                    }
+                }
+            }
+        }
+    }
+}

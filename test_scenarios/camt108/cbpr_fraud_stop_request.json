@@ -1,0 +1,80 @@
+{
+    "variables": {
+        "msg_id": {"cat": ["STOP", {"fake": ["i64", 100000000, 999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "instr_id": {"cat": ["STOPREQ", {"fake": ["i64", 1000000000, 9999999999]}]},
+        "cheque_number": {"cat": ["CHQ", {"fake": ["i64", 888000000, 888999999]}]},
+        "amount": {"fake": ["f64", 50000.0, 100000.0]},
+        "payer_lei": {"fake": ["lei"]},
+        "drawer_bic": {"fake": ["bic"]}
+    },
+    "schema": {
+        "AppHdr": {
+            "Fr": {"FIId": {"FinInstnId": {"BICFI": {"fake": ["bic"]}}}},
+            "To": {"FIId": {"FinInstnId": {"BICFI": {"fake": ["bic"]}}}},
+            "BizMsgIdr": {"var": "msg_id"},
+            "MsgDefIdr": "camt.108.001.01",
+            "BizSvc": "swift.cbprplus.01",
+            "CreDt": {"var": "creation_datetime"}
+        },
+        "Document": {
+            "ChqCxlOrStopReq": {
+                "GrpHdr": {"MsgId": {"var": "msg_id"}, "CreDtTm": {"var": "creation_datetime"}, "NbOfChqs": "1"},
+                "Chq": {
+                    "InstrId": {"var": "instr_id"},
+                    "OrgnlInstrId": {"cat": ["ORIG", {"fake": ["i64", 100000000, 999999999]}]},
+                    "ChqNb": {"var": "cheque_number"},
+                    "IsseDt": {
+                        "fake": ["date", "%Y-%m-%d", "-10d", "-5d"]
+                    },
+                    "Amt": {"@Ccy": "USD", "$value": {"var": "amount"}},
+                    "Pyer": {
+                        "Nm": {"fake": ["company_name"]},
+                        "PstlAdr": {
+                            "Ctry": "US",
+                            "AdrLine": [
+                                {"fake": ["street_address"]},
+                                {
+                                    "cat": [
+                                        {"fake": ["city_name"]},
+                                        ", ",
+                                        {"fake": ["state_abbr"]},
+                                        " ",
+                                        {"fake": ["postcode"]}
+                                    ]
+                                }
+                            ]
+                        },
+                        "Id": {
+                            "OrgId": {
+                                "LEI": {"var": "payer_lei"},
+                                "Othr": [
+                                    {
+                                        "Id": {"cat": ["US", {"fake": ["i64", 100000000, 999999999]}]},
+                                        "SchmeNm": {"Cd": "TXID"}
+                                    }
+                                ]
+                            }
+                        },
+                        "CtryOfRes": "US"
+                    },
+                    "PyerAcct": {"Id": {"IBAN": {"fake": ["iban", "US"]}}, "Tp": {"Cd": "CACC"}, "Ccy": "USD"},
+                    "DrwrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {"var": "drawer_bic"},
+                            "ClrSysMmbId": {
+                                "ClrSysId": {"Cd": "USABA"},
+                                "MmbId": {"cat": [{"fake": ["i64", 100000000, 999999999]}]}
+                            },
+                            "LEI": {"fake": ["lei"]}
+                        }
+                    },
+                    "ChqCxlOrStopRsn": {
+                        "Rsn": {"Cd": "FRAD"},
+                        "AddtlInf": "Suspected fraudulent alteration of cheque amount and payee details"
+                    }
+                }
+            }
+        }
+    }
+}

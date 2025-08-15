@@ -1,0 +1,36 @@
+{
+    "variables": {
+        "msg_id": {"cat": ["MIN", {"fake": ["i64", 100000000, 999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "instr_id": {"cat": ["INSTR", {"fake": ["i64", 1000000000, 9999999999]}]},
+        "cheque_number": {"cat": ["CHQ", {"fake": ["i64", 10000000, 99999999]}]},
+        "amount": {"fake": ["f64", 1000.0, 10000.0]},
+        "drawer_bic": {"fake": ["bic"]}
+    },
+    "schema": {
+        "AppHdr": {
+            "Fr": {"FIId": {"FinInstnId": {"BICFI": {"fake": ["bic"]}}}},
+            "To": {"FIId": {"FinInstnId": {"BICFI": {"fake": ["bic"]}}}},
+            "BizMsgIdr": {"var": "msg_id"},
+            "MsgDefIdr": "camt.107.001.01",
+            "BizSvc": "swift.cbprplus.01",
+            "CreDt": {"var": "creation_datetime"}
+        },
+        "Document": {
+            "ChqPresntmntNtfctn": {
+                "GrpHdr": {"MsgId": {"var": "msg_id"}, "CreDtTm": {"var": "creation_datetime"}, "NbOfChqs": "1"},
+                "Chq": {
+                    "InstrId": {"var": "instr_id"},
+                    "ChqNb": {"var": "cheque_number"},
+                    "IsseDt": {
+                        "fake": ["date", "%Y-%m-%d", "-30d", "-1d"]
+                    },
+                    "Amt": {"@Ccy": "USD", "$value": {"var": "amount"}},
+                    "Pyer": {"Nm": {"fake": ["name"]}, "PstlAdr": {"Ctry": "US"}, "CtryOfRes": "US"},
+                    "PyerAcct": {"Id": {"IBAN": {"fake": ["iban"]}}, "Ccy": "USD"},
+                    "Pyee": {"Nm": {"fake": ["name"]}, "PstlAdr": {"Ctry": "GB"}, "CtryOfRes": "GB"}
+                }
+            }
+        }
+    }
+}

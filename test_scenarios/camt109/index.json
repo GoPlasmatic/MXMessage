@@ -1,0 +1,21 @@
+{
+    "message_type": "camt.109",
+    "description": "Cheque Cancellation or Stop Report - Report on the status of cheque cancellation or stop payment requests",
+    "scenarios": [
+        {
+            "file": "cbpr_stop_confirmation_report.json",
+            "name": "CBPR+ Stop Payment Confirmation Report",
+            "description": "Confirmation report for successfully stopped cheque payment with CBPR+ compliance"
+        },
+        {
+            "file": "cbpr_cancellation_rejection_report.json",
+            "name": "CBPR+ Cancellation Rejection Report",
+            "description": "Report indicating rejection of cheque cancellation request with CBPR+ compliance reasons"
+        },
+        {
+            "file": "cbpr_batch_stop_report.json",
+            "name": "CBPR+ Batch Stop Payment Report",
+            "description": "Report for multiple cheque stop requests processed in batch with CBPR+ compliance"
+        }
+    ]
+}
