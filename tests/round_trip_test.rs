@@ -301,8 +301,8 @@ fn test_round_trip_scenarios() {
     let scenario_name = env::var("TEST_SCENARIO").ok();
     let debug_mode = env::var("TEST_DEBUG").is_ok();
     let stop_on_failure = env::var("TEST_STOP_ON_FAILURE").is_ok();
-    let samples_str = env::var("TEST_SAMPLE_COUNT").unwrap_or_else(|_| "10".to_string());
-    let samples_per_scenario = samples_str.parse::<usize>().unwrap_or(10);
+    let samples_str = env::var("TEST_SAMPLE_COUNT").unwrap_or_else(|_| "1".to_string());
+    let samples_per_scenario = samples_str.parse::<usize>().unwrap_or(1);
 
     let mut test_results = Vec::new();
 

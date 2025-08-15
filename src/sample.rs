@@ -664,12 +664,11 @@ fn envelope_to_xml(envelope: Value, message_type: &str) -> Result<String> {
                     ValidationError::new(9997, format!("Failed to parse camt107 header: {e}"))
                 })?;
 
-            let message: ChequePresentmentNotificationV01 = serde_json::from_value(
-                envelope["Document"]["ChqPresntmntNtfctn"].clone(),
-            )
-            .map_err(|e| {
-                ValidationError::new(9997, format!("Failed to parse camt107 document: {e}"))
-            })?;
+            let message: ChequePresentmentNotificationV01 =
+                serde_json::from_value(envelope["Document"]["ChqPresntmntNtfctn"].clone())
+                    .map_err(|e| {
+                        ValidationError::new(9997, format!("Failed to parse camt107 document: {e}"))
+                    })?;
 
             to_mx_xml(&message, header, "camt.107", None)
                 .map_err(|e| ValidationError::new(9997, format!("Failed to generate XML: {e}")))
