@@ -1,0 +1,20 @@
+{
+  "always_box_types": [
+    "ReportEntry101",
+    "ReportEntry102",
+    "ReportEntry103",
+    "EntryDetails91",
+    "EntryDetails92",
+    "EntryDetails93",
+    "EntryTransaction101",
+    "EntryTransaction102",
+    "EntryTransaction103"
+  ],
+  "box_in_vec_patterns": [],
+  "box_vec_if_parent_matches": [],
+  "min_fields_to_box": 20,
+  "max_nesting_depth": 6,
+  "use_size_heuristic": false,
+  "use_pattern_matching": false,
+  "use_nesting_analysis": false
+}

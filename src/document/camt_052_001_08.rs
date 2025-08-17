@@ -144,7 +144,7 @@ pub struct AccountReport251 {
     #[serde(rename = "TxsSummry", skip_serializing_if = "Option::is_none")]
     pub txs_summry: Option<TotalTransactions61>,
     #[serde(rename = "Ntry", skip_serializing_if = "Option::is_none")]
-    pub ntry: Option<Vec<ReportEntry101>>,
+    pub ntry: Option<Vec<Box<ReportEntry101>>>,
     #[serde(rename = "AddtlRptInf", skip_serializing_if = "Option::is_none")]
     pub addtl_rpt_inf: Option<String>,
 }
@@ -1463,6 +1463,7 @@ impl Validate for CardEntry41 {
 }
 
 // CardIndividualTransaction21: Sequential number of the validation of the cash deposit.
+
 // Usage: The sequential number is increased incrementally for each transaction.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
 pub struct CardIndividualTransaction21 {
@@ -3660,7 +3661,7 @@ pub struct EntryDetails91 {
     #[serde(rename = "Btch", skip_serializing_if = "Option::is_none")]
     pub btch: Option<BatchInformation21>,
     #[serde(rename = "TxDtls")]
-    pub tx_dtls: EntryTransaction101,
+    pub tx_dtls: Box<EntryTransaction101>,
 }
 
 impl Validate for EntryDetails91 {
@@ -7031,6 +7032,7 @@ impl Validate for PointOfInteractionCapabilities1 {
 }
 
 // PointOfInteractionComponent11: Unique approval number for a component, delivered by a certification body.
+
 // Usage: More than one approval number could be present, when assigned by different bodies. The certification body identification must be provided within the approval number (for example at the beginning of the value).
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
 pub struct PointOfInteractionComponent11 {
@@ -8939,7 +8941,7 @@ pub struct ReportEntry101 {
     #[serde(rename = "CardTx", skip_serializing_if = "Option::is_none")]
     pub card_tx: Option<CardEntry41>,
     #[serde(rename = "NtryDtls", skip_serializing_if = "Option::is_none")]
-    pub ntry_dtls: Option<Vec<EntryDetails91>>,
+    pub ntry_dtls: Option<Vec<Box<EntryDetails91>>>,
     #[serde(rename = "AddtlNtryInf", skip_serializing_if = "Option::is_none")]
     pub addtl_ntry_inf: Option<String>,
 }
