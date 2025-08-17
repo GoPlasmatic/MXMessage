@@ -197,9 +197,12 @@ fn get_namespace_for_message_type(message_type: &str) -> String {
         "pacs.008" | "pacs.008.001.08" => "urn:iso:std:iso:20022:tech:xsd:pacs.008.001.08",
         "pacs.009" | "pacs.009.001.08" => "urn:iso:std:iso:20022:tech:xsd:pacs.009.001.08",
         "pacs.003" | "pacs.003.001.08" => "urn:iso:std:iso:20022:tech:xsd:pacs.003.001.08",
+        "pacs.004" | "pacs.004.001.09" => "urn:iso:std:iso:20022:tech:xsd:pacs.004.001.09",
         "pacs.002" | "pacs.002.001.10" => "urn:iso:std:iso:20022:tech:xsd:pacs.002.001.10",
         "pain.001" | "pain.001.001.09" => "urn:iso:std:iso:20022:tech:xsd:pain.001.001.09",
+        "pain.002" | "pain.002.001.10" => "urn:iso:std:iso:20022:tech:xsd:pain.002.001.10",
         "pain.008" | "pain.008.001.08" => "urn:iso:std:iso:20022:tech:xsd:pain.008.001.08",
+        "camt.025" | "camt.025.001.08" => "urn:iso:std:iso:20022:tech:xsd:camt.025.001.08",
         "camt.052" | "camt.052.001.08" => "urn:iso:std:iso:20022:tech:xsd:camt.052.001.08",
         "camt.053" | "camt.053.001.08" => "urn:iso:std:iso:20022:tech:xsd:camt.053.001.08",
         "camt.054" | "camt.054.001.08" => "urn:iso:std:iso:20022:tech:xsd:camt.054.001.08",
@@ -208,6 +211,9 @@ fn get_namespace_for_message_type(message_type: &str) -> String {
         "camt.060" | "camt.060.001.05" => "urn:iso:std:iso:20022:tech:xsd:camt.060.001.05",
         "camt.027" | "camt.027.001.07" => "urn:iso:std:iso:20022:tech:xsd:camt.027.001.07",
         "camt.029" | "camt.029.001.09" => "urn:iso:std:iso:20022:tech:xsd:camt.029.001.09",
+        "camt.107" | "camt.107.001.01" => "urn:iso:std:iso:20022:tech:xsd:camt.107.001.01",
+        "camt.108" | "camt.108.001.01" => "urn:iso:std:iso:20022:tech:xsd:camt.108.001.01",
+        "camt.109" | "camt.109.001.01" => "urn:iso:std:iso:20022:tech:xsd:camt.109.001.01",
         _ => {
             return format!("urn:iso:std:iso:20022:tech:xsd:{message_type}");
         }

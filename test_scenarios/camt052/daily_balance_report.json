@@ -20,6 +20,7 @@
                 "Rpt": {
                     "Id": {"var": "report_id"},
                     "RptPgntn": {"PgNb": "1", "LastPgInd": true},
+                    "LglSeqNb": 12345,
                     "CreDtTm": {"var": "creation_datetime"},
                     "Acct": {"Id": {"IBAN": {"var": "account_id"}}, "Ccy": "USD"},
                     "Bal": [
@@ -29,7 +30,17 @@
                             "CdtDbtInd": "CRDT",
                             "Dt": {"Dt": "2025-01-15"}
                         }
-                    ]
+                    ],
+                    "TxsSummry": {
+                        "TtlCdtNtries": {
+                            "NbOfNtries": "5",
+                            "Sum": 7500.00
+                        },
+                        "TtlDbtNtries": {
+                            "NbOfNtries": "3",
+                            "Sum": 2500.00
+                        }
+                    }
                 }
             }
         }
