@@ -32,14 +32,8 @@
                         }
                     ],
                     "TxsSummry": {
-                        "TtlCdtNtries": {
-                            "NbOfNtries": "5",
-                            "Sum": 7500.00
-                        },
-                        "TtlDbtNtries": {
-                            "NbOfNtries": "3",
-                            "Sum": 2500.00
-                        }
+                        "TtlCdtNtries": {"NbOfNtries": "5", "Sum": 7500.0},
+                        "TtlDbtNtries": {"NbOfNtries": "3", "Sum": 2500.0}
                     }
                 }
             }

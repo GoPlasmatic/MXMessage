@@ -9,7 +9,9 @@
         "uetr": {"fake": ["uuid"]},
         "clr_sys_ref": {"cat": ["CLR", {"fake": ["i64", 10000000, 99999999]}]},
         "amount": {"fake": ["f64", 5000.0, 100000.0]},
-        "settlement_date": {"fake": ["date", "%Y-%m-%d", "+0d", "+1d"]},
+        "settlement_date": {
+            "fake": ["date", "%Y-%m-%d", "+0d", "+1d"]
+        },
         "instg_bic": {"fake": ["bic"]},
         "instd_bic": {"fake": ["bic"]},
         "intrmy1_bic": {"fake": ["bic"]},
@@ -33,33 +35,20 @@
         },
         "Document": {
             "FIDrctDbt": {
-                "GrpHdr": {
-                    "MsgId": {"var": "msg_id"},
-                    "CreDtTm": {"var": "creation_datetime"},
-                    "NbOfTxs": "1"
-                },
+                "GrpHdr": {"MsgId": {"var": "msg_id"}, "CreDtTm": {"var": "creation_datetime"}, "NbOfTxs": "1"},
                 "CdtInstr": {
                     "CdtId": {"var": "cdt_id"},
-                    "PmtTpInf": {
-                        "InstrPrty": "HIGH",
-                        "CtgyPurp": {"Cd": "CASH"}
-                    },
+                    "PmtTpInf": {"InstrPrty": "HIGH", "CtgyPurp": {"Cd": "CASH"}},
                     "InstgAgt": {
                         "FinInstnId": {
                             "BICFI": {"var": "instg_bic"},
-                            "ClrSysMmbId": {
-                                "ClrSysId": {"Cd": "TGTS"},
-                                "MmbId": {"cat": ["MB", {"fake": ["i64", 100000, 999999]}]}
-                            }
+                            "ClrSysMmbId": {"ClrSysId": {"Cd": "TGTS"}, "MmbId": {"cat": ["MB", {"fake": ["i64", 100000, 999999]}]}}
                         }
                     },
                     "InstdAgt": {
                         "FinInstnId": {
                             "BICFI": {"var": "instd_bic"},
-                            "ClrSysMmbId": {
-                                "ClrSysId": {"Cd": "TGTS"},
-                                "MmbId": {"cat": ["MB", {"fake": ["i64", 100000, 999999]}]}
-                            }
+                            "ClrSysMmbId": {"ClrSysId": {"Cd": "TGTS"}, "MmbId": {"cat": ["MB", {"fake": ["i64", 100000, 999999]}]}}
                         }
                     },
                     "IntrmyAgt1": {
@@ -69,30 +58,13 @@
                             "PstlAdr": {
                                 "Ctry": {"fake": ["country_code"]},
                                 "TwnNm": {"fake": ["city_name"]},
-                                "AdrLine": [
-                                    {"fake": ["street_address"]},
-                                    {"cat": ["Suite ", {"fake": ["i64", 100, 999]}]}
-                                ]
+                                "AdrLine": [{"fake": ["street_address"]}, {"cat": ["Suite ", {"fake": ["i64", 100, 999]}]}]
                             }
                         }
                     },
-                    "IntrmyAgt1Acct": {
-                        "Id": {"IBAN": {"fake": ["iban"]}},
-                        "Tp": {"Cd": "CACC"},
-                        "Ccy": "EUR"
-                    },
-                    "IntrmyAgt2": {
-                        "FinInstnId": {
-                            "BICFI": {"var": "intrmy2_bic"},
-                            "Nm": {"fake": ["company_name"]}
-                        }
-                    },
-                    "CdtrAgt": {
-                        "FinInstnId": {
-                            "BICFI": {"var": "cdtr_agt_bic"},
-                            "LEI": {"var": "cdtr_lei"}
-                        }
-                    },
+                    "IntrmyAgt1Acct": {"Id": {"IBAN": {"fake": ["iban"]}}, "Tp": {"Cd": "CACC"}, "Ccy": "EUR"},
+                    "IntrmyAgt2": {"FinInstnId": {"BICFI": {"var": "intrmy2_bic"}, "Nm": {"fake": ["company_name"]}}},
+                    "CdtrAgt": {"FinInstnId": {"BICFI": {"var": "cdtr_agt_bic"}, "LEI": {"var": "cdtr_lei"}}},
                     "CdtrAgtAcct": {
                         "Id": {"IBAN": {"fake": ["iban"]}},
                         "Tp": {"Cd": "CACC"},
@@ -119,10 +91,7 @@
                         "Tp": {"Cd": "LOAN"},
                         "Ccy": "EUR",
                         "Nm": {"fake": ["words", 3, 4]},
-                        "Prxy": {
-                            "Tp": {"Cd": "TELE"},
-                            "Id": {"cat": ["+", {"fake": ["i64", 10000000000, 99999999999]}]}
-                        }
+                        "Prxy": {"Tp": {"Cd": "TELE"}, "Id": {"cat": ["+", {"fake": ["i64", 10000000000, 99999999999]}]}}
                     },
                     "DrctDbtTxInf": {
                         "PmtId": {
@@ -134,17 +103,11 @@
                         },
                         "PmtTpInf": {
                             "InstrPrty": "HIGH",
-                            "SvcLvl": [
-                                {"Cd": "SEPA"},
-                                {"Cd": "G001"}
-                            ],
+                            "SvcLvl": [{"Cd": "SEPA"}, {"Cd": "G001"}],
                             "LclInstrm": {"Cd": "INST"},
                             "CtgyPurp": {"Cd": "CASH"}
                         },
-                        "IntrBkSttlmAmt": {
-                            "@Ccy": "EUR",
-                            "$value": {"var": "amount"}
-                        },
+                        "IntrBkSttlmAmt": {"@Ccy": "EUR", "$value": {"var": "amount"}},
                         "IntrBkSttlmDt": {"var": "settlement_date"},
                         "SttlmTmReq": {
                             "CLSTm": {"fake": ["iso8601_datetime"]},
@@ -175,22 +138,13 @@
                         "DbtrAgt": {
                             "FinInstnId": {
                                 "BICFI": {"var": "dbtr_agt_bic"},
-                                "ClrSysMmbId": {
-                                    "ClrSysId": {"Cd": "TGTS"},
-                                    "MmbId": {"cat": ["MB", {"fake": ["i64", 100000, 999999]}]}
-                                }
+                                "ClrSysMmbId": {"ClrSysId": {"Cd": "TGTS"}, "MmbId": {"cat": ["MB", {"fake": ["i64", 100000, 999999]}]}}
                             }
                         },
-                        "DbtrAgtAcct": {
-                            "Id": {"IBAN": {"fake": ["iban"]}},
-                            "Tp": {"Cd": "CACC"},
-                            "Ccy": "EUR"
-                        },
+                        "DbtrAgtAcct": {"Id": {"IBAN": {"fake": ["iban"]}}, "Tp": {"Cd": "CACC"}, "Ccy": "EUR"},
                         "InstrForDbtrAgt": {"fake": ["words", 5, 10]},
                         "Purp": {"Cd": "GDDS"},
-                        "RmtInf": {
-                            "Ustrd": {"cat": ["Direct debit for services: ", {"fake": ["words", 8, 15]}]}
-                        }
+                        "RmtInf": {"Ustrd": {"cat": ["Direct debit for services: ", {"fake": ["words", 8, 15]}]}}
                     }
                 }
             }

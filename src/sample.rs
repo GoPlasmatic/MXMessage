@@ -459,12 +459,10 @@ fn envelope_to_xml(envelope: Value, message_type: &str) -> Result<String> {
                     ValidationError::new(9997, format!("Failed to parse pacs010 header: {e}"))
                 })?;
 
-            let message: FinancialInstitutionDirectDebitV03 = serde_json::from_value(
-                envelope["Document"]["FIDrctDbt"].clone(),
-            )
-            .map_err(|e| {
-                ValidationError::new(9997, format!("Failed to parse pacs010 document: {e}"))
-            })?;
+            let message: FinancialInstitutionDirectDebitV03 =
+                serde_json::from_value(envelope["Document"]["FIDrctDbt"].clone()).map_err(|e| {
+                    ValidationError::new(9997, format!("Failed to parse pacs010 document: {e}"))
+                })?;
 
             to_mx_xml(&message, header, "pacs.010", None)
                 .map_err(|e| ValidationError::new(9997, format!("Failed to generate XML: {e}")))
