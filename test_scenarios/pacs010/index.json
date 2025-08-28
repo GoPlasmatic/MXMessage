@@ -1,0 +1,15 @@
+{
+    "message_type": "pacs.010",
+    "description": "Financial Institution Direct Debit V03",
+    "mx_message_type": "FinancialInstitutionDirectDebitV03",
+    "scenarios": [
+        {
+            "file": "fi_direct_debit_basic.json",
+            "description": "Basic FI direct debit with minimal required fields"
+        },
+        {
+            "file": "fi_direct_debit_intermediaries.json",
+            "description": "Complex FI direct debit with multiple intermediary agents and full remittance information"
+        }
+    ]
+}

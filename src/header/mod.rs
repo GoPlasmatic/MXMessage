@@ -43,6 +43,8 @@ pub mod bah_pacs_008_001_08_stp;
 pub mod bah_pacs_009_001_08;
 pub mod bah_pacs_009_001_08_adv;
 pub mod bah_pacs_009_001_08_cov;
+pub mod bah_pacs_010_001_03;
+pub mod bah_pacs_010_001_03_mc;
 pub mod bah_pain_001_001_09;
 pub mod bah_pain_002_001_10;
 pub mod bah_pain_008_001_08;

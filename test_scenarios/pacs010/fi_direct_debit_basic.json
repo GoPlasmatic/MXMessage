@@ -1,0 +1,83 @@
+{
+    "variables": {
+        "msg_id": {"cat": ["FIDDB", {"fake": ["i64", 100000000, 999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "cdt_id": {"cat": ["CDT", {"fake": ["i64", 1000000, 9999999]}]},
+        "instr_id": {"cat": ["INSTR", {"fake": ["i64", 1000000, 9999999]}]},
+        "end_to_end_id": {"cat": ["E2E", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "uetr": {"fake": ["uuid"]},
+        "amount": {"fake": ["f64", 100.0, 10000.0]},
+        "settlement_date": {"fake": ["date", "%Y-%m-%d", "+0d", "+2d"]},
+        "instg_bic": {"fake": ["bic"]},
+        "instd_bic": {"fake": ["bic"]},
+        "cdtr_bic": {"fake": ["bic"]},
+        "dbtr_bic": {"fake": ["bic"]}
+    },
+    "schema": {
+        "AppHdr": {
+            "Fr": {"FIId": {"FinInstnId": {"BICFI": {"var": "instg_bic"}}}},
+            "To": {"FIId": {"FinInstnId": {"BICFI": {"var": "instd_bic"}}}},
+            "BizMsgIdr": {"var": "msg_id"},
+            "MsgDefIdr": "pacs.010.001.03",
+            "BizSvc": "swift.cbprplus.01",
+            "CreDt": {"var": "creation_datetime"}
+        },
+        "Document": {
+            "FIDrctDbt": {
+                "GrpHdr": {
+                    "MsgId": {"var": "msg_id"},
+                    "CreDtTm": {"var": "creation_datetime"},
+                    "NbOfTxs": "1"
+                },
+                "CdtInstr": {
+                    "CdtId": {"var": "cdt_id"},
+                    "InstgAgt": {
+                        "FinInstnId": {
+                            "BICFI": {"var": "instg_bic"}
+                        }
+                    },
+                    "InstdAgt": {
+                        "FinInstnId": {
+                            "BICFI": {"var": "instd_bic"}
+                        }
+                    },
+                    "Cdtr": {
+                        "FinInstnId": {
+                            "BICFI": {"var": "cdtr_bic"},
+                            "Nm": {"fake": ["company_name"]}
+                        }
+                    },
+                    "CdtrAcct": {
+                        "Id": {"IBAN": {"fake": ["iban"]}},
+                        "Nm": {"fake": ["words", 2, 3]}
+                    },
+                    "DrctDbtTxInf": {
+                        "PmtId": {
+                            "InstrId": {"var": "instr_id"},
+                            "EndToEndId": {"var": "end_to_end_id"},
+                            "UETR": {"var": "uetr"}
+                        },
+                        "IntrBkSttlmAmt": {
+                            "@Ccy": "EUR",
+                            "$value": {"var": "amount"}
+                        },
+                        "IntrBkSttlmDt": {"var": "settlement_date"},
+                        "Dbtr": {
+                            "FinInstnId": {
+                                "BICFI": {"var": "dbtr_bic"},
+                                "Nm": {"fake": ["company_name"]}
+                            }
+                        },
+                        "DbtrAcct": {
+                            "Id": {"IBAN": {"fake": ["iban"]}},
+                            "Nm": {"fake": ["words", 2, 3]}
+                        },
+                        "RmtInf": {
+                            "Ustrd": {"fake": ["words", 5, 10]}
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

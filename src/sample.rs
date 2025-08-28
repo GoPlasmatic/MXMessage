@@ -367,6 +367,7 @@ fn get_document_root_element(message_type: &str) -> String {
         "camt107" => "ChqPresntmntNtfctn",
         "camt108" => "ChqCxlOrStopReq",
         "camt109" => "ChqCxlOrStopRpt",
+        "pacs010" => "FIDrctDbt",
         _ => "Document", // Fallback
     }
     .to_string()
@@ -447,6 +448,25 @@ fn envelope_to_xml(envelope: Value, message_type: &str) -> Result<String> {
                 })?;
 
             to_mx_xml(&message, header, "pacs.004", None)
+                .map_err(|e| ValidationError::new(9997, format!("Failed to generate XML: {e}")))
+        }
+        "pacs010" => {
+            use crate::document::pacs_010_001_03::FinancialInstitutionDirectDebitV03;
+            use crate::header::bah_pacs_010_001_03::BusinessApplicationHeaderV02;
+
+            let header: BusinessApplicationHeaderV02 =
+                serde_json::from_value(envelope["AppHdr"].clone()).map_err(|e| {
+                    ValidationError::new(9997, format!("Failed to parse pacs010 header: {e}"))
+                })?;
+
+            let message: FinancialInstitutionDirectDebitV03 = serde_json::from_value(
+                envelope["Document"]["FIDrctDbt"].clone(),
+            )
+            .map_err(|e| {
+                ValidationError::new(9997, format!("Failed to parse pacs010 document: {e}"))
+            })?;
+
+            to_mx_xml(&message, header, "pacs.010", None)
                 .map_err(|e| ValidationError::new(9997, format!("Failed to generate XML: {e}")))
         }
         "pacs002" => {

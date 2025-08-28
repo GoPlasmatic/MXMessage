@@ -43,6 +43,8 @@ pub mod pacs_008_001_08_stp;
 pub mod pacs_009_001_08;
 pub mod pacs_009_001_08_adv;
 pub mod pacs_009_001_08_cov;
+pub mod pacs_010_001_03;
+pub mod pacs_010_001_03_mc;
 pub mod pain_001_001_09;
 pub mod pain_002_001_10;
 pub mod pain_008_001_08;

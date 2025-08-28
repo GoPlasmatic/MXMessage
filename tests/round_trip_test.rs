@@ -798,6 +798,47 @@ fn parse_and_validate_mx_message(
                 }
             }
         }
+        "pacs.010" => {
+            match serde_json::from_value::<pacs_010_001_03::FinancialInstitutionDirectDebitV03>(
+                json_value.clone(),
+            ) {
+                Ok(mx_msg) => {
+                    if let Err(errors) = validate_message(&mx_msg) {
+                        if debug_mode {
+                            eprintln!("\n[Test {test_index}] MX structure validation failed:");
+                            eprintln!("Errors: {errors:?}");
+                            eprintln!("MX structure that failed validation:");
+                            eprintln!(
+                                "{}",
+                                serde_json::to_string_pretty(&mx_msg).unwrap_or_else(|_| {
+                                    "Failed to serialize MX structure".to_string()
+                                })
+                            );
+                        }
+                        return Err(ValidationOrSerializationError::Validation(errors));
+                    }
+
+                    match xml_to_string(&mx_msg) {
+                        Ok(xml) => {
+                            let mx_json = serde_json::to_value(&mx_msg).unwrap();
+                            Ok((mx_json, xml))
+                        }
+                        Err(e) => Err(ValidationOrSerializationError::Serialization(format!(
+                            "XML serialization error: {e:?}"
+                        ))),
+                    }
+                }
+                Err(e) => {
+                    if debug_mode {
+                        eprintln!("\n[Test {test_index}] Failed to parse pacs.010: {e:?}");
+                    }
+                    Err(ValidationOrSerializationError::Validation(vec![format!(
+                        "Parse error: {:?}",
+                        e
+                    )]))
+                }
+            }
+        }
         "pacs.002" => {
             match serde_json::from_value::<pacs_002_001_10::FIToFIPaymentStatusReportV10>(
                 json_value.clone(),
@@ -1298,6 +1339,17 @@ fn parse_xml_back_to_json(
                 Err(format!("XML parse error: {e:?}"))
             }
         },
+        "pacs.010" => {
+            match xml_from_str::<pacs_010_001_03::FinancialInstitutionDirectDebitV03>(xml_string) {
+                Ok(mx_msg) => Ok(serde_json::to_value(&mx_msg).unwrap()),
+                Err(e) => {
+                    if debug_mode {
+                        eprintln!("\n[Test {test_index}] Failed to parse XML for pacs.010: {e:?}");
+                    }
+                    Err(format!("XML parse error: {e:?}"))
+                }
+            }
+        }
         "pacs.002" => {
             match xml_from_str::<pacs_002_001_10::FIToFIPaymentStatusReportV10>(xml_string) {
                 Ok(mx_msg) => Ok(serde_json::to_value(&mx_msg).unwrap()),
