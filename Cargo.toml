@@ -1,6 +1,6 @@
 [package]
 name = "mx-message"
-version = "3.0.6"
+version = "3.0.7"
 edition = "2024"
 exclude = [".DS_Store", "/target", ".vscode", ".github"]
 authors = ["Plasmatic Engineering <shankar@goplasmatic.io>"]
@@ -14,14 +14,14 @@ categories = ["data-structures", "development-tools", "parsing"]
 
 
 [dependencies]
-regex = "1.11.1"
+regex = "1.11.2"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 chrono = { version = "0.4", features = ["serde"] }
 quick-xml = { version = "0.38", features = ["serialize", "overlapped-lists"] }
 
 # Sample generation dependencies
-datafake-rs = "0.1.5"
+datafake-rs = "0.1"
 
 [dev-dependencies]
 tempfile = "3.21"
