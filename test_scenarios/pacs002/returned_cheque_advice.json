@@ -39,62 +39,7 @@
                             {"cat": ["Cheque number: ", {"var": "cheque_number"}]}
                         ]
                     },
-                    "AccptncDtTm": {"fake": ["iso8601_datetime", "-6h", "-4h"]},
-                    "AcctSvcrRef": {"cat": ["RET-", {"fake": ["i64", 1000000, 9999999]}]},
                     "ClrSysRef": {"cat": ["CLR-", {"fake": ["i64", 1000000, 9999999]}]},
-                    "ChrgsInf": [
-                        {
-                            "Amt": {"@Ccy": "USD", "$value": {"fake": ["f64", 15.0, 50.0]}},
-                            "Agt": {"FinInstnId": {"BICFI": {"var": "beneficiary_bic"}}},
-                            "Tp": "CCHG"
-                        }
-                    ],
-                    "OrgnlTxRef": {
-                        "Amt": {"InstdAmt": {"@Ccy": "USD", "$value": {"var": "amount"}}},
-                        "ReqdExctnDt": {
-                            "Dt": {
-                                "fake": ["date", "%Y-%m-%d", "-5d", "-3d"]
-                            }
-                        },
-                        "PmtTpInf": {"InstrPrty": "NORM", "SvcLvl": [{"Cd": "SEPA"}], "LclInstrm": {"Prtry": "CHQ"}},
-                        "PmtMtd": "CHK",
-                        "RmtInf": {
-                            "Strd": [
-                                {
-                                    "RfrdDocInf": [
-                                        {
-                                            "Tp": {"CdOrPrtry": {"Prtry": "CHEQUE"}},
-                                            "Nb": {"var": "cheque_number"},
-                                            "RltdDt": {
-                                                "fake": ["date", "%Y-%m-%d", "-10d", "-7d"]
-                                            }
-                                        }
-                                    ],
-                                    "AddtlRmtInf": [
-                                        "Cheque deposited but returned unpaid",
-                                        {
-                                            "fake": [
-                                                "regex",
-                                                "(Insufficient funds|Invalid signature|Account closed|Cheque stale dated|Post dated cheque)"
-                                            ]
-                                        }
-                                    ]
-                                }
-                            ]
-                        },
-                        "Dbtr": {"Nm": {"fake": ["full_name"]}, "PstlAdr": {"Ctry": {"fake": ["country_code"]}}},
-                        "DbtrAcct": {"Id": {"IBAN": {"var": "drawer_account"}}},
-                        "DbtrAgt": {"FinInstnId": {"BICFI": {"var": "drawer_bic"}}},
-                        "CdtrAgt": {"FinInstnId": {"BICFI": {"var": "beneficiary_bic"}}},
-                        "Cdtr": {"Nm": {"fake": ["full_name"]}},
-                        "CdtrAcct": {"Id": {"IBAN": {"var": "beneficiary_account"}}}
-                    },
-                    "SplmtryData": [
-                        {
-                            "PlcAndNm": "ReturnDetails",
-                            "Envlp": {"Document": {"Prtry": {"Tp": "RETURN_REASON", "Id": {"var": "return_reason"}}}}
-                        }
-                    ],
                     "OrgnlGrpInf": {
                         "OrgnlMsgId": {"var": "original_msg_id"},
                         "OrgnlMsgNmId": "pain.001.001.08",

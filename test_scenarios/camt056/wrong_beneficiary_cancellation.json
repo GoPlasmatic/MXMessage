@@ -19,107 +19,151 @@
     },
     "schema": {
         "AppHdr": {
-            "Fr": {"FIId": {"FinInstnId": {"BICFI": {"var": "sender_bic"}}}},
-            "To": {"FIId": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}}}},
-            "BizMsgIdr": {"var": "msg_id"},
+            "Fr": {
+                "FIId": {
+                    "FinInstnId": {
+                        "BICFI": {
+                            "var": "sender_bic"
+                        }
+                    }
+                }
+            },
+            "To": {
+                "FIId": {
+                    "FinInstnId": {
+                        "BICFI": {
+                            "var": "receiver_bic"
+                        }
+                    }
+                }
+            },
+            "BizMsgIdr": {
+                "var": "msg_id"
+            },
             "MsgDefIdr": "camt.056.001.08",
             "BizSvc": "swift.cbprplus.01",
-            "CreDt": {"var": "creation_datetime"}
+            "CreDt": {
+                "var": "creation_datetime"
+            }
         },
         "Document": {
             "FIToFIPmtCxlReq": {
                 "Assgnmt": {
-                    "Id": {"var": "msg_id"},
-                    "Assgnr": {"Agt": {"FinInstnId": {"BICFI": {"var": "sender_bic"}, "LEI": {"var": "sender_lei"}}}},
-                    "Assgne": {
-                        "Agt": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}, "LEI": {"var": "receiver_lei"}}}
+                    "Id": {
+                        "var": "msg_id"
                     },
-                    "CreDtTm": {"var": "creation_datetime"}
+                    "Assgnr": {
+                        "Agt": {
+                            "FinInstnId": {
+                                "BICFI": {
+                                    "var": "sender_bic"
+                                },
+                                "LEI": {
+                                    "var": "sender_lei"
+                                }
+                            }
+                        }
+                    },
+                    "Assgne": {
+                        "Agt": {
+                            "FinInstnId": {
+                                "BICFI": {
+                                    "var": "receiver_bic"
+                                },
+                                "LEI": {
+                                    "var": "receiver_lei"
+                                }
+                            }
+                        }
+                    },
+                    "CreDtTm": {
+                        "var": "creation_datetime"
+                    }
                 },
                 "Undrlyg": {
                     "TxInf": {
-                        "CxlId": {"var": "cancellation_id"},
+                        "CxlId": {
+                            "var": "cancellation_id"
+                        },
                         "OrgnlGrpInf": {
-                            "OrgnlMsgId": {"var": "original_msg_id"},
+                            "OrgnlMsgId": {
+                                "var": "original_msg_id"
+                            },
                             "OrgnlMsgNmId": "pacs.009.001.08",
-                            "OrgnlCreDtTm": {"fake": ["iso8601_datetime", "-24h", "-12h"]}
-                        },
-                        "OrgnlInstrId": {"var": "instruction_id"},
-                        "OrgnlEndToEndId": {"var": "end_to_end_id"},
-                        "OrgnlTxId": {"var": "transaction_id"},
-                        "OrgnlIntrBkSttlmAmt": {"@Ccy": "USD", "$value": {"var": "amount"}},
-                        "OrgnlIntrBkSttlmDt": {"var": "original_date"},
-                        "CxlRsnInf": {
-                            "Orgtr": {"Nm": "Operations Department", "Id": {"OrgId": {"AnyBIC": {"var": "sender_bic"}}}},
-                            "Rsn": {"Cd": "CUST"},
-                            "AddtlInf": [
-                                "Wrong beneficiary FI selected",
-                                {"cat": ["Sent to: ", {"var": "wrong_bic"}]},
-                                {"cat": ["Should be: ", {"var": "correct_bic"}]},
-                                "Please cancel and redirect payment"
-                            ]
-                        },
-                        "OrgnlTxRef": {
-                            "IntrBkSttlmAmt": {"@Ccy": "USD", "$value": {"var": "amount"}},
-                            "IntrBkSttlmDt": {"var": "original_date"},
-                            "SttlmInf": {"SttlmMtd": "INDA", "ClrSys": {"Cd": "ILF"}},
-                            "PmtTpInf": {"InstrPrty": "NORM", "SvcLvl": [{"Cd": "G001"}], "LclInstrm": {"Prtry": "FI_PAYMENT"}},
-                            "RmtInf": {"Ustrd": ["Interbank payment - misdirected", "Wrong beneficiary institution"]},
-                            "Dbtr": {
-                                "FinInstnId": {
-                                    "BICFI": {"var": "sender_bic"},
-                                    "LEI": {"var": "sender_lei"},
-                                    "Nm": {"fake": ["company_name"]}
-                                }
-                            },
-                            "DbtrAcct": {
-                                "Id": {
-                                    "Othr": {
-                                        "Id": {"cat": ["SETTL-", {"fake": ["i64", 100000, 999999]}]},
-                                        "SchmeNm": {"Prtry": "SETTLEMENT_ACCOUNT"}
-                                    }
-                                },
-                                "Ccy": "USD"
-                            },
-                            "DbtrAgt": {"FinInstnId": {"BICFI": {"var": "sender_bic"}, "LEI": {"var": "sender_lei"}}},
-                            "CdtrAgt": {
-                                "FinInstnId": {
-                                    "BICFI": {"var": "wrong_bic"},
-                                    "Nm": "Wrong Beneficiary Bank",
-                                    "PstlAdr": {"Ctry": {"fake": ["country_code"]}}
-                                }
-                            },
-                            "Cdtr": {"FinInstnId": {"BICFI": {"var": "wrong_bic"}, "Nm": {"fake": ["company_name"]}}},
-                            "CdtrAcct": {
-                                "Id": {
-                                    "Othr": {
-                                        "Id": {"cat": ["WRONG-", {"fake": ["i64", 100000, 999999]}]},
-                                        "SchmeNm": {"Prtry": "INCORRECT_ACCOUNT"}
-                                    }
-                                },
-                                "Ccy": "USD"
+                            "OrgnlCreDtTm": {
+                                "fake": [
+                                    "iso8601_datetime",
+                                    "-24h",
+                                    "-12h"
+                                ]
                             }
                         },
-                        "SplmtryData": [
-                            {
-                                "PlcAndNm": "CorrectionRequired",
-                                "Envlp": {
-                                    "Document": {
-                                        "Prtry": {
-                                            "Tp": "ROUTING_ERROR",
-                                            "Id": "WRONG_BENEFICIARY",
-                                            "Issr": {"cat": ["Correct BIC: ", {"var": "correct_bic"}]}
+                        "OrgnlInstrId": {
+                            "var": "instruction_id"
+                        },
+                        "OrgnlEndToEndId": {
+                            "var": "end_to_end_id"
+                        },
+                        "OrgnlTxId": {
+                            "var": "transaction_id"
+                        },
+                        "OrgnlIntrBkSttlmAmt": {
+                            "@Ccy": "USD",
+                            "$value": {
+                                "var": "amount"
+                            }
+                        },
+                        "OrgnlIntrBkSttlmDt": {
+                            "var": "original_date"
+                        },
+                        "CxlRsnInf": {
+                            "Orgtr": {
+                                "Nm": "Operations Department",
+                                "Id": {
+                                    "OrgId": {
+                                        "AnyBIC": {
+                                            "var": "sender_bic"
                                         }
                                     }
                                 }
-                            }
-                        ],
-                        "Case": {
-                            "Id": {"var": "cancellation_id"},
-                            "Cretr": {"Pty": {"Nm": "Case Creator"}},
-                            "Nm": "Cancellation Case"
+                            },
+                            "Rsn": {
+                                "Cd": "CUST"
+                            },
+                            "AddtlInf": [
+                                "Wrong beneficiary FI selected",
+                                {
+                                    "cat": [
+                                        "Sent to: ",
+                                        {
+                                            "var": "wrong_bic"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "cat": [
+                                        "Should be: ",
+                                        {
+                                            "var": "correct_bic"
+                                        }
+                                    ]
+                                },
+                                "Please cancel and redirect payment"
+                            ]
                         },
-                        "OrgnlUETR": {"var": "uetr"}
+                        "Case": {
+                            "Id": {
+                                "var": "cancellation_id"
+                            },
+                            "Cretr": {
+                                "Pty": {
+                                    "Nm": "Case Creator"
+                                }
+                            }
+                        },
+                        "OrgnlUETR": {
+                            "var": "uetr"
+                        }
                     }
                 }
             }

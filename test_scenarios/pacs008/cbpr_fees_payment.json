@@ -1,166 +1,453 @@
 {
     "variables": {
-        "msg_id": {"cat": ["MSG", {"fake": ["i64", 100000000000, 999999999999]}]},
-        "creation_datetime": {"fake": ["iso8601_datetime"]},
-        "sender_bic": {"fake": ["bic"]},
-        "receiver_bic": {"fake": ["bic"]},
-        "transaction_ref": {"cat": ["TXN", {"fake": ["i64", 100000000000, 999999999999]}]},
-        "instruction_id": {"cat": ["INSTR", {"fake": ["i64", 10000000, 99999999]}]},
-        "end_to_end_id": {"cat": ["E2E", {"fake": ["i64", 100000000000, 999999999999]}]},
-        "uetr": {"fake": ["uuid"]},
-        "amount": {"fake": ["f64", 2000.0, 50000.0]},
+        "msg_id": {
+            "cat": [
+                "MSG",
+                {
+                    "fake": [
+                        "i64",
+                        100000000000,
+                        999999999999
+                    ]
+                }
+            ]
+        },
+        "creation_datetime": {
+            "fake": [
+                "iso8601_datetime"
+            ]
+        },
+        "sender_bic": {
+            "fake": [
+                "bic"
+            ]
+        },
+        "receiver_bic": {
+            "fake": [
+                "bic"
+            ]
+        },
+        "transaction_ref": {
+            "cat": [
+                "TXN",
+                {
+                    "fake": [
+                        "i64",
+                        100000000000,
+                        999999999999
+                    ]
+                }
+            ]
+        },
+        "instruction_id": {
+            "cat": [
+                "INSTR",
+                {
+                    "fake": [
+                        "i64",
+                        10000000,
+                        99999999
+                    ]
+                }
+            ]
+        },
+        "end_to_end_id": {
+            "cat": [
+                "E2E",
+                {
+                    "fake": [
+                        "i64",
+                        100000000000,
+                        999999999999
+                    ]
+                }
+            ]
+        },
+        "uetr": {
+            "fake": [
+                "uuid"
+            ]
+        },
+        "amount": {
+            "fake": [
+                "f64",
+                2000.0,
+                50000.0
+            ]
+        },
         "law_firm": {
             "cat": [
-                {"fake": ["last_name"]},
-                " & ",
-                {"fake": ["last_name"]},
+                {
+                    "fake": [
+                        "last_name"
+                    ]
+                },
+                " and ",
+                {
+                    "fake": [
+                        "last_name"
+                    ]
+                },
                 " LLP"
             ]
         },
-        "client_name": {"fake": ["company_name"]},
-        "matter_number": {"cat": ["MATTER-", {"fake": ["i64", 100000, 999999]}]},
-        "invoice_number": {"cat": ["LEGAL-", {"fake": ["i64", 10000000, 99999999]}]},
+        "client_name": {
+            "fake": [
+                "company_name"
+            ]
+        },
+        "matter_number": {
+            "cat": [
+                "MATTER-",
+                {
+                    "fake": [
+                        "i64",
+                        100000,
+                        999999
+                    ]
+                }
+            ]
+        },
+        "invoice_number": {
+            "cat": [
+                "LEGAL-",
+                {
+                    "fake": [
+                        "i64",
+                        10000000,
+                        99999999
+                    ]
+                }
+            ]
+        },
         "invoice_date": {
-            "fake": ["date", "%Y-%m-%d", "-30d", "-1d"]
+            "fake": [
+                "date",
+                "%Y-%m-%d",
+                "-30d",
+                "-1d"
+            ]
         }
     },
     "schema": {
         "AppHdr": {
-            "Fr": {"FIId": {"FinInstnId": {"BICFI": {"var": "sender_bic"}}}},
-            "To": {"FIId": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}}}},
-            "BizMsgIdr": {"var": "msg_id"},
+            "Fr": {
+                "FIId": {
+                    "FinInstnId": {
+                        "BICFI": {
+                            "var": "sender_bic"
+                        }
+                    }
+                }
+            },
+            "To": {
+                "FIId": {
+                    "FinInstnId": {
+                        "BICFI": {
+                            "var": "receiver_bic"
+                        }
+                    }
+                }
+            },
+            "BizMsgIdr": {
+                "var": "msg_id"
+            },
             "MsgDefIdr": "pacs.008.001.08",
             "BizSvc": "swift.cbprplus.01",
-            "CreDt": {"var": "creation_datetime"}
+            "CreDt": {
+                "var": "creation_datetime"
+            }
         },
         "Document": {
             "FIToFICstmrCdtTrf": {
                 "GrpHdr": {
-                    "MsgId": {"var": "msg_id"},
-                    "CreDtTm": {"var": "creation_datetime"},
+                    "MsgId": {
+                        "var": "msg_id"
+                    },
+                    "CreDtTm": {
+                        "var": "creation_datetime"
+                    },
                     "NbOfTxs": "1",
-                    "SttlmInf": {"SttlmMtd": "INDA"}
+                    "SttlmInf": {
+                        "SttlmMtd": "INDA"
+                    }
                 },
                 "CdtTrfTxInf": {
                     "PmtId": {
-                        "InstrId": {"var": "instruction_id"},
-                        "EndToEndId": {"var": "end_to_end_id"},
-                        "TxId": {"var": "transaction_ref"},
-                        "UETR": {"var": "uetr"}
+                        "InstrId": {
+                            "var": "instruction_id"
+                        },
+                        "EndToEndId": {
+                            "var": "end_to_end_id"
+                        },
+                        "TxId": {
+                            "var": "transaction_ref"
+                        },
+                        "UETR": {
+                            "var": "uetr"
+                        }
                     },
                     "PmtTpInf": {
                         "InstrPrty": "NORM",
-                        "SvcLvl": [{"Cd": "CBPR"}],
-                        "CtgyPurp": {"Cd": "FEES"},
-                        "LclInstrm": {"Prtry": "PROFESSIONAL_SERVICES"}
+                        "SvcLvl": [
+                            {
+                                "Cd": "CBPR"
+                            }
+                        ],
+                        "CtgyPurp": {
+                            "Cd": "FEES"
+                        },
+                        "LclInstrm": {
+                            "Prtry": "PROFESSIONAL_SERVICES"
+                        }
                     },
-                    "IntrBkSttlmAmt": {"@Ccy": "EUR", "$value": {"var": "amount"}},
+                    "IntrBkSttlmAmt": {
+                        "@Ccy": "EUR",
+                        "$value": {
+                            "var": "amount"
+                        }
+                    },
                     "IntrBkSttlmDt": {
-                        "fake": ["date", "%Y-%m-%d", "+0d", "+0d"]
+                        "fake": [
+                            "date",
+                            "%Y-%m-%d",
+                            "+0d",
+                            "+0d"
+                        ]
                     },
                     "SttlmPrty": "NORM",
-                    "InstdAmt": {"@Ccy": "EUR", "$value": {"var": "amount"}},
+                    "InstdAmt": {
+                        "@Ccy": "EUR",
+                        "$value": {
+                            "var": "amount"
+                        }
+                    },
                     "ChrgBr": "SHAR",
-                    "InstgAgt": {"FinInstnId": {"BICFI": {"var": "sender_bic"}, "LEI": {"fake": ["lei"]}}},
-                    "InstdAgt": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}, "LEI": {"fake": ["lei"]}}},
+                    "InstgAgt": {
+                        "FinInstnId": {
+                            "BICFI": {
+                                "var": "sender_bic"
+                            },
+                            "LEI": {
+                                "fake": [
+                                    "lei"
+                                ]
+                            }
+                        }
+                    },
+                    "InstdAgt": {
+                        "FinInstnId": {
+                            "BICFI": {
+                                "var": "receiver_bic"
+                            },
+                            "LEI": {
+                                "fake": [
+                                    "lei"
+                                ]
+                            }
+                        }
+                    },
                     "Dbtr": {
-                        "Nm": {"var": "client_name"},
+                        "Nm": {
+                            "var": "client_name"
+                        },
                         "PstlAdr": {
-                            "StrtNm": {"fake": ["street_name"]},
-                            "BldgNb": {"cat": [{"fake": ["i64", 1, 999]}]},
-                            "PstCd": {"fake": ["postcode"]},
-                            "TwnNm": {"fake": ["city_name"]},
+                            "StrtNm": {
+                                "fake": [
+                                    "street_name"
+                                ]
+                            },
+                            "BldgNb": {
+                                "cat": [
+                                    {
+                                        "fake": [
+                                            "i64",
+                                            1,
+                                            999
+                                        ]
+                                    }
+                                ]
+                            },
+                            "PstCd": {
+                                "fake": [
+                                    "postcode"
+                                ]
+                            },
+                            "TwnNm": {
+                                "fake": [
+                                    "city_name"
+                                ]
+                            },
                             "Ctry": "LU"
                         },
                         "CtryOfRes": "LU",
                         "Id": {
                             "OrgId": {
-                                "LEI": {"fake": ["lei"]},
-                                "Othr": [
-                                    {
-                                        "Id": {"cat": ["LU", {"fake": ["i64", 100000000, 999999999]}]},
-                                        "SchmeNm": {"Cd": "TXID"}
-                                    }
-                                ]
+                                "LEI": {
+                                    "fake": [
+                                        "lei"
+                                    ]
+                                }
                             }
                         }
                     },
                     "DbtrAcct": {
-                        "Id": {"IBAN": {"fake": ["iban", "LU"]}},
+                        "Id": {
+                            "IBAN": {
+                                "fake": [
+                                    "iban",
+                                    "LU"
+                                ]
+                            }
+                        },
                         "Ccy": "EUR",
                         "Nm": "Corporate Operating Account"
                     },
                     "DbtrAgt": {
                         "FinInstnId": {
-                            "BICFI": {"var": "sender_bic"},
-                            "Nm": {"fake": ["company_name"]},
-                            "LEI": {"fake": ["lei"]}
+                            "BICFI": {
+                                "var": "sender_bic"
+                            },
+                            "Nm": {
+                                "fake": [
+                                    "company_name"
+                                ]
+                            },
+                            "LEI": {
+                                "fake": [
+                                    "lei"
+                                ]
+                            }
                         }
                     },
                     "CdtrAgt": {
                         "FinInstnId": {
-                            "BICFI": {"var": "receiver_bic"},
-                            "Nm": {"fake": ["company_name"]},
-                            "LEI": {"fake": ["lei"]}
+                            "BICFI": {
+                                "var": "receiver_bic"
+                            },
+                            "Nm": {
+                                "fake": [
+                                    "company_name"
+                                ]
+                            },
+                            "LEI": {
+                                "fake": [
+                                    "lei"
+                                ]
+                            }
                         }
                     },
                     "Cdtr": {
-                        "Nm": {"var": "law_firm"},
+                        "Nm": {
+                            "var": "law_firm"
+                        },
                         "PstlAdr": {
-                            "StrtNm": {"fake": ["street_name"]},
-                            "BldgNb": {"cat": [{"fake": ["i64", 1, 999]}]},
-                            "PstCd": {"fake": ["postcode"]},
-                            "TwnNm": {"fake": ["city_name"]},
+                            "StrtNm": {
+                                "fake": [
+                                    "street_name"
+                                ]
+                            },
+                            "BldgNb": {
+                                "cat": [
+                                    {
+                                        "fake": [
+                                            "i64",
+                                            1,
+                                            999
+                                        ]
+                                    }
+                                ]
+                            },
+                            "PstCd": {
+                                "fake": [
+                                    "postcode"
+                                ]
+                            },
+                            "TwnNm": {
+                                "fake": [
+                                    "city_name"
+                                ]
+                            },
                             "Ctry": "GB"
                         },
                         "CtryOfRes": "GB",
                         "Id": {
                             "OrgId": {
-                                "LEI": {"fake": ["lei"]},
-                                "Othr": [
-                                    {
-                                        "Id": {"cat": ["SRA-", {"fake": ["i64", 100000, 999999]}]},
-                                        "SchmeNm": {"Prtry": "SOLICITORS_REGULATION_AUTHORITY"}
-                                    }
-                                ]
+                                "LEI": {
+                                    "fake": [
+                                        "lei"
+                                    ]
+                                }
                             }
                         }
                     },
-                    "CdtrAcct": {"Id": {"IBAN": {"fake": ["iban", "GB"]}}, "Ccy": "EUR", "Nm": "Client Account"},
-                    "Purp": {"Cd": "FEES"},
-                    "RgltryRptg": [
-                        {
-                            "Dtls": [
-                                {
-                                    "Tp": "BOTH",
-                                    "Dt": {
-                                        "fake": ["date", "%Y-%m-%d", "+0d", "+0d"]
-                                    },
-                                    "Ctry": "GB",
-                                    "Cd": "150",
-                                    "Amt": {"@Ccy": "EUR", "$value": {"var": "amount"}},
-                                    "Inf": ["CBPR+ PROFESSIONAL SERVICES FEE"]
-                                }
-                            ]
-                        }
-                    ],
+                    "CdtrAcct": {
+                        "Id": {
+                            "IBAN": {
+                                "fake": [
+                                    "iban",
+                                    "GB"
+                                ]
+                            }
+                        },
+                        "Ccy": "EUR",
+                        "Nm": "Client Account"
+                    },
+                    "Purp": {
+                        "Cd": "FEES"
+                    },
                     "RmtInf": {
                         "Strd": [
                             {
                                 "RfrdDocInf": [
                                     {
-                                        "Tp": {"CdOrPrtry": {"Cd": "CINV"}},
-                                        "Nb": {"var": "invoice_number"},
-                                        "RltdDt": {"var": "invoice_date"}
+                                        "Tp": {
+                                            "CdOrPrtry": {
+                                                "Cd": "CINV"
+                                            }
+                                        },
+                                        "Nb": {
+                                            "var": "invoice_number"
+                                        },
+                                        "RltdDt": {
+                                            "var": "invoice_date"
+                                        }
                                     }
                                 ],
                                 "RfrdDocAmt": {
-                                    "DuePyblAmt": {"@Ccy": "EUR", "$value": {"var": "amount"}},
-                                    "RmtdAmt": {"@Ccy": "EUR", "$value": {"var": "amount"}}
+                                    "DuePyblAmt": {
+                                        "@Ccy": "EUR",
+                                        "$value": {
+                                            "var": "amount"
+                                        }
+                                    },
+                                    "RmtdAmt": {
+                                        "@Ccy": "EUR",
+                                        "$value": {
+                                            "var": "amount"
+                                        }
+                                    }
                                 },
-                                "CdtrRefInf": {"Tp": {"CdOrPrtry": {"Prtry": "MATTER_NUMBER"}}, "Ref": {"var": "matter_number"}},
-                                "Invcr": {"Nm": {"var": "law_firm"}},
-                                "Invcee": {"Nm": {"var": "client_name"}},
+                                "CdtrRefInf": {
+                                    "Tp": {
+                                        "CdOrPrtry": {
+                                            "Prtry": "MATTER_NUMBER"
+                                        }
+                                    },
+                                    "Ref": {
+                                        "var": "matter_number"
+                                    }
+                                },
+                                "Invcr": {
+                                    "Nm": {
+                                        "var": "law_firm"
+                                    }
+                                },
+                                "Invcee": {
+                                    "Nm": {
+                                        "var": "client_name"
+                                    }
+                                },
                                 "AddtlRmtInf": [
                                     "Legal services rendered - Corporate acquisition advisory",
                                     "Generated remittance information"

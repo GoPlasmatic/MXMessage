@@ -28,37 +28,6 @@
                         "fake": ["date", "%Y-%m-%d", "-10d", "-5d"]
                     },
                     "Amt": {"@Ccy": "USD", "$value": {"var": "amount"}},
-                    "Pyer": {
-                        "Nm": {"fake": ["company_name"]},
-                        "PstlAdr": {
-                            "Ctry": "US",
-                            "AdrLine": [
-                                {"fake": ["street_address"]},
-                                {
-                                    "cat": [
-                                        {"fake": ["city_name"]},
-                                        ", ",
-                                        {"fake": ["state_abbr"]},
-                                        " ",
-                                        {"fake": ["postcode"]}
-                                    ]
-                                }
-                            ]
-                        },
-                        "Id": {
-                            "OrgId": {
-                                "LEI": {"var": "payer_lei"},
-                                "Othr": [
-                                    {
-                                        "Id": {"cat": ["US", {"fake": ["i64", 100000000, 999999999]}]},
-                                        "SchmeNm": {"Cd": "TXID"}
-                                    }
-                                ]
-                            }
-                        },
-                        "CtryOfRes": "US"
-                    },
-                    "PyerAcct": {"Id": {"IBAN": {"fake": ["iban", "US"]}}, "Tp": {"Cd": "CACC"}, "Ccy": "USD"},
                     "DrwrAgt": {
                         "FinInstnId": {
                             "BICFI": {"var": "drawer_bic"},

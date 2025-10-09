@@ -18,22 +18,58 @@
     "schema": {
         "AppHdr": {
             "Fr": {
-                "FIId": {"FinInstnId": {"BICFI": {"var": "sender_bic"}, "LEI": {"var": "sender_lei"}}}
+                "FIId": {
+                    "FinInstnId": {
+                        "BICFI": {
+                            "var": "sender_bic"
+                        },
+                        "LEI": {
+                            "var": "sender_lei"
+                        }
+                    }
+                }
             },
             "To": {
-                "FIId": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}, "LEI": {"var": "receiver_lei"}}}
+                "FIId": {
+                    "FinInstnId": {
+                        "BICFI": {
+                            "var": "receiver_bic"
+                        },
+                        "LEI": {
+                            "var": "receiver_lei"
+                        }
+                    }
+                }
             },
-            "BizMsgIdr": {"var": "msg_id"},
+            "BizMsgIdr": {
+                "var": "msg_id"
+            },
             "MsgDefIdr": "camt.056.001.08",
             "BizSvc": "swift.cbprplus.01",
-            "CreDt": {"var": "creation_datetime"}
+            "CreDt": {
+                "var": "creation_datetime"
+            }
         },
         "Document": {
             "FIToFIPmtCxlReq": {
                 "Assgnmt": {
                     "Id": "MSG123456789",
-                    "Assgnr": {"Agt": {"FinInstnId": {"BICFI": "BANKUS33XXX", "LEI": "54930084UKLVMY22DS16"}}},
-                    "Assgne": {"Agt": {"FinInstnId": {"BICFI": "BANKGB22XXX", "LEI": "213800QILIUD4ROSUO03"}}},
+                    "Assgnr": {
+                        "Agt": {
+                            "FinInstnId": {
+                                "BICFI": "BANKUS33XXX",
+                                "LEI": "54930084UKLVMY22DS16"
+                            }
+                        }
+                    },
+                    "Assgne": {
+                        "Agt": {
+                            "FinInstnId": {
+                                "BICFI": "BANKGB22XXX",
+                                "LEI": "213800QILIUD4ROSUO03"
+                            }
+                        }
+                    },
                     "CreDtTm": "2025-01-15T10:00:00.123+00:00"
                 },
                 "Undrlyg": {
@@ -41,8 +77,11 @@
                         "CxlId": "CANC-123456789",
                         "Case": {
                             "Id": "CASE-123456789",
-                            "Cretr": {"Pty": {"Nm": "Case Creator"}},
-                            "Nm": "Cancellation Case"
+                            "Cretr": {
+                                "Pty": {
+                                    "Nm": "Case Creator"
+                                }
+                            }
                         },
                         "OrgnlGrpInf": {
                             "OrgnlMsgId": "ORIG-123456789",
@@ -53,12 +92,22 @@
                         "OrgnlEndToEndId": "E2E123456789",
                         "OrgnlTxId": "TXN123456789",
                         "OrgnlUETR": "a1234567-b123-4123-8123-123456789012",
-                        "OrgnlIntrBkSttlmAmt": {"@Ccy": "USD", "$value": 10000.0},
+                        "OrgnlIntrBkSttlmAmt": {
+                            "@Ccy": "USD",
+                            "$value": 10000.0
+                        },
                         "OrgnlIntrBkSttlmDt": "2025-01-14",
                         "CxlRsnInf": {
-                            "Orgtr": {"Nm": "Compliance Department"},
-                            "Rsn": {"Cd": "CUST"},
-                            "AddtlInf": ["Customer requested cancellation", "CBPR+ compliant cancellation request"]
+                            "Orgtr": {
+                                "Nm": "Compliance Department"
+                            },
+                            "Rsn": {
+                                "Cd": "CUST"
+                            },
+                            "AddtlInf": [
+                                "Customer requested cancellation",
+                                "CBPR+ compliant cancellation request"
+                            ]
                         }
                     }
                 }

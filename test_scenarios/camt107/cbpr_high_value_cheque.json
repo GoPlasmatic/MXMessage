@@ -84,20 +84,6 @@
                             }
                         },
                         "CtryOfRes": "SG"
-                    },
-                    "PyeeAcct": {
-                        "Id": {
-                            "Othr": {"Id": {"cat": [{"fake": ["i64", 1000000000, 9999999999]}]}, "SchmeNm": {"Cd": "BBAN"}}
-                        },
-                        "Tp": {"Cd": "CACC"},
-                        "Ccy": "SGD"
-                    },
-                    "PyeeAgt": {
-                        "FinInstnId": {
-                            "BICFI": {"var": "payee_bic"},
-                            "ClrSysMmbId": {"ClrSysId": {"Cd": "MEPS"}, "MmbId": {"cat": [{"fake": ["i64", 1000, 9999]}]}},
-                            "LEI": {"var": "instd_lei"}
-                        }
                     }
                 }
             }

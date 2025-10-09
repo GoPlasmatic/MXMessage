@@ -5,10 +5,8 @@
         "instr_id": {"cat": ["CXLINSTR", {"fake": ["i64", 1000000000, 9999999999]}]},
         "cheque_number": {"cat": ["EU", {"fake": ["i64", 2025000000, 2025999999]}]},
         "amount": {"fake": ["f64", 200000.0, 300000.0]},
-        "payer_lei": {"fake": ["lei"]},
         "payee_lei": {"fake": ["lei"]},
-        "drawer_bic": {"fake": ["bic"]},
-        "payee_bic": {"fake": ["bic"]}
+        "drawer_bic": {"fake": ["bic"]}
     },
     "schema": {
         "AppHdr": {
@@ -30,29 +28,6 @@
                         "fake": ["date", "%Y-%m-%d", "-15d", "-10d"]
                     },
                     "Amt": {"@Ccy": "EUR", "$value": {"var": "amount"}},
-                    "Pyer": {
-                        "Nm": {"fake": ["company_name"]},
-                        "PstlAdr": {
-                            "Ctry": "DE",
-                            "AdrLine": [
-                                {"fake": ["street_address"]},
-                                {"cat": [{"fake": ["postcode"]}, " ", {"fake": ["city_name"]}]}
-                            ]
-                        },
-                        "Id": {
-                            "OrgId": {
-                                "LEI": {"var": "payer_lei"},
-                                "Othr": [
-                                    {
-                                        "Id": {"cat": ["DE", {"fake": ["i64", 100000000, 999999999]}]},
-                                        "SchmeNm": {"Cd": "TXID"}
-                                    }
-                                ]
-                            }
-                        },
-                        "CtryOfRes": "DE"
-                    },
-                    "PyerAcct": {"Id": {"IBAN": {"fake": ["iban", "DE"]}}, "Tp": {"Cd": "CACC"}, "Ccy": "EUR"},
                     "DrwrAgt": {
                         "FinInstnId": {
                             "BICFI": {"var": "drawer_bic"},
@@ -81,23 +56,6 @@
                             }
                         },
                         "CtryOfRes": "JP"
-                    },
-                    "PyeeAcct": {
-                        "Id": {
-                            "Othr": {
-                                "Id": {"cat": ["JP", {"fake": ["i64", 100000000000, 999999999999]}]},
-                                "SchmeNm": {"Cd": "BBAN"}
-                            }
-                        },
-                        "Tp": {"Cd": "CACC"},
-                        "Ccy": "JPY"
-                    },
-                    "PyeeAgt": {
-                        "FinInstnId": {
-                            "BICFI": {"var": "payee_bic"},
-                            "ClrSysMmbId": {"ClrSysId": {"Cd": "BOJNET"}, "MmbId": {"fake": ["i64", 1000, 9999]}},
-                            "LEI": {"fake": ["lei"]}
-                        }
                     },
                     "ChqCxlOrStopRsn": {
                         "Rsn": {"Cd": "LOST"},

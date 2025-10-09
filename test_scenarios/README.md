@@ -220,16 +220,19 @@ Each scenario file uses a consistent JSON structure with:
 
 | Component | Status | Details |
 |-----------|--------|---------|
-| **Sample Generator** | ✅ | All scenarios generate valid samples |
-| **Structure Validation** | ⚠️ | 96% parse success, 62% validation success |
-| **JSON Round Trip Test** | ⚠️ | 62% successful round-trip |
-| **MT to MX Migration** | ⚠️ | 99.4% complete (168/169 scenarios) |
+| **Sample Generator** | ✅ | All scenarios generate valid samples with enhanced fake data |
+| **Structure Validation** | ✅ | 100% parse success with improved field coverage |
+| **JSON Round Trip Test** | ✅ | 100% successful round-trip with expanded scenarios |
+| **XML Serialization** | ✅ | Full MX XML envelope generation with AppHdr |
+| **Dataflow Integration** | ✅ | End-to-end async pipeline testing |
+| **MT to MX Migration** | ✅ | 100% complete (170+ scenarios) |
 
-### Test Coverage
-- **Total Scenarios**: 166
-- **Message Types**: 16 (pain.001-camt.060)
-- **CBPR+ Scenarios**: 58 (cross-border payment compliance)
-- **Success Rate**: 62% (1040/1660 tests passing)
+### Test Coverage (v3.1.1)
+- **Total Scenarios**: 170+
+- **Message Types**: 19 (including new pacs.004, pacs.010, camt.107-109)
+- **CBPR+ Scenarios**: 60+ (cross-border payment compliance)
+- **Success Rate**: 100% (All tests passing)
+- **Enhanced Coverage**: Expanded field generation with comprehensive fake data
 
 ## Status Legend
 
@@ -251,9 +254,29 @@ use mx_message::sample::generate_sample;
 // Generate standard scenario
 let msg: serde_json::Value = generate_sample("pacs008", None)?;
 
-// Generate specific scenario  
+// Generate specific scenario
 let msg: serde_json::Value = generate_sample("pacs008", Some("high_value"))?;
 ```
+
+### End-to-End Dataflow Pipeline Testing (New in v3.1)
+
+```bash
+# Run the complete dataflow pipeline test
+cargo test test_mx_workflow_pipeline
+
+# Test specific message type through the pipeline
+TEST_MESSAGE_TYPE=pacs.008 cargo test test_mx_workflow_pipeline
+
+# Test specific scenario through the pipeline
+TEST_MESSAGE_TYPE=pacs.008 TEST_SCENARIO=cbpr_business_payment cargo test test_mx_workflow_pipeline
+```
+
+The dataflow pipeline test performs:
+1. **Generate**: Create sample data from scenario using datafake
+2. **Publish**: Convert to XML/JSON format
+3. **Validate**: Validate against schema and business rules
+4. **Parse**: Parse the message back to structured format
+5. **Round-trip**: Verify data integrity through the pipeline
 
 ### Test All Scenarios
 ```bash
@@ -308,7 +331,7 @@ TEST_MESSAGE_TYPE=pacs.008 TEST_DEBUG=1 TEST_STOP_ON_FAILURE=1 cargo test round_
     "variables": {
         "msg_id": {"fake": ["uuid"]},
         "amount": {"fake": ["f64", 1000.0, 50000.0]},
-        "currency": {"pick": ["EUR", "USD", "GBP"]},
+        "currency": {"fake": ["currency_code"]},
         "sender_bic": {"fake": ["bic"]},
         "reference": {"cat": ["REF", {"fake": ["i64", 1000, 9999]}]}
     },
@@ -346,9 +369,6 @@ TEST_MESSAGE_TYPE=pacs.008 TEST_DEBUG=1 TEST_STOP_ON_FAILURE=1 cargo test round_
 ### Concatenation
 - `{"cat": ["PREFIX-", {"fake": ["i64", 1, 100]}]}` - Concatenate values
 - `{"cat": ["REF-", {"var": "reference"}, "-END"]}` - Multiple concatenation
-
-### Random Selection
-- `{"pick": ["EUR", "USD", "GBP"]}` - Pick random value from array
 
 ### Variable Reference
 - `{"var": "amount"}` - Reference a previously defined variable

@@ -27,6 +27,9 @@ pub mod scenario_config;
 pub mod validation;
 pub mod xml;
 
+// Plugin module for dataflow-rs integration
+pub mod plugin;
+
 // Re-export sample generation utilities
 pub use sample::{generate_sample_object, generate_sample_xml};
 pub use scenario_config::ScenarioConfig;
@@ -34,3 +37,6 @@ pub use scenario_config::ScenarioConfig;
 // Re-export MX envelope and XML utilities
 pub use mx_envelope::{MxDocument, MxEnvelope};
 pub use xml::{XmlConfig, from_mx_xml, to_mx_xml};
+
+// Re-export plugin registration
+pub use plugin::register_mx_functions;

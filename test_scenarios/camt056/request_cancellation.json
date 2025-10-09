@@ -17,65 +17,130 @@
     },
     "schema": {
         "AppHdr": {
-            "Fr": {"FIId": {"FinInstnId": {"BICFI": {"var": "sender_bic"}}}},
-            "To": {"FIId": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}}}},
-            "BizMsgIdr": {"var": "msg_id"},
+            "Fr": {
+                "FIId": {
+                    "FinInstnId": {
+                        "BICFI": {
+                            "var": "sender_bic"
+                        }
+                    }
+                }
+            },
+            "To": {
+                "FIId": {
+                    "FinInstnId": {
+                        "BICFI": {
+                            "var": "receiver_bic"
+                        }
+                    }
+                }
+            },
+            "BizMsgIdr": {
+                "var": "msg_id"
+            },
             "MsgDefIdr": "camt.056.001.08",
             "BizSvc": "swift.cbprplus.01",
-            "CreDt": {"var": "creation_datetime"}
+            "CreDt": {
+                "var": "creation_datetime"
+            }
         },
         "Document": {
             "FIToFIPmtCxlReq": {
                 "Assgnmt": {
-                    "Id": {"var": "msg_id"},
-                    "Assgnr": {"Agt": {"FinInstnId": {"BICFI": {"var": "sender_bic"}}}},
-                    "Assgne": {"Agt": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}}}},
-                    "CreDtTm": {"var": "creation_datetime"}
+                    "Id": {
+                        "var": "msg_id"
+                    },
+                    "Assgnr": {
+                        "Agt": {
+                            "FinInstnId": {
+                                "BICFI": {
+                                    "var": "sender_bic"
+                                }
+                            }
+                        }
+                    },
+                    "Assgne": {
+                        "Agt": {
+                            "FinInstnId": {
+                                "BICFI": {
+                                    "var": "receiver_bic"
+                                }
+                            }
+                        }
+                    },
+                    "CreDtTm": {
+                        "var": "creation_datetime"
+                    }
                 },
                 "Undrlyg": {
                     "TxInf": {
-                        "CxlId": {"var": "cancellation_id"},
-                        "OrgnlGrpInf": {
-                            "OrgnlMsgId": {"var": "original_msg_id"},
-                            "OrgnlMsgNmId": "pacs.008.001.08",
-                            "OrgnlCreDtTm": {"fake": ["iso8601_datetime", "-5d", "-2d"]}
+                        "CxlId": {
+                            "var": "cancellation_id"
                         },
-                        "OrgnlInstrId": {"var": "instruction_id"},
-                        "OrgnlEndToEndId": {"var": "end_to_end_id"},
-                        "OrgnlTxId": {"var": "transaction_id"},
-                        "OrgnlIntrBkSttlmAmt": {"@Ccy": "USD", "$value": {"var": "amount"}},
-                        "OrgnlIntrBkSttlmDt": {"var": "original_date"},
+                        "OrgnlGrpInf": {
+                            "OrgnlMsgId": {
+                                "var": "original_msg_id"
+                            },
+                            "OrgnlMsgNmId": "pacs.008.001.08",
+                            "OrgnlCreDtTm": {
+                                "fake": [
+                                    "iso8601_datetime",
+                                    "-5d",
+                                    "-2d"
+                                ]
+                            }
+                        },
+                        "OrgnlInstrId": {
+                            "var": "instruction_id"
+                        },
+                        "OrgnlEndToEndId": {
+                            "var": "end_to_end_id"
+                        },
+                        "OrgnlTxId": {
+                            "var": "transaction_id"
+                        },
+                        "OrgnlIntrBkSttlmAmt": {
+                            "@Ccy": "USD",
+                            "$value": {
+                                "var": "amount"
+                            }
+                        },
+                        "OrgnlIntrBkSttlmDt": {
+                            "var": "original_date"
+                        },
                         "CxlRsnInf": {
                             "Orgtr": {
                                 "Nm": "Customer Service Department",
-                                "Id": {"OrgId": {"AnyBIC": {"var": "sender_bic"}}}
+                                "Id": {
+                                    "OrgId": {
+                                        "AnyBIC": {
+                                            "var": "sender_bic"
+                                        }
+                                    }
+                                }
                             },
-                            "Rsn": {"Cd": "CUST"},
+                            "Rsn": {
+                                "Cd": "CUST"
+                            },
                             "AddtlInf": [
                                 "Standard cancellation request",
                                 "Customer instruction to cancel payment",
                                 "Payment not yet settled"
                             ]
                         },
-                        "OrgnlTxRef": {
-                            "IntrBkSttlmAmt": {"@Ccy": "USD", "$value": {"var": "amount"}},
-                            "IntrBkSttlmDt": {"var": "original_date"},
-                            "SttlmInf": {"SttlmMtd": "INDA"},
-                            "PmtTpInf": {"InstrPrty": "NORM", "SvcLvl": [{"Cd": "SEPA"}]},
-                            "RmtInf": {"Ustrd": ["Standard payment transfer"]},
-                            "Dbtr": {"Nm": {"var": "debtor_name"}, "PstlAdr": {"Ctry": {"fake": ["country_code"]}}},
-                            "DbtrAcct": {"Id": {"IBAN": {"fake": ["iban"]}}},
-                            "DbtrAgt": {"FinInstnId": {"BICFI": {"var": "sender_bic"}}},
-                            "CdtrAgt": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}}},
-                            "Cdtr": {"Nm": {"var": "creditor_name"}, "PstlAdr": {"Ctry": {"fake": ["country_code"]}}},
-                            "CdtrAcct": {"Id": {"IBAN": {"fake": ["iban"]}}}
-                        },
                         "Case": {
-                            "Id": {"var": "cancellation_id"},
-                            "Cretr": {"Pty": {"Nm": "Case Creator"}},
-                            "Nm": "Cancellation Case"
+                            "Id": {
+                                "var": "cancellation_id"
+                            },
+                            "Cretr": {
+                                "Pty": {
+                                    "Nm": "Case Creator"
+                                }
+                            }
                         },
-                        "OrgnlUETR": {"var": "uetr"}
+                        "OrgnlUETR": {
+                            "var": "uetr"
+                        }
                     }
                 }
             }

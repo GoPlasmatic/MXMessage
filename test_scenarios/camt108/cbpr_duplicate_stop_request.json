@@ -30,35 +30,6 @@
                         "fake": ["date", "%Y-%m-%d", "-5d", "-3d"]
                     },
                     "Amt": {"@Ccy": "SGD", "$value": {"var": "amount"}},
-                    "Pyer": {
-                        "Nm": {"fake": ["company_name"]},
-                        "PstlAdr": {
-                            "Ctry": "SG",
-                            "AdrLine": [{"fake": ["street_address"]}, {"cat": ["Singapore ", {"fake": ["postcode"]}]}]
-                        },
-                        "Id": {
-                            "OrgId": {
-                                "LEI": {"var": "payer_lei"},
-                                "Othr": [
-                                    {
-                                        "Id": {"cat": ["SG", {"fake": ["i64", 100000000, 999999999]}, "A"]},
-                                        "SchmeNm": {"Cd": "TXID"}
-                                    }
-                                ]
-                            }
-                        },
-                        "CtryOfRes": "SG"
-                    },
-                    "PyerAcct": {
-                        "Id": {
-                            "Othr": {
-                                "Id": {"cat": ["SG", {"fake": ["i64", 100000000000, 999999999999]}]},
-                                "SchmeNm": {"Cd": "BBAN"}
-                            }
-                        },
-                        "Tp": {"Cd": "CACC"},
-                        "Ccy": "SGD"
-                    },
                     "DrwrAgt": {
                         "FinInstnId": {
                             "BICFI": {"var": "drawer_bic"},
@@ -92,23 +63,6 @@
                             }
                         },
                         "CtryOfRes": "AU"
-                    },
-                    "PyeeAcct": {
-                        "Id": {
-                            "Othr": {
-                                "Id": {"cat": ["AU", {"fake": ["i64", 1000000000, 9999999999]}]},
-                                "SchmeNm": {"Cd": "BBAN"}
-                            }
-                        },
-                        "Tp": {"Cd": "CACC"},
-                        "Ccy": "AUD"
-                    },
-                    "PyeeAgt": {
-                        "FinInstnId": {
-                            "BICFI": {"var": "payee_bic"},
-                            "ClrSysMmbId": {"ClrSysId": {"Cd": "AUBSB"}, "MmbId": {"cat": [{"fake": ["i64", 100000, 999999]}]}},
-                            "LEI": {"fake": ["lei"]}
-                        }
                     },
                     "ChqCxlOrStopRsn": {
                         "Rsn": {"Cd": "DUPL"},

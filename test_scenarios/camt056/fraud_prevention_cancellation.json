@@ -18,86 +18,143 @@
     },
     "schema": {
         "AppHdr": {
-            "Fr": {"FIId": {"FinInstnId": {"BICFI": {"var": "sender_bic"}}}},
-            "To": {"FIId": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}}}},
-            "BizMsgIdr": {"var": "msg_id"},
+            "Fr": {
+                "FIId": {
+                    "FinInstnId": {
+                        "BICFI": {
+                            "var": "sender_bic"
+                        }
+                    }
+                }
+            },
+            "To": {
+                "FIId": {
+                    "FinInstnId": {
+                        "BICFI": {
+                            "var": "receiver_bic"
+                        }
+                    }
+                }
+            },
+            "BizMsgIdr": {
+                "var": "msg_id"
+            },
             "MsgDefIdr": "camt.056.001.08",
             "BizSvc": "swift.cbprplus.01",
-            "CreDt": {"var": "creation_datetime"}
+            "CreDt": {
+                "var": "creation_datetime"
+            }
         },
         "Document": {
             "FIToFIPmtCxlReq": {
                 "Assgnmt": {
-                    "Id": {"var": "msg_id"},
-                    "Assgnr": {"Agt": {"FinInstnId": {"BICFI": {"var": "sender_bic"}}}},
-                    "Assgne": {"Agt": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}}}},
-                    "CreDtTm": {"var": "creation_datetime"}
+                    "Id": {
+                        "var": "msg_id"
+                    },
+                    "Assgnr": {
+                        "Agt": {
+                            "FinInstnId": {
+                                "BICFI": {
+                                    "var": "sender_bic"
+                                }
+                            }
+                        }
+                    },
+                    "Assgne": {
+                        "Agt": {
+                            "FinInstnId": {
+                                "BICFI": {
+                                    "var": "receiver_bic"
+                                }
+                            }
+                        }
+                    },
+                    "CreDtTm": {
+                        "var": "creation_datetime"
+                    }
                 },
                 "Undrlyg": {
                     "TxInf": {
-                        "CxlId": {"var": "cancellation_id"},
-                        "OrgnlGrpInf": {
-                            "OrgnlMsgId": {"var": "original_msg_id"},
-                            "OrgnlMsgNmId": "pacs.008.001.08",
-                            "OrgnlCreDtTm": {"fake": ["iso8601_datetime", "-24h", "-12h"]}
+                        "CxlId": {
+                            "var": "cancellation_id"
                         },
-                        "OrgnlInstrId": {"var": "instruction_id"},
-                        "OrgnlEndToEndId": {"var": "end_to_end_id"},
-                        "OrgnlTxId": {"var": "transaction_id"},
-                        "OrgnlIntrBkSttlmAmt": {"@Ccy": "USD", "$value": {"var": "amount"}},
-                        "OrgnlIntrBkSttlmDt": {"var": "original_date"},
+                        "OrgnlGrpInf": {
+                            "OrgnlMsgId": {
+                                "var": "original_msg_id"
+                            },
+                            "OrgnlMsgNmId": "pacs.008.001.08",
+                            "OrgnlCreDtTm": {
+                                "fake": [
+                                    "iso8601_datetime",
+                                    "-24h",
+                                    "-12h"
+                                ]
+                            }
+                        },
+                        "OrgnlInstrId": {
+                            "var": "instruction_id"
+                        },
+                        "OrgnlEndToEndId": {
+                            "var": "end_to_end_id"
+                        },
+                        "OrgnlTxId": {
+                            "var": "transaction_id"
+                        },
+                        "OrgnlIntrBkSttlmAmt": {
+                            "@Ccy": "USD",
+                            "$value": {
+                                "var": "amount"
+                            }
+                        },
+                        "OrgnlIntrBkSttlmDt": {
+                            "var": "original_date"
+                        },
                         "CxlRsnInf": {
                             "Orgtr": {
                                 "Nm": "Fraud Detection Unit",
-                                "Id": {"OrgId": {"Othr": [{"Id": "FRAUD_DEPT", "SchmeNm": {"Cd": "BANK"}}]}}
+                                "Id": {
+                                    "OrgId": {
+                                        "Othr": [
+                                            {
+                                                "Id": "FRAUD_DEPT",
+                                                "SchmeNm": {
+                                                    "Cd": "BANK"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
                             },
-                            "Rsn": {"Cd": "FRAD"},
+                            "Rsn": {
+                                "Cd": "FRAD"
+                            },
                             "AddtlInf": [
                                 "URGENT: Fraudulent transaction detected",
                                 "Account takeover confirmed",
                                 "Immediate cancellation required",
-                                {"cat": ["Fraud case reference: ", {"var": "fraud_case_id"}]}
+                                {
+                                    "cat": [
+                                        "Fraud case reference: ",
+                                        {
+                                            "var": "fraud_case_id"
+                                        }
+                                    ]
+                                }
                             ]
                         },
-                        "OrgnlTxRef": {
-                            "IntrBkSttlmAmt": {"@Ccy": "USD", "$value": {"var": "amount"}},
-                            "IntrBkSttlmDt": {"var": "original_date"},
-                            "SttlmInf": {"SttlmMtd": "INDA", "SttlmPrty": "URGT"},
-                            "PmtTpInf": {
-                                "InstrPrty": "HIGH",
-                                "SvcLvl": [{"Cd": "URGP"}],
-                                "CtgyPurp": {"Prtry": "FRAUD_PREVENTION"}
+                        "Case": {
+                            "Id": {
+                                "var": "cancellation_id"
                             },
-                            "RmtInf": {
-                                "Ustrd": ["Fraudulent payment - DO NOT PROCESS", "Contact fraud department immediately"]
-                            },
-                            "Dbtr": {
-                                "Nm": {"fake": ["full_name"]},
-                                "PstlAdr": {"Ctry": {"fake": ["country_code"]}},
-                                "Id": {"PrvtId": {"Othr": [{"Id": "COMPROMISED", "SchmeNm": {"Prtry": "FRAUD_FLAG"}}]}}
-                            },
-                            "DbtrAcct": {"Id": {"IBAN": {"fake": ["iban"]}}},
-                            "DbtrAgt": {"FinInstnId": {"BICFI": {"var": "sender_bic"}}},
-                            "CdtrAgt": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}}},
-                            "Cdtr": {"Nm": {"fake": ["full_name"]}, "PstlAdr": {"Ctry": {"fake": ["country_code"]}}},
-                            "CdtrAcct": {"Id": {"IBAN": {"fake": ["iban"]}}}
-                        },
-                        "SplmtryData": [
-                            {
-                                "PlcAndNm": "FraudAlert",
-                                "Envlp": {
-                                    "Document": {
-                                        "Prtry": {"Tp": "FRAUD_ALERT", "Id": {"var": "fraud_case_id"}, "Issr": "HIGH_PRIORITY"}
-                                    }
+                            "Cretr": {
+                                "Pty": {
+                                    "Nm": "Case Creator"
                                 }
                             }
-                        ],
-                        "Case": {
-                            "Id": {"var": "cancellation_id"},
-                            "Cretr": {"Pty": {"Nm": "Case Creator"}},
-                            "Nm": "Cancellation Case"
                         },
-                        "OrgnlUETR": {"var": "uetr"}
+                        "OrgnlUETR": {
+                            "var": "uetr"
+                        }
                     }
                 }
             }

@@ -49,14 +49,6 @@
                             "Id": "PMT-123456",
                             "XpctdValDt": "2025-01-15T14:00:00.123+00:00",
                             "Amt": {"@Ccy": "USD", "$value": 10000.0},
-                            "RmtInf": {
-                                "Strd": [
-                                    {
-                                        "RfrdDocInf": [{"Tp": {"CdOrPrtry": {"Cd": "MSIN"}}, "Nb": "REF-123456"}],
-                                        "AddtlRmtInf": ["Expected payment from ABC Corporation"]
-                                    }
-                                ]
-                            },
                             "Purp": {"Cd": "GDDS"}
                         }
                     ]

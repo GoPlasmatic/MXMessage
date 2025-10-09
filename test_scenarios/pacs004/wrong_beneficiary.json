@@ -1,88 +1,372 @@
 {
     "variables": {
-        "msg_id": {"cat": ["RTN", {"fake": ["i64", 100000000000, 999999999999]}]},
-        "creation_datetime": {"fake": ["iso8601_datetime"]},
-        "sender_bic": {"fake": ["bic"]},
-        "receiver_bic": {"fake": ["bic"]},
-        "orgnl_msg_id": {"cat": ["MSG", {"fake": ["i64", 100000000000, 999999999999]}]},
-        "orgnl_instr_id": {"cat": ["INSTR", {"fake": ["i64", 10000000, 99999999]}]},
-        "orgnl_end_to_end_id": {"cat": ["E2E", {"fake": ["i64", 100000000000, 999999999999]}]},
-        "orgnl_tx_id": {"cat": ["TXN", {"fake": ["i64", 100000000000, 999999999999]}]},
-        "orgnl_uetr": {"fake": ["uuid"]},
-        "rtr_id": {"cat": ["RTR", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "msg_id": {
+            "cat": [
+                "RTN",
+                {
+                    "fake": [
+                        "i64",
+                        100000000000,
+                        999999999999
+                    ]
+                }
+            ]
+        },
+        "creation_datetime": {
+            "fake": [
+                "iso8601_datetime"
+            ]
+        },
+        "sender_bic": {
+            "fake": [
+                "bic"
+            ]
+        },
+        "receiver_bic": {
+            "fake": [
+                "bic"
+            ]
+        },
+        "orgnl_msg_id": {
+            "cat": [
+                "MSG",
+                {
+                    "fake": [
+                        "i64",
+                        100000000000,
+                        999999999999
+                    ]
+                }
+            ]
+        },
+        "orgnl_instr_id": {
+            "cat": [
+                "INSTR",
+                {
+                    "fake": [
+                        "i64",
+                        10000000,
+                        99999999
+                    ]
+                }
+            ]
+        },
+        "orgnl_end_to_end_id": {
+            "cat": [
+                "E2E",
+                {
+                    "fake": [
+                        "i64",
+                        100000000000,
+                        999999999999
+                    ]
+                }
+            ]
+        },
+        "orgnl_tx_id": {
+            "cat": [
+                "TXN",
+                {
+                    "fake": [
+                        "i64",
+                        100000000000,
+                        999999999999
+                    ]
+                }
+            ]
+        },
+        "orgnl_uetr": {
+            "fake": [
+                "uuid"
+            ]
+        },
+        "rtr_id": {
+            "cat": [
+                "RTR",
+                {
+                    "fake": [
+                        "i64",
+                        100000000000,
+                        999999999999
+                    ]
+                }
+            ]
+        },
         "currency": "CAD",
-        "amount": {"fake": ["f64", 5000.0, 100000.0]},
-        "debtor_iban": {"fake": ["iban", "CA"]},
-        "creditor_iban": {"fake": ["iban", "AU"]},
-        "wrong_name": {"fake": ["full_name"]},
-        "correct_name": {"fake": ["full_name"]}
+        "amount": {
+            "fake": [
+                "f64",
+                5000.0,
+                100000.0
+            ]
+        },
+        "debtor_iban": {
+            "fake": [
+                "iban",
+                "CA"
+            ]
+        },
+        "creditor_iban": {
+            "fake": [
+                "iban",
+                "AU"
+            ]
+        },
+        "wrong_name": {
+            "fake": [
+                "full_name"
+            ]
+        },
+        "correct_name": {
+            "fake": [
+                "full_name"
+            ]
+        }
     },
     "schema": {
         "AppHdr": {
-            "Fr": {"FIId": {"FinInstnId": {"BICFI": {"var": "sender_bic"}}}},
-            "To": {"FIId": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}}}},
-            "BizMsgIdr": {"var": "msg_id"},
+            "Fr": {
+                "FIId": {
+                    "FinInstnId": {
+                        "BICFI": {
+                            "var": "sender_bic"
+                        }
+                    }
+                }
+            },
+            "To": {
+                "FIId": {
+                    "FinInstnId": {
+                        "BICFI": {
+                            "var": "receiver_bic"
+                        }
+                    }
+                }
+            },
+            "BizMsgIdr": {
+                "var": "msg_id"
+            },
             "MsgDefIdr": "pacs.004.001.09",
             "BizSvc": "swift.cbprplus.01",
-            "CreDt": {"var": "creation_datetime"}
+            "CreDt": {
+                "var": "creation_datetime"
+            }
         },
         "Document": {
             "PmtRtr": {
                 "GrpHdr": {
-                    "MsgId": {"var": "msg_id"},
-                    "CreDtTm": {"var": "creation_datetime"},
+                    "MsgId": {
+                        "var": "msg_id"
+                    },
+                    "CreDtTm": {
+                        "var": "creation_datetime"
+                    },
                     "NbOfTxs": "1",
-                    "TtlRtrdIntrBkSttlmAmt": {"@Ccy": {"var": "currency"}, "$value": {"var": "amount"}},
-                    "SttlmInf": {"SttlmMtd": "INDA"}
+                    "SttlmInf": {
+                        "SttlmMtd": "INDA"
+                    }
                 },
                 "TxInf": {
-                    "RtrId": {"var": "rtr_id"},
-                    "OrgnlGrpInf": {"OrgnlMsgId": {"var": "orgnl_msg_id"}, "OrgnlMsgNmId": "pacs.008.001.08"},
-                    "OrgnlInstrId": {"var": "orgnl_instr_id"},
-                    "OrgnlEndToEndId": {"var": "orgnl_end_to_end_id"},
-                    "OrgnlTxId": {"var": "orgnl_tx_id"},
-                    "OrgnlUETR": {"var": "orgnl_uetr"},
-                    "OrgnlIntrBkSttlmAmt": {"@Ccy": {"var": "currency"}, "$value": {"var": "amount"}},
-                    "RtrdIntrBkSttlmAmt": {"@Ccy": {"var": "currency"}, "$value": {"var": "amount"}},
+                    "RtrId": {
+                        "var": "rtr_id"
+                    },
+                    "OrgnlGrpInf": {
+                        "OrgnlMsgId": {
+                            "var": "orgnl_msg_id"
+                        },
+                        "OrgnlMsgNmId": "pacs.008.001.08"
+                    },
+                    "OrgnlInstrId": {
+                        "var": "orgnl_instr_id"
+                    },
+                    "OrgnlEndToEndId": {
+                        "var": "orgnl_end_to_end_id"
+                    },
+                    "OrgnlTxId": {
+                        "var": "orgnl_tx_id"
+                    },
+                    "OrgnlUETR": {
+                        "var": "orgnl_uetr"
+                    },
+                    "OrgnlIntrBkSttlmAmt": {
+                        "@Ccy": {
+                            "var": "currency"
+                        },
+                        "$value": {
+                            "var": "amount"
+                        }
+                    },
+                    "RtrdIntrBkSttlmAmt": {
+                        "@Ccy": {
+                            "var": "currency"
+                        },
+                        "$value": {
+                            "var": "amount"
+                        }
+                    },
                     "ChrgBr": "SHAR",
-                    "InstgAgt": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}}},
-                    "InstdAgt": {"FinInstnId": {"BICFI": {"var": "sender_bic"}}},
+                    "InstgAgt": {
+                        "FinInstnId": {
+                            "BICFI": {
+                                "var": "receiver_bic"
+                            }
+                        }
+                    },
+                    "InstdAgt": {
+                        "FinInstnId": {
+                            "BICFI": {
+                                "var": "sender_bic"
+                            }
+                        }
+                    },
                     "RtrChain": {
-                        "DbtrAgt": {"FinInstnId": {"BICFI": {"var": "sender_bic"}, "Nm": {"fake": ["company_name"]}}},
-                        "CdtrAgt": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}, "Nm": {"fake": ["company_name"]}}},
+                        "DbtrAgt": {
+                            "FinInstnId": {
+                                "BICFI": {
+                                    "var": "sender_bic"
+                                },
+                                "Nm": {
+                                    "fake": [
+                                        "company_name"
+                                    ]
+                                }
+                            }
+                        },
+                        "CdtrAgt": {
+                            "FinInstnId": {
+                                "BICFI": {
+                                    "var": "receiver_bic"
+                                },
+                                "Nm": {
+                                    "fake": [
+                                        "company_name"
+                                    ]
+                                }
+                            }
+                        },
                         "Dbtr": {
-                            "Nm": {"fake": ["company_name"]},
-                            "PstlAdr": {
-                                "StrtNm": {"fake": ["street_name"]},
-                                "BldgNb": {"cat": [{"fake": ["i64", 1, 999]}]},
-                                "PstCd": {"fake": ["postcode"]},
-                                "TwnNm": {"fake": ["city_name"]},
-                                "Ctry": "CA"
+                            "Pty": {
+                                "Nm": {
+                                    "fake": [
+                                        "company_name"
+                                    ]
+                                },
+                                "PstlAdr": {
+                                    "StrtNm": {
+                                        "fake": [
+                                            "street_name"
+                                        ]
+                                    },
+                                    "BldgNb": {
+                                        "cat": [
+                                            {
+                                                "fake": [
+                                                    "i64",
+                                                    1,
+                                                    999
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    "PstCd": {
+                                        "fake": [
+                                            "postcode"
+                                        ]
+                                    },
+                                    "TwnNm": {
+                                        "fake": [
+                                            "city_name"
+                                        ]
+                                    },
+                                    "Ctry": "CA"
+                                }
                             }
                         },
-                        "DbtrAcct": {"Id": {"IBAN": {"var": "debtor_iban"}}},
                         "Cdtr": {
-                            "Nm": {"var": "wrong_name"},
-                            "PstlAdr": {
-                                "StrtNm": {"fake": ["street_name"]},
-                                "BldgNb": {"cat": [{"fake": ["i64", 1, 999]}]},
-                                "PstCd": {"fake": ["postcode"]},
-                                "TwnNm": {"fake": ["city_name"]},
-                                "Ctry": "AU"
+                            "Pty": {
+                                "Nm": {
+                                    "var": "wrong_name"
+                                },
+                                "PstlAdr": {
+                                    "StrtNm": {
+                                        "fake": [
+                                            "street_name"
+                                        ]
+                                    },
+                                    "BldgNb": {
+                                        "cat": [
+                                            {
+                                                "fake": [
+                                                    "i64",
+                                                    1,
+                                                    999
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    "PstCd": {
+                                        "fake": [
+                                            "postcode"
+                                        ]
+                                    },
+                                    "TwnNm": {
+                                        "fake": [
+                                            "city_name"
+                                        ]
+                                    },
+                                    "Ctry": "AU"
+                                }
                             }
-                        },
-                        "CdtrAcct": {"Id": {"IBAN": {"var": "creditor_iban"}}}
+                        }
                     },
                     "RtrRsnInf": {
-                        "Orgtr": {"Nm": "Beneficiary Bank"},
-                        "Rsn": {"Cd": "AC01"},
+                        "Orgtr": {
+                            "Nm": "Beneficiary Bank"
+                        },
+                        "Rsn": {
+                            "Cd": "AC01"
+                        },
                         "AddtlInf": [
                             "Incorrect beneficiary name",
-                            {"cat": ["Account holder is: ", {"var": "correct_name"}]},
-                            {"cat": ["Payment addressed to: ", {"var": "wrong_name"}]}
+                            {
+                                "cat": [
+                                    "Account holder is: ",
+                                    {
+                                        "var": "correct_name"
+                                    }
+                                ]
+                            },
+                            {
+                                "cat": [
+                                    "Payment addressed to: ",
+                                    {
+                                        "var": "wrong_name"
+                                    }
+                                ]
+                            }
                         ]
                     },
-                    "IntrBkSttlmDt": {"fake": ["date"]}
+                    "IntrBkSttlmDt": {
+                        "fake": [
+                            "date"
+                        ]
+                    },
+                    "OrgnlTxRef": {
+                        "DbtrAcct": {
+                            "Id": {
+                                "IBAN": {
+                                    "var": "debtor_iban"
+                                }
+                            }
+                        },
+                        "CdtrAcct": {
+                            "Id": {
+                                "IBAN": {
+                                    "var": "creditor_iban"
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }

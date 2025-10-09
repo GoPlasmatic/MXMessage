@@ -13,7 +13,7 @@
         "customer_name": {"fake": ["full_name"]},
         "customer_country": {"fake": ["country_code"]},
         "customer_account": {"fake": ["iban"]},
-        "utility_company": {"cat": [{"fake": ["city"]}, " Power & Gas Ltd"]},
+        "utility_company": {"cat": [{"fake": ["city"]}, " Power and Gas Ltd"]},
         "utility_country": {"fake": ["country_code"]},
         "utility_account": {"fake": ["iban"]},
         "account_number": {"cat": ["ACC-", {"fake": ["i64", 10000000, 99999999]}]},

@@ -17,6 +17,42 @@
 // You may obtain a copy of this library at
 // https://github.com/GoPlasmatic/MXMessage
 
+use thiserror::Error;
+
+/// MX Message processing errors
+#[derive(Error, Debug)]
+pub enum MxError {
+    /// XML serialization/deserialization error
+    #[error("XML error: {0}")]
+    Xml(String),
+
+    /// JSON serialization/deserialization error
+    #[error("JSON error: {0}")]
+    Json(#[from] serde_json::Error),
+
+    /// Validation error with details
+    #[error("Validation error: {message}")]
+    Validation {
+        code: u32,
+        message: String,
+        field: Option<String>,
+        path: Option<String>,
+    },
+
+    /// Format detection error
+    #[error("Cannot detect message format")]
+    FormatDetection,
+
+    /// Unknown message type
+    #[error("Unknown message type: {0}")]
+    UnknownMessageType(String),
+
+    /// IO error
+    #[error("IO error: {0}")]
+    Io(#[from] std::io::Error),
+}
+
+/// Legacy ValidationError for backward compatibility
 #[derive(Debug, Clone, PartialEq)]
 pub struct ValidationError {
     pub code: u32,
@@ -43,5 +79,16 @@ impl ValidationError {
     pub fn with_path(mut self, path: String) -> Self {
         self.path = Some(path);
         self
+    }
+}
+
+impl From<ValidationError> for MxError {
+    fn from(err: ValidationError) -> Self {
+        MxError::Validation {
+            code: err.code,
+            message: err.message,
+            field: err.field,
+            path: err.path,
+        }
     }
 }

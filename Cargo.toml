@@ -1,6 +1,6 @@
 [package]
 name = "mx-message"
-version = "3.1.0"
+version = "3.1.1"
 edition = "2024"
 exclude = [".DS_Store", "/target", ".vscode", ".github"]
 authors = ["Plasmatic Engineering <shankar@goplasmatic.io>"]
@@ -19,9 +19,19 @@ serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 chrono = { version = "0.4", features = ["serde"] }
 quick-xml = { version = "0.38", features = ["serialize", "overlapped-lists"] }
+thiserror = "2.0"
 
 # Sample generation dependencies
-datafake-rs = "0.2"
+datafake-rs = {path = "../datafake-rs"}
+
+# Data validation and workflow
+datalogic-rs = "4.0"
+dataflow-rs = "2.0"
+
+# Plugin support
+async-trait = "0.1"
+tracing = "0.1"
 
 [dev-dependencies]
 tempfile = "3.22"
+tokio = { version = "1.35", features = ["rt", "macros", "test-util"] }

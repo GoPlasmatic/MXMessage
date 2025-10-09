@@ -14,40 +14,134 @@
     },
     "schema": {
         "AppHdr": {
-            "Fr": {"FIId": {"FinInstnId": {"BICFI": {"var": "sender_bic"}}}},
-            "To": {"FIId": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}}}},
-            "BizMsgIdr": {"var": "msg_id"},
+            "Fr": {
+                "FIId": {
+                    "FinInstnId": {
+                        "BICFI": {
+                            "var": "sender_bic"
+                        }
+                    }
+                }
+            },
+            "To": {
+                "FIId": {
+                    "FinInstnId": {
+                        "BICFI": {
+                            "var": "receiver_bic"
+                        }
+                    }
+                }
+            },
+            "BizMsgIdr": {
+                "var": "msg_id"
+            },
             "MsgDefIdr": "pacs.008.001.08",
             "BizSvc": "swift.cbprplus.01",
-            "CreDt": {"var": "creation_datetime"}
+            "CreDt": {
+                "var": "creation_datetime"
+            }
         },
         "Document": {
             "FIToFICstmrCdtTrf": {
                 "GrpHdr": {
-                    "MsgId": {"var": "msg_id"},
-                    "CreDtTm": {"var": "creation_datetime"},
+                    "MsgId": {
+                        "var": "msg_id"
+                    },
+                    "CreDtTm": {
+                        "var": "creation_datetime"
+                    },
                     "NbOfTxs": "1",
-                    "SttlmInf": {"SttlmMtd": "INDA"}
+                    "SttlmInf": {
+                        "SttlmMtd": "INDA"
+                    }
                 },
                 "CdtTrfTxInf": {
                     "PmtId": {
-                        "InstrId": {"var": "instruction_id"},
-                        "EndToEndId": {"var": "end_to_end_id"},
-                        "TxId": {"var": "transaction_ref"},
-                        "UETR": {"var": "uetr"}
+                        "InstrId": {
+                            "var": "instruction_id"
+                        },
+                        "EndToEndId": {
+                            "var": "end_to_end_id"
+                        },
+                        "TxId": {
+                            "var": "transaction_ref"
+                        },
+                        "UETR": {
+                            "var": "uetr"
+                        }
                     },
-                    "IntrBkSttlmAmt": {"@Ccy": {"var": "currency"}, "$value": {"var": "amount"}},
-                    "IntrBkSttlmDt": {"var": "value_date"},
-                    "InstdAmt": {"@Ccy": {"var": "currency"}, "$value": {"var": "amount"}},
+                    "IntrBkSttlmAmt": {
+                        "@Ccy": {
+                            "var": "currency"
+                        },
+                        "$value": {
+                            "var": "amount"
+                        }
+                    },
+                    "IntrBkSttlmDt": {
+                        "var": "value_date"
+                    },
+                    "InstdAmt": {
+                        "@Ccy": {
+                            "var": "currency"
+                        },
+                        "$value": {
+                            "var": "amount"
+                        }
+                    },
                     "ChrgBr": "SHAR",
-                    "InstgAgt": {"FinInstnId": {"BICFI": {"var": "sender_bic"}}},
-                    "InstdAgt": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}}},
-                    "Dbtr": {"Nm": "Debtor Company", "PstlAdr": {"Ctry": "US"}},
-                    "DbtrAcct": {"Id": {"Othr": {"Id": "1234567890", "SchmeNm": {"Cd": "BBAN"}}}},
-                    "DbtrAgt": {"FinInstnId": {"BICFI": {"var": "sender_bic"}}},
-                    "CdtrAgt": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}}},
-                    "Cdtr": {"Nm": "Creditor Company", "PstlAdr": {"Ctry": "GB"}},
-                    "CdtrAcct": {"Id": {"IBAN": "GB29NWBK60161331926819"}}
+                    "InstgAgt": {
+                        "FinInstnId": {
+                            "BICFI": {
+                                "var": "sender_bic"
+                            }
+                        }
+                    },
+                    "InstdAgt": {
+                        "FinInstnId": {
+                            "BICFI": {
+                                "var": "receiver_bic"
+                            }
+                        }
+                    },
+                    "Dbtr": {
+                        "Nm": "Debtor Company",
+                        "PstlAdr": {
+                            "Ctry": "US"
+                        }
+                    },
+                    "DbtrAcct": {
+                        "Id": {
+                            "Othr": {
+                                "Id": "1234567890"
+                            }
+                        }
+                    },
+                    "DbtrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {
+                                "var": "sender_bic"
+                            }
+                        }
+                    },
+                    "CdtrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {
+                                "var": "receiver_bic"
+                            }
+                        }
+                    },
+                    "Cdtr": {
+                        "Nm": "Creditor Company",
+                        "PstlAdr": {
+                            "Ctry": "GB"
+                        }
+                    },
+                    "CdtrAcct": {
+                        "Id": {
+                            "IBAN": "GB29NWBK60161331926819"
+                        }
+                    }
                 }
             }
         }

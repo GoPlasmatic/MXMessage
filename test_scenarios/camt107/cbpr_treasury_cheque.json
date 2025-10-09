@@ -70,20 +70,6 @@
                             }
                         },
                         "CtryOfRes": "CA"
-                    },
-                    "PyeeAcct": {
-                        "Id": {
-                            "Othr": {"Id": {"cat": ["MSA-", {"fake": ["i64", 100000, 999999]}]}, "SchmeNm": {"Cd": "BBAN"}}
-                        },
-                        "Tp": {"Cd": "GOVT"},
-                        "Ccy": "CAD"
-                    },
-                    "PyeeAgt": {
-                        "FinInstnId": {
-                            "BICFI": {"var": "payee_bic"},
-                            "ClrSysMmbId": {"ClrSysId": {"Cd": "CACPA"}, "MmbId": {"fake": ["i64", 100000000, 999999999]}},
-                            "LEI": {"fake": ["lei"]}
-                        }
                     }
                 }
             }

@@ -1,185 +1,533 @@
 {
     "variables": {
-        "msg_id": {"cat": ["MSG", {"fake": ["i64", 100000000000, 999999999999]}]},
-        "creation_datetime": {"fake": ["iso8601_datetime"]},
-        "sender_bic": {"fake": ["bic"]},
-        "receiver_bic": {"fake": ["bic"]},
-        "transaction_ref": {"cat": ["TXN", {"fake": ["i64", 100000000000, 999999999999]}]},
-        "instruction_id": {"cat": ["INSTR", {"fake": ["i64", 10000000, 99999999]}]},
-        "end_to_end_id": {"cat": ["E2E", {"fake": ["i64", 100000000000, 999999999999]}]},
-        "uetr": {"fake": ["uuid"]},
-        "tuition_amount": {"fake": ["f64", 15000.0, 75000.0]},
-        "student_name": {"fake": ["name"]},
-        "student_id": {"cat": ["STU-", {"fake": ["i64", 20240000, 20249999]}]},
-        "university_name": {"cat": [{"fake": ["word"]}, " University"]},
-        "semester": {"fake": ["regex", "(Spring|Fall|Summer) 2024"]},
-        "parent_name": {"fake": ["name"]},
-        "exchange_rate": {"fake": ["f64", 0.8, 1.2]}
+        "msg_id": {
+            "cat": [
+                "MSG",
+                {
+                    "fake": [
+                        "i64",
+                        100000000000,
+                        999999999999
+                    ]
+                }
+            ]
+        },
+        "creation_datetime": {
+            "fake": [
+                "iso8601_datetime"
+            ]
+        },
+        "sender_bic": {
+            "fake": [
+                "bic"
+            ]
+        },
+        "receiver_bic": {
+            "fake": [
+                "bic"
+            ]
+        },
+        "transaction_ref": {
+            "cat": [
+                "TXN",
+                {
+                    "fake": [
+                        "i64",
+                        100000000000,
+                        999999999999
+                    ]
+                }
+            ]
+        },
+        "instruction_id": {
+            "cat": [
+                "INSTR",
+                {
+                    "fake": [
+                        "i64",
+                        10000000,
+                        99999999
+                    ]
+                }
+            ]
+        },
+        "end_to_end_id": {
+            "cat": [
+                "E2E",
+                {
+                    "fake": [
+                        "i64",
+                        100000000000,
+                        999999999999
+                    ]
+                }
+            ]
+        },
+        "uetr": {
+            "fake": [
+                "uuid"
+            ]
+        },
+        "tuition_amount": {
+            "fake": [
+                "f64",
+                15000.0,
+                75000.0
+            ]
+        },
+        "student_name": {
+            "fake": [
+                "name"
+            ]
+        },
+        "student_id": {
+            "cat": [
+                "STU-",
+                {
+                    "fake": [
+                        "i64",
+                        20240000,
+                        20249999
+                    ]
+                }
+            ]
+        },
+        "university_name": {
+            "cat": [
+                {
+                    "fake": [
+                        "word"
+                    ]
+                },
+                " University"
+            ]
+        },
+        "semester": {
+            "fake": [
+                "regex",
+                "(Spring|Fall|Summer) 2024"
+            ]
+        },
+        "parent_name": {
+            "fake": [
+                "name"
+            ]
+        },
+        "exchange_rate": {
+            "fake": [
+                "f64",
+                0.8,
+                1.2
+            ]
+        },
+        "debtor_lei": {
+            "fake": [
+                "lei"
+            ]
+        },
+        "creditor_lei": {
+            "fake": [
+                "lei"
+            ]
+        }
     },
     "schema": {
         "AppHdr": {
-            "Fr": {"FIId": {"FinInstnId": {"BICFI": {"var": "sender_bic"}}}},
-            "To": {"FIId": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}}}},
-            "BizMsgIdr": {"var": "msg_id"},
+            "Fr": {
+                "FIId": {
+                    "FinInstnId": {
+                        "BICFI": {
+                            "var": "sender_bic"
+                        }
+                    }
+                }
+            },
+            "To": {
+                "FIId": {
+                    "FinInstnId": {
+                        "BICFI": {
+                            "var": "receiver_bic"
+                        }
+                    }
+                }
+            },
+            "BizMsgIdr": {
+                "var": "msg_id"
+            },
             "MsgDefIdr": "pacs.008.001.08",
             "BizSvc": "swift.cbprplus.01",
-            "CreDt": {"var": "creation_datetime"}
+            "CreDt": {
+                "var": "creation_datetime"
+            }
         },
         "Document": {
             "FIToFICstmrCdtTrf": {
                 "GrpHdr": {
-                    "MsgId": {"var": "msg_id"},
-                    "CreDtTm": {"var": "creation_datetime"},
+                    "MsgId": {
+                        "var": "msg_id"
+                    },
+                    "CreDtTm": {
+                        "var": "creation_datetime"
+                    },
                     "NbOfTxs": "1",
-                    "SttlmInf": {"SttlmMtd": "INDA"}
+                    "SttlmInf": {
+                        "SttlmMtd": "INDA"
+                    }
                 },
                 "CdtTrfTxInf": {
                     "PmtId": {
-                        "InstrId": {"var": "instruction_id"},
-                        "EndToEndId": {"var": "end_to_end_id"},
-                        "TxId": {"var": "transaction_ref"},
-                        "UETR": {"var": "uetr"}
+                        "InstrId": {
+                            "var": "instruction_id"
+                        },
+                        "EndToEndId": {
+                            "var": "end_to_end_id"
+                        },
+                        "TxId": {
+                            "var": "transaction_ref"
+                        },
+                        "UETR": {
+                            "var": "uetr"
+                        }
                     },
                     "PmtTpInf": {
                         "InstrPrty": "HIGH",
-                        "SvcLvl": [{"Cd": "CBPR"}],
-                        "CtgyPurp": {"Cd": "INTC"},
-                        "LclInstrm": {"Prtry": "INTERNATIONAL_EDUCATION"}
+                        "SvcLvl": [
+                            {
+                                "Cd": "CBPR"
+                            }
+                        ],
+                        "CtgyPurp": {
+                            "Cd": "INTC"
+                        },
+                        "LclInstrm": {
+                            "Prtry": "INTERNATIONAL_EDUCATION"
+                        }
                     },
-                    "IntrBkSttlmAmt": {"@Ccy": "USD", "$value": {"var": "tuition_amount"}},
+                    "IntrBkSttlmAmt": {
+                        "@Ccy": "USD",
+                        "$value": {
+                            "var": "tuition_amount"
+                        }
+                    },
                     "IntrBkSttlmDt": {
-                        "fake": ["date", "%Y-%m-%d", "+0d", "+2d"]
+                        "fake": [
+                            "date",
+                            "%Y-%m-%d",
+                            "+0d",
+                            "+2d"
+                        ]
                     },
                     "SttlmPrty": "HIGH",
-                    "InstdAmt": {"@Ccy": "USD", "$value": {"var": "tuition_amount"}},
-                    "XchgRate": {"var": "exchange_rate"},
+                    "InstdAmt": {
+                        "@Ccy": "USD",
+                        "$value": {
+                            "var": "tuition_amount"
+                        }
+                    },
+                    "XchgRate": {
+                        "var": "exchange_rate"
+                    },
                     "ChrgBr": "DEBT",
                     "ChrgsInf": [
                         {
-                            "Amt": {"@Ccy": "USD", "$value": {"fake": ["f64", 25.0, 100.0]}},
-                            "Agt": {"FinInstnId": {"BICFI": {"var": "sender_bic"}}},
-                            "Tp": {"Prtry": "INTERNATIONAL_WIRE_FEE"}
+                            "Amt": {
+                                "@Ccy": "USD",
+                                "$value": {
+                                    "fake": [
+                                        "f64",
+                                        25.0,
+                                        100.0
+                                    ]
+                                }
+                            },
+                            "Agt": {
+                                "FinInstnId": {
+                                    "BICFI": {
+                                        "var": "sender_bic"
+                                    }
+                                }
+                            }
                         }
                     ],
-                    "InstgAgt": {"FinInstnId": {"BICFI": {"var": "sender_bic"}, "LEI": {"fake": ["lei"]}}},
-                    "InstdAgt": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}, "LEI": {"fake": ["lei"]}}},
+                    "InstgAgt": {
+                        "FinInstnId": {
+                            "BICFI": {
+                                "var": "sender_bic"
+                            },
+                            "LEI": {
+                                "fake": [
+                                    "lei"
+                                ]
+                            }
+                        }
+                    },
+                    "InstdAgt": {
+                        "FinInstnId": {
+                            "BICFI": {
+                                "var": "receiver_bic"
+                            },
+                            "LEI": {
+                                "fake": [
+                                    "lei"
+                                ]
+                            }
+                        }
+                    },
                     "Dbtr": {
-                        "Nm": {"var": "parent_name"},
-                        "PstlAdr": {
-                            "StrtNm": {"fake": ["street_name"]},
-                            "BldgNb": {"cat": [{"fake": ["i64", 1, 999]}]},
-                            "PstCd": {"fake": ["postcode"]},
-                            "TwnNm": {"fake": ["city_name"]},
-                            "Ctry": {"fake": ["regex", "(CN|IN|KR|JP|BR)"]}
+                        "Nm": {
+                            "var": "parent_name"
                         },
-                        "CtryOfRes": {"fake": ["regex", "(CN|IN|KR|JP|BR)"]},
+                        "PstlAdr": {
+                            "StrtNm": {
+                                "fake": [
+                                    "street_name"
+                                ]
+                            },
+                            "BldgNb": {
+                                "cat": [
+                                    {
+                                        "fake": [
+                                            "i64",
+                                            1,
+                                            999
+                                        ]
+                                    }
+                                ]
+                            },
+                            "PstCd": {
+                                "fake": [
+                                    "postcode"
+                                ]
+                            },
+                            "TwnNm": {
+                                "fake": [
+                                    "city_name"
+                                ]
+                            },
+                            "Ctry": {
+                                "fake": [
+                                    "regex",
+                                    "(CN|IN|KR|JP|BR)"
+                                ]
+                            }
+                        },
+                        "CtryOfRes": {
+                            "fake": [
+                                "regex",
+                                "(CN|IN|KR|JP|BR)"
+                            ]
+                        },
                         "Id": {
                             "PrvtId": {
                                 "Othr": [
-                                    {"Id": {"fake": ["regex", "[A-Z][0-9]{8}"]}, "SchmeNm": {"Prtry": "PASSPORT_NUMBER"}}
+                                    {
+                                        "Id": {
+                                            "fake": [
+                                                "regex",
+                                                "[A-Z][0-9]{8}"
+                                            ]
+                                        },
+                                        "SchmeNm": {
+                                            "Cd": "PSPN"
+                                        }
+                                    }
                                 ]
                             }
                         }
                     },
                     "DbtrAcct": {
                         "Id": {
-                            "Othr": {"Id": {"cat": [{"fake": ["i64", 1000000000, 9999999999]}]}, "SchmeNm": {"Cd": "BBAN"}}
+                            "IBAN": {
+                                "fake": [
+                                    "iban"
+                                ]
+                            }
                         },
-                        "Ccy": {"fake": ["regex", "(CNY|INR|KRW|JPY|BRL)"]},
+                        "Ccy": {
+                            "fake": [
+                                "regex",
+                                "(CNY|INR|KRW|JPY|BRL)"
+                            ]
+                        },
                         "Nm": "Parent Savings Account"
                     },
                     "DbtrAgt": {
                         "FinInstnId": {
-                            "BICFI": {"var": "sender_bic"},
-                            "Nm": {"fake": ["company_name"]},
-                            "LEI": {"fake": ["lei"]}
+                            "BICFI": {
+                                "var": "sender_bic"
+                            },
+                            "Nm": {
+                                "fake": [
+                                    "company_name"
+                                ]
+                            },
+                            "LEI": {
+                                "fake": [
+                                    "lei"
+                                ]
+                            }
                         }
                     },
                     "CdtrAgt": {
                         "FinInstnId": {
-                            "BICFI": {"var": "receiver_bic"},
-                            "Nm": {"fake": ["company_name"]},
-                            "LEI": {"fake": ["lei"]}
+                            "BICFI": {
+                                "var": "receiver_bic"
+                            },
+                            "Nm": {
+                                "fake": [
+                                    "company_name"
+                                ]
+                            },
+                            "LEI": {
+                                "fake": [
+                                    "lei"
+                                ]
+                            }
                         }
                     },
                     "Cdtr": {
-                        "Nm": {"var": "university_name"},
-                        "PstlAdr": {
-                            "StrtNm": {"cat": [{"fake": ["i64", 1, 999]}, " University Avenue"]},
-                            "PstCd": {"fake": ["postcode"]},
-                            "TwnNm": {"fake": ["city_name"]},
-                            "Ctry": {"fake": ["regex", "(US|GB|CA|AU)"]}
+                        "Nm": {
+                            "var": "university_name"
                         },
-                        "CtryOfRes": {"fake": ["regex", "(US|GB|CA|AU)"]},
+                        "PstlAdr": {
+                            "StrtNm": {
+                                "cat": [
+                                    {
+                                        "fake": [
+                                            "i64",
+                                            1,
+                                            999
+                                        ]
+                                    },
+                                    " University Avenue"
+                                ]
+                            },
+                            "PstCd": {
+                                "fake": [
+                                    "postcode"
+                                ]
+                            },
+                            "TwnNm": {
+                                "fake": [
+                                    "city_name"
+                                ]
+                            },
+                            "Ctry": {
+                                "fake": [
+                                    "regex",
+                                    "(US|GB|CA|AU)"
+                                ]
+                            }
+                        },
+                        "CtryOfRes": {
+                            "fake": [
+                                "regex",
+                                "(US|GB|CA|AU)"
+                            ]
+                        },
                         "Id": {
                             "OrgId": {
-                                "Othr": [
-                                    {
-                                        "Id": {"cat": [{"fake": ["i64", 10, 99]}, "-", {"fake": ["i64", 1000000, 9999999]}]},
-                                        "SchmeNm": {"Prtry": "EDUCATION_INSTITUTION_ID"}
-                                    }
-                                ]
+                                "LEI": {
+                                    "var": "creditor_lei"
+                                }
                             }
                         }
                     },
                     "CdtrAcct": {
                         "Id": {
-                            "Othr": {
-                                "Id": {"cat": ["TUITION-", {"fake": ["i64", 100000, 999999]}]},
-                                "SchmeNm": {"Prtry": "STUDENT_ACCOUNT"}
+                            "IBAN": {
+                                "fake": [
+                                    "iban"
+                                ]
                             }
                         },
                         "Ccy": "USD",
                         "Nm": "Tuition Fee Collection Account"
                     },
                     "UltmtCdtr": {
-                        "Nm": {"var": "student_name"},
+                        "Nm": {
+                            "var": "student_name"
+                        },
                         "Id": {
-                            "PrvtId": {"Othr": [{"Id": {"var": "student_id"}, "SchmeNm": {"Prtry": "STUDENT_ID"}}]}
+                            "PrvtId": {
+                                "Othr": [
+                                    {
+                                        "Id": {
+                                            "var": "student_id"
+                                        },
+                                        "SchmeNm": {
+                                            "Cd": "STID"
+                                        }
+                                    }
+                                ]
+                            }
                         }
                     },
-                    "InstrForCdtrAgt": [{"Cd": "PHOB", "InstrInf": "STUDENT VISA COMPLIANCE VERIFIED"}],
-                    "Purp": {"Cd": "EDUC"},
-                    "RgltryRptg": [
+                    "InstrForCdtrAgt": [
                         {
-                            "Dtls": [
-                                {
-                                    "Tp": "BOTH",
-                                    "Dt": {
-                                        "fake": ["date", "%Y-%m-%d", "+0d", "+0d"]
-                                    },
-                                    "Ctry": {"fake": ["regex", "(US|GB|CA|AU)"]},
-                                    "Cd": "303",
-                                    "Amt": {"@Ccy": "USD", "$value": {"var": "tuition_amount"}},
-                                    "Inf": ["CBPR+ INTERNATIONAL EDUCATION PAYME"]
-                                }
-                            ]
+                            "Cd": "PHOB",
+                            "InstrInf": "STUDENT VISA COMPLIANCE VERIFIED"
                         }
                     ],
+                    "Purp": {
+                        "Cd": "EDUC"
+                    },
                     "RmtInf": {
                         "Strd": [
                             {
                                 "RfrdDocInf": [
                                     {
-                                        "Tp": {"CdOrPrtry": {"Prtry": "TUITION_INVOICE"}},
+                                        "Tp": {
+                                            "CdOrPrtry": {
+                                                "Prtry": "TUITION_INVOICE"
+                                            }
+                                        },
                                         "Nb": {
                                             "cat": [
                                                 "INV-",
-                                                {"var": "semester"},
+                                                {
+                                                    "var": "semester"
+                                                },
                                                 "-",
-                                                {"var": "student_id"}
+                                                {
+                                                    "var": "student_id"
+                                                }
                                             ]
                                         },
                                         "RltdDt": {
-                                            "fake": ["date", "%Y-%m-%d", "-30d", "-10d"]
+                                            "fake": [
+                                                "date",
+                                                "%Y-%m-%d",
+                                                "-30d",
+                                                "-10d"
+                                            ]
                                         }
                                     }
                                 ],
                                 "RfrdDocAmt": {
-                                    "DuePyblAmt": {"@Ccy": "USD", "$value": {"var": "tuition_amount"}},
-                                    "RmtdAmt": {"@Ccy": "USD", "$value": {"var": "tuition_amount"}}
+                                    "DuePyblAmt": {
+                                        "@Ccy": "USD",
+                                        "$value": {
+                                            "var": "tuition_amount"
+                                        }
+                                    },
+                                    "RmtdAmt": {
+                                        "@Ccy": "USD",
+                                        "$value": {
+                                            "var": "tuition_amount"
+                                        }
+                                    }
                                 },
-                                "CdtrRefInf": {"Tp": {"CdOrPrtry": {"Prtry": "STUDENT_REFERENCE"}}, "Ref": {"var": "student_id"}},
+                                "CdtrRefInf": {
+                                    "Tp": {
+                                        "CdOrPrtry": {
+                                            "Prtry": "STUDENT_REFERENCE"
+                                        }
+                                    },
+                                    "Ref": {
+                                        "var": "student_id"
+                                    }
+                                },
                                 "AddtlRmtInf": [
                                     "Generated remittance information",
                                     "Generated remittance information",

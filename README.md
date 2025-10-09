@@ -34,6 +34,8 @@ MXMessage is a comprehensive Rust library for handling ISO 20022 (MX) financial 
   - **Test Data Generation:** Automatic generation of valid test messages using configurable scenarios.
   - **Extensive Coverage:** Support for pacs, pain, and camt message families.
   - **Zero-Copy Parsing:** Efficient processing with minimal allocations.
+  - **Dataflow Integration:** Plugin support for dataflow-rs engine enabling async processing pipelines.
+  - **Enhanced XML Support:** Advanced XML serialization with configurable formatting and namespace handling.
 
 ## 🏗️ How It Works: Schema-Driven Architecture
 
@@ -83,12 +85,12 @@ use mx_message::pain_008_001_08::*;  // Customer Direct Debit Initiation
 
 ## 🎯 Serialization Support
 
-MXMessage provides seamless serialization between JSON and XML formats.
+MXMessage provides seamless serialization between JSON and XML formats with enhanced XML capabilities.
 
 ```rust
 use mx_message::document::Document;
+use mx_message::xml::{XmlConfig, to_mx_xml};
 use serde_json;
-use quick_xml;
 
 // Parse from JSON
 let doc: Document = serde_json::from_str(json_str)?;
@@ -96,8 +98,16 @@ let doc: Document = serde_json::from_str(json_str)?;
 // Serialize to pretty JSON
 let json_output = serde_json::to_string_pretty(&doc)?;
 
-// Serialize to XML
-let xml_output = quick_xml::se::to_string(&doc)?;
+// Enhanced XML serialization with configuration
+let xml_config = XmlConfig {
+    include_declaration: true,
+    pretty_print: true,
+    indent: "  ".to_string(),
+    include_schema_location: true,
+};
+
+// Generate complete MX XML with envelope
+let xml_output = to_mx_xml(&doc, header, "pacs.008.001.08", Some(xml_config))?;
 ```
 
 **Example JSON Output:**
@@ -134,9 +144,13 @@ Add `mx-message` to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-mx-message = "3.0"
+mx-message = "3.1"
 serde_json = "1.0"  # For JSON support
-quick-xml = { version = "0.31", features = ["serialize"] }  # For XML support
+quick-xml = { version = "0.38", features = ["serialize"] }  # For XML support
+
+# Optional: For dataflow pipeline integration
+dataflow-rs = "2.0"  # For async processing pipelines
+datalogic-rs = "4.0"  # For validation logic
 ```
 
 ## 📖 Usage
@@ -268,6 +282,68 @@ match document.validate() {
 }
 ```
 
+### Dataflow Integration (New in v3.1)
+
+MXMessage now provides seamless integration with dataflow-rs for building async processing pipelines with a clean, refactored plugin architecture:
+
+```rust
+use mx_message::plugin::register_mx_functions;
+use dataflow_rs::Engine;
+
+// Register MX message functions with dataflow engine
+let functions = register_mx_functions();
+let mut engine = Engine::new();
+
+for (name, handler) in functions {
+    engine.register_function(name, handler);
+}
+
+// Create a pipeline workflow
+let workflow = r#"
+{
+  "name": "mx-processing-pipeline",
+  "tasks": [
+    {
+      "id": "generate",
+      "function": "generate_mx",
+      "params": {
+        "message_type": "pacs.008",
+        "scenario": "cbpr_business_payment"
+      }
+    },
+    {
+      "id": "validate",
+      "function": "validate_mx",
+      "inputs": ["generate.output"]
+    },
+    {
+      "id": "publish",
+      "function": "publish_mx",
+      "params": {
+        "format": "xml"
+      },
+      "inputs": ["validate.output"]
+    }
+  ]
+}
+"#;
+
+// Execute the pipeline asynchronously
+let result = engine.execute(workflow).await?;
+```
+
+Available dataflow functions:
+- `parse_mx`: Parse MX messages from JSON/XML
+- `validate_mx`: Validate against schema and business rules
+- `generate_mx`: Generate sample data from scenarios
+- `publish_mx`: Serialize to JSON/XML formats
+
+The plugin architecture has been refactored for better maintainability:
+- **Common utilities module** (`plugin::common`) provides shared functionality
+- **Centralized format detection** and message type mapping
+- **Reduced code duplication** across plugin modules
+- **Type-safe error handling** with improved error types
+
 ### Error Collection (Comprehensive Validation)
 
 MXMessage supports collecting all validation errors instead of stopping at the first error:
@@ -351,8 +427,10 @@ This library implements CBPR+ SR2025 (Central Bank Payment Regulation Plus Stand
 ### Payment Messages (pacs)
 - **pacs.002.001.10**: Payment Status Report
 - **pacs.003.001.08**: Direct Debit
+- **pacs.004.001.09**: Payment Return
 - **pacs.008.001.08**: Customer Credit Transfer
 - **pacs.009.001.08**: Financial Institution Credit Transfer
+- **pacs.010.001.03**: Financial Institution Direct Debit (New in v3.1)
 
 ### Payment Initiation (pain)
 - **pain.001.001.09**: Customer Credit Transfer Initiation
@@ -369,6 +447,9 @@ This library implements CBPR+ SR2025 (Central Bank Payment Regulation Plus Stand
 - **camt.056.001.08**: Payment Cancellation Request
 - **camt.057.001.06**: Notification to Receive
 - **camt.060.001.05**: Account Reporting Request
+- **camt.107.001.01**: Cheque Presentment Notification (New in v3.1)
+- **camt.108.001.01**: Cheque Stop Request (New in v3.1)
+- **camt.109.001.01**: Cheque Cancellation or Stop Request Status (New in v3.1)
 
 ## 🤝 Contributing
 

@@ -14,8 +14,6 @@
         },
         "instg_bic": {"fake": ["bic"]},
         "instd_bic": {"fake": ["bic"]},
-        "intrmy1_bic": {"fake": ["bic"]},
-        "intrmy2_bic": {"fake": ["bic"]},
         "cdtr_bic": {"fake": ["bic"]},
         "cdtr_agt_bic": {"fake": ["bic"]},
         "dbtr_bic": {"fake": ["bic"]},
@@ -38,7 +36,6 @@
                 "GrpHdr": {"MsgId": {"var": "msg_id"}, "CreDtTm": {"var": "creation_datetime"}, "NbOfTxs": "1"},
                 "CdtInstr": {
                     "CdtId": {"var": "cdt_id"},
-                    "PmtTpInf": {"InstrPrty": "HIGH", "CtgyPurp": {"Cd": "CASH"}},
                     "InstgAgt": {
                         "FinInstnId": {
                             "BICFI": {"var": "instg_bic"},
@@ -51,19 +48,6 @@
                             "ClrSysMmbId": {"ClrSysId": {"Cd": "TGTS"}, "MmbId": {"cat": ["MB", {"fake": ["i64", 100000, 999999]}]}}
                         }
                     },
-                    "IntrmyAgt1": {
-                        "FinInstnId": {
-                            "BICFI": {"var": "intrmy1_bic"},
-                            "Nm": {"fake": ["company_name"]},
-                            "PstlAdr": {
-                                "Ctry": {"fake": ["country_code"]},
-                                "TwnNm": {"fake": ["city_name"]},
-                                "AdrLine": [{"fake": ["street_address"]}, {"cat": ["Suite ", {"fake": ["i64", 100, 999]}]}]
-                            }
-                        }
-                    },
-                    "IntrmyAgt1Acct": {"Id": {"IBAN": {"fake": ["iban"]}}, "Tp": {"Cd": "CACC"}, "Ccy": "EUR"},
-                    "IntrmyAgt2": {"FinInstnId": {"BICFI": {"var": "intrmy2_bic"}, "Nm": {"fake": ["company_name"]}}},
                     "CdtrAgt": {"FinInstnId": {"BICFI": {"var": "cdtr_agt_bic"}, "LEI": {"var": "cdtr_lei"}}},
                     "CdtrAgtAcct": {
                         "Id": {"IBAN": {"fake": ["iban"]}},

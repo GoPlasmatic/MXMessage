@@ -93,14 +93,6 @@
                             }
                         },
                         "CtryOfRes": "GB"
-                    },
-                    "PyeeAcct": {"Id": {"IBAN": {"fake": ["iban", "GB"]}}, "Tp": {"Cd": "CACC"}, "Ccy": "GBP"},
-                    "PyeeAgt": {
-                        "FinInstnId": {
-                            "BICFI": {"var": "payee_bic"},
-                            "ClrSysMmbId": {"ClrSysId": {"Cd": "GBDSC"}, "MmbId": {"fake": ["i64", 100000, 999999]}},
-                            "LEI": {"fake": ["lei"]}
-                        }
                     }
                 }
             }

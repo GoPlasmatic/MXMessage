@@ -50,61 +50,7 @@
                             }
                         ]
                     },
-                    "AccptncDtTm": {"fake": ["iso8601_datetime", "-15m", "-10m"]},
-                    "AcctSvcrRef": {"cat": ["STOP-REJ-", {"fake": ["i64", 1000000, 9999999]}]},
                     "ClrSysRef": {"cat": ["CLR-", {"fake": ["i64", 1000000, 9999999]}]},
-                    "OrgnlTxRef": {
-                        "Amt": {"InstdAmt": {"@Ccy": "USD", "$value": {"var": "amount"}}},
-                        "ReqdExctnDt": {
-                            "Dt": {
-                                "fake": ["date", "%Y-%m-%d", "+0d", "+0d"]
-                            }
-                        },
-                        "PmtTpInf": {
-                            "InstrPrty": "HIGH",
-                            "SvcLvl": [{"Cd": "URGP"}],
-                            "LclInstrm": {"Prtry": "STOP_CHQ_REJECT"}
-                        },
-                        "PmtMtd": "CHK",
-                        "RmtInf": {
-                            "Strd": [
-                                {
-                                    "RfrdDocInf": [
-                                        {
-                                            "Tp": {"CdOrPrtry": {"Prtry": "CHEQUE"}},
-                                            "Nb": {"var": "cheque_number"},
-                                            "RltdDt": {
-                                                "fake": ["date", "%Y-%m-%d", "-30d", "-7d"]
-                                            }
-                                        }
-                                    ],
-                                    "AddtlRmtInf": [
-                                        "Stop payment cannot be processed",
-                                        {"cat": ["Cheque status: ", {"fake": ["regex", "(Cleared|In process|Unknown)"]}]},
-                                        {"cat": ["Action date: ", {"var": "cleared_date"}]},
-                                        "Please contact customer service"
-                                    ]
-                                }
-                            ]
-                        },
-                        "Dbtr": {"Nm": {"var": "drawer_name"}, "PstlAdr": {"Ctry": {"fake": ["country_code"]}}},
-                        "DbtrAcct": {"Id": {"IBAN": {"var": "drawer_account"}}},
-                        "DbtrAgt": {"FinInstnId": {"BICFI": {"var": "drawer_bic"}}}
-                    },
-                    "SplmtryData": [
-                        {
-                            "PlcAndNm": "RejectionDetails",
-                            "Envlp": {
-                                "Document": {
-                                    "Prtry": {
-                                        "Tp": "REJECTION_REASON",
-                                        "Id": {"var": "rejection_reason"},
-                                        "Issr": "STOP_PAYMENT_SYSTEM"
-                                    }
-                                }
-                            }
-                        }
-                    ],
                     "OrgnlGrpInf": {
                         "OrgnlMsgId": {"var": "stop_request_id"},
                         "OrgnlMsgNmId": "pain.001.001.08",

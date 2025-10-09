@@ -1,65 +1,207 @@
 {
     "variables": {
-        "msg_id": {"cat": ["RTN-SMPL-", {"fake": ["i64", 100000000000, 999999999999]}]},
-        "creation_datetime": {"fake": ["iso8601_datetime"]},
-        "payment_id": {"cat": ["RTRN-", {"fake": ["i64", 100000, 999999]}]},
-        "original_payment": {"cat": ["PMT-", {"fake": ["i64", 100000, 999999]}]},
-        "uetr": {"fake": ["uuid"]},
-        "amount": {"fake": ["f64", 1000.0, 50000.0]},
-        "currency": {
-            "fake": ["enum", "USD", "EUR", "GBP"]
+        "msg_id": {
+            "cat": [
+                "RTN-SMPL-",
+                {
+                    "fake": [
+                        "i64",
+                        100000000000,
+                        999999999999
+                    ]
+                }
+            ]
         },
-        "sender_bic": {"fake": ["bic"]},
-        "receiver_bic": {"fake": ["bic"]},
-        "debtor_name": {"fake": ["full_name"]},
-        "creditor_name": {"fake": ["full_name"]}
+        "creation_datetime": {
+            "fake": [
+                "iso8601_datetime"
+            ]
+        },
+        "payment_id": {
+            "cat": [
+                "RTRN-",
+                {
+                    "fake": [
+                        "i64",
+                        100000,
+                        999999
+                    ]
+                }
+            ]
+        },
+        "original_payment": {
+            "cat": [
+                "PMT-",
+                {
+                    "fake": [
+                        "i64",
+                        100000,
+                        999999
+                    ]
+                }
+            ]
+        },
+        "uetr": {
+            "fake": [
+                "uuid"
+            ]
+        },
+        "amount": {
+            "fake": [
+                "f64",
+                1000.0,
+                50000.0
+            ]
+        },
+        "currency": {
+            "fake": [
+                "enum",
+                "USD",
+                "EUR",
+                "GBP"
+            ]
+        },
+        "sender_bic": {
+            "fake": [
+                "bic"
+            ]
+        },
+        "receiver_bic": {
+            "fake": [
+                "bic"
+            ]
+        },
+        "debtor_name": {
+            "fake": [
+                "full_name"
+            ]
+        },
+        "creditor_name": {
+            "fake": [
+                "full_name"
+            ]
+        }
     },
     "schema": {
         "AppHdr": {
-            "Fr": {"FIId": {"FinInstnId": {"BICFI": {"var": "sender_bic"}}}},
-            "To": {"FIId": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}}}},
-            "BizMsgIdr": {"var": "msg_id"},
+            "Fr": {
+                "FIId": {
+                    "FinInstnId": {
+                        "BICFI": {
+                            "var": "sender_bic"
+                        }
+                    }
+                }
+            },
+            "To": {
+                "FIId": {
+                    "FinInstnId": {
+                        "BICFI": {
+                            "var": "receiver_bic"
+                        }
+                    }
+                }
+            },
+            "BizMsgIdr": {
+                "var": "msg_id"
+            },
             "MsgDefIdr": "pacs.009.001.08",
             "BizSvc": "swift.cbprplus.01",
-            "CreDt": {"var": "creation_datetime"}
+            "CreDt": {
+                "var": "creation_datetime"
+            }
         },
         "Document": {
             "FinInstnCdtTrf": {
                 "GrpHdr": {
-                    "MsgId": {"var": "msg_id"},
-                    "CreDtTm": {"var": "creation_datetime"},
+                    "MsgId": {
+                        "var": "msg_id"
+                    },
+                    "CreDtTm": {
+                        "var": "creation_datetime"
+                    },
                     "NbOfTxs": "1",
-                    "SttlmInf": {"SttlmMtd": "INDA"}
+                    "SttlmInf": {
+                        "SttlmMtd": "INDA"
+                    }
                 },
                 "CdtTrfTxInf": {
                     "PmtId": {
-                        "InstrId": {"var": "payment_id"},
-                        "EndToEndId": {"var": "original_payment"},
-                        "UETR": {"var": "uetr"}
+                        "InstrId": {
+                            "var": "payment_id"
+                        },
+                        "EndToEndId": {
+                            "var": "original_payment"
+                        },
+                        "UETR": {
+                            "var": "uetr"
+                        }
                     },
-                    "PmtTpInf": {"InstrPrty": "NORM", "SvcLvl": [{"Cd": "G001"}], "LclInstrm": {"Prtry": "RETURN"}},
-                    "IntrBkSttlmAmt": {"@Ccy": {"var": "currency"}, "$value": {"var": "amount"}},
+                    "PmtTpInf": {
+                        "InstrPrty": "NORM",
+                        "SvcLvl": [
+                            {
+                                "Cd": "G001"
+                            }
+                        ],
+                        "LclInstrm": {
+                            "Prtry": "RETURN"
+                        }
+                    },
+                    "IntrBkSttlmAmt": {
+                        "@Ccy": {
+                            "var": "currency"
+                        },
+                        "$value": {
+                            "var": "amount"
+                        }
+                    },
                     "IntrBkSttlmDt": {
-                        "fake": ["date", "%Y-%m-%d", "0d", "0d"]
+                        "fake": [
+                            "date",
+                            "%Y-%m-%d",
+                            "0d",
+                            "0d"
+                        ]
                     },
-                    "ChrgBr": "SHAR",
-                    "InstgAgt": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}}},
-                    "InstdAgt": {"FinInstnId": {"BICFI": {"var": "sender_bic"}}},
-                    "Dbtr": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}}},
-                    "Cdtr": {"FinInstnId": {"BICFI": {"var": "sender_bic"}}},
-                    "RmtInf": {"Ustrd": {"cat": ["Return payment - Original ref: ", {"var": "original_payment"}]}},
-                    "SplmtryData": [
-                        {
-                            "Envlp": {
-                                "SimpleReturnInfo": {
-                                    "OriginalReference": {"var": "original_payment"},
-                                    "ReturnCode": "AC06",
-                                    "Debtor": {"var": "debtor_name"},
-                                    "Creditor": {"var": "creditor_name"}
-                                }
+                    "InstgAgt": {
+                        "FinInstnId": {
+                            "BICFI": {
+                                "var": "receiver_bic"
                             }
                         }
-                    ]
+                    },
+                    "InstdAgt": {
+                        "FinInstnId": {
+                            "BICFI": {
+                                "var": "sender_bic"
+                            }
+                        }
+                    },
+                    "Dbtr": {
+                        "FinInstnId": {
+                            "BICFI": {
+                                "var": "receiver_bic"
+                            }
+                        }
+                    },
+                    "Cdtr": {
+                        "FinInstnId": {
+                            "BICFI": {
+                                "var": "sender_bic"
+                            }
+                        }
+                    },
+                    "RmtInf": {
+                        "Ustrd": {
+                            "cat": [
+                                "Return payment - Original ref: ",
+                                {
+                                    "var": "original_payment"
+                                }
+                            ]
+                        }
+                    }
                 }
             }
         }

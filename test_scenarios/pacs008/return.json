@@ -1,107 +1,398 @@
 {
     "variables": {
-        "msg_id": {"cat": ["MSG", {"fake": ["i64", 100000000000, 999999999999]}]},
-        "creation_datetime": {"fake": ["iso8601_datetime"]},
-        "sender_bic": {"fake": ["bic"]},
-        "receiver_bic": {"fake": ["bic"]},
-        "transaction_ref": {"cat": ["TXN", {"fake": ["i64", 100000000000, 999999999999]}]},
-        "instruction_id": {"cat": ["INSTR", {"fake": ["i64", 10000000, 99999999]}]},
-        "end_to_end_id": {"cat": ["E2E", {"fake": ["i64", 100000000000, 999999999999]}]},
-        "original_msg_id": {"cat": ["ORIG-MSG", {"fake": ["i64", 100000000000, 999999999999]}]},
-        "original_end_to_end": {"cat": ["ORIG-E2E", {"fake": ["i64", 100000000000, 999999999999]}]},
-        "original_uetr": {"fake": ["uuid"]},
-        "amount": {"fake": ["f64", 1000.0, 50000.0]},
-        "return_reason_code": {"fake": ["regex", "(AC01|AC04|AC06|AG01|AM05|BE04|MD07|RC01)"]},
+        "msg_id": {
+            "cat": [
+                "MSG",
+                {
+                    "fake": [
+                        "i64",
+                        100000000000,
+                        999999999999
+                    ]
+                }
+            ]
+        },
+        "creation_datetime": {
+            "fake": [
+                "iso8601_datetime"
+            ]
+        },
+        "sender_bic": {
+            "fake": [
+                "bic"
+            ]
+        },
+        "receiver_bic": {
+            "fake": [
+                "bic"
+            ]
+        },
+        "transaction_ref": {
+            "cat": [
+                "TXN",
+                {
+                    "fake": [
+                        "i64",
+                        100000000000,
+                        999999999999
+                    ]
+                }
+            ]
+        },
+        "instruction_id": {
+            "cat": [
+                "INSTR",
+                {
+                    "fake": [
+                        "i64",
+                        10000000,
+                        99999999
+                    ]
+                }
+            ]
+        },
+        "end_to_end_id": {
+            "cat": [
+                "E2E",
+                {
+                    "fake": [
+                        "i64",
+                        100000000000,
+                        999999999999
+                    ]
+                }
+            ]
+        },
+        "original_msg_id": {
+            "cat": [
+                "ORIG-MSG",
+                {
+                    "fake": [
+                        "i64",
+                        100000000000,
+                        999999999999
+                    ]
+                }
+            ]
+        },
+        "original_end_to_end": {
+            "cat": [
+                "ORIG-E2E",
+                {
+                    "fake": [
+                        "i64",
+                        100000000000,
+                        999999999999
+                    ]
+                }
+            ]
+        },
+        "original_uetr": {
+            "fake": [
+                "uuid"
+            ]
+        },
+        "amount": {
+            "fake": [
+                "f64",
+                1000.0,
+                50000.0
+            ]
+        },
+        "return_reason_code": {
+            "fake": [
+                "regex",
+                "(AC01|AC04|AC06|AG01|AM05|BE04|MD07|RC01)"
+            ]
+        },
         "original_value_date": {
-            "fake": ["date", "%Y-%m-%d", "-10d", "-2d"]
+            "fake": [
+                "date",
+                "%Y-%m-%d",
+                "-10d",
+                "-2d"
+            ]
         }
     },
     "schema": {
         "AppHdr": {
-            "Fr": {"FIId": {"FinInstnId": {"BICFI": {"var": "sender_bic"}}}},
-            "To": {"FIId": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}}}},
-            "BizMsgIdr": {"var": "msg_id"},
+            "Fr": {
+                "FIId": {
+                    "FinInstnId": {
+                        "BICFI": {
+                            "var": "sender_bic"
+                        }
+                    }
+                }
+            },
+            "To": {
+                "FIId": {
+                    "FinInstnId": {
+                        "BICFI": {
+                            "var": "receiver_bic"
+                        }
+                    }
+                }
+            },
+            "BizMsgIdr": {
+                "var": "msg_id"
+            },
             "MsgDefIdr": "pacs.008.001.08",
             "BizSvc": "swift.cbprplus.01",
-            "CreDt": {"var": "creation_datetime"}
+            "CreDt": {
+                "var": "creation_datetime"
+            }
         },
         "Document": {
             "FIToFICstmrCdtTrf": {
                 "GrpHdr": {
-                    "MsgId": {"var": "msg_id"},
-                    "CreDtTm": {"var": "creation_datetime"},
+                    "MsgId": {
+                        "var": "msg_id"
+                    },
+                    "CreDtTm": {
+                        "var": "creation_datetime"
+                    },
                     "NbOfTxs": "1",
-                    "SttlmInf": {"SttlmMtd": "INDA"}
+                    "SttlmInf": {
+                        "SttlmMtd": "INDA"
+                    }
                 },
                 "CdtTrfTxInf": {
                     "PmtId": {
-                        "InstrId": {"var": "instruction_id"},
-                        "EndToEndId": {"var": "end_to_end_id"},
-                        "TxId": {"var": "transaction_ref"},
-                        "UETR": {"fake": ["uuid"]}
+                        "InstrId": {
+                            "var": "instruction_id"
+                        },
+                        "EndToEndId": {
+                            "var": "end_to_end_id"
+                        },
+                        "TxId": {
+                            "var": "transaction_ref"
+                        },
+                        "UETR": {
+                            "fake": [
+                                "uuid"
+                            ]
+                        }
                     },
-                    "PmtTpInf": {"InstrPrty": "HIGH", "SvcLvl": [{"Cd": "URGP"}], "LclInstrm": {"Prtry": "RETURN"}},
-                    "IntrBkSttlmAmt": {"@Ccy": "EUR", "$value": {"var": "amount"}},
+                    "PmtTpInf": {
+                        "InstrPrty": "HIGH",
+                        "SvcLvl": [
+                            {
+                                "Cd": "URGP"
+                            }
+                        ],
+                        "LclInstrm": {
+                            "Prtry": "RETURN"
+                        }
+                    },
+                    "IntrBkSttlmAmt": {
+                        "@Ccy": "EUR",
+                        "$value": {
+                            "var": "amount"
+                        }
+                    },
                     "IntrBkSttlmDt": {
-                        "fake": ["date", "%Y-%m-%d", "+0d", "+0d"]
+                        "fake": [
+                            "date",
+                            "%Y-%m-%d",
+                            "+0d",
+                            "+0d"
+                        ]
                     },
                     "SttlmPrty": "HIGH",
-                    "InstdAmt": {"@Ccy": "EUR", "$value": {"var": "amount"}},
+                    "InstdAmt": {
+                        "@Ccy": "EUR",
+                        "$value": {
+                            "var": "amount"
+                        }
+                    },
                     "ChrgBr": "SHAR",
-                    "InstgAgt": {"FinInstnId": {"BICFI": {"var": "sender_bic"}}},
-                    "InstdAgt": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}}},
-                    "PrvsInstgAgt1": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}}},
+                    "InstgAgt": {
+                        "FinInstnId": {
+                            "BICFI": {
+                                "var": "sender_bic"
+                            }
+                        }
+                    },
+                    "InstdAgt": {
+                        "FinInstnId": {
+                            "BICFI": {
+                                "var": "receiver_bic"
+                            }
+                        }
+                    },
+                    "PrvsInstgAgt1": {
+                        "FinInstnId": {
+                            "BICFI": {
+                                "var": "receiver_bic"
+                            }
+                        }
+                    },
                     "Dbtr": {
-                        "Nm": {"fake": ["company_name"]},
+                        "Nm": {
+                            "fake": [
+                                "company_name"
+                            ]
+                        },
                         "PstlAdr": {
-                            "StrtNm": {"fake": ["street_name"]},
-                            "BldgNb": {"cat": [{"fake": ["i64", 1, 999]}]},
-                            "PstCd": {"fake": ["postcode"]},
-                            "TwnNm": {"fake": ["city_name"]},
+                            "StrtNm": {
+                                "fake": [
+                                    "street_name"
+                                ]
+                            },
+                            "BldgNb": {
+                                "cat": [
+                                    {
+                                        "fake": [
+                                            "i64",
+                                            1,
+                                            999
+                                        ]
+                                    }
+                                ]
+                            },
+                            "PstCd": {
+                                "fake": [
+                                    "postcode"
+                                ]
+                            },
+                            "TwnNm": {
+                                "fake": [
+                                    "city_name"
+                                ]
+                            },
                             "Ctry": "FR"
                         },
                         "CtryOfRes": "FR"
                     },
-                    "DbtrAcct": {"Id": {"IBAN": {"fake": ["iban", "FR"]}}, "Ccy": "EUR"},
-                    "DbtrAgt": {"FinInstnId": {"BICFI": {"var": "sender_bic"}, "Nm": {"fake": ["company_name"]}}},
-                    "CdtrAgt": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}, "Nm": {"fake": ["company_name"]}}},
+                    "DbtrAcct": {
+                        "Id": {
+                            "IBAN": {
+                                "fake": [
+                                    "iban",
+                                    "FR"
+                                ]
+                            }
+                        },
+                        "Ccy": "EUR"
+                    },
+                    "DbtrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {
+                                "var": "sender_bic"
+                            },
+                            "Nm": {
+                                "fake": [
+                                    "company_name"
+                                ]
+                            }
+                        }
+                    },
+                    "CdtrAgt": {
+                        "FinInstnId": {
+                            "BICFI": {
+                                "var": "receiver_bic"
+                            },
+                            "Nm": {
+                                "fake": [
+                                    "company_name"
+                                ]
+                            }
+                        }
+                    },
                     "Cdtr": {
-                        "Nm": {"fake": ["company_name"]},
+                        "Nm": {
+                            "fake": [
+                                "company_name"
+                            ]
+                        },
                         "PstlAdr": {
-                            "StrtNm": {"fake": ["street_name"]},
-                            "BldgNb": {"cat": [{"fake": ["i64", 1, 999]}]},
-                            "PstCd": {"fake": ["postcode"]},
-                            "TwnNm": {"fake": ["city_name"]},
+                            "StrtNm": {
+                                "fake": [
+                                    "street_name"
+                                ]
+                            },
+                            "BldgNb": {
+                                "cat": [
+                                    {
+                                        "fake": [
+                                            "i64",
+                                            1,
+                                            999
+                                        ]
+                                    }
+                                ]
+                            },
+                            "PstCd": {
+                                "fake": [
+                                    "postcode"
+                                ]
+                            },
+                            "TwnNm": {
+                                "fake": [
+                                    "city_name"
+                                ]
+                            },
                             "Ctry": "DE"
                         },
                         "CtryOfRes": "DE"
                     },
-                    "CdtrAcct": {"Id": {"IBAN": {"fake": ["iban", "DE"]}}, "Ccy": "EUR"},
-                    "InstrForNxtAgt": [{"Cd": "PHOB", "InstrInf": "Return of original payment"}],
-                    "Purp": {"Prtry": "RETURN_PAYMENT"},
+                    "CdtrAcct": {
+                        "Id": {
+                            "IBAN": {
+                                "fake": [
+                                    "iban",
+                                    "DE"
+                                ]
+                            }
+                        },
+                        "Ccy": "EUR"
+                    },
+                    "InstrForNxtAgt": [
+                        {
+                            "InstrInf": "PHOB - Return of original payment"
+                        }
+                    ],
+                    "Purp": {
+                        "Prtry": "RETURN_PAYMENT"
+                    },
                     "RmtInf": {
-                        "Ustrd": {"cat": ["Return of payment - ", {"var": "return_reason_code"}]},
+                        "Ustrd": {
+                            "cat": [
+                                "Return of payment - ",
+                                {
+                                    "var": "return_reason_code"
+                                }
+                            ]
+                        },
                         "Strd": [
                             {
-                                "OrgnlPmtInf": {
-                                    "OrgnlPmtAmt": {"@Ccy": "EUR", "$value": {"var": "amount"}},
-                                    "ReqdExctnDt": {"Dt": {"var": "original_value_date"}},
-                                    "OrgnlReqdExctnDt": {"Dt": {"var": "original_value_date"}}
-                                },
                                 "RfrdDocInf": [
                                     {
-                                        "Tp": {"CdOrPrtry": {"Prtry": "ORIGINAL_PAYMENT"}},
-                                        "Nb": {"var": "original_msg_id"},
-                                        "RltdDt": {"var": "original_value_date"}
+                                        "Tp": {
+                                            "CdOrPrtry": {
+                                                "Prtry": "ORIGINAL_PAYMENT"
+                                            }
+                                        },
+                                        "Nb": {
+                                            "var": "original_msg_id"
+                                        },
+                                        "RltdDt": {
+                                            "var": "original_value_date"
+                                        }
                                     }
                                 ],
                                 "AddtlRmtInf": [
                                     {
                                         "cat": [
                                             "Original End-to-End ID: ",
-                                            {"var": "original_end_to_end"},
+                                            {
+                                                "var": "original_end_to_end"
+                                            },
                                             " | Original UETR: ",
-                                            {"var": "original_uetr"}
+                                            {
+                                                "var": "original_uetr"
+                                            }
                                         ]
                                     }
                                 ]

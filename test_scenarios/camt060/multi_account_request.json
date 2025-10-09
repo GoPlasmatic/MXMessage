@@ -31,8 +31,7 @@
                 "GrpHdr": {
                     "MsgId": "MSG123456789",
                     "CreDtTm": "2025-01-15T10:00:00.123+00:00",
-                    "MsgSndr": {"Agt": {"FinInstnId": {"BICFI": "BANKUS33XXX"}}},
-                    "MsgRcpt": {"Agt": {"FinInstnId": {"BICFI": "BANKGB22XXX"}}}
+                    "MsgSndr": {"Agt": {"FinInstnId": {"BICFI": "BANKUS33XXX"}}}
                 },
                 "RptgReq": [
                     {
@@ -40,8 +39,10 @@
                         "ReqdMsgNmId": "camt.053.001.08",
                         "Acct": {"Id": {"IBAN": "GB29NWBK60161331926819"}, "Ccy": "USD", "Nm": "John Smith"},
                         "AcctOwnr": {
-                            "Nm": "John Smith",
-                            "Id": {"OrgId": {"Othr": [{"Id": "CUST-123456", "SchmeNm": {"Prtry": "CUST_ID"}}]}}
+                            "Pty": {
+                                "Nm": "John Smith",
+                                "Id": {"OrgId": {"Othr": [{"Id": "CUST-123456", "SchmeNm": {"Prtry": "CUST_ID"}}]}}
+                            }
                         },
                         "RptgPrd": {"FrToDt": {"FrDt": "2025-01-01", "ToDt": "2025-01-14"}, "Tp": "ALLL"}
                     }

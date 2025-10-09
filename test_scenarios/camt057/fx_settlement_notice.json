@@ -48,19 +48,7 @@
                         {
                             "Id": "PMT-123456",
                             "XpctdValDt": "2025-01-15T14:00:00.123+00:00",
-                            "Amt": {"@Ccy": "USD", "$value": 10000.0},
-                            "RmtInf": {
-                                "Ustrd": ["FX Settlement - Deal MISSING_deal_reference"],
-                                "Strd": [
-                                    {
-                                        "AddtlRmtInf": [
-                                            "Buy MISSING_buy_currency MISSING_buy_amount",
-                                            "Sell MISSING_sell_currency MISSING_sell_amount",
-                                            "Rate: MISSING_exchange_rate"
-                                        ]
-                                    }
-                                ]
-                            }
+                            "Amt": {"@Ccy": "USD", "$value": 10000.0}
                         }
                     ]
                 },
