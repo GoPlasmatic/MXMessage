@@ -3,7 +3,7 @@
         "msg_id": {"cat": ["DUP-UETR-", {"fake": ["i64", 100000000000, 999999999999]}]},
         "creation_datetime": {"fake": ["iso8601_datetime"]},
         "payment_id": {"cat": ["DUP-PMT-", {"fake": ["i64", 100000, 999999]}]},
-        "duplicate_uetr": "550e8400-e29b-41d4-a716-446655440000",
+        "duplicate_uetr": {"fake": ["uuid"]},
         "amount": {"fake": ["f64", 5000.0, 50000.0]},
         "currency": {
             "fake": ["enum", "USD", "EUR", "GBP"]

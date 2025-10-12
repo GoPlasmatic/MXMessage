@@ -1,136 +1,58 @@
 {
     "variables": {
-        "msg_id": "MSG123456789",
-        "creation_datetime": "2025-01-15T10:00:00.123+00:00",
-        "original_msg_id": "ORIG-123456789",
-        "uetr": "a1234567-b123-4123-8123-123456789012",
-        "transaction_id": "TXN123456789",
-        "instruction_id": "INSTR12345678",
-        "end_to_end_id": "E2E123456789",
-        "amount": 10000.0,
-        "cancellation_id": "CANC-123456789",
-        "sender_bic": "BANKUS33XXX",
-        "receiver_bic": "BANKGB22XXX",
-        "sender_lei": "54930084UKLVMY22DS16",
-        "receiver_lei": "213800QILIUD4ROSUO03",
-        "original_date": "2025-01-14"
+        "msg_id": {"cat": ["MSG", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "original_msg_id": {"cat": ["ORIG", {"fake": ["i64", 100000000, 999999999]}]},
+        "uetr": {"fake": ["uuid"]},
+        "transaction_id": {"cat": ["TXN", {"fake": ["i64", 100000000, 999999999]}]},
+        "instruction_id": {"cat": ["INSTR", {"fake": ["i64", 10000000, 99999999]}]},
+        "end_to_end_id": {"cat": ["E2E", {"fake": ["i64", 100000000, 999999999]}]},
+        "amount": {"fake": ["f64", 100.0, 500000.0]},
+        "cancellation_id": {"cat": ["CANC", {"fake": ["i64", 100000, 999999]}]},
+        "sender_bic": {"fake": ["bic"]},
+        "receiver_bic": {"fake": ["bic"]},
+        "sender_lei": {"fake": ["lei"]},
+        "receiver_lei": {"fake": ["lei"]},
+        "original_date": {
+            "fake": ["date", "%Y-%m-%d", "-30d", "-1d"]
+        }
     },
     "schema": {
         "AppHdr": {
-            "Fr": {
-                "FIId": {
-                    "FinInstnId": {
-                        "BICFI": {
-                            "var": "sender_bic"
-                        }
-                    }
-                }
-            },
-            "To": {
-                "FIId": {
-                    "FinInstnId": {
-                        "BICFI": {
-                            "var": "receiver_bic"
-                        }
-                    }
-                }
-            },
-            "BizMsgIdr": {
-                "var": "msg_id"
-            },
+            "Fr": {"FIId": {"FinInstnId": {"BICFI": {"var": "sender_bic"}}}},
+            "To": {"FIId": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}}}},
+            "BizMsgIdr": {"var": "msg_id"},
             "MsgDefIdr": "camt.056.001.08",
             "BizSvc": "swift.cbprplus.01",
-            "CreDt": {
-                "var": "creation_datetime"
-            }
+            "CreDt": {"var": "creation_datetime"}
         },
         "Document": {
             "FIToFIPmtCxlReq": {
                 "Assgnmt": {
-                    "Id": {
-                        "var": "msg_id"
-                    },
-                    "Assgnr": {
-                        "Agt": {
-                            "FinInstnId": {
-                                "BICFI": {
-                                    "var": "sender_bic"
-                                },
-                                "LEI": {
-                                    "var": "sender_lei"
-                                }
-                            }
-                        }
-                    },
+                    "Id": {"var": "msg_id"},
+                    "Assgnr": {"Agt": {"FinInstnId": {"BICFI": {"var": "sender_bic"}, "LEI": {"var": "sender_lei"}}}},
                     "Assgne": {
-                        "Agt": {
-                            "FinInstnId": {
-                                "BICFI": {
-                                    "var": "receiver_bic"
-                                },
-                                "LEI": {
-                                    "var": "receiver_lei"
-                                }
-                            }
-                        }
+                        "Agt": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}, "LEI": {"var": "receiver_lei"}}}
                     },
-                    "CreDtTm": {
-                        "var": "creation_datetime"
-                    }
+                    "CreDtTm": {"var": "creation_datetime"}
                 },
                 "Undrlyg": {
                     "TxInf": {
-                        "CxlId": {
-                            "var": "cancellation_id"
-                        },
+                        "CxlId": {"var": "cancellation_id"},
                         "OrgnlGrpInf": {
-                            "OrgnlMsgId": {
-                                "var": "original_msg_id"
-                            },
+                            "OrgnlMsgId": {"var": "original_msg_id"},
                             "OrgnlMsgNmId": "pacs.009.001.08",
-                            "OrgnlCreDtTm": {
-                                "fake": [
-                                    "iso8601_datetime",
-                                    "-2h",
-                                    "-1h"
-                                ]
-                            }
+                            "OrgnlCreDtTm": {"fake": ["iso8601_datetime", "-2h", "-1h"]}
                         },
-                        "OrgnlInstrId": {
-                            "var": "instruction_id"
-                        },
-                        "OrgnlEndToEndId": {
-                            "var": "end_to_end_id"
-                        },
-                        "OrgnlTxId": {
-                            "var": "transaction_id"
-                        },
-                        "OrgnlUETR": {
-                            "var": "uetr"
-                        },
-                        "OrgnlIntrBkSttlmAmt": {
-                            "@Ccy": "USD",
-                            "$value": {
-                                "var": "amount"
-                            }
-                        },
-                        "OrgnlIntrBkSttlmDt": {
-                            "var": "original_date"
-                        },
+                        "OrgnlInstrId": {"var": "instruction_id"},
+                        "OrgnlEndToEndId": {"var": "end_to_end_id"},
+                        "OrgnlTxId": {"var": "transaction_id"},
+                        "OrgnlUETR": {"var": "uetr"},
+                        "OrgnlIntrBkSttlmAmt": {"@Ccy": "USD", "$value": {"var": "amount"}},
+                        "OrgnlIntrBkSttlmDt": {"var": "original_date"},
                         "CxlRsnInf": {
-                            "Orgtr": {
-                                "Nm": "Treasury Operations",
-                                "Id": {
-                                    "OrgId": {
-                                        "AnyBIC": {
-                                            "var": "sender_bic"
-                                        }
-                                    }
-                                }
-                            },
-                            "Rsn": {
-                                "Cd": "TECH"
-                            },
+                            "Orgtr": {"Nm": "Treasury Operations", "Id": {"OrgId": {"AnyBIC": {"var": "sender_bic"}}}},
+                            "Rsn": {"Cd": "TECH"},
                             "AddtlInf": [
                                 "URGENT CANCELLATION REQUIRED",
                                 "Wrong amount entered - decimal error",
@@ -138,16 +60,7 @@
                                 "Immediate action required to prevent loss"
                             ]
                         },
-                        "Case": {
-                            "Id": {
-                                "var": "cancellation_id"
-                            },
-                            "Cretr": {
-                                "Pty": {
-                                    "Nm": "Case Creator"
-                                }
-                            }
-                        }
+                        "Case": {"Id": {"var": "cancellation_id"}, "Cretr": {"Pty": {"Nm": "Case Creator"}}}
                     }
                 }
             }

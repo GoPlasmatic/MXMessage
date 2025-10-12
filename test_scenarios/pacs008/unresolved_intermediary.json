@@ -9,7 +9,7 @@
             "fake": ["enum", "USD", "EUR", "GBP"]
         },
         "sender_bic": {"fake": ["bic"]},
-        "intermediary_bic": "XXXXUS33XXX",
+        "intermediary_bic": {"fake": ["bic"]},
         "receiver_bic": {"fake": ["bic"]},
         "ordering_customer": {"fake": ["company_name"]},
         "ordering_account": {"fake": ["iban"]},

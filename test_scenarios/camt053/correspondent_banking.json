@@ -1,9 +1,9 @@
 {
     "variables": {
-        "msg_id": "CORRMSG123456789",
-        "creation_datetime": "2025-01-15T10:00:00.123+00:00",
-        "stmt_id": "CORRSTMT123456789",
-        "account_id": "GB29NWBK60161331926819"
+        "msg_id": {"cat": ["MSG", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "stmt_id": {"cat": ["STMT", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "account_id": {"fake": ["iban"]}
     },
     "schema": {
         "AppHdr": {

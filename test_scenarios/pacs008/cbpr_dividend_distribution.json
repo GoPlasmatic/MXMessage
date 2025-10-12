@@ -1,509 +1,133 @@
 {
     "variables": {
-        "msg_id": {
-            "cat": [
-                "MSG",
-                {
-                    "fake": [
-                        "i64",
-                        100000000000,
-                        999999999999
-                    ]
-                }
-            ]
-        },
-        "creation_datetime": {
-            "fake": [
-                "iso8601_datetime"
-            ]
-        },
-        "sender_bic": {
-            "fake": [
-                "bic"
-            ]
-        },
-        "receiver_bic": {
-            "fake": [
-                "bic"
-            ]
-        },
-        "transaction_ref": {
-            "cat": [
-                "TXN",
-                {
-                    "fake": [
-                        "i64",
-                        100000000000,
-                        999999999999
-                    ]
-                }
-            ]
-        },
-        "instruction_id": {
-            "cat": [
-                "INSTR",
-                {
-                    "fake": [
-                        "i64",
-                        10000000,
-                        99999999
-                    ]
-                }
-            ]
-        },
-        "end_to_end_id": {
-            "cat": [
-                "E2E",
-                {
-                    "fake": [
-                        "i64",
-                        100000000000,
-                        999999999999
-                    ]
-                }
-            ]
-        },
-        "uetr": {
-            "fake": [
-                "uuid"
-            ]
-        },
-        "dividend_amount": {
-            "fake": [
-                "f64",
-                1000.0,
-                50000.0
-            ]
-        },
-        "shares_held": {
-            "fake": [
-                "i64",
-                100,
-                10000
-            ]
-        },
-        "dividend_per_share": {
-            "fake": [
-                "f64",
-                0.5,
-                5.0
-            ]
-        },
-        "withholding_tax": {
-            "fake": [
-                "f64",
-                100.0,
-                7500.0
-            ]
-        },
-        "issuer_name": {
-            "fake": [
-                "company_name"
-            ]
-        },
-        "shareholder_name": {
-            "fake": [
-                "name"
-            ]
-        },
+        "msg_id": {"cat": ["MSG", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "sender_bic": {"fake": ["bic"]},
+        "receiver_bic": {"fake": ["bic"]},
+        "transaction_ref": {"cat": ["TXN", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "instruction_id": {"cat": ["INSTR", {"fake": ["i64", 10000000, 99999999]}]},
+        "end_to_end_id": {"cat": ["E2E", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "uetr": {"fake": ["uuid"]},
+        "dividend_amount": {"fake": ["f64", 1000.0, 50000.0]},
+        "shares_held": {"fake": ["i64", 100, 10000]},
+        "dividend_per_share": {"fake": ["f64", 0.5, 5.0]},
+        "withholding_tax": {"fake": ["f64", 100.0, 7500.0]},
+        "issuer_name": {"fake": ["company_name"]},
+        "shareholder_name": {"fake": ["name"]},
         "record_date": {
-            "fake": [
-                "date",
-                "%Y-%m-%d",
-                "-30d",
-                "-10d"
-            ]
+            "fake": ["date", "%Y-%m-%d", "-30d", "-10d"]
         },
         "payment_date": {
-            "fake": [
-                "date",
-                "%Y-%m-%d",
-                "+0d",
-                "+0d"
-            ]
+            "fake": ["date", "%Y-%m-%d", "+0d", "+0d"]
         },
-        "isin": {
-            "cat": [
-                "US",
-                {
-                    "fake": [
-                        "regex",
-                        "[0-9A-Z]{10}"
-                    ]
-                }
-            ]
-        }
+        "isin": {"cat": ["US", {"fake": ["regex", "[0-9A-Z]{10}"]}]}
     },
     "schema": {
         "AppHdr": {
-            "Fr": {
-                "FIId": {
-                    "FinInstnId": {
-                        "BICFI": {
-                            "var": "sender_bic"
-                        }
-                    }
-                }
-            },
-            "To": {
-                "FIId": {
-                    "FinInstnId": {
-                        "BICFI": {
-                            "var": "receiver_bic"
-                        }
-                    }
-                }
-            },
-            "BizMsgIdr": {
-                "var": "msg_id"
-            },
+            "Fr": {"FIId": {"FinInstnId": {"BICFI": {"var": "sender_bic"}}}},
+            "To": {"FIId": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}}}},
+            "BizMsgIdr": {"var": "msg_id"},
             "MsgDefIdr": "pacs.008.001.08",
             "BizSvc": "swift.cbprplus.01",
-            "CreDt": {
-                "var": "creation_datetime"
-            }
+            "CreDt": {"var": "creation_datetime"}
         },
         "Document": {
             "FIToFICstmrCdtTrf": {
                 "GrpHdr": {
-                    "MsgId": {
-                        "var": "msg_id"
-                    },
-                    "CreDtTm": {
-                        "var": "creation_datetime"
-                    },
+                    "MsgId": {"var": "msg_id"},
+                    "CreDtTm": {"var": "creation_datetime"},
                     "NbOfTxs": "1",
-                    "SttlmInf": {
-                        "SttlmMtd": "INDA"
-                    }
+                    "SttlmInf": {"SttlmMtd": "INDA"}
                 },
                 "CdtTrfTxInf": {
                     "PmtId": {
-                        "InstrId": {
-                            "var": "instruction_id"
-                        },
-                        "EndToEndId": {
-                            "var": "end_to_end_id"
-                        },
-                        "TxId": {
-                            "var": "transaction_ref"
-                        },
-                        "UETR": {
-                            "var": "uetr"
-                        }
+                        "InstrId": {"var": "instruction_id"},
+                        "EndToEndId": {"var": "end_to_end_id"},
+                        "TxId": {"var": "transaction_ref"},
+                        "UETR": {"var": "uetr"}
                     },
                     "PmtTpInf": {
                         "InstrPrty": "NORM",
-                        "SvcLvl": [
-                            {
-                                "Cd": "CBPR"
-                            }
-                        ],
-                        "CtgyPurp": {
-                            "Cd": "DIVI"
-                        },
-                        "LclInstrm": {
-                            "Cd": "SDVA"
-                        }
+                        "SvcLvl": [{"Cd": "CBPR"}],
+                        "CtgyPurp": {"Cd": "DIVI"},
+                        "LclInstrm": {"Cd": "SDVA"}
                     },
-                    "IntrBkSttlmAmt": {
-                        "@Ccy": "USD",
-                        "$value": {
-                            "fake": [
-                                "f64",
-                                850.0,
-                                42500.0
-                            ]
-                        }
-                    },
-                    "IntrBkSttlmDt": {
-                        "var": "payment_date"
-                    },
+                    "IntrBkSttlmAmt": {"@Ccy": "USD", "$value": {"fake": ["f64", 850.0, 42500.0]}},
+                    "IntrBkSttlmDt": {"var": "payment_date"},
                     "SttlmPrty": "NORM",
-                    "InstdAmt": {
-                        "@Ccy": "USD",
-                        "$value": {
-                            "fake": [
-                                "f64",
-                                850.0,
-                                42500.0
-                            ]
-                        }
-                    },
+                    "InstdAmt": {"@Ccy": "USD", "$value": {"fake": ["f64", 850.0, 42500.0]}},
                     "ChrgBr": "SHAR",
-                    "InstgAgt": {
-                        "FinInstnId": {
-                            "BICFI": {
-                                "var": "sender_bic"
-                            },
-                            "LEI": {
-                                "fake": [
-                                    "lei"
-                                ]
-                            }
-                        }
-                    },
-                    "InstdAgt": {
-                        "FinInstnId": {
-                            "BICFI": {
-                                "var": "receiver_bic"
-                            },
-                            "LEI": {
-                                "fake": [
-                                    "lei"
-                                ]
-                            }
-                        }
-                    },
+                    "InstgAgt": {"FinInstnId": {"BICFI": {"var": "sender_bic"}, "LEI": {"fake": ["lei"]}}},
+                    "InstdAgt": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}, "LEI": {"fake": ["lei"]}}},
                     "Dbtr": {
-                        "Nm": {
-                            "var": "issuer_name"
-                        },
+                        "Nm": {"var": "issuer_name"},
                         "PstlAdr": {
-                            "StrtNm": {
-                                "cat": [
-                                    {
-                                        "fake": [
-                                            "i64",
-                                            1,
-                                            999
-                                        ]
-                                    },
-                                    " Corporate Boulevard"
-                                ]
-                            },
-                            "PstCd": {
-                                "fake": [
-                                    "postcode"
-                                ]
-                            },
-                            "TwnNm": {
-                                "fake": [
-                                    "city_name"
-                                ]
-                            },
+                            "StrtNm": {"cat": [{"fake": ["i64", 1, 999]}, " Corporate Boulevard"]},
+                            "PstCd": {"fake": ["postcode"]},
+                            "TwnNm": {"fake": ["city_name"]},
                             "Ctry": "US"
                         },
                         "CtryOfRes": "US",
-                        "Id": {
-                            "OrgId": {
-                                "LEI": {
-                                    "fake": [
-                                        "lei"
-                                    ]
-                                }
-                            }
-                        }
+                        "Id": {"OrgId": {"LEI": {"fake": ["lei"]}}}
                     },
                     "DbtrAcct": {
-                        "Id": {
-                            "Othr": {
-                                "Id": {
-                                    "cat": [
-                                        "DIV-PAY-",
-                                        {
-                                            "fake": [
-                                                "i64",
-                                                100000,
-                                                999999
-                                            ]
-                                        }
-                                    ]
-                                }
-                            }
-                        },
+                        "Id": {"Othr": {"Id": {"cat": ["DIV-PAY-", {"fake": ["i64", 100000, 999999]}]}}},
                         "Ccy": "USD",
                         "Nm": "Dividend Payment Account"
                     },
                     "DbtrAgt": {
                         "FinInstnId": {
-                            "BICFI": {
-                                "var": "sender_bic"
-                            },
-                            "Nm": {
-                                "cat": [
-                                    {
-                                        "fake": [
-                                            "company_name"
-                                        ]
-                                    },
-                                    " Custody Services"
-                                ]
-                            },
-                            "LEI": {
-                                "fake": [
-                                    "lei"
-                                ]
-                            }
+                            "BICFI": {"var": "sender_bic"},
+                            "Nm": {"cat": [{"fake": ["company_name"]}, " Custody Services"]},
+                            "LEI": {"fake": ["lei"]}
                         }
                     },
                     "CdtrAgt": {
                         "FinInstnId": {
-                            "BICFI": {
-                                "var": "receiver_bic"
-                            },
-                            "Nm": {
-                                "fake": [
-                                    "company_name"
-                                ]
-                            },
-                            "LEI": {
-                                "fake": [
-                                    "lei"
-                                ]
-                            }
+                            "BICFI": {"var": "receiver_bic"},
+                            "Nm": {"fake": ["company_name"]},
+                            "LEI": {"fake": ["lei"]}
                         }
                     },
                     "Cdtr": {
-                        "Nm": {
-                            "var": "shareholder_name"
-                        },
+                        "Nm": {"var": "shareholder_name"},
                         "PstlAdr": {
-                            "StrtNm": {
-                                "fake": [
-                                    "street_name"
-                                ]
-                            },
-                            "BldgNb": {
-                                "cat": [
-                                    {
-                                        "fake": [
-                                            "i64",
-                                            1,
-                                            999
-                                        ]
-                                    }
-                                ]
-                            },
-                            "PstCd": {
-                                "fake": [
-                                    "postcode"
-                                ]
-                            },
-                            "TwnNm": {
-                                "fake": [
-                                    "city_name"
-                                ]
-                            },
-                            "Ctry": {
-                                "fake": [
-                                    "regex",
-                                    "(GB|DE|FR|CA|AU)"
-                                ]
-                            }
+                            "StrtNm": {"fake": ["street_name"]},
+                            "BldgNb": {"cat": [{"fake": ["i64", 1, 999]}]},
+                            "PstCd": {"fake": ["postcode"]},
+                            "TwnNm": {"fake": ["city_name"]},
+                            "Ctry": {"fake": ["regex", "(GB|DE|FR|CA|AU)"]}
                         },
-                        "CtryOfRes": {
-                            "fake": [
-                                "regex",
-                                "(GB|DE|FR|CA|AU)"
-                            ]
-                        },
-                        "Id": {
-                            "PrvtId": {
-                                "Othr": [
-                                    {
-                                        "Id": {
-                                            "cat": [
-                                                "SH-",
-                                                {
-                                                    "fake": [
-                                                        "i64",
-                                                        10000000,
-                                                        99999999
-                                                    ]
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            }
-                        }
+                        "CtryOfRes": {"fake": ["regex", "(GB|DE|FR|CA|AU)"]},
+                        "Id": {"PrvtId": {"Othr": [{"Id": {"cat": ["SH-", {"fake": ["i64", 10000000, 99999999]}]}}]}}
                     },
-                    "CdtrAcct": {
-                        "Id": {
-                            "IBAN": {
-                                "fake": [
-                                    "iban",
-                                    "GB"
-                                ]
-                            }
-                        },
-                        "Ccy": "USD",
-                        "Nm": "Investment Account"
-                    },
-                    "Purp": {
-                        "Cd": "DIVI"
-                    },
+                    "CdtrAcct": {"Id": {"IBAN": {"fake": ["iban", "GB"]}}, "Ccy": "USD", "Nm": "Investment Account"},
+                    "Purp": {"Cd": "DIVI"},
                     "RmtInf": {
                         "Strd": [
                             {
                                 "RfrdDocInf": [
                                     {
-                                        "Tp": {
-                                            "CdOrPrtry": {
-                                                "Prtry": "DIVIDEND_ANNOUNCEMENT"
-                                            }
-                                        },
+                                        "Tp": {"CdOrPrtry": {"Prtry": "DIVIDEND_ANNOUNCEMENT"}},
                                         "Nb": {
                                             "cat": [
                                                 "DIV-",
                                                 {
-                                                    "fake": [
-                                                        "date",
-                                                        "%Y%m%d",
-                                                        "+0d",
-                                                        "+0d"
-                                                    ]
+                                                    "fake": ["date", "%Y%m%d", "+0d", "+0d"]
                                                 },
                                                 "-",
-                                                {
-                                                    "var": "isin"
-                                                }
+                                                {"var": "isin"}
                                             ]
                                         },
-                                        "RltdDt": {
-                                            "var": "record_date"
-                                        }
+                                        "RltdDt": {"var": "record_date"}
                                     }
                                 ],
                                 "RfrdDocAmt": {
-                                    "DuePyblAmt": {
-                                        "@Ccy": "USD",
-                                        "$value": {
-                                            "var": "dividend_amount"
-                                        }
-                                    },
-                                    "TaxAmt": [
-                                        {
-                                            "Amt": {
-                                                "@Ccy": "USD",
-                                                "$value": {
-                                                    "var": "withholding_tax"
-                                                }
-                                            }
-                                        }
-                                    ],
-                                    "RmtdAmt": {
-                                        "@Ccy": "USD",
-                                        "$value": {
-                                            "fake": [
-                                                "f64",
-                                                850.0,
-                                                42500.0
-                                            ]
-                                        }
-                                    }
+                                    "DuePyblAmt": {"@Ccy": "USD", "$value": {"var": "dividend_amount"}},
+                                    "TaxAmt": [{"Amt": {"@Ccy": "USD", "$value": {"var": "withholding_tax"}}}],
+                                    "RmtdAmt": {"@Ccy": "USD", "$value": {"fake": ["f64", 850.0, 42500.0]}}
                                 },
-                                "CdtrRefInf": {
-                                    "Tp": {
-                                        "CdOrPrtry": {
-                                            "Prtry": "SECURITY_IDENTIFIER"
-                                        }
-                                    },
-                                    "Ref": {
-                                        "var": "isin"
-                                    }
-                                },
+                                "CdtrRefInf": {"Tp": {"CdOrPrtry": {"Prtry": "SECURITY_IDENTIFIER"}}, "Ref": {"var": "isin"}},
                                 "AddtlRmtInf": [
                                     "Generated remittance information",
                                     "Generated remittance information",

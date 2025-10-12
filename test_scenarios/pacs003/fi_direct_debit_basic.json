@@ -2,7 +2,9 @@
     "variables": {
         "msg_id": {"cat": ["MSG", {"fake": ["i64", 100000000000, 999999999999]}]},
         "creation_datetime": {"fake": ["iso8601_datetime"]},
-        "settlement_date": "2025-01-20",
+        "settlement_date": {
+            "fake": ["date", "%Y-%m-%d", "+1d", "+5d"]
+        },
         "instd_amt": {"fake": ["f64", 1000.0, 10000.0]},
         "intrbank_amt": {"fake": ["f64", 1000.0, 10000.0]},
         "end_to_end_id": {"cat": ["E2E", {"fake": ["i64", 100000000000, 999999999999]}]},
@@ -14,7 +16,9 @@
         "creditor_iban": {"fake": ["iban", "FR"]},
         "instruction_id": {"cat": ["INSTR", {"fake": ["i64", 10000000, 99999999]}]},
         "uetr": {"fake": ["uuid"]},
-        "collection_date": "2025-01-20"
+        "collection_date": {
+            "fake": ["date", "%Y-%m-%d", "+5d", "+15d"]
+        }
     },
     "schema": {
         "AppHdr": {

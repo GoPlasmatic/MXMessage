@@ -1,376 +1,101 @@
 {
     "variables": {
-        "msg_id": {
-            "cat": [
-                "MSGDDRET",
-                {
-                    "fake": [
-                        "i64",
-                        100000000000,
-                        999999999999
-                    ]
-                }
-            ]
+        "msg_id": {"cat": ["MSGDDRET", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "company_name": {"fake": ["company_name"]},
+        "company_lei": {"fake": ["lei"]},
+        "pmt_inf_id": {"cat": ["DDRETURN", {"fake": ["i64", 10000000, 99999999]}]},
+        "collection_date": {
+            "fake": ["date", "%Y-%m-%d", "+5d", "+15d"]
         },
-        "creation_datetime": {
-            "fake": [
-                "iso8601_datetime"
-            ]
-        },
-        "company_name": {
-            "fake": [
-                "company_name"
-            ]
-        },
-        "company_lei": {
-            "fake": [
-                "lei"
-            ]
-        },
-        "pmt_inf_id": {
-            "cat": [
-                "DDRETURN",
-                {
-                    "fake": [
-                        "i64",
-                        10000000,
-                        99999999
-                    ]
-                }
-            ]
-        },
-        "collection_date": "2025-01-18",
-        "creditor_iban": {
-            "fake": [
-                "iban",
-                "DE"
-            ]
-        },
-        "creditor_bic": {
-            "fake": [
-                "bic"
-            ]
-        },
-        "creditor_scheme_id": {
-            "cat": [
-                "DE",
-                {
-                    "fake": [
-                        "i64",
-                        10000000,
-                        99999999
-                    ]
-                },
-                "ZZZ"
-            ]
-        },
-        "num_returns": 5
+        "creditor_iban": {"fake": ["iban", "DE"]},
+        "creditor_bic": {"fake": ["bic"]},
+        "creditor_scheme_id": {"cat": ["DE", {"fake": ["i64", 10000000, 99999999]}, "ZZZ"]},
+        "num_returns": {"fake": ["i64", 1, 10]}
     },
     "schema": {
         "AppHdr": {
-            "Fr": {
-                "FIId": {
-                    "FinInstnId": {
-                        "BICFI": {
-                            "fake": [
-                                "bic"
-                            ]
-                        }
-                    }
-                }
-            },
-            "To": {
-                "FIId": {
-                    "FinInstnId": {
-                        "BICFI": {
-                            "fake": [
-                                "bic"
-                            ]
-                        }
-                    }
-                }
-            },
-            "BizMsgIdr": {
-                "var": "msg_id"
-            },
+            "Fr": {"FIId": {"FinInstnId": {"BICFI": {"fake": ["bic"]}}}},
+            "To": {"FIId": {"FinInstnId": {"BICFI": {"fake": ["bic"]}}}},
+            "BizMsgIdr": {"var": "msg_id"},
             "MsgDefIdr": "pain.008.001.08",
             "BizSvc": "swift.cbprplus.01",
-            "CreDt": {
-                "var": "creation_datetime"
-            }
+            "CreDt": {"var": "creation_datetime"}
         },
         "Document": {
             "CstmrDrctDbtInitn": {
                 "GrpHdr": {
-                    "MsgId": {
-                        "var": "msg_id"
-                    },
-                    "CreDtTm": {
-                        "var": "creation_datetime"
-                    },
-                    "NbOfTxs": {
-                        "cat": [
-                            {
-                                "var": "num_returns"
-                            }
-                        ]
-                    },
-                    "InitgPty": {
-                        "Nm": {
-                            "var": "company_name"
-                        },
-                        "Id": {
-                            "OrgId": {
-                                "LEI": {
-                                    "var": "company_lei"
-                                }
-                            }
-                        }
-                    },
-                    "FwdgAgt": {
-                        "FinInstnId": {
-                            "BICFI": "DEUTDEFFXXX"
-                        }
-                    }
+                    "MsgId": {"var": "msg_id"},
+                    "CreDtTm": {"var": "creation_datetime"},
+                    "NbOfTxs": {"cat": [{"var": "num_returns"}]},
+                    "InitgPty": {"Nm": {"var": "company_name"}, "Id": {"OrgId": {"LEI": {"var": "company_lei"}}}},
+                    "FwdgAgt": {"FinInstnId": {"BICFI": "DEUTDEFFXXX"}}
                 },
                 "PmtInf": {
-                    "PmtInfId": {
-                        "var": "pmt_inf_id"
-                    },
+                    "PmtInfId": {"var": "pmt_inf_id"},
                     "PmtMtd": "DD",
-                    "ReqdColltnDt": {
-                        "var": "collection_date"
-                    },
+                    "ReqdColltnDt": {"var": "collection_date"},
                     "Cdtr": {
-                        "Nm": {
-                            "var": "company_name"
-                        },
+                        "Nm": {"var": "company_name"},
                         "PstlAdr": {
                             "Ctry": "DE",
                             "AdrLine": [
-                                {
-                                    "fake": [
-                                        "street_address"
-                                    ]
-                                },
-                                {
-                                    "cat": [
-                                        {
-                                            "fake": [
-                                                "postcode"
-                                            ]
-                                        },
-                                        " ",
-                                        {
-                                            "fake": [
-                                                "city_name"
-                                            ]
-                                        }
-                                    ]
-                                }
+                                {"fake": ["street_address"]},
+                                {"cat": [{"fake": ["postcode"]}, " ", {"fake": ["city_name"]}]}
                             ]
                         },
-                        "Id": {
-                            "OrgId": {
-                                "LEI": {
-                                    "var": "company_lei"
-                                }
-                            }
-                        }
+                        "Id": {"OrgId": {"LEI": {"var": "company_lei"}}}
                     },
-                    "CdtrAcct": {
-                        "Id": {
-                            "IBAN": {
-                                "var": "creditor_iban"
-                            }
-                        },
-                        "Tp": {
-                            "Cd": "CACC"
-                        },
-                        "Ccy": "EUR"
-                    },
-                    "CdtrAgt": {
-                        "FinInstnId": {
-                            "BICFI": {
-                                "var": "creditor_bic"
-                            }
-                        }
-                    },
+                    "CdtrAcct": {"Id": {"IBAN": {"var": "creditor_iban"}}, "Tp": {"Cd": "CACC"}, "Ccy": "EUR"},
+                    "CdtrAgt": {"FinInstnId": {"BICFI": {"var": "creditor_bic"}}},
                     "DrctDbtTxInf": [
                         {
                             "PmtId": {
-                                "InstrId": {
-                                    "cat": [
-                                        "RETDD",
-                                        {
-                                            "fake": [
-                                                "i64",
-                                                100001,
-                                                999999
-                                            ]
-                                        }
-                                    ]
-                                },
-                                "EndToEndId": {
-                                    "cat": [
-                                        "E2ERET",
-                                        {
-                                            "fake": [
-                                                "i64",
-                                                100000000000,
-                                                999999999999
-                                            ]
-                                        }
-                                    ]
-                                }
+                                "InstrId": {"cat": ["RETDD", {"fake": ["i64", 100001, 999999]}]},
+                                "EndToEndId": {"cat": ["E2ERET", {"fake": ["i64", 100000000000, 999999999999]}]}
                             },
-                            "InstdAmt": {
-                                "@Ccy": "EUR",
-                                "$value": {
-                                    "fake": [
-                                        "f64",
-                                        100.0,
-                                        500.0
-                                    ]
-                                }
-                            },
+                            "InstdAmt": {"@Ccy": "EUR", "$value": {"fake": ["f64", 100.0, 500.0]}},
                             "DrctDbtTx": {
                                 "MndtRltdInf": {
-                                    "MndtId": {
-                                        "cat": [
-                                            "MNDT",
-                                            {
-                                                "fake": [
-                                                    "i64",
-                                                    2023001,
-                                                    2024999
-                                                ]
-                                            }
-                                        ]
-                                    },
+                                    "MndtId": {"cat": ["MNDT", {"fake": ["i64", 2023001, 2024999]}]},
                                     "DtOfSgntr": "2024-01-10",
                                     "AmdmntInd": false
                                 },
-                                "PreNtfctnId": {
-                                    "cat": [
-                                        "RETNOTIF",
-                                        {
-                                            "fake": [
-                                                "i64",
-                                                100001,
-                                                999999
-                                            ]
-                                        }
-                                    ]
-                                },
+                                "PreNtfctnId": {"cat": ["RETNOTIF", {"fake": ["i64", 100001, 999999]}]},
                                 "PreNtfctnDt": "2025-01-10",
                                 "CdtrSchmeId": {
                                     "Id": {
-                                        "PrvtId": {
-                                            "Othr": [
-                                                {
-                                                    "Id": {
-                                                        "var": "creditor_scheme_id"
-                                                    },
-                                                    "SchmeNm": {
-                                                        "Prtry": "SEPA"
-                                                    }
-                                                }
-                                            ]
-                                        }
+                                        "PrvtId": {"Othr": [{"Id": {"var": "creditor_scheme_id"}, "SchmeNm": {"Prtry": "SEPA"}}]}
                                     }
                                 }
                             },
-                            "DbtrAgt": {
-                                "FinInstnId": {
-                                    "BICFI": {
-                                        "fake": [
-                                            "bic"
-                                        ]
-                                    }
-                                }
-                            },
+                            "DbtrAgt": {"FinInstnId": {"BICFI": {"fake": ["bic"]}}},
                             "Dbtr": {
-                                "Nm": {
-                                    "fake": [
-                                        "name"
-                                    ]
-                                },
-                                "PstlAdr": {
-                                    "Ctry": {
-                                        "fake": [
-                                            "country_code"
-                                        ]
-                                    }
-                                },
+                                "Nm": {"fake": ["name"]},
+                                "PstlAdr": {"Ctry": {"fake": ["country_code"]}},
                                 "Id": {
                                     "PrvtId": {
                                         "Othr": [
                                             {
-                                                "Id": {
-                                                    "cat": [
-                                                        "RETCUST",
-                                                        {
-                                                            "fake": [
-                                                                "i64",
-                                                                100001,
-                                                                999999
-                                                            ]
-                                                        }
-                                                    ]
-                                                },
-                                                "SchmeNm": {
-                                                    "Cd": "NIDN"
-                                                }
+                                                "Id": {"cat": ["RETCUST", {"fake": ["i64", 100001, 999999]}]},
+                                                "SchmeNm": {"Cd": "NIDN"}
                                             }
                                         ]
                                     }
                                 }
                             },
-                            "DbtrAcct": {
-                                "Id": {
-                                    "IBAN": {
-                                        "fake": [
-                                            "iban"
-                                        ]
-                                    }
-                                }
-                            },
-                            "Purp": {
-                                "Cd": "OTHR"
-                            },
+                            "DbtrAcct": {"Id": {"IBAN": {"fake": ["iban"]}}},
+                            "Purp": {"Cd": "OTHR"},
                             "RmtInf": {
                                 "Ustrd": "Return processing - Account closed",
                                 "Strd": [
                                     {
-                                        "RfrdDocInf": [
-                                            {
-                                                "Tp": {
-                                                    "CdOrPrtry": {
-                                                        "Prtry": "RETURN_REASON"
-                                                    }
-                                                },
-                                                "Nb": "AC04"
-                                            }
-                                        ],
-                                        "AddtlRmtInf": [
-                                            "Original collection date: 2025-01-15",
-                                            "Return reason: Account closed"
-                                        ]
+                                        "RfrdDocInf": [{"Tp": {"CdOrPrtry": {"Prtry": "RETURN_REASON"}}, "Nb": "AC04"}],
+                                        "AddtlRmtInf": ["Original collection date: 2025-01-15", "Return reason: Account closed"]
                                     }
                                 ]
                             },
-                            "PmtTpInf": {
-                                "SvcLvl": [
-                                    {
-                                        "Cd": "SEPA"
-                                    }
-                                ],
-                                "LclInstrm": {
-                                    "Cd": "CORE"
-                                },
-                                "SeqTp": "OOFF"
-                            },
+                            "PmtTpInf": {"SvcLvl": [{"Cd": "SEPA"}], "LclInstrm": {"Cd": "CORE"}, "SeqTp": "OOFF"},
                             "ChrgBr": "SHAR"
                         }
                     ]

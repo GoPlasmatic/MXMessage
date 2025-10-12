@@ -1,8 +1,8 @@
 {
     "variables": {
-        "msg_id": "FXRATE123456789",
-        "creation_datetime": "2025-01-15T10:00:00.123+00:00",
-        "orig_msg_id": "ORIG789123",
+        "msg_id": {"cat": ["MSG", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "orig_msg_id": {"cat": ["ORIG", {"fake": ["i64", 100000, 999999]}]},
         "msg_name_id": "camt.025.001.08"
     },
     "schema": {

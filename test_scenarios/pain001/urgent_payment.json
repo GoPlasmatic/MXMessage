@@ -5,7 +5,9 @@
         "company_name": {"fake": ["company_name"]},
         "company_lei": {"fake": ["lei"]},
         "pmt_inf_id": {"cat": ["URGENT", {"fake": ["i64", 10000000, 99999999]}]},
-        "execution_date": "2024-12-20",
+        "execution_date": {
+            "fake": ["date", "%Y-%m-%d", "+1d", "+10d"]
+        },
         "debtor_name": {"fake": ["company_name"]},
         "debtor_iban": {"fake": ["iban", "DE"]},
         "debtor_bic": {"fake": ["bic"]},

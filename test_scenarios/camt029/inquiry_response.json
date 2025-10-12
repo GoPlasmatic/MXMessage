@@ -1,112 +1,50 @@
 {
     "variables": {
-        "msg_id": "INQUIRYRESPONSE123456789",
-        "creation_datetime": "2025-01-15T10:00:00.123+00:00",
-        "responder_bic": "DEUTDEFFXXX",
-        "originator_bic": "BNPAFRPPXXX",
-        "original_payment_id": "PMT123456789",
-        "investigation_id": "INV987654321",
-        "original_uetr": "550e8400-e29b-41d4-a716-446655440000",
-        "cancellation_amount": 10000.0,
-        "original_date": "2025-01-10",
-        "currency": "USD"
+        "msg_id": {"cat": ["INQRSP", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "responder_bic": {"fake": ["bic"]},
+        "originator_bic": {"fake": ["bic"]},
+        "original_payment_id": {"cat": ["PMT", {"fake": ["i64", 100000000, 999999999]}]},
+        "investigation_id": {"cat": ["INV", {"fake": ["i64", 100000000, 999999999]}]},
+        "original_uetr": {"fake": ["uuid"]},
+        "cancellation_amount": {"fake": ["f64", 100.0, 500000.0]},
+        "original_date": {
+            "fake": ["date", "%Y-%m-%d", "-30d", "-1d"]
+        },
+        "currency": {
+            "fake": ["enum", "USD", "EUR", "GBP", "JPY", "CHF"]
+        },
+        "end_to_end_id": {"cat": ["E2E", {"fake": ["i64", 100000000, 999999999]}]}
     },
     "schema": {
         "AppHdr": {
-            "Fr": {
-                "FIId": {
-                    "FinInstnId": {
-                        "BICFI": {
-                            "fake": [
-                                "bic"
-                            ]
-                        }
-                    }
-                }
-            },
-            "To": {
-                "FIId": {
-                    "FinInstnId": {
-                        "BICFI": {
-                            "fake": [
-                                "bic"
-                            ]
-                        }
-                    }
-                }
-            },
-            "BizMsgIdr": {
-                "var": "msg_id"
-            },
+            "Fr": {"FIId": {"FinInstnId": {"BICFI": {"fake": ["bic"]}}}},
+            "To": {"FIId": {"FinInstnId": {"BICFI": {"fake": ["bic"]}}}},
+            "BizMsgIdr": {"var": "msg_id"},
             "MsgDefIdr": "camt.029.001.09",
             "BizSvc": "swift.cbprplus.01",
-            "CreDt": {
-                "var": "creation_datetime"
-            }
+            "CreDt": {"var": "creation_datetime"}
         },
         "Document": {
             "RsltnOfInvstgtn": {
                 "Assgnmt": {
-                    "Id": {
-                        "var": "msg_id"
-                    },
-                    "Assgnr": {
-                        "Agt": {
-                            "FinInstnId": {
-                                "BICFI": {
-                                    "var": "responder_bic"
-                                }
-                            }
-                        }
-                    },
-                    "Assgne": {
-                        "Agt": {
-                            "FinInstnId": {
-                                "BICFI": {
-                                    "var": "originator_bic"
-                                }
-                            }
-                        }
-                    },
-                    "CreDtTm": {
-                        "var": "creation_datetime"
-                    }
+                    "Id": {"var": "msg_id"},
+                    "Assgnr": {"Agt": {"FinInstnId": {"BICFI": {"var": "responder_bic"}}}},
+                    "Assgne": {"Agt": {"FinInstnId": {"BICFI": {"var": "originator_bic"}}}},
+                    "CreDtTm": {"var": "creation_datetime"}
                 },
-                "Sts": {
-                    "Conf": "PDCR"
-                },
+                "Sts": {"Conf": "PDCR"},
                 "CxlDtls": {
                     "TxInfAndSts": {
-                        "CxlStsId": {
-                            "var": "investigation_id"
-                        },
+                        "CxlStsId": {"var": "investigation_id"},
                         "RslvdCase": {
-                            "Id": {
-                                "var": "investigation_id"
-                            },
-                            "Cretr": {
-                                "Agt": {
-                                    "FinInstnId": {
-                                        "BICFI": {
-                                            "var": "originator_bic"
-                                        }
-                                    }
-                                }
-                            }
+                            "Id": {"var": "investigation_id"},
+                            "Cretr": {"Agt": {"FinInstnId": {"BICFI": {"var": "originator_bic"}}}}
                         },
-                        "OrgnlGrpInf": {
-                            "OrgnlMsgId": {
-                                "var": "original_payment_id"
-                            },
-                            "OrgnlMsgNmId": "pacs.008.001.08"
-                        },
-                        "OrgnlInstrId": {
-                            "var": "original_payment_id"
-                        },
-                        "OrgnlEndToEndId": "E2E123456789",
-                        "OrgnlUETR": {
-                            "var": "original_uetr"
-                        }
+                        "OrgnlGrpInf": {"OrgnlMsgId": {"var": "original_payment_id"}, "OrgnlMsgNmId": "pacs.008.001.08"},
+                        "OrgnlInstrId": {"var": "original_payment_id"},
+                        "OrgnlEndToEndId": {"var": "end_to_end_id"},
+                        "OrgnlUETR": {"var": "original_uetr"}
                     }
                 }
             }

@@ -1,286 +1,67 @@
 {
     "variables": {
-        "msg_id": {
-            "cat": [
-                "MSGSCHED",
-                {
-                    "fake": [
-                        "i64",
-                        100000000000,
-                        999999999999
-                    ]
-                }
-            ]
-        },
-        "creation_datetime": {
-            "fake": [
-                "iso8601_datetime"
-            ]
-        },
-        "company_name": {
-            "fake": [
-                "company_name"
-            ]
-        },
-        "company_lei": {
-            "fake": [
-                "lei"
-            ]
-        },
-        "pmt_inf_id": {
-            "cat": [
-                "SCHED",
-                {
-                    "fake": [
-                        "i64",
-                        10000000,
-                        99999999
-                    ]
-                }
-            ]
-        },
-        "debtor_name": {
-            "fake": [
-                "company_name"
-            ]
-        },
-        "debtor_iban": {
-            "fake": [
-                "iban",
-                "DE"
-            ]
-        },
-        "debtor_bic": {
-            "fake": [
-                "bic"
-            ]
-        }
+        "msg_id": {"cat": ["MSGSCHED", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "company_name": {"fake": ["company_name"]},
+        "company_lei": {"fake": ["lei"]},
+        "pmt_inf_id": {"cat": ["SCHED", {"fake": ["i64", 10000000, 99999999]}]},
+        "debtor_name": {"fake": ["company_name"]},
+        "debtor_iban": {"fake": ["iban", "DE"]},
+        "debtor_bic": {"fake": ["bic"]}
     },
     "schema": {
         "AppHdr": {
-            "Fr": {
-                "FIId": {
-                    "FinInstnId": {
-                        "BICFI": {
-                            "fake": [
-                                "bic"
-                            ]
-                        }
-                    }
-                }
-            },
-            "To": {
-                "FIId": {
-                    "FinInstnId": {
-                        "BICFI": {
-                            "fake": [
-                                "bic"
-                            ]
-                        }
-                    }
-                }
-            },
-            "BizMsgIdr": {
-                "var": "msg_id"
-            },
+            "Fr": {"FIId": {"FinInstnId": {"BICFI": {"fake": ["bic"]}}}},
+            "To": {"FIId": {"FinInstnId": {"BICFI": {"fake": ["bic"]}}}},
+            "BizMsgIdr": {"var": "msg_id"},
             "MsgDefIdr": "pain.001.001.09",
             "BizSvc": "swift.cbprplus.01",
-            "CreDt": {
-                "var": "creation_datetime"
-            }
+            "CreDt": {"var": "creation_datetime"}
         },
         "Document": {
             "CstmrCdtTrfInitn": {
                 "GrpHdr": {
-                    "MsgId": {
-                        "var": "msg_id"
-                    },
-                    "CreDtTm": {
-                        "var": "creation_datetime"
-                    },
+                    "MsgId": {"var": "msg_id"},
+                    "CreDtTm": {"var": "creation_datetime"},
                     "NbOfTxs": "1",
-                    "InitgPty": {
-                        "Nm": {
-                            "var": "company_name"
-                        },
-                        "Id": {
-                            "OrgId": {
-                                "LEI": {
-                                    "var": "company_lei"
-                                }
-                            }
-                        }
-                    }
+                    "InitgPty": {"Nm": {"var": "company_name"}, "Id": {"OrgId": {"LEI": {"var": "company_lei"}}}}
                 },
                 "PmtInf": {
-                    "PmtInfId": {
-                        "var": "pmt_inf_id"
-                    },
+                    "PmtInfId": {"var": "pmt_inf_id"},
                     "PmtMtd": "TRF",
-                    "PmtTpInf": {
-                        "InstrPrty": "NORM",
-                        "SvcLvl": [
-                            {
-                                "Cd": "NORM"
-                            }
-                        ]
-                    },
-                    "ReqdExctnDt": {
-                        "Dt": "2025-01-01"
-                    },
+                    "PmtTpInf": {"InstrPrty": "NORM", "SvcLvl": [{"Cd": "NORM"}]},
+                    "ReqdExctnDt": {"Dt": "2025-01-01"},
                     "Dbtr": {
-                        "Nm": {
-                            "var": "debtor_name"
-                        },
-                        "PstlAdr": {
-                            "Ctry": "DE"
-                        },
-                        "Id": {
-                            "OrgId": {
-                                "LEI": {
-                                    "var": "company_lei"
-                                }
-                            }
-                        }
+                        "Nm": {"var": "debtor_name"},
+                        "PstlAdr": {"Ctry": "DE"},
+                        "Id": {"OrgId": {"LEI": {"var": "company_lei"}}}
                     },
-                    "DbtrAcct": {
-                        "Id": {
-                            "IBAN": {
-                                "var": "debtor_iban"
-                            }
-                        },
-                        "Tp": {
-                            "Cd": "CACC"
-                        },
-                        "Ccy": "EUR"
-                    },
-                    "DbtrAgt": {
-                        "FinInstnId": {
-                            "BICFI": {
-                                "var": "debtor_bic"
-                            }
-                        }
-                    },
+                    "DbtrAcct": {"Id": {"IBAN": {"var": "debtor_iban"}}, "Tp": {"Cd": "CACC"}, "Ccy": "EUR"},
+                    "DbtrAgt": {"FinInstnId": {"BICFI": {"var": "debtor_bic"}}},
                     "CdtTrfTxInf": {
                         "PmtId": {
-                            "InstrId": {
-                                "cat": [
-                                    "SCHEDJAN",
-                                    {
-                                        "fake": [
-                                            "i64",
-                                            100001,
-                                            999999
-                                        ]
-                                    }
-                                ]
-                            },
-                            "EndToEndId": {
-                                "cat": [
-                                    "E2ESCHED2025-01-",
-                                    {
-                                        "fake": [
-                                            "i64",
-                                            10001,
-                                            99999
-                                        ]
-                                    }
-                                ]
-                            },
-                            "UETR": {
-                                "fake": [
-                                    "uuid"
-                                ]
-                            }
+                            "InstrId": {"cat": ["SCHEDJAN", {"fake": ["i64", 100001, 999999]}]},
+                            "EndToEndId": {"cat": ["E2ESCHED2025-01-", {"fake": ["i64", 10001, 99999]}]},
+                            "UETR": {"fake": ["uuid"]}
                         },
-                        "PmtTpInf": {
-                            "LclInstrm": {
-                                "Cd": "INST"
-                            },
-                            "CtgyPurp": {
-                                "Cd": "LOAN"
-                            }
-                        },
-                        "Amt": {
-                            "InstdAmt": {
-                                "@Ccy": "EUR",
-                                "$value": {
-                                    "fake": [
-                                        "f64",
-                                        25000.0,
-                                        50000.0
-                                    ]
-                                }
-                            }
-                        },
-                        "CdtrAgt": {
-                            "FinInstnId": {
-                                "BICFI": {
-                                    "fake": [
-                                        "bic"
-                                    ]
-                                }
-                            }
-                        },
-                        "Cdtr": {
-                            "Nm": {
-                                "cat": [
-                                    {
-                                        "fake": [
-                                            "company_name"
-                                        ]
-                                    },
-                                    " Bank"
-                                ]
-                            },
-                            "PstlAdr": {
-                                "Ctry": "DE"
-                            }
-                        },
-                        "CdtrAcct": {
-                            "Id": {
-                                "IBAN": {
-                                    "fake": [
-                                        "iban",
-                                        "DE"
-                                    ]
-                                }
-                            }
-                        },
-                        "Purp": {
-                            "Cd": "LOAN"
-                        },
+                        "PmtTpInf": {"LclInstrm": {"Cd": "INST"}, "CtgyPurp": {"Cd": "LOAN"}},
+                        "Amt": {"InstdAmt": {"@Ccy": "EUR", "$value": {"fake": ["f64", 25000.0, 50000.0]}}},
+                        "CdtrAgt": {"FinInstnId": {"BICFI": {"fake": ["bic"]}}},
+                        "Cdtr": {"Nm": {"cat": [{"fake": ["company_name"]}, " Bank"]}, "PstlAdr": {"Ctry": "DE"}},
+                        "CdtrAcct": {"Id": {"IBAN": {"fake": ["iban", "DE"]}}},
+                        "Purp": {"Cd": "LOAN"},
                         "RmtInf": {
                             "Ustrd": "Monthly Loan Repayment - January 2025",
                             "Strd": [
                                 {
                                     "RfrdDocInf": [
                                         {
-                                            "Tp": {
-                                                "CdOrPrtry": {
-                                                    "Prtry": "LOAN_CONTRACT"
-                                                }
-                                            },
-                                            "Nb": {
-                                                "cat": [
-                                                    "LOAN-",
-                                                    {
-                                                        "fake": [
-                                                            "i64",
-                                                            2020001,
-                                                            2023999
-                                                        ]
-                                                    }
-                                                ]
-                                            },
+                                            "Tp": {"CdOrPrtry": {"Prtry": "LOAN_CONTRACT"}},
+                                            "Nb": {"cat": ["LOAN-", {"fake": ["i64", 2020001, 2023999]}]},
                                             "RltdDt": "2023-01-15"
                                         }
                                     ],
-                                    "AddtlRmtInf": [
-                                        "Principal: EUR 20,000.00",
-                                        "Interest: EUR 5,000.00",
-                                        "Payment 25 of 60"
-                                    ]
+                                    "AddtlRmtInf": ["Principal: EUR 20,000.00", "Interest: EUR 5,000.00", "Payment 25 of 60"]
                                 }
                             ]
                         }

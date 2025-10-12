@@ -1,295 +1,75 @@
 {
     "variables": {
-        "msg_id": {
-            "cat": [
-                "MSG",
-                {
-                    "fake": [
-                        "i64",
-                        100000000000,
-                        999999999999
-                    ]
-                }
-            ]
-        },
-        "creation_datetime": {
-            "fake": [
-                "iso8601_datetime"
-            ]
-        },
-        "sender_bic": {
-            "fake": [
-                "bic"
-            ]
-        },
-        "receiver_bic": {
-            "fake": [
-                "bic"
-            ]
-        },
-        "transaction_ref": {
-            "cat": [
-                "TXN",
-                {
-                    "fake": [
-                        "i64",
-                        100000000000,
-                        999999999999
-                    ]
-                }
-            ]
-        },
-        "instruction_id": {
-            "cat": [
-                "INSTR",
-                {
-                    "fake": [
-                        "i64",
-                        10000000,
-                        99999999
-                    ]
-                }
-            ]
-        },
-        "end_to_end_id": {
-            "cat": [
-                "E2E",
-                {
-                    "fake": [
-                        "i64",
-                        100000000000,
-                        999999999999
-                    ]
-                }
-            ]
-        },
-        "cover_amount": {
-            "fake": [
-                "f64",
-                50000.0,
-                500000.0
-            ]
-        },
-        "underlying_amount": {
-            "fake": [
-                "f64",
-                49000.0,
-                499000.0
-            ]
-        },
-        "mismatch_amount": {
-            "fake": [
-                "f64",
-                100.0,
-                1000.0
-            ]
-        },
-        "underlying_ref": {
-            "cat": [
-                "CUST-",
-                {
-                    "fake": [
-                        "i64",
-                        100000000000,
-                        999999999999
-                    ]
-                }
-            ]
-        },
-        "uetr": {
-            "fake": [
-                "uuid"
-            ]
-        }
+        "msg_id": {"cat": ["MSG", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "sender_bic": {"fake": ["bic"]},
+        "receiver_bic": {"fake": ["bic"]},
+        "transaction_ref": {"cat": ["TXN", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "instruction_id": {"cat": ["INSTR", {"fake": ["i64", 10000000, 99999999]}]},
+        "end_to_end_id": {"cat": ["E2E", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "cover_amount": {"fake": ["f64", 50000.0, 500000.0]},
+        "underlying_amount": {"fake": ["f64", 49000.0, 499000.0]},
+        "mismatch_amount": {"fake": ["f64", 100.0, 1000.0]},
+        "underlying_ref": {"cat": ["CUST-", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "uetr": {"fake": ["uuid"]}
     },
     "schema": {
         "AppHdr": {
-            "Fr": {
-                "FIId": {
-                    "FinInstnId": {
-                        "BICFI": {
-                            "var": "sender_bic"
-                        }
-                    }
-                }
-            },
-            "To": {
-                "FIId": {
-                    "FinInstnId": {
-                        "BICFI": {
-                            "var": "receiver_bic"
-                        }
-                    }
-                }
-            },
-            "BizMsgIdr": {
-                "var": "msg_id"
-            },
+            "Fr": {"FIId": {"FinInstnId": {"BICFI": {"var": "sender_bic"}}}},
+            "To": {"FIId": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}}}},
+            "BizMsgIdr": {"var": "msg_id"},
             "MsgDefIdr": "pacs.009.001.08",
             "BizSvc": "swift.cbprplus.01",
-            "CreDt": {
-                "var": "creation_datetime"
-            }
+            "CreDt": {"var": "creation_datetime"}
         },
         "Document": {
             "FICdtTrf": {
                 "GrpHdr": {
-                    "MsgId": {
-                        "var": "msg_id"
-                    },
-                    "CreDtTm": {
-                        "var": "creation_datetime"
-                    },
+                    "MsgId": {"var": "msg_id"},
+                    "CreDtTm": {"var": "creation_datetime"},
                     "NbOfTxs": "1",
-                    "SttlmInf": {
-                        "SttlmMtd": "INDA"
-                    }
+                    "SttlmInf": {"SttlmMtd": "INDA"}
                 },
                 "CdtTrfTxInf": {
                     "PmtId": {
-                        "InstrId": {
-                            "var": "instruction_id"
-                        },
-                        "EndToEndId": {
-                            "var": "end_to_end_id"
-                        },
-                        "TxId": {
-                            "var": "transaction_ref"
-                        },
-                        "UETR": {
-                            "var": "uetr"
-                        }
+                        "InstrId": {"var": "instruction_id"},
+                        "EndToEndId": {"var": "end_to_end_id"},
+                        "TxId": {"var": "transaction_ref"},
+                        "UETR": {"var": "uetr"}
                     },
                     "PmtTpInf": {
                         "InstrPrty": "HIGH",
-                        "SvcLvl": [
-                            {
-                                "Cd": "PHOB"
-                            }
-                        ],
-                        "LclInstrm": {
-                            "Prtry": "COVER_MISMATCH"
-                        }
+                        "SvcLvl": [{"Cd": "PHOB"}],
+                        "LclInstrm": {"Prtry": "COVER_MISMATCH"}
                     },
-                    "IntrBkSttlmAmt": {
-                        "@Ccy": "USD",
-                        "$value": {
-                            "var": "cover_amount"
-                        }
-                    },
+                    "IntrBkSttlmAmt": {"@Ccy": "USD", "$value": {"var": "cover_amount"}},
                     "IntrBkSttlmDt": {
-                        "fake": [
-                            "date",
-                            "%Y-%m-%d",
-                            "+0d",
-                            "+0d"
-                        ]
+                        "fake": ["date", "%Y-%m-%d", "+0d", "+0d"]
                     },
-                    "InstgAgt": {
-                        "FinInstnId": {
-                            "BICFI": {
-                                "var": "sender_bic"
-                            }
-                        }
-                    },
-                    "InstdAgt": {
-                        "FinInstnId": {
-                            "BICFI": {
-                                "var": "receiver_bic"
-                            }
-                        }
-                    },
-                    "Dbtr": {
-                        "FinInstnId": {
-                            "BICFI": {
-                                "var": "sender_bic"
-                            },
-                            "Nm": {
-                                "fake": [
-                                    "company_name"
-                                ]
-                            }
-                        }
-                    },
+                    "InstgAgt": {"FinInstnId": {"BICFI": {"var": "sender_bic"}}},
+                    "InstdAgt": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}}},
+                    "Dbtr": {"FinInstnId": {"BICFI": {"var": "sender_bic"}, "Nm": {"fake": ["company_name"]}}},
                     "DbtrAcct": {
                         "Id": {
                             "Othr": {
-                                "Id": {
-                                    "cat": [
-                                        "NOSTRO-",
-                                        {
-                                            "fake": [
-                                                "i64",
-                                                100000,
-                                                999999
-                                            ]
-                                        }
-                                    ]
-                                },
-                                "SchmeNm": {
-                                    "Cd": "BBAN"
-                                }
+                                "Id": {"cat": ["NOSTRO-", {"fake": ["i64", 100000, 999999]}]},
+                                "SchmeNm": {"Cd": "BBAN"}
                             }
                         }
                     },
-                    "DbtrAgt": {
-                        "FinInstnId": {
-                            "BICFI": {
-                                "var": "sender_bic"
-                            }
-                        }
-                    },
-                    "CdtrAgt": {
-                        "FinInstnId": {
-                            "BICFI": {
-                                "var": "receiver_bic"
-                            }
-                        }
-                    },
-                    "Cdtr": {
-                        "FinInstnId": {
-                            "BICFI": {
-                                "var": "receiver_bic"
-                            },
-                            "Nm": {
-                                "fake": [
-                                    "company_name"
-                                ]
-                            }
-                        }
-                    },
+                    "DbtrAgt": {"FinInstnId": {"BICFI": {"var": "sender_bic"}}},
+                    "CdtrAgt": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}}},
+                    "Cdtr": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}, "Nm": {"fake": ["company_name"]}}},
                     "CdtrAcct": {
                         "Id": {
                             "Othr": {
-                                "Id": {
-                                    "cat": [
-                                        "VOSTRO-",
-                                        {
-                                            "fake": [
-                                                "i64",
-                                                100000,
-                                                999999
-                                            ]
-                                        }
-                                    ]
-                                },
-                                "SchmeNm": {
-                                    "Cd": "BBAN"
-                                }
+                                "Id": {"cat": ["VOSTRO-", {"fake": ["i64", 100000, 999999]}]},
+                                "SchmeNm": {"Cd": "BBAN"}
                             }
                         }
                     },
-                    "InstrForCdtrAgt": [
-                        {
-                            "Cd": "PHOB",
-                            "InstrInf": "AMOUNT MISMATCH - INVESTIGATE"
-                        }
-                    ],
-                    "InstrForNxtAgt": [
-                        {
-                            "InstrInf": "AMOUNT MISMATCH DETECTED"
-                        }
-                    ],
+                    "InstrForCdtrAgt": [{"Cd": "PHOB", "InstrInf": "AMOUNT MISMATCH - INVESTIGATE"}],
+                    "InstrForNxtAgt": [{"InstrInf": "AMOUNT MISMATCH DETECTED"}],
                     "RmtInf": {
                         "Ustrd": "{'cat': ['MISMATCH DETECTED - Cover: $', {'var': 'cover_amount'}, ', Underlying: $', {'var': 'underlying_amount'}]}"
                     }

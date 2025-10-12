@@ -1,34 +1,42 @@
 {
     "variables": {
-        "msg_id": "MSG123456789",
-        "creation_datetime": "2025-01-15T10:00:00.123+00:00",
-        "expected_datetime": "2025-01-15T14:00:00.123+00:00",
-        "sender_bic": "BANKUS33XXX",
-        "receiver_bic": "BANKGB22XXX",
-        "amount": 10000.0,
-        "currency": "USD",
-        "ordering_name": "John Smith",
-        "ordering_address": "123 Main Street",
-        "ordering_country": "US",
-        "beneficiary_account": "GB29NWBK60161331926819",
-        "beneficiary_name": "Jane Doe",
-        "payment_reference": "PMT-123456",
-        "remittance_info": "Payment for services",
-        "sender_reference": "SNDREF-123456",
-        "notification_id": "NOTIF-123456",
-        "reference": "REF-123456",
-        "ordering_customer": "ABC Corporation",
-        "purpose_code": "GDDS",
-        "batch_id": "BATCH-456789",
-        "number_of_transactions": 5,
-        "fx_rate": 1.2345,
-        "base_currency": "EUR",
-        "fx_reference": "FX-REF-789012",
-        "security_id": "US0378331005",
-        "quantity": 100,
-        "settlement_date": "2025-01-16",
-        "debtor_account": "US64SVBKUS6S1234567890",
-        "intermediary_bank": "CHASGB2LXXX"
+        "msg_id": {"cat": ["MSG", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "expected_datetime": {"fake": ["iso8601_datetime"]},
+        "sender_bic": {"fake": ["bic"]},
+        "receiver_bic": {"fake": ["bic"]},
+        "amount": {"fake": ["f64", 100.0, 500000.0]},
+        "currency": {
+            "fake": ["enum", "USD", "EUR", "GBP", "JPY", "CHF"]
+        },
+        "ordering_name": {"fake": ["name"]},
+        "ordering_address": {"fake": ["street_address"]},
+        "ordering_country": {"fake": ["country_code"]},
+        "beneficiary_account": {"fake": ["iban"]},
+        "beneficiary_name": {"fake": ["name"]},
+        "payment_reference": {"cat": ["PMT-", {"fake": ["i64", 100000, 999999]}]},
+        "remittance_info": {"substr": [{"fake": ["sentence"]}, 0, 140]},
+        "sender_reference": {"cat": ["SNDREF", {"fake": ["i64", 100000, 999999]}]},
+        "notification_id": {"cat": ["NOTIF", {"fake": ["i64", 100000, 999999]}]},
+        "reference": {"cat": ["REF-", {"fake": ["i64", 100000, 999999]}]},
+        "ordering_customer": {"fake": ["company_name"]},
+        "purpose_code": {
+            "fake": ["enum", "SUPP", "SALA", "INTC", "GDDS", "TREA"]
+        },
+        "batch_id": {"cat": ["BATCH-", {"fake": ["i64", 100000, 999999]}]},
+        "number_of_transactions": {"fake": ["i64", 1, 20]},
+        "fx_rate": {"fake": ["f64", 0.5, 2.0]},
+        "base_currency": {
+            "fake": ["enum", "USD", "EUR", "GBP", "JPY", "CHF"]
+        },
+        "fx_reference": {"cat": ["FX-REF-", {"fake": ["i64", 100000, 999999]}]},
+        "security_id": {"cat": ["US", {"fake": ["i64", 100000000, 999999999]}]},
+        "quantity": {"fake": ["i64", 1, 1000]},
+        "settlement_date": {
+            "fake": ["date", "%Y-%m-%d", "+1d", "+5d"]
+        },
+        "debtor_account": {"fake": ["iban"]},
+        "intermediary_bank": {"fake": ["bic"]}
     },
     "schema": {
         "AppHdr": {

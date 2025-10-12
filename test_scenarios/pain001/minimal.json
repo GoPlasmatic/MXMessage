@@ -3,7 +3,9 @@
         "msg_id": {"cat": ["MSGMIN", {"fake": ["i64", 1000000, 9999999]}]},
         "creation_datetime": {"fake": ["iso8601_datetime"]},
         "pmt_inf_id": {"cat": ["PMT", {"fake": ["i64", 100000, 999999]}]},
-        "execution_date": "2024-12-20",
+        "execution_date": {
+            "fake": ["date", "%Y-%m-%d", "+1d", "+10d"]
+        },
         "end_to_end_id": {"cat": ["E2E", {"fake": ["i64", 1000000, 9999999]}]},
         "amount": {"fake": ["f64", 100.0, 1000.0]},
         "debtor_iban": {"fake": ["iban", "DE"]},

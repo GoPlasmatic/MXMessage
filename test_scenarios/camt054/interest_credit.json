@@ -1,95 +1,36 @@
 {
     "variables": {
-        "msg_id": "INTMSG123456789",
-        "creation_datetime": "2025-01-15T10:00:00.123+00:00",
-        "ntfctn_id": "INTNTFCTN123456789",
-        "account_id": "GB29NWBK60161331926819"
+        "msg_id": {"cat": ["MSG", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "ntfctn_id": {"cat": ["NTF", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "account_id": {"fake": ["iban"]}
     },
     "schema": {
         "AppHdr": {
-            "Fr": {
-                "FIId": {
-                    "FinInstnId": {
-                        "BICFI": {
-                            "fake": [
-                                "bic"
-                            ]
-                        }
-                    }
-                }
-            },
-            "To": {
-                "FIId": {
-                    "FinInstnId": {
-                        "BICFI": {
-                            "fake": [
-                                "bic"
-                            ]
-                        }
-                    }
-                }
-            },
-            "BizMsgIdr": {
-                "var": "msg_id"
-            },
+            "Fr": {"FIId": {"FinInstnId": {"BICFI": {"fake": ["bic"]}}}},
+            "To": {"FIId": {"FinInstnId": {"BICFI": {"fake": ["bic"]}}}},
+            "BizMsgIdr": {"var": "msg_id"},
             "MsgDefIdr": "camt.054.001.08",
             "BizSvc": "swift.cbprplus.01",
-            "CreDt": {
-                "var": "creation_datetime"
-            }
+            "CreDt": {"var": "creation_datetime"}
         },
         "Document": {
             "BkToCstmrDbtCdtNtfctn": {
-                "GrpHdr": {
-                    "MsgId": {
-                        "var": "msg_id"
-                    },
-                    "CreDtTm": {
-                        "var": "creation_datetime"
-                    }
-                },
+                "GrpHdr": {"MsgId": {"var": "msg_id"}, "CreDtTm": {"var": "creation_datetime"}},
                 "Ntfctn": [
                     {
-                        "Id": {
-                            "var": "ntfctn_id"
-                        },
-                        "CreDtTm": {
-                            "var": "creation_datetime"
-                        },
-                        "Acct": {
-                            "Id": {
-                                "IBAN": {
-                                    "var": "account_id"
-                                }
-                            },
-                            "Ccy": "USD"
-                        },
+                        "Id": {"var": "ntfctn_id"},
+                        "CreDtTm": {"var": "creation_datetime"},
+                        "Acct": {"Id": {"IBAN": {"var": "account_id"}}, "Ccy": "USD"},
                         "Ntry": [
                             {
                                 "NtryRef": "INTENT123456",
-                                "Amt": {
-                                    "@Ccy": "USD",
-                                    "$value": 125.0
-                                },
+                                "Amt": {"@Ccy": "USD", "$value": 125.0},
                                 "CdtDbtInd": "CRDT",
-                                "Sts": {
-                                    "Cd": "BOOK"
-                                },
-                                "BookgDt": {
-                                    "DtTm": "2025-01-15T00:00:00.000+00:00"
-                                },
-                                "ValDt": {
-                                    "Dt": "2025-01-15"
-                                },
-                                "BkTxCd": {
-                                    "Domn": {
-                                        "Cd": "CAMT",
-                                        "Fmly": {
-                                            "Cd": "ACCI",
-                                            "SubFmlyCd": "INTR"
-                                        }
-                                    }
-                                }
+                                "Sts": {"Cd": "BOOK"},
+                                "BookgDt": {"DtTm": "2025-01-15T00:00:00.000+00:00"},
+                                "ValDt": {"Dt": "2025-01-15"},
+                                "BkTxCd": {"Domn": {"Cd": "CAMT", "Fmly": {"Cd": "ACCI", "SubFmlyCd": "INTR"}}}
                             }
                         ]
                     }

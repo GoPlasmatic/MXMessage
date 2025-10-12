@@ -2,8 +2,10 @@
     "variables": {
         "msg_id": {"cat": ["MSG", {"fake": ["i64", 100000000000, 999999999999]}]},
         "creation_datetime": {"fake": ["iso8601_datetime"]},
-        "settlement_date": "2025-01-22",
-        "num_txs": 3,
+        "settlement_date": {
+            "fake": ["date", "%Y-%m-%d", "+1d", "+5d"]
+        },
+        "num_txs": {"fake": ["i64", 1, 10]},
         "total_amt": {"fake": ["f64", 50000.0, 150000.0]},
         "instg_lei": {"fake": ["lei"]},
         "instd_lei": {"fake": ["lei"]},
@@ -11,7 +13,9 @@
         "instd_bic": {"fake": ["bic"]},
         "instruction_id": {"cat": ["INSTR", {"fake": ["i64", 10000000, 99999999]}]},
         "uetr": {"fake": ["uuid"]},
-        "collection_date": "2025-01-22",
+        "collection_date": {
+            "fake": ["date", "%Y-%m-%d", "+5d", "+15d"]
+        },
         "end_to_end_id": {"cat": ["E2E", {"fake": ["i64", 100000000000, 999999999999]}]},
         "tx_id": {"cat": ["TX", {"fake": ["i64", 100000000000, 999999999999]}]},
         "debtor_bic": {"fake": ["bic"]},

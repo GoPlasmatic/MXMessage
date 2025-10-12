@@ -1,21 +1,29 @@
 {
     "variables": {
-        "msg_id": "MSG123456789",
-        "creation_datetime": "2025-01-15T10:00:00.123+00:00",
-        "sender_bic": "BANKUS33XXX",
-        "receiver_bic": "BANKGB22XXX",
-        "account_iban": "GB29NWBK60161331926819",
-        "account_currency": "USD",
-        "account_name": "John Smith",
-        "statement_date": "2025-01-14",
-        "request_reference": "REF-123456",
-        "from_date": "2025-01-01",
-        "to_date": "2025-01-14",
-        "customer_id": "CUST-123456",
-        "account1_iban": "GB29NWBK60161331926819",
-        "account2_iban": "DE89370400440532013000",
-        "account3_iban": "FR1420041010050500013M02606",
-        "account_owner": "ABC Corporation"
+        "msg_id": {"cat": ["MSG", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "sender_bic": {"fake": ["bic"]},
+        "receiver_bic": {"fake": ["bic"]},
+        "account_iban": {"fake": ["iban"]},
+        "account_currency": {
+            "fake": ["enum", "USD", "EUR", "GBP", "JPY", "CHF"]
+        },
+        "account_name": {"fake": ["name"]},
+        "statement_date": {
+            "fake": ["date", "%Y-%m-%d", "-1d", "+0d"]
+        },
+        "request_reference": {"cat": ["REQ", {"fake": ["i64", 100000, 999999]}]},
+        "from_date": {
+            "fake": ["date", "%Y-%m-%d", "-30d", "-1d"]
+        },
+        "to_date": {
+            "fake": ["date", "%Y-%m-%d", "-1d", "+0d"]
+        },
+        "customer_id": {"cat": ["CUST", {"fake": ["i64", 100000, 999999]}]},
+        "account1_iban": {"fake": ["iban"]},
+        "account2_iban": {"fake": ["iban"]},
+        "account3_iban": {"fake": ["iban"]},
+        "account_owner": {"fake": ["company_name"]}
     },
     "schema": {
         "AppHdr": {

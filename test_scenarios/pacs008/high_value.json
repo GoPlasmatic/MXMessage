@@ -10,11 +10,17 @@
         "uetr": {"fake": ["uuid"]},
         "currency": {"fake": ["currency_code"]},
         "amount": {"fake": ["f64", 1000000.0, 50000000.0]},
-        "value_date": "2024-01-15",
-        "charges": "CRED",
+        "value_date": {
+            "fake": ["date", "%Y-%m-%d", "+0d", "+2d"]
+        },
+        "charges": {
+            "fake": ["enum", "SHAR", "CRED", "DEBT"]
+        },
         "debtor_iban": {"fake": ["iban", "DE"]},
         "creditor_iban": {"fake": ["iban", "FR"]},
-        "purpose_code": "INTC",
+        "purpose_code": {
+            "fake": ["enum", "SUPP", "SALA", "INTC", "GDDS", "TREA"]
+        },
         "lei_debtor": {"fake": ["lei"]},
         "lei_creditor": {"fake": ["lei"]}
     },

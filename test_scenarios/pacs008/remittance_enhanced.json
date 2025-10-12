@@ -1,281 +1,73 @@
 {
     "variables": {
-        "msg_id": {
-            "cat": [
-                "RMT-ENH-",
-                {
-                    "fake": [
-                        "i64",
-                        100000000000,
-                        999999999999
-                    ]
-                }
-            ]
-        },
-        "creation_datetime": {
-            "fake": [
-                "iso8601_datetime"
-            ]
-        },
-        "payment_id": {
-            "cat": [
-                "RMT-PMT-",
-                {
-                    "fake": [
-                        "i64",
-                        100000,
-                        999999
-                    ]
-                }
-            ]
-        },
-        "uetr": {
-            "fake": [
-                "uuid"
-            ]
-        },
-        "amount": {
-            "fake": [
-                "f64",
-                1000.0,
-                25000.0
-            ]
-        },
+        "msg_id": {"cat": ["RMT-ENH-", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "payment_id": {"cat": ["RMT-PMT-", {"fake": ["i64", 100000, 999999]}]},
+        "uetr": {"fake": ["uuid"]},
+        "amount": {"fake": ["f64", 1000.0, 25000.0]},
         "currency": {
-            "fake": [
-                "enum",
-                "USD",
-                "EUR",
-                "GBP",
-                "INR",
-                "PHP",
-                "MXN"
-            ]
+            "fake": ["enum", "USD", "EUR", "GBP", "INR", "PHP", "MXN"]
         },
-        "sender_bic": {
-            "fake": [
-                "bic"
-            ]
-        },
-        "receiver_bic": {
-            "fake": [
-                "bic"
-            ]
-        },
-        "sender_name": {
-            "fake": [
-                "full_name"
-            ]
-        },
-        "sender_country": {
-            "fake": [
-                "country_code"
-            ]
-        },
-        "sender_account": {
-            "fake": [
-                "iban"
-            ]
-        },
-        "receiver_name": {
-            "fake": [
-                "full_name"
-            ]
-        },
-        "receiver_country": {
-            "fake": [
-                "country_code"
-            ]
-        },
-        "receiver_account": {
-            "fake": [
-                "iban"
-            ]
-        },
-        "sender_phone": {
-            "fake": [
-                "phone_number"
-            ]
-        },
-        "receiver_phone": {
-            "fake": [
-                "phone_number"
-            ]
-        },
+        "sender_bic": {"fake": ["bic"]},
+        "receiver_bic": {"fake": ["bic"]},
+        "sender_name": {"fake": ["full_name"]},
+        "sender_country": {"fake": ["country_code"]},
+        "sender_account": {"fake": ["iban"]},
+        "receiver_name": {"fake": ["full_name"]},
+        "receiver_country": {"fake": ["country_code"]},
+        "receiver_account": {"fake": ["iban"]},
+        "sender_phone": {"fake": ["phone_number"]},
+        "receiver_phone": {"fake": ["phone_number"]},
         "purpose_code": {
-            "fake": [
-                "enum",
-                "FAMI",
-                "EDUC",
-                "MEDI",
-                "PROP"
-            ]
+            "fake": ["enum", "FAMI", "EDUC", "MEDI", "PROP"]
         },
         "relationship": {
-            "fake": [
-                "enum",
-                "PARENT",
-                "SIBLING",
-                "SPOUSE",
-                "CHILD"
-            ]
+            "fake": ["enum", "PARENT", "SIBLING", "SPOUSE", "CHILD"]
         }
     },
     "schema": {
         "AppHdr": {
-            "Fr": {
-                "FIId": {
-                    "FinInstnId": {
-                        "BICFI": {
-                            "var": "sender_bic"
-                        }
-                    }
-                }
-            },
-            "To": {
-                "FIId": {
-                    "FinInstnId": {
-                        "BICFI": {
-                            "var": "receiver_bic"
-                        }
-                    }
-                }
-            },
-            "BizMsgIdr": {
-                "var": "msg_id"
-            },
+            "Fr": {"FIId": {"FinInstnId": {"BICFI": {"var": "sender_bic"}}}},
+            "To": {"FIId": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}}}},
+            "BizMsgIdr": {"var": "msg_id"},
             "MsgDefIdr": "pacs.008.001.08",
             "BizSvc": "swift.cbprplus.01",
-            "CreDt": {
-                "var": "creation_datetime"
-            }
+            "CreDt": {"var": "creation_datetime"}
         },
         "Document": {
             "FIToFICstmrCdtTrf": {
                 "GrpHdr": {
-                    "MsgId": {
-                        "var": "msg_id"
-                    },
-                    "CreDtTm": {
-                        "var": "creation_datetime"
-                    },
+                    "MsgId": {"var": "msg_id"},
+                    "CreDtTm": {"var": "creation_datetime"},
                     "NbOfTxs": "1",
-                    "SttlmInf": {
-                        "SttlmMtd": "INDA"
-                    }
+                    "SttlmInf": {"SttlmMtd": "INDA"}
                 },
                 "CdtTrfTxInf": {
                     "PmtId": {
-                        "InstrId": {
-                            "var": "payment_id"
-                        },
-                        "EndToEndId": {
-                            "var": "payment_id"
-                        },
-                        "UETR": {
-                            "var": "uetr"
-                        }
+                        "InstrId": {"var": "payment_id"},
+                        "EndToEndId": {"var": "payment_id"},
+                        "UETR": {"var": "uetr"}
                     },
                     "PmtTpInf": {
                         "InstrPrty": "NORM",
-                        "SvcLvl": [
-                            {
-                                "Cd": "G001"
-                            }
-                        ],
-                        "CtgyPurp": {
-                            "Cd": {
-                                "var": "purpose_code"
-                            }
-                        }
+                        "SvcLvl": [{"Cd": "G001"}],
+                        "CtgyPurp": {"Cd": {"var": "purpose_code"}}
                     },
-                    "IntrBkSttlmAmt": {
-                        "@Ccy": {
-                            "var": "currency"
-                        },
-                        "$value": {
-                            "var": "amount"
-                        }
-                    },
+                    "IntrBkSttlmAmt": {"@Ccy": {"var": "currency"}, "$value": {"var": "amount"}},
                     "IntrBkSttlmDt": {
-                        "fake": [
-                            "date",
-                            "%Y-%m-%d",
-                            "0d",
-                            "+1d"
-                        ]
+                        "fake": ["date", "%Y-%m-%d", "0d", "+1d"]
                     },
-                    "InstdAmt": {
-                        "@Ccy": {
-                            "var": "currency"
-                        },
-                        "$value": {
-                            "var": "amount"
-                        }
-                    },
+                    "InstdAmt": {"@Ccy": {"var": "currency"}, "$value": {"var": "amount"}},
                     "ChrgBr": "DEBT",
-                    "Dbtr": {
-                        "Nm": {
-                            "var": "sender_name"
-                        },
-                        "PstlAdr": {
-                            "Ctry": {
-                                "var": "sender_country"
-                            }
-                        }
-                    },
-                    "DbtrAcct": {
-                        "Id": {
-                            "IBAN": {
-                                "var": "sender_account"
-                            }
-                        }
-                    },
-                    "DbtrAgt": {
-                        "FinInstnId": {
-                            "BICFI": {
-                                "var": "sender_bic"
-                            }
-                        }
-                    },
-                    "CdtrAgt": {
-                        "FinInstnId": {
-                            "BICFI": {
-                                "var": "receiver_bic"
-                            }
-                        }
-                    },
-                    "Cdtr": {
-                        "Nm": {
-                            "var": "receiver_name"
-                        },
-                        "PstlAdr": {
-                            "Ctry": {
-                                "var": "receiver_country"
-                            }
-                        }
-                    },
-                    "CdtrAcct": {
-                        "Id": {
-                            "IBAN": {
-                                "var": "receiver_account"
-                            }
-                        }
-                    },
-                    "Purp": {
-                        "Cd": {
-                            "var": "purpose_code"
-                        }
-                    },
+                    "Dbtr": {"Nm": {"var": "sender_name"}, "PstlAdr": {"Ctry": {"var": "sender_country"}}},
+                    "DbtrAcct": {"Id": {"IBAN": {"var": "sender_account"}}},
+                    "DbtrAgt": {"FinInstnId": {"BICFI": {"var": "sender_bic"}}},
+                    "CdtrAgt": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}}},
+                    "Cdtr": {"Nm": {"var": "receiver_name"}, "PstlAdr": {"Ctry": {"var": "receiver_country"}}},
+                    "CdtrAcct": {"Id": {"IBAN": {"var": "receiver_account"}}},
+                    "Purp": {"Cd": {"var": "purpose_code"}},
                     "RmtInf": {
-                        "Ustrd": {
-                            "cat": [
-                                "Family support - ",
-                                {
-                                    "var": "relationship"
-                                }
-                            ]
-                        },
+                        "Ustrd": {"cat": ["Family support - ", {"var": "relationship"}]},
                         "Strd": [
                             {
                                 "AddtlRmtInf": [
@@ -293,52 +85,15 @@
                                             }
                                         ]
                                     },
-                                    {
-                                        "cat": [
-                                            "Relationship: ",
-                                            {
-                                                "var": "relationship"
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "cat": [
-                                            "Sender contact: ",
-                                            {
-                                                "var": "sender_phone"
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "cat": [
-                                            "Receiver contact: ",
-                                            {
-                                                "var": "receiver_phone"
-                                            }
-                                        ]
-                                    }
+                                    {"cat": ["Relationship: ", {"var": "relationship"}]},
+                                    {"cat": ["Sender contact: ", {"var": "sender_phone"}]},
+                                    {"cat": ["Receiver contact: ", {"var": "receiver_phone"}]}
                                 ]
                             }
                         ]
                     },
-                    "InstgAgt": {
-                        "FinInstnId": {
-                            "BICFI": {
-                                "fake": [
-                                    "bic"
-                                ]
-                            }
-                        }
-                    },
-                    "InstdAgt": {
-                        "FinInstnId": {
-                            "BICFI": {
-                                "fake": [
-                                    "bic"
-                                ]
-                            }
-                        }
-                    }
+                    "InstgAgt": {"FinInstnId": {"BICFI": {"fake": ["bic"]}}},
+                    "InstdAgt": {"FinInstnId": {"BICFI": {"fake": ["bic"]}}}
                 }
             }
         }

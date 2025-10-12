@@ -1,284 +1,75 @@
 {
     "variables": {
-        "msg_id": {
-            "cat": [
-                "MSG",
-                {
-                    "fake": [
-                        "i64",
-                        100000000000,
-                        999999999999
-                    ]
-                }
-            ]
-        },
-        "creation_datetime": {
-            "fake": [
-                "iso8601_datetime"
-            ]
-        },
-        "sender_bic": {
-            "fake": [
-                "bic"
-            ]
-        },
-        "receiver_bic": {
-            "fake": [
-                "bic"
-            ]
-        },
-        "transaction_ref": {
-            "cat": [
-                "TXN",
-                {
-                    "fake": [
-                        "i64",
-                        100000000000,
-                        999999999999
-                    ]
-                }
-            ]
-        },
-        "instruction_id": {
-            "cat": [
-                "INSTR",
-                {
-                    "fake": [
-                        "i64",
-                        10000000,
-                        99999999
-                    ]
-                }
-            ]
-        },
-        "end_to_end_id": {
-            "cat": [
-                "E2E",
-                {
-                    "fake": [
-                        "i64",
-                        100000000000,
-                        999999999999
-                    ]
-                }
-            ]
-        },
-        "uetr": {
-            "fake": [
-                "uuid"
-            ]
-        },
-        "purchase_price": {
-            "fake": [
-                "f64",
-                250000.0,
-                2000000.0
-            ]
-        },
-        "buyer_name": {
-            "fake": [
-                "name"
-            ]
-        },
-        "seller_name": {
-            "fake": [
-                "name"
-            ]
-        },
+        "msg_id": {"cat": ["MSG", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "creation_datetime": {"fake": ["iso8601_datetime"]},
+        "sender_bic": {"fake": ["bic"]},
+        "receiver_bic": {"fake": ["bic"]},
+        "transaction_ref": {"cat": ["TXN", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "instruction_id": {"cat": ["INSTR", {"fake": ["i64", 10000000, 99999999]}]},
+        "end_to_end_id": {"cat": ["E2E", {"fake": ["i64", 100000000000, 999999999999]}]},
+        "uetr": {"fake": ["uuid"]},
+        "purchase_price": {"fake": ["f64", 250000.0, 2000000.0]},
+        "buyer_name": {"fake": ["name"]},
+        "seller_name": {"fake": ["name"]},
         "property_address": {
             "cat": [
-                {
-                    "fake": [
-                        "i64",
-                        1,
-                        999
-                    ]
-                },
+                {"fake": ["i64", 1, 999]},
                 " ",
-                {
-                    "fake": [
-                        "street_name"
-                    ]
-                },
+                {"fake": ["street_name"]},
                 ", ",
-                {
-                    "fake": [
-                        "city_name"
-                    ]
-                }
+                {"fake": ["city_name"]}
             ]
         },
-        "escrow_number": {
-            "cat": [
-                "ESC-",
-                {
-                    "fake": [
-                        "i64",
-                        2024000000,
-                        2024999999
-                    ]
-                }
-            ]
-        },
+        "escrow_number": {"cat": ["ESC-", {"fake": ["i64", 2024000000, 2024999999]}]},
         "closing_date": {
-            "fake": [
-                "date",
-                "%Y-%m-%d",
-                "+0d",
-                "+0d"
-            ]
+            "fake": ["date", "%Y-%m-%d", "+0d", "+0d"]
         }
     },
     "schema": {
         "AppHdr": {
-            "Fr": {
-                "FIId": {
-                    "FinInstnId": {
-                        "BICFI": {
-                            "var": "sender_bic"
-                        }
-                    }
-                }
-            },
-            "To": {
-                "FIId": {
-                    "FinInstnId": {
-                        "BICFI": {
-                            "var": "receiver_bic"
-                        }
-                    }
-                }
-            },
-            "BizMsgIdr": {
-                "var": "msg_id"
-            },
+            "Fr": {"FIId": {"FinInstnId": {"BICFI": {"var": "sender_bic"}}}},
+            "To": {"FIId": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}}}},
+            "BizMsgIdr": {"var": "msg_id"},
             "MsgDefIdr": "pacs.008.001.08",
             "BizSvc": "swift.cbprplus.01",
-            "CreDt": {
-                "var": "creation_datetime"
-            }
+            "CreDt": {"var": "creation_datetime"}
         },
         "Document": {
             "FIToFICstmrCdtTrf": {
                 "GrpHdr": {
-                    "MsgId": {
-                        "var": "msg_id"
-                    },
-                    "CreDtTm": {
-                        "var": "creation_datetime"
-                    },
+                    "MsgId": {"var": "msg_id"},
+                    "CreDtTm": {"var": "creation_datetime"},
                     "NbOfTxs": "1",
-                    "SttlmInf": {
-                        "SttlmMtd": "INDA"
-                    }
+                    "SttlmInf": {"SttlmMtd": "INDA"}
                 },
                 "CdtTrfTxInf": {
                     "PmtId": {
-                        "InstrId": {
-                            "var": "instruction_id"
-                        },
-                        "EndToEndId": {
-                            "var": "end_to_end_id"
-                        },
-                        "TxId": {
-                            "var": "transaction_ref"
-                        },
-                        "UETR": {
-                            "var": "uetr"
-                        }
+                        "InstrId": {"var": "instruction_id"},
+                        "EndToEndId": {"var": "end_to_end_id"},
+                        "TxId": {"var": "transaction_ref"},
+                        "UETR": {"var": "uetr"}
                     },
                     "PmtTpInf": {
                         "InstrPrty": "HIGH",
-                        "SvcLvl": [
-                            {
-                                "Cd": "CBPR"
-                            }
-                        ],
-                        "CtgyPurp": {
-                            "Cd": "INTC"
-                        },
-                        "LclInstrm": {
-                            "Prtry": "REAL_ESTATE_PURCHASE"
-                        }
+                        "SvcLvl": [{"Cd": "CBPR"}],
+                        "CtgyPurp": {"Cd": "INTC"},
+                        "LclInstrm": {"Prtry": "REAL_ESTATE_PURCHASE"}
                     },
-                    "IntrBkSttlmAmt": {
-                        "@Ccy": "CAD",
-                        "$value": {
-                            "var": "purchase_price"
-                        }
-                    },
-                    "IntrBkSttlmDt": {
-                        "var": "closing_date"
-                    },
+                    "IntrBkSttlmAmt": {"@Ccy": "CAD", "$value": {"var": "purchase_price"}},
+                    "IntrBkSttlmDt": {"var": "closing_date"},
                     "SttlmPrty": "HIGH",
-                    "InstdAmt": {
-                        "@Ccy": "CAD",
-                        "$value": {
-                            "var": "purchase_price"
-                        }
-                    },
+                    "InstdAmt": {"@Ccy": "CAD", "$value": {"var": "purchase_price"}},
                     "ChrgBr": "SHAR",
-                    "InstgAgt": {
-                        "FinInstnId": {
-                            "BICFI": {
-                                "var": "sender_bic"
-                            },
-                            "LEI": {
-                                "fake": [
-                                    "lei"
-                                ]
-                            }
-                        }
-                    },
-                    "InstdAgt": {
-                        "FinInstnId": {
-                            "BICFI": {
-                                "var": "receiver_bic"
-                            },
-                            "LEI": {
-                                "fake": [
-                                    "lei"
-                                ]
-                            }
-                        }
-                    },
+                    "InstgAgt": {"FinInstnId": {"BICFI": {"var": "sender_bic"}, "LEI": {"fake": ["lei"]}}},
+                    "InstdAgt": {"FinInstnId": {"BICFI": {"var": "receiver_bic"}, "LEI": {"fake": ["lei"]}}},
                     "Dbtr": {
-                        "Nm": {
-                            "var": "buyer_name"
-                        },
+                        "Nm": {"var": "buyer_name"},
                         "PstlAdr": {
-                            "StrtNm": {
-                                "fake": [
-                                    "street_name"
-                                ]
-                            },
-                            "BldgNb": {
-                                "cat": [
-                                    {
-                                        "fake": [
-                                            "i64",
-                                            1,
-                                            999
-                                        ]
-                                    }
-                                ]
-                            },
-                            "PstCd": {
-                                "fake": [
-                                    "postcode"
-                                ]
-                            },
-                            "TwnNm": {
-                                "fake": [
-                                    "city_name"
-                                ]
-                            },
-                            "CtrySubDvsn": {
-                                "fake": [
-                                    "regex",
-                                    "(ON|QC|BC|AB|MB|SK|NS|NB|NL|PE|NT|YT|NU)"
-                                ]
-                            },
+                            "StrtNm": {"fake": ["street_name"]},
+                            "BldgNb": {"cat": [{"fake": ["i64", 1, 999]}]},
+                            "PstCd": {"fake": ["postcode"]},
+                            "TwnNm": {"fake": ["city_name"]},
+                            "CtrySubDvsn": {"fake": ["regex", "(ON|QC|BC|AB|MB|SK|NS|NB|NL|PE|NT|YT|NU)"]},
                             "Ctry": "CA"
                         },
                         "CtryOfRes": "CA",
@@ -286,18 +77,9 @@
                             "PrvtId": {
                                 "DtAndPlcOfBirth": {
                                     "BirthDt": {
-                                        "fake": [
-                                            "date",
-                                            "%Y-%m-%d",
-                                            "-65y",
-                                            "-25y"
-                                        ]
+                                        "fake": ["date", "%Y-%m-%d", "-65y", "-25y"]
                                     },
-                                    "CityOfBirth": {
-                                        "fake": [
-                                            "city_name"
-                                        ]
-                                    },
+                                    "CityOfBirth": {"fake": ["city_name"]},
                                     "CtryOfBirth": "CA"
                                 }
                             }
@@ -309,21 +91,9 @@
                                 "Id": {
                                     "cat": [
                                         "TRANSIT-",
-                                        {
-                                            "fake": [
-                                                "i64",
-                                                10000,
-                                                99999
-                                            ]
-                                        },
+                                        {"fake": ["i64", 10000, 99999]},
                                         "-ACC-",
-                                        {
-                                            "fake": [
-                                                "i64",
-                                                1000000,
-                                                9999999
-                                            ]
-                                        }
+                                        {"fake": ["i64", 1000000, 9999999]}
                                     ]
                                 }
                             }
@@ -333,97 +103,32 @@
                     },
                     "DbtrAgt": {
                         "FinInstnId": {
-                            "BICFI": {
-                                "var": "sender_bic"
-                            },
-                            "Nm": {
-                                "fake": [
-                                    "company_name"
-                                ]
-                            },
-                            "LEI": {
-                                "fake": [
-                                    "lei"
-                                ]
-                            }
+                            "BICFI": {"var": "sender_bic"},
+                            "Nm": {"fake": ["company_name"]},
+                            "LEI": {"fake": ["lei"]}
                         }
                     },
                     "IntrmyAgt1": {
                         "FinInstnId": {
-                            "Nm": {
-                                "cat": [
-                                    {
-                                        "fake": [
-                                            "company_name"
-                                        ]
-                                    },
-                                    " Title and Escrow"
-                                ]
-                            },
-                            "PstlAdr": {
-                                "TwnNm": {
-                                    "fake": [
-                                        "city_name"
-                                    ]
-                                },
-                                "Ctry": "CA"
-                            }
+                            "Nm": {"cat": [{"fake": ["company_name"]}, " Title and Escrow"]},
+                            "PstlAdr": {"TwnNm": {"fake": ["city_name"]}, "Ctry": "CA"}
                         }
                     },
                     "CdtrAgt": {
                         "FinInstnId": {
-                            "BICFI": {
-                                "var": "receiver_bic"
-                            },
-                            "Nm": {
-                                "fake": [
-                                    "company_name"
-                                ]
-                            },
-                            "LEI": {
-                                "fake": [
-                                    "lei"
-                                ]
-                            }
+                            "BICFI": {"var": "receiver_bic"},
+                            "Nm": {"fake": ["company_name"]},
+                            "LEI": {"fake": ["lei"]}
                         }
                     },
                     "Cdtr": {
-                        "Nm": {
-                            "var": "seller_name"
-                        },
+                        "Nm": {"var": "seller_name"},
                         "PstlAdr": {
-                            "StrtNm": {
-                                "fake": [
-                                    "street_name"
-                                ]
-                            },
-                            "BldgNb": {
-                                "cat": [
-                                    {
-                                        "fake": [
-                                            "i64",
-                                            1,
-                                            999
-                                        ]
-                                    }
-                                ]
-                            },
-                            "PstCd": {
-                                "fake": [
-                                    "postcode"
-                                ]
-                            },
-                            "TwnNm": {
-                                "fake": [
-                                    "city_name"
-                                ]
-                            },
-                            "CtrySubDvsn": {
-                                "fake": [
-                                    "regex",
-                                    "(ON|QC|BC|AB|MB|SK|NS|NB|NL|PE|NT|YT|NU)"
-                                ]
-                            },
+                            "StrtNm": {"fake": ["street_name"]},
+                            "BldgNb": {"cat": [{"fake": ["i64", 1, 999]}]},
+                            "PstCd": {"fake": ["postcode"]},
+                            "TwnNm": {"fake": ["city_name"]},
+                            "CtrySubDvsn": {"fake": ["regex", "(ON|QC|BC|AB|MB|SK|NS|NB|NL|PE|NT|YT|NU)"]},
                             "Ctry": "CA"
                         },
                         "CtryOfRes": "CA"
@@ -434,79 +139,32 @@
                                 "Id": {
                                     "cat": [
                                         "TRANSIT-",
-                                        {
-                                            "fake": [
-                                                "i64",
-                                                10000,
-                                                99999
-                                            ]
-                                        },
+                                        {"fake": ["i64", 10000, 99999]},
                                         "-ACC-",
-                                        {
-                                            "fake": [
-                                                "i64",
-                                                1000000,
-                                                9999999
-                                            ]
-                                        }
+                                        {"fake": ["i64", 1000000, 9999999]}
                                     ]
                                 }
                             }
                         },
                         "Ccy": "CAD"
                     },
-                    "Purp": {
-                        "Cd": "TRAD"
-                    },
+                    "Purp": {"Cd": "TRAD"},
                     "RmtInf": {
                         "Strd": [
                             {
                                 "RfrdDocInf": [
                                     {
-                                        "Tp": {
-                                            "CdOrPrtry": {
-                                                "Prtry": "PURCHASE_AGREEMENT"
-                                            }
-                                        },
-                                        "Nb": {
-                                            "var": "escrow_number"
-                                        },
+                                        "Tp": {"CdOrPrtry": {"Prtry": "PURCHASE_AGREEMENT"}},
+                                        "Nb": {"var": "escrow_number"},
                                         "RltdDt": {
-                                            "fake": [
-                                                "date",
-                                                "%Y-%m-%d",
-                                                "-30d",
-                                                "-7d"
-                                            ]
+                                            "fake": ["date", "%Y-%m-%d", "-30d", "-7d"]
                                         }
                                     }
                                 ],
-                                "RfrdDocAmt": {
-                                    "DuePyblAmt": {
-                                        "@Ccy": "CAD",
-                                        "$value": {
-                                            "var": "purchase_price"
-                                        }
-                                    }
-                                },
+                                "RfrdDocAmt": {"DuePyblAmt": {"@Ccy": "CAD", "$value": {"var": "purchase_price"}}},
                                 "CdtrRefInf": {
-                                    "Tp": {
-                                        "CdOrPrtry": {
-                                            "Prtry": "PROPERTY_REFERENCE"
-                                        }
-                                    },
-                                    "Ref": {
-                                        "cat": [
-                                            "PIN-",
-                                            {
-                                                "fake": [
-                                                    "i64",
-                                                    10000000,
-                                                    99999999
-                                                ]
-                                            }
-                                        ]
-                                    }
+                                    "Tp": {"CdOrPrtry": {"Prtry": "PROPERTY_REFERENCE"}},
+                                    "Ref": {"cat": ["PIN-", {"fake": ["i64", 10000000, 99999999]}]}
                                 },
                                 "AddtlRmtInf": [
                                     "Generated remittance information",
