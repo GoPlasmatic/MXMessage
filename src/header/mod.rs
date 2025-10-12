@@ -48,3 +48,8 @@ pub mod bah_pacs_010_001_03_mc;
 pub mod bah_pain_001_001_09;
 pub mod bah_pain_002_001_10;
 pub mod bah_pain_008_001_08;
+
+/// AppHdr type - represents all possible Business Application Header types
+/// Since all BAH types are structurally identical, we use a type alias
+/// pointing to BusinessApplicationHeaderV02 from pacs.008
+pub type AppHdr = bah_pacs_008_001_08::BusinessApplicationHeaderV02;

@@ -140,7 +140,7 @@
             }
         },
         "Document": {
-            "FinInstnCdtTrf": {
+            "FICdtTrf": {
                 "GrpHdr": {
                     "MsgId": {
                         "var": "msg_id"

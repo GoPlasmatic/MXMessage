@@ -6,26 +6,6 @@
 use dataflow_rs::engine::error::{DataflowError, Result};
 use serde_json::Value;
 
-/// Detect the format of an MX message payload (XML or JSON)
-///
-/// # Arguments
-/// * `payload` - The message payload to analyze
-///
-/// # Returns
-/// * "xml" if the payload appears to be XML
-/// * "json" if the payload appears to be JSON
-/// * "xml" as default if format cannot be determined
-pub fn detect_format(payload: &str) -> String {
-    let trimmed = payload.trim();
-    if trimmed.starts_with('<') {
-        "xml".to_string()
-    } else if trimmed.starts_with('{') || trimmed.starts_with('[') {
-        "json".to_string()
-    } else {
-        "xml".to_string() // Default to XML
-    }
-}
-
 /// Map ISO20022 document element names to message types
 ///
 /// # Arguments
@@ -38,7 +18,7 @@ pub fn map_document_element_to_message_type(element_name: &str) -> Result<String
     let message_type = match element_name {
         "FIToFICstmrCdtTrf" | "FIToFICustomerCreditTransferV08" => "pacs.008",
         "FIToFIPmtStsRpt" | "FIToFIPaymentStatusReportV10" => "pacs.002",
-        "FinInstnCdtTrf" | "FinancialInstitutionCreditTransferV08" => "pacs.009",
+        "FICdtTrf" | "FinInstnCdtTrf" | "FinancialInstitutionCreditTransferV08" => "pacs.009",
         "PmtRtr" | "PaymentReturnV09" => "pacs.004",
         "FIToFICstmrDrctDbt" | "FIToFICustomerDirectDebitV08" => "pacs.003",
         "FIDrctDbt" | "FinancialInstitutionDirectDebitV03" => "pacs.010",
@@ -47,7 +27,7 @@ pub fn map_document_element_to_message_type(element_name: &str) -> Result<String
         "AcctRptgReq" | "AccountReportingRequestV05" => "camt.060",
         "BkToCstmrAcctRpt" | "BankToCustomerAccountReportV08" => "camt.052",
         "RsltnOfInvstgtn" | "ResolutionOfInvestigationV09" => "camt.029",
-        "Rct" | "ReceiptV08" => "camt.025",
+        "Rcpt" | "Rct" | "ReceiptV08" => "camt.025",
         "FIToFIPmtCxlReq" | "FIToFIPaymentCancellationRequestV08" => "camt.056",
         "NtfctnToRcv" | "NotificationToReceiveV06" => "camt.057",
         "CstmrCdtTrfInitn" | "CustomerCreditTransferInitiationV09" => "pain.001",
@@ -206,16 +186,6 @@ pub fn extract_mx_content(
 mod tests {
     use super::*;
     use serde_json::json;
-
-    #[test]
-    fn test_detect_format() {
-        assert_eq!(detect_format("<?xml version=\"1.0\"?>"), "xml");
-        assert_eq!(detect_format("<Document>"), "xml");
-        assert_eq!(detect_format("{\"key\": \"value\"}"), "json");
-        assert_eq!(detect_format("[1, 2, 3]"), "json");
-        assert_eq!(detect_format("unknown"), "xml"); // default
-        assert_eq!(detect_format("  <tag>  "), "xml"); // with whitespace
-    }
 
     #[test]
     fn test_map_document_element_to_message_type() {

@@ -10,9 +10,7 @@ use serde_json::{Value, json};
 use std::sync::Arc;
 use tracing::{debug, error, instrument};
 
-use super::common::{
-    detect_format, extract_message_type, extract_message_type_from_xml, extract_mx_content,
-};
+use super::common::{extract_message_type, extract_mx_content};
 
 pub struct Parse;
 
@@ -25,7 +23,7 @@ impl AsyncFunctionHandler for Parse {
         config: &FunctionConfig,
         _datalogic: Arc<DataLogic>,
     ) -> Result<(usize, Vec<Change>)> {
-        debug!("Starting MX message parsing");
+        debug!("Starting MX message parsing (XML to JSON)");
 
         // Extract custom configuration
         let input = match config {
@@ -49,60 +47,72 @@ impl AsyncFunctionHandler for Parse {
             DataflowError::Validation("'parsed' parameter is required".to_string())
         })?;
 
-        let format = input
-            .get("format")
-            .and_then(Value::as_str)
-            .unwrap_or("auto");
-
-        let payload = extract_mx_content(message.data(), mx_message_field, &message.payload)?
+        let xml_payload = extract_mx_content(message.data(), mx_message_field, &message.payload)?
             .replace("\\n", "\n");
 
         debug!(
             mx_message_field = %mx_message_field,
             parsed_field = %parsed_field,
-            payload_length = payload.len(),
-            format = %format,
-            "Extracted MX payload for parsing"
+            payload_length = xml_payload.len(),
+            "Extracted XML payload for parsing"
         );
 
-        self.parse_mx_message(message, &payload, parsed_field, format)
+        self.parse_xml_to_json(message, &xml_payload, parsed_field)
     }
 }
 
 impl Parse {
-    fn parse_mx_message(
+    /// Parse XML to JSON using MxMessage API
+    /// This is the primary parsing method - always XML input to JSON output
+    fn parse_xml_to_json(
         &self,
         message: &mut Message,
-        payload: &str,
+        xml_str: &str,
         parsed_field: &str,
-        format_hint: &str,
     ) -> Result<(usize, Vec<Change>)> {
-        debug!("Parsing MX message");
+        use crate::mx_envelope::MxMessage;
 
-        // Auto-detect format if needed
-        let format = if format_hint == "auto" {
-            detect_format(payload)
+        debug!("Parsing XML to JSON using MxMessage API");
+
+        // Check if XML has full envelope or just Document
+        let has_envelope = xml_str.contains("<AppHdr") || xml_str.contains("<Envelope");
+
+        let parsed_data = if has_envelope {
+            debug!("XML has full envelope with AppHdr");
+
+            // Use MxMessage to deserialize XML with envelope
+            let mx_message = MxMessage::from_xml(xml_str).map_err(|e| {
+                error!(error = ?e, "Failed to parse XML with MxMessage");
+                DataflowError::Validation(format!("XML parsing error: {}", e))
+            })?;
+
+            // Convert to JSON string then parse to Value
+            let json_str = mx_message.to_json().map_err(|e| {
+                error!(error = ?e, "Failed to convert to JSON");
+                DataflowError::Validation(format!("JSON conversion error: {}", e))
+            })?;
+
+            serde_json::from_str(&json_str).map_err(|e| {
+                error!(error = ?e, "Failed to parse JSON");
+                DataflowError::Validation(format!("JSON parsing error: {}", e))
+            })?
         } else {
-            format_hint.to_string()
-        };
+            debug!("XML has Document only, using typed parser");
 
-        debug!(format = %format, "Detected/using format");
+            // Fall back to Document-only parser for XML without envelope
+            use super::common::extract_message_type_from_xml;
+            let message_type = extract_message_type_from_xml(xml_str)?;
 
-        let parsed_data = match format.as_str() {
-            "xml" => self.parse_xml(payload)?,
-            "json" => self.parse_json(payload)?,
-            _ => {
-                return Err(DataflowError::Validation(format!(
-                    "Unsupported format: {}",
-                    format
-                )));
-            }
+            crate::xml::xml_to_json_via_document(xml_str, &message_type).map_err(|e| {
+                error!(error = ?e, "XML parsing failed");
+                DataflowError::Validation(format!("XML parsing error: {}", e))
+            })?
         };
 
         // Extract message type from parsed data
         let message_type = extract_message_type(&parsed_data)?;
 
-        debug!(message_type = %message_type, "Successfully parsed MX message");
+        debug!(message_type = %message_type, "Successfully parsed XML to JSON");
 
         // Store the parsed result in message data
         message
@@ -115,15 +125,14 @@ impl Parse {
             parsed_field.to_string(),
             json!({
                 "message_type": message_type,
-                "format": format,
+                "format": "json",
             }),
         );
 
         debug!(
             message_type = %message_type,
-            format = %format,
             parsed_field = %parsed_field,
-            "MX message parsing completed successfully"
+            "XML to JSON parsing completed successfully"
         );
 
         // Important: invalidate cache after modifications
@@ -137,27 +146,5 @@ impl Parse {
                 new_value: Arc::new(parsed_data),
             }],
         ))
-    }
-
-    /// Parse XML to JSON
-    fn parse_xml(&self, xml_str: &str) -> Result<Value> {
-        // First, extract message type from XML to determine which typed struct to use
-        let message_type = extract_message_type_from_xml(xml_str)?;
-
-        debug!(message_type = %message_type, "Extracted message type from XML");
-
-        // Use the typed struct parser which correctly handles arrays
-        crate::xml::xml_to_json_via_document(xml_str, &message_type).map_err(|e| {
-            error!(error = ?e, "XML parsing failed");
-            DataflowError::Validation(format!("XML parsing error: {}", e))
-        })
-    }
-
-    /// Parse JSON string to Value
-    fn parse_json(&self, json_str: &str) -> Result<Value> {
-        serde_json::from_str(json_str).map_err(|e| {
-            error!(error = ?e, "JSON parsing failed");
-            DataflowError::Validation(format!("JSON parsing error: {}", e))
-        })
     }
 }

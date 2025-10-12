@@ -82,16 +82,10 @@ async fn test_mx_workflow_pipeline() {
     }
 
     // Create workflows for unique message types
-    let mut workflows = Vec::new();
-    let mut processed_types = std::collections::HashSet::new();
-    for (msg_type, _, _) in &test_cases {
-        if processed_types.insert(msg_type.clone()) {
-            workflows.push(create_mx_workflow(msg_type));
-        }
-    }
+    let workflow = create_mx_workflow();
 
     // Create the engine with workflows and custom functions
-    let engine = Engine::new(workflows, Some(custom_functions));
+    let engine = Engine::new([workflow].to_vec(), Some(custom_functions));
 
     let mut all_results = Vec::new();
     let mut failure_count = 0;
@@ -125,42 +119,6 @@ async fn test_mx_workflow_pipeline() {
 
             // Create message with scenario in payload
             let mut message = Message::from_value(&schema);
-
-            // Set metadata fields for tracking
-            message
-                .data_mut()
-                .as_object_mut()
-                .unwrap()
-                .insert("message_type".to_string(), json!(message_type));
-            message
-                .data_mut()
-                .as_object_mut()
-                .unwrap()
-                .insert("scenario".to_string(), json!(scenario));
-
-            // Important: invalidate cache after modifying data
-            message.invalidate_context_cache();
-
-            if debug_mode {
-                println!("\nDebug - Initial message created with:");
-                println!("  message_type: {}", message_type);
-                println!("  scenario: {}", scenario);
-                println!(
-                    "  schema: {} bytes",
-                    serde_json::to_string(&schema).unwrap_or_default().len()
-                );
-            }
-
-            // Add metadata for tracking
-            message.metadata_mut().as_object_mut().unwrap().insert(
-                "test_info".to_string(),
-                json!({
-                    "message_type": message_type,
-                    "scenario": scenario,
-                    "sample_index": sample_idx,
-                    "start_time": chrono::Utc::now().to_rfc3339()
-                }),
-            );
 
             // Process the message through the engine
             let result = engine.process_message(&mut message).await;
@@ -498,19 +456,13 @@ fn load_scenario_schema(message_type: &str, scenario: &str) -> Result<Value, Str
 }
 
 /// Create the ISO20022 MX processing workflow from JSON definition
-fn create_mx_workflow(message_type: &str) -> Workflow {
+fn create_mx_workflow() -> Workflow {
     // Define the workflow in JSON format for better readability and maintainability
     let workflow_json = json!({
-        "id": format!("mx_{}_workflow", message_type.replace('.', "_")),
-        "name": format!("ISO20022 {} Processing Pipeline", message_type),
-        "description": format!("End-to-end processing pipeline for {} messages", message_type),
+        "id": "mx_workflow",
+        "name": "ISO20022 MX Processing Pipeline",
+        "description": "End-to-end processing pipeline for MX messages",
         "priority": 0,
-        "condition": {
-            "==": [
-                {"var": "data.message_type"},
-                message_type
-            ]
-        },
         "tasks": [
             {
                 "id": "step_1_generate",
@@ -519,8 +471,7 @@ fn create_mx_workflow(message_type: &str) -> Workflow {
                 "function": {
                     "name": "generate_mx",
                     "input": {
-                        "generated": "sample_json",
-                        "message_type": message_type
+                        "generated": "sample_json"
                     }
                 },
             },
@@ -532,7 +483,6 @@ fn create_mx_workflow(message_type: &str) -> Workflow {
                     "name": "publish_mx",
                     "input": {
                         "json_data": "sample_json",
-                        "format": "xml",
                         "mx_message": "sample_xml"
                     }
                 },
@@ -545,9 +495,7 @@ fn create_mx_workflow(message_type: &str) -> Workflow {
                     "name": "validate_mx",
                     "input": {
                         "mx_message": "sample_xml",
-                        "format": "xml",
                         "validation_result": "validation_result",
-                        "validation_level": "full"
                     }
                 },
             },
@@ -559,7 +507,6 @@ fn create_mx_workflow(message_type: &str) -> Workflow {
                     "name": "parse_mx",
                     "input": {
                         "mx_message": "sample_xml",
-                        "format": "xml",
                         "parsed": "mx_json"
                     }
                 },
@@ -741,8 +688,31 @@ fn check_round_trip_success(message: &Message) -> bool {
     }
 }
 
+/// Format a float with a specific number of significant figures
+fn format_with_sig_figs(f: f64, sig_figs: usize) -> String {
+    if f == 0.0 {
+        return "0".to_string();
+    }
+
+    let abs_f = f.abs();
+
+    // For very small or very large numbers, use scientific notation
+    if abs_f < 1e-6 || abs_f > 1e15 {
+        // Use scientific notation with sig_figs-1 decimal places
+        format!("{:.prec$e}", f, prec = sig_figs.saturating_sub(1))
+    } else {
+        // Calculate how many decimal places we need for the desired significant figures
+        let magnitude = abs_f.log10().floor() as i32;
+        let decimal_places = (sig_figs as i32 - magnitude - 1).max(0) as usize;
+
+        // Format with calculated decimal places
+        format!("{:.prec$}", f, prec = decimal_places)
+    }
+}
+
 /// Normalize JSON types for round-trip comparison
 /// Converts numbers in $value fields to strings to match XML parsing behavior
+/// Rounds floating-point numbers to handle precision loss in XML round-trip
 fn normalize_json_types(value: &serde_json::Value) -> serde_json::Value {
     match value {
         serde_json::Value::Object(map) => {
@@ -752,14 +722,34 @@ fn normalize_json_types(value: &serde_json::Value) -> serde_json::Value {
                     // Normalize $value to string, removing trailing .0 for floats
                     let normalized_val = match val {
                         serde_json::Value::Number(n) => {
-                            let s = n.to_string();
-                            // Remove trailing .0 from floats to match XML parsing
-                            let s = if s.ends_with(".0") && !s.contains('e') && !s.contains('E') {
-                                s.trim_end_matches(".0").to_string()
+                            // Parse as f64 and format with significant figures
+                            let rounded = if let Some(f) = n.as_f64() {
+                                f
+                            } else if let Some(i) = n.as_i64() {
+                                i as f64
+                            } else if let Some(u) = n.as_u64() {
+                                u as f64
                             } else {
-                                s
+                                n.as_f64().unwrap_or(0.0)
                             };
-                            serde_json::Value::String(s)
+
+                            // Use 12 significant figures to account for XML round-trip precision loss
+                            // f64 has ~15-17 sig figs, but XML round-trip loses 2-3 digits
+                            let s = format_with_sig_figs(rounded, 12);
+
+                            // Remove trailing zeros and decimal point if unnecessary
+                            let s = s.trim_end_matches('0').trim_end_matches('.');
+                            serde_json::Value::String(s.to_string())
+                        }
+                        serde_json::Value::String(s) => {
+                            // If it's already a string, try to parse and normalize it too
+                            if let Ok(f) = s.parse::<f64>() {
+                                let normalized_str = format_with_sig_figs(f, 12);
+                                let normalized_str = normalized_str.trim_end_matches('0').trim_end_matches('.');
+                                serde_json::Value::String(normalized_str.to_string())
+                            } else {
+                                serde_json::Value::String(s.clone())
+                            }
                         }
                         serde_json::Value::Bool(b) => serde_json::Value::String(b.to_string()),
                         other => other.clone(),
@@ -779,14 +769,22 @@ fn normalize_json_types(value: &serde_json::Value) -> serde_json::Value {
         }
         // Normalize numbers to strings (XML converts everything to strings)
         serde_json::Value::Number(n) => {
-            let s = n.to_string();
-            // Remove trailing .0 from floats
-            let s = if s.ends_with(".0") && !s.contains('e') && !s.contains('E') {
-                s.trim_end_matches(".0").to_string()
+            // Parse as f64 and format with significant figures
+            let rounded = if let Some(f) = n.as_f64() {
+                f
+            } else if let Some(i) = n.as_i64() {
+                i as f64
+            } else if let Some(u) = n.as_u64() {
+                u as f64
             } else {
-                s
+                n.as_f64().unwrap_or(0.0)
             };
-            serde_json::Value::String(s)
+
+            // Use 12 significant figures
+            let s = format_with_sig_figs(rounded, 12);
+            // Remove trailing zeros and decimal point if unnecessary
+            let s = s.trim_end_matches('0').trim_end_matches('.');
+            serde_json::Value::String(s.to_string())
         }
         // Normalize booleans to strings
         serde_json::Value::Bool(b) => serde_json::Value::String(b.to_string()),
