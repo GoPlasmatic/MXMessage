@@ -33,38 +33,31 @@ impl AsyncFunctionHandler for Publish {
             }
         };
 
-        // Get json_data and mx_message field names
-        let json_data_field = input
-            .get("json_data")
-            .and_then(Value::as_str)
-            .ok_or_else(|| {
-                DataflowError::Validation("'json_data' parameter is required".to_string())
-            })?;
+        // Get source and target field names
+        let source_field = input.get("source").and_then(Value::as_str).ok_or_else(|| {
+            DataflowError::Validation("'source' parameter is required".to_string())
+        })?;
 
-        let mx_message_field =
-            input
-                .get("mx_message")
-                .and_then(Value::as_str)
-                .ok_or_else(|| {
-                    DataflowError::Validation("'mx_message' parameter is required".to_string())
-                })?;
+        let target_field = input.get("target").and_then(Value::as_str).ok_or_else(|| {
+            DataflowError::Validation("'target' parameter is required".to_string())
+        })?;
 
         // Extract JSON data from the message
-        let json_data = message.data().get(json_data_field).cloned().ok_or_else(|| {
+        let json_data = message.data().get(source_field).cloned().ok_or_else(|| {
             error!(
-                json_data_field = %json_data_field,
+                source_field = %source_field,
                 available_fields = ?message.data().as_object().map(|obj| obj.keys().collect::<Vec<_>>()),
                 "JSON data field not found in message data"
             );
             DataflowError::Validation(format!(
                 "Field '{}' not found in message data",
-                json_data_field
+                source_field
             ))
         })?;
 
         debug!(
-            json_data_field = %json_data_field,
-            mx_message_field = %mx_message_field,
+            source_field = %source_field,
+            target_field = %target_field,
             "Processing JSON to MX conversion"
         );
 
@@ -79,11 +72,11 @@ impl AsyncFunctionHandler for Publish {
         // Store the MX message in the output field
         let old_value = message
             .data()
-            .get(mx_message_field)
+            .get(target_field)
             .cloned()
             .unwrap_or(Value::Null);
 
-        message.data_mut()[mx_message_field] = Value::String(mx_message.clone());
+        message.data_mut()[target_field] = Value::String(mx_message.clone());
 
         // Invalidate cache after modifications
         message.invalidate_context_cache();
@@ -91,7 +84,7 @@ impl AsyncFunctionHandler for Publish {
         Ok((
             200,
             vec![Change {
-                path: Arc::from(format!("data.{}", mx_message_field)),
+                path: Arc::from(format!("data.{}", target_field)),
                 old_value: Arc::new(old_value),
                 new_value: Arc::new(Value::String(mx_message)),
             }],

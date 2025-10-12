@@ -471,7 +471,7 @@ fn create_mx_workflow() -> Workflow {
                 "function": {
                     "name": "generate_mx",
                     "input": {
-                        "generated": "sample_json"
+                        "target": "sample_json"
                     }
                 },
             },
@@ -482,8 +482,8 @@ fn create_mx_workflow() -> Workflow {
                 "function": {
                     "name": "publish_mx",
                     "input": {
-                        "json_data": "sample_json",
-                        "mx_message": "sample_xml"
+                        "source": "sample_json",
+                        "target": "sample_xml"
                     }
                 },
             },
@@ -494,8 +494,8 @@ fn create_mx_workflow() -> Workflow {
                 "function": {
                     "name": "validate_mx",
                     "input": {
-                        "mx_message": "sample_xml",
-                        "validation_result": "validation_result",
+                        "source": "sample_xml",
+                        "target": "validation_result",
                     }
                 },
             },
@@ -506,8 +506,8 @@ fn create_mx_workflow() -> Workflow {
                 "function": {
                     "name": "parse_mx",
                     "input": {
-                        "mx_message": "sample_xml",
-                        "parsed": "mx_json"
+                        "source": "sample_xml",
+                        "target": "mx_json"
                     }
                 },
             }

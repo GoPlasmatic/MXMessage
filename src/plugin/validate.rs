@@ -35,27 +35,20 @@ impl AsyncFunctionHandler for Validate {
             }
         };
 
-        let mx_message_field =
-            input
-                .get("mx_message")
-                .and_then(Value::as_str)
-                .ok_or_else(|| {
-                    DataflowError::Validation("'mx_message' parameter is required".to_string())
-                })?;
+        let source_field = input.get("source").and_then(Value::as_str).ok_or_else(|| {
+            DataflowError::Validation("'source' parameter is required".to_string())
+        })?;
 
-        let validation_result_field = input
-            .get("validation_result")
-            .and_then(Value::as_str)
-            .ok_or_else(|| {
-                DataflowError::Validation("'validation_result' parameter is required".to_string())
-            })?;
+        let target_field = input.get("target").and_then(Value::as_str).ok_or_else(|| {
+            DataflowError::Validation("'target' parameter is required".to_string())
+        })?;
 
         // Get the MX XML message to validate
-        let xml_content = extract_mx_content(message.data(), mx_message_field, &message.payload)?;
+        let xml_content = extract_mx_content(message.data(), source_field, &message.payload)?;
 
         debug!(
-            mx_message_field = %mx_message_field,
-            validation_result_field = %validation_result_field,
+            source_field = %source_field,
+            target_field = %target_field,
             "Validating MX XML message"
         );
 
@@ -63,10 +56,11 @@ impl AsyncFunctionHandler for Validate {
         let validation_result = self.validate_xml(&xml_content)?;
 
         // Store validation result
-        message.data_mut().as_object_mut().unwrap().insert(
-            validation_result_field.to_string(),
-            validation_result.clone(),
-        );
+        message
+            .data_mut()
+            .as_object_mut()
+            .unwrap()
+            .insert(target_field.to_string(), validation_result.clone());
 
         // Update metadata with validation summary
         message.metadata_mut().as_object_mut().unwrap().insert(
@@ -82,7 +76,7 @@ impl AsyncFunctionHandler for Validate {
         Ok((
             200,
             vec![Change {
-                path: Arc::from(format!("data.{}", validation_result_field)),
+                path: Arc::from(format!("data.{}", target_field)),
                 old_value: Arc::new(Value::Null),
                 new_value: Arc::new(validation_result),
             }],

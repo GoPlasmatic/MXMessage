@@ -35,29 +35,25 @@ impl AsyncFunctionHandler for Parse {
             }
         };
 
-        let mx_message_field =
-            input
-                .get("mx_message")
-                .and_then(Value::as_str)
-                .ok_or_else(|| {
-                    DataflowError::Validation("'mx_message' parameter is required".to_string())
-                })?;
-
-        let parsed_field = input.get("parsed").and_then(Value::as_str).ok_or_else(|| {
-            DataflowError::Validation("'parsed' parameter is required".to_string())
+        let source_field = input.get("source").and_then(Value::as_str).ok_or_else(|| {
+            DataflowError::Validation("'source' parameter is required".to_string())
         })?;
 
-        let xml_payload = extract_mx_content(message.data(), mx_message_field, &message.payload)?
+        let target_field = input.get("target").and_then(Value::as_str).ok_or_else(|| {
+            DataflowError::Validation("'target' parameter is required".to_string())
+        })?;
+
+        let xml_payload = extract_mx_content(message.data(), source_field, &message.payload)?
             .replace("\\n", "\n");
 
         debug!(
-            mx_message_field = %mx_message_field,
-            parsed_field = %parsed_field,
+            source_field = %source_field,
+            target_field = %target_field,
             payload_length = xml_payload.len(),
             "Extracted XML payload for parsing"
         );
 
-        self.parse_xml_to_json(message, &xml_payload, parsed_field)
+        self.parse_xml_to_json(message, &xml_payload, target_field)
     }
 }
 
@@ -68,7 +64,7 @@ impl Parse {
         &self,
         message: &mut Message,
         xml_str: &str,
-        parsed_field: &str,
+        target_field: &str,
     ) -> Result<(usize, Vec<Change>)> {
         use crate::mx_envelope::MxMessage;
 
@@ -119,10 +115,10 @@ impl Parse {
             .data_mut()
             .as_object_mut()
             .unwrap()
-            .insert(parsed_field.to_string(), parsed_data.clone());
+            .insert(target_field.to_string(), parsed_data.clone());
 
         message.metadata_mut().as_object_mut().unwrap().insert(
-            parsed_field.to_string(),
+            target_field.to_string(),
             json!({
                 "message_type": message_type,
                 "format": "json",
@@ -131,7 +127,7 @@ impl Parse {
 
         debug!(
             message_type = %message_type,
-            parsed_field = %parsed_field,
+            target_field = %target_field,
             "XML to JSON parsing completed successfully"
         );
 
@@ -141,7 +137,7 @@ impl Parse {
         Ok((
             200,
             vec![Change {
-                path: Arc::from(format!("data.{}", parsed_field)),
+                path: Arc::from(format!("data.{}", target_field)),
                 old_value: Arc::new(Value::Null),
                 new_value: Arc::new(parsed_data),
             }],
