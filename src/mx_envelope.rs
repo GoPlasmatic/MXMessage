@@ -353,12 +353,9 @@ impl MxMessage {
                 "ChrgsPmtNtfctn",
                 "camt.105"
             ),
-            Document::Camt106(doc) => serialize_doc!(
-                doc,
-                "ChargesPaymentRequestV02",
-                "ChrgsPmtReq",
-                "camt.106"
-            ),
+            Document::Camt106(doc) => {
+                serialize_doc!(doc, "ChargesPaymentRequestV02", "ChrgsPmtReq", "camt.106")
+            }
             Document::Camt107(doc) => serialize_doc!(
                 doc,
                 "ChequePresentmentNotificationV01",
