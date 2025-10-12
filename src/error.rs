@@ -22,7 +22,19 @@ use thiserror::Error;
 /// MX Message processing errors
 #[derive(Error, Debug)]
 pub enum MxError {
-    /// XML serialization/deserialization error
+    /// XML serialization error
+    #[error("XML serialization error: {0}")]
+    XmlSerialization(String),
+
+    /// XML deserialization error
+    #[error("XML deserialization error: {0}")]
+    XmlDeserialization(String),
+
+    /// XML validation error
+    #[error("XML validation error: {0}")]
+    XmlValidation(String),
+
+    /// General XML error
     #[error("XML error: {0}")]
     Xml(String),
 

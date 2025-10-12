@@ -20,6 +20,7 @@
 pub mod document;
 pub mod error;
 pub mod header;
+pub mod message_registry;
 pub mod parse_result;
 pub mod validation;
 pub mod xml;

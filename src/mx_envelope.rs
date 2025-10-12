@@ -1,10 +1,11 @@
 // MX Message Envelope Structure for ISO 20022 compliant XML generation
 
 use serde::{Deserialize, Serialize};
-use std::fmt;
 
 // Re-export AppHdr for convenience
+use crate::error::MxError;
 pub use crate::header::AppHdr;
+use crate::message_registry;
 
 /// Document enum - represents the Document element in MX messages
 /// Each variant uses serde rename to match the XML element name
@@ -82,51 +83,32 @@ pub enum Document {
 impl Document {
     /// Get the namespace for this document based on its type
     pub fn namespace(&self) -> String {
-        match self {
-            Document::Pacs008(_) => "urn:iso:std:iso:20022:tech:xsd:pacs.008.001.08".to_string(),
-            Document::Pacs009(_) => "urn:iso:std:iso:20022:tech:xsd:pacs.009.001.08".to_string(),
-            Document::Pacs003(_) => "urn:iso:std:iso:20022:tech:xsd:pacs.003.001.08".to_string(),
-            Document::Pacs004(_) => "urn:iso:std:iso:20022:tech:xsd:pacs.004.001.09".to_string(),
-            Document::Pacs002(_) => "urn:iso:std:iso:20022:tech:xsd:pacs.002.001.10".to_string(),
-            Document::Pacs010(_) => "urn:iso:std:iso:20022:tech:xsd:pacs.010.001.03".to_string(),
-            Document::Pain001(_) => "urn:iso:std:iso:20022:tech:xsd:pain.001.001.09".to_string(),
-            Document::Pain002(_) => "urn:iso:std:iso:20022:tech:xsd:pain.002.001.10".to_string(),
-            Document::Pain008(_) => "urn:iso:std:iso:20022:tech:xsd:pain.008.001.08".to_string(),
-            Document::Camt025(_) => "urn:iso:std:iso:20022:tech:xsd:camt.025.001.08".to_string(),
-            Document::Camt029(_) => "urn:iso:std:iso:20022:tech:xsd:camt.029.001.09".to_string(),
-            Document::Camt052(_) => "urn:iso:std:iso:20022:tech:xsd:camt.052.001.08".to_string(),
-            Document::Camt053(_) => "urn:iso:std:iso:20022:tech:xsd:camt.053.001.08".to_string(),
-            Document::Camt054(_) => "urn:iso:std:iso:20022:tech:xsd:camt.054.001.08".to_string(),
-            Document::Camt056(_) => "urn:iso:std:iso:20022:tech:xsd:camt.056.001.08".to_string(),
-            Document::Camt057(_) => "urn:iso:std:iso:20022:tech:xsd:camt.057.001.06".to_string(),
-            Document::Camt060(_) => "urn:iso:std:iso:20022:tech:xsd:camt.060.001.05".to_string(),
-            Document::Camt107(_) => "urn:iso:std:iso:20022:tech:xsd:camt.107.001.01".to_string(),
-            Document::Camt108(_) => "urn:iso:std:iso:20022:tech:xsd:camt.108.001.01".to_string(),
-            Document::Camt109(_) => "urn:iso:std:iso:20022:tech:xsd:camt.109.001.01".to_string(),
-            Document::Admi024(_) => "urn:iso:std:iso:20022:tech:xsd:admi.024.001.01".to_string(),
-        }
+        let msg_type = match self {
+            Document::Pacs008(_) => "pacs.008",
+            Document::Pacs009(_) => "pacs.009",
+            Document::Pacs003(_) => "pacs.003",
+            Document::Pacs004(_) => "pacs.004",
+            Document::Pacs002(_) => "pacs.002",
+            Document::Pacs010(_) => "pacs.010",
+            Document::Pain001(_) => "pain.001",
+            Document::Pain002(_) => "pain.002",
+            Document::Pain008(_) => "pain.008",
+            Document::Camt025(_) => "camt.025",
+            Document::Camt029(_) => "camt.029",
+            Document::Camt052(_) => "camt.052",
+            Document::Camt053(_) => "camt.053",
+            Document::Camt054(_) => "camt.054",
+            Document::Camt056(_) => "camt.056",
+            Document::Camt057(_) => "camt.057",
+            Document::Camt060(_) => "camt.060",
+            Document::Camt107(_) => "camt.107",
+            Document::Camt108(_) => "camt.108",
+            Document::Camt109(_) => "camt.109",
+            Document::Admi024(_) => "admi.024",
+        };
+        message_registry::get_namespace(msg_type)
     }
 }
-
-/// Error type for MX envelope operations
-#[derive(Debug)]
-pub enum MxError {
-    SerializationError(String),
-    DeserializationError(String),
-    ValidationError(String),
-}
-
-impl fmt::Display for MxError {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match self {
-            MxError::SerializationError(msg) => write!(f, "MX Serialization Error: {}", msg),
-            MxError::DeserializationError(msg) => write!(f, "MX Deserialization Error: {}", msg),
-            MxError::ValidationError(msg) => write!(f, "MX Validation Error: {}", msg),
-        }
-    }
-}
-
-impl std::error::Error for MxError {}
 
 /// Complete MX message containing Business Application Header and Document
 /// This is the unified structure for all ISO20022 message types
@@ -162,137 +144,33 @@ impl MxMessage {
     }
 }
 
-/// Message type to namespace mapping
-/// Format: (short_form, full_form, namespace)
-const NAMESPACE_MAPPINGS: &[(&str, &str, &str)] = &[
-    (
-        "pacs.008",
-        "pacs.008.001.08",
-        "urn:iso:std:iso:20022:tech:xsd:pacs.008.001.08",
-    ),
-    (
-        "pacs.009",
-        "pacs.009.001.08",
-        "urn:iso:std:iso:20022:tech:xsd:pacs.009.001.08",
-    ),
-    (
-        "pacs.003",
-        "pacs.003.001.08",
-        "urn:iso:std:iso:20022:tech:xsd:pacs.003.001.08",
-    ),
-    (
-        "pacs.004",
-        "pacs.004.001.09",
-        "urn:iso:std:iso:20022:tech:xsd:pacs.004.001.09",
-    ),
-    (
-        "pacs.002",
-        "pacs.002.001.10",
-        "urn:iso:std:iso:20022:tech:xsd:pacs.002.001.10",
-    ),
-    (
-        "pacs.010",
-        "pacs.010.001.03",
-        "urn:iso:std:iso:20022:tech:xsd:pacs.010.001.03",
-    ),
-    (
-        "pain.001",
-        "pain.001.001.09",
-        "urn:iso:std:iso:20022:tech:xsd:pain.001.001.09",
-    ),
-    (
-        "pain.002",
-        "pain.002.001.10",
-        "urn:iso:std:iso:20022:tech:xsd:pain.002.001.10",
-    ),
-    (
-        "pain.008",
-        "pain.008.001.08",
-        "urn:iso:std:iso:20022:tech:xsd:pain.008.001.08",
-    ),
-    (
-        "camt.025",
-        "camt.025.001.08",
-        "urn:iso:std:iso:20022:tech:xsd:camt.025.001.08",
-    ),
-    (
-        "camt.029",
-        "camt.029.001.09",
-        "urn:iso:std:iso:20022:tech:xsd:camt.029.001.09",
-    ),
-    (
-        "camt.052",
-        "camt.052.001.08",
-        "urn:iso:std:iso:20022:tech:xsd:camt.052.001.08",
-    ),
-    (
-        "camt.053",
-        "camt.053.001.08",
-        "urn:iso:std:iso:20022:tech:xsd:camt.053.001.08",
-    ),
-    (
-        "camt.054",
-        "camt.054.001.08",
-        "urn:iso:std:iso:20022:tech:xsd:camt.054.001.08",
-    ),
-    (
-        "camt.056",
-        "camt.056.001.08",
-        "urn:iso:std:iso:20022:tech:xsd:camt.056.001.08",
-    ),
-    (
-        "camt.057",
-        "camt.057.001.06",
-        "urn:iso:std:iso:20022:tech:xsd:camt.057.001.06",
-    ),
-    (
-        "camt.060",
-        "camt.060.001.05",
-        "urn:iso:std:iso:20022:tech:xsd:camt.060.001.05",
-    ),
-    (
-        "camt.107",
-        "camt.107.001.01",
-        "urn:iso:std:iso:20022:tech:xsd:camt.107.001.01",
-    ),
-    (
-        "camt.108",
-        "camt.108.001.01",
-        "urn:iso:std:iso:20022:tech:xsd:camt.108.001.01",
-    ),
-    (
-        "camt.109",
-        "camt.109.001.01",
-        "urn:iso:std:iso:20022:tech:xsd:camt.109.001.01",
-    ),
-    (
-        "admi.024",
-        "admi.024.001.01",
-        "urn:iso:std:iso:20022:tech:xsd:admi.024.001.01",
-    ),
-];
-
 /// Get the appropriate namespace for a message type
+/// Delegates to message_registry module
 pub fn get_namespace_for_message_type(message_type: &str) -> String {
-    // Look up in the static mapping
-    for (short_form, full_form, namespace) in NAMESPACE_MAPPINGS {
-        if message_type == *short_form || message_type == *full_form {
-            return namespace.to_string();
-        }
-    }
-
-    // Default fallback: construct namespace from message type
-    format!("urn:iso:std:iso:20022:tech:xsd:{}", message_type)
+    message_registry::get_namespace(message_type)
 }
 
 /// Get the short form of message type (e.g., "pacs.008")
+/// Delegates to message_registry module
 pub fn normalize_message_type(message_type: &str) -> String {
-    for (short_form, full_form, _) in NAMESPACE_MAPPINGS {
-        if message_type == *short_form || message_type == *full_form {
-            return short_form.to_string();
-        }
-    }
-    message_type.to_string()
+    message_registry::normalize_message_type(message_type)
+}
+
+/// Macro to reduce serialization boilerplate
+macro_rules! serialize_doc {
+    ($doc:expr, $rust_type:expr, $xml_elem:expr, $msg_type:expr) => {
+        MxMessage::serialize_with_rename($doc.as_ref(), $rust_type, $xml_elem, $msg_type)
+    };
+}
+
+/// Macro to reduce deserialization boilerplate
+macro_rules! deserialize_doc {
+    ($xml:expr, $path:path, $variant:ident, $msg_type:expr) => {{
+        let doc = quick_xml::de::from_str::<$path>($xml).map_err(|e| {
+            MxError::XmlDeserialization(format!("Failed to parse {}: {}", $msg_type, e))
+        })?;
+        Ok(Document::$variant(Box::new(doc)))
+    }};
 }
 
 impl MxMessage {
@@ -306,12 +184,27 @@ impl MxMessage {
         Ok(get_namespace_for_message_type(self.message_type()?))
     }
 
+    /// Helper function to serialize a document with struct name replacement
+    fn serialize_with_rename<T: Serialize>(
+        value: &T,
+        rust_type: &str,
+        xml_element: &str,
+        msg_type: &str,
+    ) -> Result<String, MxError> {
+        let xml = quick_xml::se::to_string(value).map_err(|e| {
+            MxError::XmlSerialization(format!("Failed to serialize {}: {}", msg_type, e))
+        })?;
+        Ok(xml
+            .replace(&format!("<{}>", rust_type), &format!("<{}>", xml_element))
+            .replace(&format!("</{}>", rust_type), &format!("</{}>", xml_element)))
+    }
+
     /// Serialize to XML string
     pub fn to_xml(&self) -> Result<String, MxError> {
         // Custom serialization to handle enum variants
         // Serialize AppHdr
         let app_hdr_xml = quick_xml::se::to_string(&self.app_hdr)
-            .map_err(|e| MxError::SerializationError(format!("Failed to serialize AppHdr: {}", e)))?;
+            .map_err(|e| MxError::XmlSerialization(format!("Failed to serialize AppHdr: {}", e)))?;
 
         // AppHdr is serialized directly without a wrapper tag, use it as-is
         let app_hdr_inner = app_hdr_xml;
@@ -340,141 +233,122 @@ impl MxMessage {
     /// Serialize document based on its variant
     fn serialize_document(&self) -> Result<String, MxError> {
         match &self.document {
-            Document::Pacs008(doc) => {
-                let xml = quick_xml::se::to_string(doc.as_ref())
-                    .map_err(|e| MxError::SerializationError(format!("Failed to serialize pacs.008: {}", e)))?;
-                // Replace the struct name wrapper with the ISO20022 element name
-                let renamed = xml
-                    .replace("<FIToFICustomerCreditTransferV08>", "<FIToFICstmrCdtTrf>")
-                    .replace("</FIToFICustomerCreditTransferV08>", "</FIToFICstmrCdtTrf>");
-                Ok(renamed)
-            }
-            Document::Pacs002(doc) => {
-                let xml = quick_xml::se::to_string(doc.as_ref())
-                    .map_err(|e| MxError::SerializationError(format!("Failed to serialize pacs.002: {}", e)))?;
-                Ok(xml.replace("<FIToFIPaymentStatusReportV10>", "<FIToFIPmtStsRpt>")
-                    .replace("</FIToFIPaymentStatusReportV10>", "</FIToFIPmtStsRpt>"))
-            }
-            Document::Pacs003(doc) => {
-                let xml = quick_xml::se::to_string(doc.as_ref())
-                    .map_err(|e| MxError::SerializationError(format!("Failed to serialize pacs.003: {}", e)))?;
-                Ok(xml.replace("<FIToFICustomerDirectDebitV08>", "<FIToFICstmrDrctDbt>")
-                    .replace("</FIToFICustomerDirectDebitV08>", "</FIToFICstmrDrctDbt>"))
-            }
-            Document::Pacs004(doc) => {
-                let xml = quick_xml::se::to_string(doc.as_ref())
-                    .map_err(|e| MxError::SerializationError(format!("Failed to serialize pacs.004: {}", e)))?;
-                Ok(xml.replace("<PaymentReturnV09>", "<PmtRtr>")
-                    .replace("</PaymentReturnV09>", "</PmtRtr>"))
-            }
-            Document::Pacs009(doc) => {
-                let xml = quick_xml::se::to_string(doc.as_ref())
-                    .map_err(|e| MxError::SerializationError(format!("Failed to serialize pacs.009: {}", e)))?;
-                Ok(xml.replace("<FinancialInstitutionCreditTransferV08>", "<FICdtTrf>")
-                    .replace("</FinancialInstitutionCreditTransferV08>", "</FICdtTrf>"))
-            }
-            Document::Pacs010(doc) => {
-                let xml = quick_xml::se::to_string(doc.as_ref())
-                    .map_err(|e| MxError::SerializationError(format!("Failed to serialize pacs.010: {}", e)))?;
-                Ok(xml.replace("<FinancialInstitutionDirectDebitV03>", "<FIDrctDbt>")
-                    .replace("</FinancialInstitutionDirectDebitV03>", "</FIDrctDbt>"))
-            }
-            Document::Pain001(doc) => {
-                let xml = quick_xml::se::to_string(doc.as_ref())
-                    .map_err(|e| MxError::SerializationError(format!("Failed to serialize pain.001: {}", e)))?;
-                Ok(xml.replace("<CustomerCreditTransferInitiationV09>", "<CstmrCdtTrfInitn>")
-                    .replace("</CustomerCreditTransferInitiationV09>", "</CstmrCdtTrfInitn>"))
-            }
-            Document::Pain002(doc) => {
-                let xml = quick_xml::se::to_string(doc.as_ref())
-                    .map_err(|e| MxError::SerializationError(format!("Failed to serialize pain.002: {}", e)))?;
-                Ok(xml.replace("<CustomerPaymentStatusReportV10>", "<CstmrPmtStsRpt>")
-                    .replace("</CustomerPaymentStatusReportV10>", "</CstmrPmtStsRpt>"))
-            }
-            Document::Pain008(doc) => {
-                let xml = quick_xml::se::to_string(doc.as_ref())
-                    .map_err(|e| MxError::SerializationError(format!("Failed to serialize pain.008: {}", e)))?;
-                Ok(xml.replace("<CustomerDirectDebitInitiationV08>", "<CstmrDrctDbtInitn>")
-                    .replace("</CustomerDirectDebitInitiationV08>", "</CstmrDrctDbtInitn>"))
-            }
-            Document::Camt025(doc) => {
-                let xml = quick_xml::se::to_string(doc.as_ref())
-                    .map_err(|e| MxError::SerializationError(format!("Failed to serialize camt.025: {}", e)))?;
-                Ok(xml.replace("<ReceiptV08>", "<Rcpt>")
-                    .replace("</ReceiptV08>", "</Rcpt>"))
-            }
-            Document::Camt029(doc) => {
-                let xml = quick_xml::se::to_string(doc.as_ref())
-                    .map_err(|e| MxError::SerializationError(format!("Failed to serialize camt.029: {}", e)))?;
-                Ok(xml.replace("<ResolutionOfInvestigationV09>", "<RsltnOfInvstgtn>")
-                    .replace("</ResolutionOfInvestigationV09>", "</RsltnOfInvstgtn>"))
-            }
-            Document::Camt052(doc) => {
-                let xml = quick_xml::se::to_string(doc.as_ref())
-                    .map_err(|e| MxError::SerializationError(format!("Failed to serialize camt.052: {}", e)))?;
-                Ok(xml.replace("<BankToCustomerAccountReportV08>", "<BkToCstmrAcctRpt>")
-                    .replace("</BankToCustomerAccountReportV08>", "</BkToCstmrAcctRpt>"))
-            }
-            Document::Camt053(doc) => {
-                let xml = quick_xml::se::to_string(doc.as_ref())
-                    .map_err(|e| MxError::SerializationError(format!("Failed to serialize camt.053: {}", e)))?;
-                Ok(xml.replace("<BankToCustomerStatementV08>", "<BkToCstmrStmt>")
-                    .replace("</BankToCustomerStatementV08>", "</BkToCstmrStmt>"))
-            }
-            Document::Camt054(doc) => {
-                let xml = quick_xml::se::to_string(doc.as_ref())
-                    .map_err(|e| MxError::SerializationError(format!("Failed to serialize camt.054: {}", e)))?;
-                Ok(xml.replace("<BankToCustomerDebitCreditNotificationV08>", "<BkToCstmrDbtCdtNtfctn>")
-                    .replace("</BankToCustomerDebitCreditNotificationV08>", "</BkToCstmrDbtCdtNtfctn>"))
-            }
-            Document::Camt056(doc) => {
-                let xml = quick_xml::se::to_string(doc.as_ref())
-                    .map_err(|e| MxError::SerializationError(format!("Failed to serialize camt.056: {}", e)))?;
-                Ok(xml.replace("<FIToFIPaymentCancellationRequestV08>", "<FIToFIPmtCxlReq>")
-                    .replace("</FIToFIPaymentCancellationRequestV08>", "</FIToFIPmtCxlReq>"))
-            }
+            Document::Pacs008(doc) => serialize_doc!(
+                doc,
+                "FIToFICustomerCreditTransferV08",
+                "FIToFICstmrCdtTrf",
+                "pacs.008"
+            ),
+            Document::Pacs002(doc) => serialize_doc!(
+                doc,
+                "FIToFIPaymentStatusReportV10",
+                "FIToFIPmtStsRpt",
+                "pacs.002"
+            ),
+            Document::Pacs003(doc) => serialize_doc!(
+                doc,
+                "FIToFICustomerDirectDebitV08",
+                "FIToFICstmrDrctDbt",
+                "pacs.003"
+            ),
+            Document::Pacs004(doc) => serialize_doc!(doc, "PaymentReturnV09", "PmtRtr", "pacs.004"),
+            Document::Pacs009(doc) => serialize_doc!(
+                doc,
+                "FinancialInstitutionCreditTransferV08",
+                "FICdtTrf",
+                "pacs.009"
+            ),
+            Document::Pacs010(doc) => serialize_doc!(
+                doc,
+                "FinancialInstitutionDirectDebitV03",
+                "FIDrctDbt",
+                "pacs.010"
+            ),
+            Document::Pain001(doc) => serialize_doc!(
+                doc,
+                "CustomerCreditTransferInitiationV09",
+                "CstmrCdtTrfInitn",
+                "pain.001"
+            ),
+            Document::Pain002(doc) => serialize_doc!(
+                doc,
+                "CustomerPaymentStatusReportV10",
+                "CstmrPmtStsRpt",
+                "pain.002"
+            ),
+            Document::Pain008(doc) => serialize_doc!(
+                doc,
+                "CustomerDirectDebitInitiationV08",
+                "CstmrDrctDbtInitn",
+                "pain.008"
+            ),
+            Document::Camt025(doc) => serialize_doc!(doc, "ReceiptV08", "Rcpt", "camt.025"),
+            Document::Camt029(doc) => serialize_doc!(
+                doc,
+                "ResolutionOfInvestigationV09",
+                "RsltnOfInvstgtn",
+                "camt.029"
+            ),
+            Document::Camt052(doc) => serialize_doc!(
+                doc,
+                "BankToCustomerAccountReportV08",
+                "BkToCstmrAcctRpt",
+                "camt.052"
+            ),
+            Document::Camt053(doc) => serialize_doc!(
+                doc,
+                "BankToCustomerStatementV08",
+                "BkToCstmrStmt",
+                "camt.053"
+            ),
+            Document::Camt054(doc) => serialize_doc!(
+                doc,
+                "BankToCustomerDebitCreditNotificationV08",
+                "BkToCstmrDbtCdtNtfctn",
+                "camt.054"
+            ),
+            Document::Camt056(doc) => serialize_doc!(
+                doc,
+                "FIToFIPaymentCancellationRequestV08",
+                "FIToFIPmtCxlReq",
+                "camt.056"
+            ),
             Document::Camt057(doc) => {
-                let xml = quick_xml::se::to_string(doc.as_ref())
-                    .map_err(|e| MxError::SerializationError(format!("Failed to serialize camt.057: {}", e)))?;
-                Ok(xml.replace("<NotificationToReceiveV06>", "<NtfctnToRcv>")
-                    .replace("</NotificationToReceiveV06>", "</NtfctnToRcv>"))
+                serialize_doc!(doc, "NotificationToReceiveV06", "NtfctnToRcv", "camt.057")
             }
             Document::Camt060(doc) => {
-                let xml = quick_xml::se::to_string(doc.as_ref())
-                    .map_err(|e| MxError::SerializationError(format!("Failed to serialize camt.060: {}", e)))?;
-                Ok(xml.replace("<AccountReportingRequestV05>", "<AcctRptgReq>")
-                    .replace("</AccountReportingRequestV05>", "</AcctRptgReq>"))
+                serialize_doc!(doc, "AccountReportingRequestV05", "AcctRptgReq", "camt.060")
             }
-            Document::Camt107(doc) => {
-                let xml = quick_xml::se::to_string(doc.as_ref())
-                    .map_err(|e| MxError::SerializationError(format!("Failed to serialize camt.107: {}", e)))?;
-                Ok(xml.replace("<ChequePresentmentNotificationV01>", "<ChqPresntmntNtfctn>")
-                    .replace("</ChequePresentmentNotificationV01>", "</ChqPresntmntNtfctn>"))
-            }
-            Document::Camt108(doc) => {
-                let xml = quick_xml::se::to_string(doc.as_ref())
-                    .map_err(|e| MxError::SerializationError(format!("Failed to serialize camt.108: {}", e)))?;
-                Ok(xml.replace("<ChequeCancellationOrStopRequestV01>", "<ChqCxlOrStopReq>")
-                    .replace("</ChequeCancellationOrStopRequestV01>", "</ChqCxlOrStopReq>"))
-            }
-            Document::Camt109(doc) => {
-                let xml = quick_xml::se::to_string(doc.as_ref())
-                    .map_err(|e| MxError::SerializationError(format!("Failed to serialize camt.109: {}", e)))?;
-                Ok(xml.replace("<ChequeCancellationOrStopReportV01>", "<ChqCxlOrStopRpt>")
-                    .replace("</ChequeCancellationOrStopReportV01>", "</ChqCxlOrStopRpt>"))
-            }
-            Document::Admi024(doc) => {
-                let xml = quick_xml::se::to_string(doc.as_ref())
-                    .map_err(|e| MxError::SerializationError(format!("Failed to serialize admi.024: {}", e)))?;
-                Ok(xml.replace("<NotificationOfCorrespondenceV01>", "<NtfctnOfCrrspndnc>")
-                    .replace("</NotificationOfCorrespondenceV01>", "</NtfctnOfCrrspndnc>"))
-            }
+            Document::Camt107(doc) => serialize_doc!(
+                doc,
+                "ChequePresentmentNotificationV01",
+                "ChqPresntmntNtfctn",
+                "camt.107"
+            ),
+            Document::Camt108(doc) => serialize_doc!(
+                doc,
+                "ChequeCancellationOrStopRequestV01",
+                "ChqCxlOrStopReq",
+                "camt.108"
+            ),
+            Document::Camt109(doc) => serialize_doc!(
+                doc,
+                "ChequeCancellationOrStopReportV01",
+                "ChqCxlOrStopRpt",
+                "camt.109"
+            ),
+            Document::Admi024(doc) => serialize_doc!(
+                doc,
+                "NotificationOfCorrespondenceV01",
+                "NtfctnOfCrrspndnc",
+                "admi.024"
+            ),
         }
     }
 
     /// Serialize to JSON string
     pub fn to_json(&self) -> Result<String, MxError> {
-        serde_json::to_string_pretty(self).map_err(|e| MxError::SerializationError(e.to_string()))
+        serde_json::to_string_pretty(self).map_err(|e| MxError::XmlSerialization(e.to_string()))
     }
 
     /// Deserialize from XML string using quick-xml with custom enum handling
@@ -493,15 +367,17 @@ impl MxMessage {
     fn from_xml_with_envelope(xml: &str) -> Result<Self, MxError> {
         // Extract AppHdr section
         let app_hdr_xml = Self::extract_section(xml, "AppHdr")
-            .ok_or_else(|| MxError::DeserializationError("AppHdr not found in XML".to_string()))?;
+            .ok_or_else(|| MxError::XmlDeserialization("AppHdr not found in XML".to_string()))?;
 
         // Deserialize AppHdr using quick-xml
-        let app_hdr: crate::header::AppHdr = quick_xml::de::from_str(&format!("<AppHdr>{}</AppHdr>", app_hdr_xml))
-            .map_err(|e| MxError::DeserializationError(format!("Failed to parse AppHdr: {}", e)))?;
+        let app_hdr: crate::header::AppHdr =
+            quick_xml::de::from_str(&format!("<AppHdr>{}</AppHdr>", app_hdr_xml)).map_err(|e| {
+                MxError::XmlDeserialization(format!("Failed to parse AppHdr: {}", e))
+            })?;
 
         // Extract Document section
         let doc_xml = Self::extract_section(xml, "Document")
-            .ok_or_else(|| MxError::DeserializationError("Document not found in XML".to_string()))?;
+            .ok_or_else(|| MxError::XmlDeserialization("Document not found in XML".to_string()))?;
 
         // Determine document type from the first element inside Document
         let doc_type = Self::detect_document_type(&doc_xml)?;
@@ -525,8 +401,8 @@ impl MxMessage {
     fn from_xml_document_only(_xml: &str) -> Result<Self, MxError> {
         // For document-only XML, we need to create a minimal AppHdr
         // This is a fallback case - typically we expect full envelopes
-        Err(MxError::DeserializationError(
-            "Document-only XML requires AppHdr information. Use full envelope format.".to_string()
+        Err(MxError::XmlDeserialization(
+            "Document-only XML requires AppHdr information. Use full envelope format.".to_string(),
         ))
     }
 
@@ -559,45 +435,25 @@ impl MxMessage {
         // Find the first element tag after any whitespace
         let trimmed = doc_xml.trim();
         if !trimmed.starts_with('<') {
-            return Err(MxError::DeserializationError(
-                "Invalid document XML structure".to_string()
+            return Err(MxError::XmlDeserialization(
+                "Invalid document XML structure".to_string(),
             ));
         }
 
         let end_idx = trimmed[1..]
             .find(|c: char| c.is_whitespace() || c == '>')
             .map(|i| i + 1)
-            .ok_or_else(|| MxError::DeserializationError("Could not find document element".to_string()))?;
+            .ok_or_else(|| {
+                MxError::XmlDeserialization("Could not find document element".to_string())
+            })?;
 
         let element_name = &trimmed[1..end_idx];
 
-        // Map element name to message type
-        let message_type = match element_name {
-            "FIToFICstmrCdtTrf" => "pacs.008",
-            "FIToFIPmtStsRpt" => "pacs.002",
-            "FIToFICstmrDrctDbt" => "pacs.003",
-            "PmtRtr" => "pacs.004",
-            "FICdtTrf" => "pacs.009",
-            "FIDrctDbt" => "pacs.010",
-            "CstmrCdtTrfInitn" => "pain.001",
-            "CstmrPmtStsRpt" => "pain.002",
-            "CstmrDrctDbtInitn" => "pain.008",
-            "Rcpt" => "camt.025",
-            "RsltnOfInvstgtn" => "camt.029",
-            "BkToCstmrAcctRpt" => "camt.052",
-            "BkToCstmrStmt" => "camt.053",
-            "BkToCstmrDbtCdtNtfctn" => "camt.054",
-            "FIToFIPmtCxlReq" => "camt.056",
-            "NtfctnToRcv" => "camt.057",
-            "AcctRptgReq" => "camt.060",
-            "ChqPresntmntNtfctn" => "camt.107",
-            "ChqCxlOrStopReq" => "camt.108",
-            "ChqCxlOrStopRpt" => "camt.109",
-            "NtfctnOfCrrspndnc" => "admi.024",
-            _ => return Err(MxError::DeserializationError(
-                format!("Unknown document type: {}", element_name)
-            )),
-        };
+        // Map element name to message type using message registry
+        let message_type =
+            message_registry::element_to_message_type(element_name).ok_or_else(|| {
+                MxError::XmlDeserialization(format!("Unknown document type: {}", element_name))
+            })?;
 
         Ok(message_type.to_string())
     }
@@ -607,121 +463,140 @@ impl MxMessage {
         use crate::document::*;
 
         match message_type {
-            "pacs.008" => {
-                let doc = quick_xml::de::from_str::<pacs_008_001_08::FIToFICustomerCreditTransferV08>(doc_xml)
-                    .map_err(|e| MxError::DeserializationError(format!("Failed to parse pacs.008: {}", e)))?;
-                Ok(Document::Pacs008(Box::new(doc)))
-            }
-            "pacs.002" => {
-                let doc = quick_xml::de::from_str::<pacs_002_001_10::FIToFIPaymentStatusReportV10>(doc_xml)
-                    .map_err(|e| MxError::DeserializationError(format!("Failed to parse pacs.002: {}", e)))?;
-                Ok(Document::Pacs002(Box::new(doc)))
-            }
-            "pacs.003" => {
-                let doc = quick_xml::de::from_str::<pacs_003_001_08::FIToFICustomerDirectDebitV08>(doc_xml)
-                    .map_err(|e| MxError::DeserializationError(format!("Failed to parse pacs.003: {}", e)))?;
-                Ok(Document::Pacs003(Box::new(doc)))
-            }
-            "pacs.004" => {
-                let doc = quick_xml::de::from_str::<pacs_004_001_09::PaymentReturnV09>(doc_xml)
-                    .map_err(|e| MxError::DeserializationError(format!("Failed to parse pacs.004: {}", e)))?;
-                Ok(Document::Pacs004(Box::new(doc)))
-            }
-            "pacs.009" => {
-                let doc = quick_xml::de::from_str::<pacs_009_001_08::FinancialInstitutionCreditTransferV08>(doc_xml)
-                    .map_err(|e| MxError::DeserializationError(format!("Failed to parse pacs.009: {}", e)))?;
-                Ok(Document::Pacs009(Box::new(doc)))
-            }
-            "pacs.010" => {
-                let doc = quick_xml::de::from_str::<pacs_010_001_03::FinancialInstitutionDirectDebitV03>(doc_xml)
-                    .map_err(|e| MxError::DeserializationError(format!("Failed to parse pacs.010: {}", e)))?;
-                Ok(Document::Pacs010(Box::new(doc)))
-            }
-            "pain.001" => {
-                let doc = quick_xml::de::from_str::<pain_001_001_09::CustomerCreditTransferInitiationV09>(doc_xml)
-                    .map_err(|e| MxError::DeserializationError(format!("Failed to parse pain.001: {}", e)))?;
-                Ok(Document::Pain001(Box::new(doc)))
-            }
-            "pain.002" => {
-                let doc = quick_xml::de::from_str::<pain_002_001_10::CustomerPaymentStatusReportV10>(doc_xml)
-                    .map_err(|e| MxError::DeserializationError(format!("Failed to parse pain.002: {}", e)))?;
-                Ok(Document::Pain002(Box::new(doc)))
-            }
-            "pain.008" => {
-                let doc = quick_xml::de::from_str::<pain_008_001_08::CustomerDirectDebitInitiationV08>(doc_xml)
-                    .map_err(|e| MxError::DeserializationError(format!("Failed to parse pain.008: {}", e)))?;
-                Ok(Document::Pain008(Box::new(doc)))
-            }
+            "pacs.008" => deserialize_doc!(
+                doc_xml,
+                pacs_008_001_08::FIToFICustomerCreditTransferV08,
+                Pacs008,
+                "pacs.008"
+            ),
+            "pacs.002" => deserialize_doc!(
+                doc_xml,
+                pacs_002_001_10::FIToFIPaymentStatusReportV10,
+                Pacs002,
+                "pacs.002"
+            ),
+            "pacs.003" => deserialize_doc!(
+                doc_xml,
+                pacs_003_001_08::FIToFICustomerDirectDebitV08,
+                Pacs003,
+                "pacs.003"
+            ),
+            "pacs.004" => deserialize_doc!(
+                doc_xml,
+                pacs_004_001_09::PaymentReturnV09,
+                Pacs004,
+                "pacs.004"
+            ),
+            "pacs.009" => deserialize_doc!(
+                doc_xml,
+                pacs_009_001_08::FinancialInstitutionCreditTransferV08,
+                Pacs009,
+                "pacs.009"
+            ),
+            "pacs.010" => deserialize_doc!(
+                doc_xml,
+                pacs_010_001_03::FinancialInstitutionDirectDebitV03,
+                Pacs010,
+                "pacs.010"
+            ),
+            "pain.001" => deserialize_doc!(
+                doc_xml,
+                pain_001_001_09::CustomerCreditTransferInitiationV09,
+                Pain001,
+                "pain.001"
+            ),
+            "pain.002" => deserialize_doc!(
+                doc_xml,
+                pain_002_001_10::CustomerPaymentStatusReportV10,
+                Pain002,
+                "pain.002"
+            ),
+            "pain.008" => deserialize_doc!(
+                doc_xml,
+                pain_008_001_08::CustomerDirectDebitInitiationV08,
+                Pain008,
+                "pain.008"
+            ),
             "camt.025" => {
-                let doc = quick_xml::de::from_str::<camt_025_001_08::ReceiptV08>(doc_xml)
-                    .map_err(|e| MxError::DeserializationError(format!("Failed to parse camt.025: {}", e)))?;
-                Ok(Document::Camt025(Box::new(doc)))
+                deserialize_doc!(doc_xml, camt_025_001_08::ReceiptV08, Camt025, "camt.025")
             }
-            "camt.029" => {
-                let doc = quick_xml::de::from_str::<camt_029_001_09::ResolutionOfInvestigationV09>(doc_xml)
-                    .map_err(|e| MxError::DeserializationError(format!("Failed to parse camt.029: {}", e)))?;
-                Ok(Document::Camt029(Box::new(doc)))
-            }
-            "camt.052" => {
-                let doc = quick_xml::de::from_str::<camt_052_001_08::BankToCustomerAccountReportV08>(doc_xml)
-                    .map_err(|e| MxError::DeserializationError(format!("Failed to parse camt.052: {}", e)))?;
-                Ok(Document::Camt052(Box::new(doc)))
-            }
-            "camt.053" => {
-                let doc = quick_xml::de::from_str::<camt_053_001_08::BankToCustomerStatementV08>(doc_xml)
-                    .map_err(|e| MxError::DeserializationError(format!("Failed to parse camt.053: {}", e)))?;
-                Ok(Document::Camt053(Box::new(doc)))
-            }
-            "camt.054" => {
-                let doc = quick_xml::de::from_str::<camt_054_001_08::BankToCustomerDebitCreditNotificationV08>(doc_xml)
-                    .map_err(|e| MxError::DeserializationError(format!("Failed to parse camt.054: {}", e)))?;
-                Ok(Document::Camt054(Box::new(doc)))
-            }
-            "camt.056" => {
-                let doc = quick_xml::de::from_str::<camt_056_001_08::FIToFIPaymentCancellationRequestV08>(doc_xml)
-                    .map_err(|e| MxError::DeserializationError(format!("Failed to parse camt.056: {}", e)))?;
-                Ok(Document::Camt056(Box::new(doc)))
-            }
-            "camt.057" => {
-                let doc = quick_xml::de::from_str::<camt_057_001_06::NotificationToReceiveV06>(doc_xml)
-                    .map_err(|e| MxError::DeserializationError(format!("Failed to parse camt.057: {}", e)))?;
-                Ok(Document::Camt057(Box::new(doc)))
-            }
-            "camt.060" => {
-                let doc = quick_xml::de::from_str::<camt_060_001_05::AccountReportingRequestV05>(doc_xml)
-                    .map_err(|e| MxError::DeserializationError(format!("Failed to parse camt.060: {}", e)))?;
-                Ok(Document::Camt060(Box::new(doc)))
-            }
-            "camt.107" => {
-                let doc = quick_xml::de::from_str::<camt_107_001_01::ChequePresentmentNotificationV01>(doc_xml)
-                    .map_err(|e| MxError::DeserializationError(format!("Failed to parse camt.107: {}", e)))?;
-                Ok(Document::Camt107(Box::new(doc)))
-            }
-            "camt.108" => {
-                let doc = quick_xml::de::from_str::<camt_108_001_01::ChequeCancellationOrStopRequestV01>(doc_xml)
-                    .map_err(|e| MxError::DeserializationError(format!("Failed to parse camt.108: {}", e)))?;
-                Ok(Document::Camt108(Box::new(doc)))
-            }
-            "camt.109" => {
-                let doc = quick_xml::de::from_str::<camt_109_001_01::ChequeCancellationOrStopReportV01>(doc_xml)
-                    .map_err(|e| MxError::DeserializationError(format!("Failed to parse camt.109: {}", e)))?;
-                Ok(Document::Camt109(Box::new(doc)))
-            }
-            "admi.024" => {
-                let doc = quick_xml::de::from_str::<admi_024_001_01::NotificationOfCorrespondenceV01>(doc_xml)
-                    .map_err(|e| MxError::DeserializationError(format!("Failed to parse admi.024: {}", e)))?;
-                Ok(Document::Admi024(Box::new(doc)))
-            }
-            _ => Err(MxError::DeserializationError(
-                format!("Unsupported message type: {}", message_type)
-            )),
+            "camt.029" => deserialize_doc!(
+                doc_xml,
+                camt_029_001_09::ResolutionOfInvestigationV09,
+                Camt029,
+                "camt.029"
+            ),
+            "camt.052" => deserialize_doc!(
+                doc_xml,
+                camt_052_001_08::BankToCustomerAccountReportV08,
+                Camt052,
+                "camt.052"
+            ),
+            "camt.053" => deserialize_doc!(
+                doc_xml,
+                camt_053_001_08::BankToCustomerStatementV08,
+                Camt053,
+                "camt.053"
+            ),
+            "camt.054" => deserialize_doc!(
+                doc_xml,
+                camt_054_001_08::BankToCustomerDebitCreditNotificationV08,
+                Camt054,
+                "camt.054"
+            ),
+            "camt.056" => deserialize_doc!(
+                doc_xml,
+                camt_056_001_08::FIToFIPaymentCancellationRequestV08,
+                Camt056,
+                "camt.056"
+            ),
+            "camt.057" => deserialize_doc!(
+                doc_xml,
+                camt_057_001_06::NotificationToReceiveV06,
+                Camt057,
+                "camt.057"
+            ),
+            "camt.060" => deserialize_doc!(
+                doc_xml,
+                camt_060_001_05::AccountReportingRequestV05,
+                Camt060,
+                "camt.060"
+            ),
+            "camt.107" => deserialize_doc!(
+                doc_xml,
+                camt_107_001_01::ChequePresentmentNotificationV01,
+                Camt107,
+                "camt.107"
+            ),
+            "camt.108" => deserialize_doc!(
+                doc_xml,
+                camt_108_001_01::ChequeCancellationOrStopRequestV01,
+                Camt108,
+                "camt.108"
+            ),
+            "camt.109" => deserialize_doc!(
+                doc_xml,
+                camt_109_001_01::ChequeCancellationOrStopReportV01,
+                Camt109,
+                "camt.109"
+            ),
+            "admi.024" => deserialize_doc!(
+                doc_xml,
+                admi_024_001_01::NotificationOfCorrespondenceV01,
+                Admi024,
+                "admi.024"
+            ),
+            _ => Err(MxError::XmlDeserialization(format!(
+                "Unsupported message type: {}",
+                message_type
+            ))),
         }
     }
 
     /// Deserialize from JSON string
     pub fn from_json(json: &str) -> Result<Self, MxError> {
         let message: MxMessage = serde_json::from_str(json).map_err(|e| {
-            MxError::DeserializationError(format!("JSON deserialization failed: {}", e))
+            MxError::XmlDeserialization(format!("JSON deserialization failed: {}", e))
         })?;
 
         Ok(message)
@@ -734,7 +609,7 @@ pub fn peek_message_type_from_xml(xml: &str) -> Result<String, MxError> {
     use regex::Regex;
 
     let re = Regex::new(r"<MsgDefIdr>([^<]+)</MsgDefIdr>")
-        .map_err(|e| MxError::DeserializationError(format!("Regex error: {}", e)))?;
+        .map_err(|e| MxError::XmlDeserialization(format!("Regex error: {}", e)))?;
 
     if let Some(captures) = re.captures(xml)
         && let Some(msg_def_idr) = captures.get(1)
@@ -742,7 +617,7 @@ pub fn peek_message_type_from_xml(xml: &str) -> Result<String, MxError> {
         return Ok(normalize_message_type(msg_def_idr.as_str()));
     }
 
-    Err(MxError::DeserializationError(
+    Err(MxError::XmlDeserialization(
         "Could not find MsgDefIdr in XML".to_string(),
     ))
 }
@@ -750,7 +625,7 @@ pub fn peek_message_type_from_xml(xml: &str) -> Result<String, MxError> {
 /// Extract message type from JSON without full deserialization
 pub fn peek_message_type_from_json(json: &str) -> Result<String, MxError> {
     let value: serde_json::Value = serde_json::from_str(json)
-        .map_err(|e| MxError::DeserializationError(format!("JSON parsing error: {}", e)))?;
+        .map_err(|e| MxError::XmlDeserialization(format!("JSON parsing error: {}", e)))?;
 
     // Try to extract MsgDefIdr from AppHdr
     if let Some(msg_def_idr) = value
@@ -762,7 +637,7 @@ pub fn peek_message_type_from_json(json: &str) -> Result<String, MxError> {
         return Ok(normalize_message_type(msg_def_idr));
     }
 
-    Err(MxError::DeserializationError(
+    Err(MxError::XmlDeserialization(
         "Could not find MsgDefIdr in JSON".to_string(),
     ))
 }

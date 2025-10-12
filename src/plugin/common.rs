@@ -3,6 +3,7 @@
 //! This module contains shared functionality used across multiple plugin handlers
 //! to reduce code duplication and improve maintainability.
 
+use crate::message_registry;
 use dataflow_rs::engine::error::{DataflowError, Result};
 use serde_json::Value;
 
@@ -15,27 +16,16 @@ use serde_json::Value;
 /// * Ok(message_type) - The corresponding message type (e.g., "pacs.008")
 /// * Err(error) - If the element name is not recognized
 pub fn map_document_element_to_message_type(element_name: &str) -> Result<String> {
+    // Use message registry for standard mappings
+    if let Some(msg_type) = message_registry::element_to_message_type(element_name) {
+        return Ok(msg_type.to_string());
+    }
+
+    // Handle legacy aliases not in registry
     let message_type = match element_name {
-        "FIToFICstmrCdtTrf" | "FIToFICustomerCreditTransferV08" => "pacs.008",
-        "FIToFIPmtStsRpt" | "FIToFIPaymentStatusReportV10" => "pacs.002",
-        "FICdtTrf" | "FinInstnCdtTrf" | "FinancialInstitutionCreditTransferV08" => "pacs.009",
-        "PmtRtr" | "PaymentReturnV09" => "pacs.004",
-        "FIToFICstmrDrctDbt" | "FIToFICustomerDirectDebitV08" => "pacs.003",
-        "FIDrctDbt" | "FinancialInstitutionDirectDebitV03" => "pacs.010",
-        "BkToCstmrStmt" | "BankToCustomerStatementV08" => "camt.053",
-        "BkToCstmrDbtCdtNtfctn" | "BankToCustomerDebitCreditNotificationV08" => "camt.054",
-        "AcctRptgReq" | "AccountReportingRequestV05" => "camt.060",
-        "BkToCstmrAcctRpt" | "BankToCustomerAccountReportV08" => "camt.052",
-        "RsltnOfInvstgtn" | "ResolutionOfInvestigationV09" => "camt.029",
-        "Rcpt" | "Rct" | "ReceiptV08" => "camt.025",
-        "FIToFIPmtCxlReq" | "FIToFIPaymentCancellationRequestV08" => "camt.056",
-        "NtfctnToRcv" | "NotificationToReceiveV06" => "camt.057",
-        "CstmrCdtTrfInitn" | "CustomerCreditTransferInitiationV09" => "pain.001",
-        "CstmrDrctDbtInitn" | "CustomerDirectDebitInitiationV08" => "pain.008",
-        "ChqPresntmntNtfctn" | "ChequePresentmentNotificationV01" => "camt.107",
-        "ChqCxlOrStopReq" | "ChequeCancellationOrStopRequestV01" => "camt.108",
-        "ChqCxlOrStopRpt" | "ChequeCancellationOrStopReportV01" => "camt.109",
-        "ClmNonRct" | "ClaimNonReceiptV07" => "camt.027",
+        "FinInstnCdtTrf" => "pacs.009", // Legacy alias for FICdtTrf
+        "Rct" => "camt.025",            // Typo variant of Rcpt
+        "ClmNonRct" | "ClaimNonReceiptV07" => "camt.027", // Not yet in registry
         _ => {
             return Err(DataflowError::Validation(format!(
                 "Unknown document element: {}",
