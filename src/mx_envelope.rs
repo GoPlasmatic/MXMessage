@@ -57,14 +57,26 @@ pub enum Document {
     #[serde(rename = "BkToCstmrDbtCdtNtfctn")]
     Camt054(Box<crate::document::camt_054_001_08::BankToCustomerDebitCreditNotificationV08>),
 
+    #[serde(rename = "CstmrPmtCxlReq")]
+    Camt055(Box<crate::document::camt_055_001_08::CustomerPaymentCancellationRequestV08>),
+
     #[serde(rename = "FIToFIPmtCxlReq")]
     Camt056(Box<crate::document::camt_056_001_08::FIToFIPaymentCancellationRequestV08>),
+
+    #[serde(rename = "NtfctnToRcvCxlAdvc")]
+    Camt058(Box<crate::document::camt_058_001_08::NotificationToReceiveCancellationAdviceV08>),
 
     #[serde(rename = "NtfctnToRcv")]
     Camt057(Box<crate::document::camt_057_001_06::NotificationToReceiveV06>),
 
     #[serde(rename = "AcctRptgReq")]
     Camt060(Box<crate::document::camt_060_001_05::AccountReportingRequestV05>),
+
+    #[serde(rename = "ChrgsPmtNtfctn")]
+    Camt105(Box<crate::document::camt_105_001_02::ChargesPaymentNotificationV02>),
+
+    #[serde(rename = "ChrgsPmtReq")]
+    Camt106(Box<crate::document::camt_106_001_02::ChargesPaymentRequestV02>),
 
     #[serde(rename = "ChqPresntmntNtfctn")]
     Camt107(Box<crate::document::camt_107_001_01::ChequePresentmentNotificationV01>),
@@ -76,7 +88,7 @@ pub enum Document {
     Camt109(Box<crate::document::camt_109_001_01::ChequeCancellationOrStopReportV01>),
 
     // ADMI - Administration
-    #[serde(rename = "NtfctnOfCrrspndnc")]
+    #[serde(rename = "NtfctnOfCrspdc")]
     Admi024(Box<crate::document::admi_024_001_01::NotificationOfCorrespondenceV01>),
 }
 
@@ -98,9 +110,13 @@ impl Document {
             Document::Camt052(_) => "camt.052",
             Document::Camt053(_) => "camt.053",
             Document::Camt054(_) => "camt.054",
+            Document::Camt055(_) => "camt.055",
             Document::Camt056(_) => "camt.056",
             Document::Camt057(_) => "camt.057",
+            Document::Camt058(_) => "camt.058",
             Document::Camt060(_) => "camt.060",
+            Document::Camt105(_) => "camt.105",
+            Document::Camt106(_) => "camt.106",
             Document::Camt107(_) => "camt.107",
             Document::Camt108(_) => "camt.108",
             Document::Camt109(_) => "camt.109",
@@ -307,11 +323,23 @@ impl MxMessage {
                 "BkToCstmrDbtCdtNtfctn",
                 "camt.054"
             ),
+            Document::Camt055(doc) => serialize_doc!(
+                doc,
+                "CustomerPaymentCancellationRequestV08",
+                "CstmrPmtCxlReq",
+                "camt.055"
+            ),
             Document::Camt056(doc) => serialize_doc!(
                 doc,
                 "FIToFIPaymentCancellationRequestV08",
                 "FIToFIPmtCxlReq",
                 "camt.056"
+            ),
+            Document::Camt058(doc) => serialize_doc!(
+                doc,
+                "NotificationToReceiveCancellationAdviceV08",
+                "NtfctnToRcvCxlAdvc",
+                "camt.058"
             ),
             Document::Camt057(doc) => {
                 serialize_doc!(doc, "NotificationToReceiveV06", "NtfctnToRcv", "camt.057")
@@ -319,6 +347,18 @@ impl MxMessage {
             Document::Camt060(doc) => {
                 serialize_doc!(doc, "AccountReportingRequestV05", "AcctRptgReq", "camt.060")
             }
+            Document::Camt105(doc) => serialize_doc!(
+                doc,
+                "ChargesPaymentNotificationV02",
+                "ChrgsPmtNtfctn",
+                "camt.105"
+            ),
+            Document::Camt106(doc) => serialize_doc!(
+                doc,
+                "ChargesPaymentRequestV02",
+                "ChrgsPmtReq",
+                "camt.106"
+            ),
             Document::Camt107(doc) => serialize_doc!(
                 doc,
                 "ChequePresentmentNotificationV01",
@@ -340,7 +380,7 @@ impl MxMessage {
             Document::Admi024(doc) => serialize_doc!(
                 doc,
                 "NotificationOfCorrespondenceV01",
-                "NtfctnOfCrrspndnc",
+                "NtfctnOfCrspdc",
                 "admi.024"
             ),
         }
@@ -544,11 +584,23 @@ impl MxMessage {
                 Camt054,
                 "camt.054"
             ),
+            "camt.055" => deserialize_doc!(
+                doc_xml,
+                camt_055_001_08::CustomerPaymentCancellationRequestV08,
+                Camt055,
+                "camt.055"
+            ),
             "camt.056" => deserialize_doc!(
                 doc_xml,
                 camt_056_001_08::FIToFIPaymentCancellationRequestV08,
                 Camt056,
                 "camt.056"
+            ),
+            "camt.058" => deserialize_doc!(
+                doc_xml,
+                camt_058_001_08::NotificationToReceiveCancellationAdviceV08,
+                Camt058,
+                "camt.058"
             ),
             "camt.057" => deserialize_doc!(
                 doc_xml,
@@ -561,6 +613,18 @@ impl MxMessage {
                 camt_060_001_05::AccountReportingRequestV05,
                 Camt060,
                 "camt.060"
+            ),
+            "camt.105" => deserialize_doc!(
+                doc_xml,
+                camt_105_001_02::ChargesPaymentNotificationV02,
+                Camt105,
+                "camt.105"
+            ),
+            "camt.106" => deserialize_doc!(
+                doc_xml,
+                camt_106_001_02::ChargesPaymentRequestV02,
+                Camt106,
+                "camt.106"
             ),
             "camt.107" => deserialize_doc!(
                 doc_xml,

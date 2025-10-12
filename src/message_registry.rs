@@ -126,10 +126,22 @@ pub const MESSAGE_REGISTRY: &[MessageTypeInfo] = &[
         xml_element_name: "BkToCstmrDbtCdtNtfctn",
     },
     MessageTypeInfo {
+        short_form: "camt.055",
+        full_form: "camt.055.001.08",
+        rust_type_name: "CustomerPaymentCancellationRequestV08",
+        xml_element_name: "CstmrPmtCxlReq",
+    },
+    MessageTypeInfo {
         short_form: "camt.056",
         full_form: "camt.056.001.08",
         rust_type_name: "FIToFIPaymentCancellationRequestV08",
         xml_element_name: "FIToFIPmtCxlReq",
+    },
+    MessageTypeInfo {
+        short_form: "camt.058",
+        full_form: "camt.058.001.08",
+        rust_type_name: "NotificationToReceiveCancellationAdviceV08",
+        xml_element_name: "NtfctnToRcvCxlAdvc",
     },
     MessageTypeInfo {
         short_form: "camt.057",
@@ -142,6 +154,18 @@ pub const MESSAGE_REGISTRY: &[MessageTypeInfo] = &[
         full_form: "camt.060.001.05",
         rust_type_name: "AccountReportingRequestV05",
         xml_element_name: "AcctRptgReq",
+    },
+    MessageTypeInfo {
+        short_form: "camt.105",
+        full_form: "camt.105.001.02",
+        rust_type_name: "ChargesPaymentNotificationV02",
+        xml_element_name: "ChrgsPmtNtfctn",
+    },
+    MessageTypeInfo {
+        short_form: "camt.106",
+        full_form: "camt.106.001.02",
+        rust_type_name: "ChargesPaymentRequestV02",
+        xml_element_name: "ChrgsPmtReq",
     },
     MessageTypeInfo {
         short_form: "camt.107",
