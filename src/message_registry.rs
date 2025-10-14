@@ -190,7 +190,7 @@ pub const MESSAGE_REGISTRY: &[MessageTypeInfo] = &[
         short_form: "admi.024",
         full_form: "admi.024.001.01",
         rust_type_name: "NotificationOfCorrespondenceV01",
-        xml_element_name: "NtfctnOfCrrspndnc",
+        xml_element_name: "NtfctnOfCrspdc",
     },
 ];
 
