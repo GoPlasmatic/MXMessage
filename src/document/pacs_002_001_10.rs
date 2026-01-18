@@ -22,6 +22,7 @@ use serde::{Deserialize, Serialize};
 
 // BranchAndFinancialInstitutionIdentification61: Unique and unambiguous identification of a financial institution, as assigned under an internationally recognised or proprietary identification scheme.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct BranchAndFinancialInstitutionIdentification61 {
     #[serde(rename = "FinInstnId")]
     pub fin_instn_id: FinancialInstitutionIdentification181,
@@ -36,6 +37,7 @@ impl Validate for BranchAndFinancialInstitutionIdentification61 {
 
 // ClearingSystemIdentification2Choice1: Identification of a clearing system, in a coded form as published in an external list.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct ClearingSystemIdentification2Choice1 {
     #[serde(rename = "Cd", skip_serializing_if = "Option::is_none")]
     pub cd: Option<String>,
@@ -59,6 +61,7 @@ impl Validate for ClearingSystemIdentification2Choice1 {
 
 // ClearingSystemMemberIdentification21: Identification of a member of a clearing system.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct ClearingSystemMemberIdentification21 {
     #[serde(rename = "ClrSysId")]
     pub clr_sys_id: ClearingSystemIdentification2Choice1,
@@ -92,6 +95,7 @@ impl Validate for ClearingSystemMemberIdentification21 {
 
 // DateAndDateTime2Choice1: Specified date and time.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct DateAndDateTime2Choice1 {
     #[serde(rename = "Dt", skip_serializing_if = "Option::is_none")]
     pub dt: Option<String>,
@@ -116,6 +120,7 @@ impl Validate for DateAndDateTime2Choice1 {
 
 // DateAndPlaceOfBirth11: Country where a person was born.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct DateAndPlaceOfBirth11 {
     #[serde(rename = "BirthDt")]
     pub birth_dt: String,
@@ -180,6 +185,7 @@ impl Validate for DateAndPlaceOfBirth11 {
 
 // FIToFIPaymentStatusReportV10: Information concerning the original transactions, to which the status report message refers.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct FIToFIPaymentStatusReportV10 {
     #[serde(rename = "GrpHdr")]
     pub grp_hdr: GroupHeader911,
@@ -198,6 +204,7 @@ impl Validate for FIToFIPaymentStatusReportV10 {
 
 // FinancialInstitutionIdentification181: Legal entity identifier of the financial institution.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct FinancialInstitutionIdentification181 {
     #[serde(rename = "BICFI")]
     pub bicfi: String,
@@ -237,6 +244,7 @@ impl Validate for FinancialInstitutionIdentification181 {
 
 // GenericOrganisationIdentification11: Entity that assigns the identification.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct GenericOrganisationIdentification11 {
     #[serde(rename = "Id")]
     pub id: String,
@@ -296,6 +304,7 @@ impl Validate for GenericOrganisationIdentification11 {
 
 // GenericPersonIdentification11: Entity that assigns the identification.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct GenericPersonIdentification11 {
     #[serde(rename = "Id")]
     pub id: String,
@@ -355,6 +364,7 @@ impl Validate for GenericPersonIdentification11 {
 
 // GroupHeader911: Date and time at which the message was created.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct GroupHeader911 {
     #[serde(rename = "MsgId")]
     pub msg_id: String,
@@ -394,6 +404,7 @@ impl Validate for GroupHeader911 {
 
 // OrganisationIdentification291: Unique identification of an organisation, as assigned by an institution, using an identification scheme.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct OrganisationIdentification291 {
     #[serde(rename = "AnyBIC", skip_serializing_if = "Option::is_none")]
     pub any_bic: Option<String>,
@@ -437,6 +448,7 @@ impl Validate for OrganisationIdentification291 {
 
 // OrganisationIdentificationSchemeName1Choice1: Name of the identification scheme, in a free text form.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct OrganisationIdentificationSchemeName1Choice1 {
     #[serde(rename = "Cd", skip_serializing_if = "Option::is_none")]
     pub cd: Option<String>,
@@ -483,6 +495,7 @@ impl Validate for OrganisationIdentificationSchemeName1Choice1 {
 
 // OriginalGroupInformation291: Original date and time at which the message was created.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct OriginalGroupInformation291 {
     #[serde(rename = "OrgnlMsgId")]
     pub orgnl_msg_id: String,
@@ -543,6 +556,7 @@ impl Validate for OriginalGroupInformation291 {
 
 // Party38Choice1: Unique and unambiguous identification of a person, for example a passport.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct Party38Choice1 {
     #[serde(rename = "OrgId", skip_serializing_if = "Option::is_none")]
     pub org_id: Option<OrganisationIdentification291>,
@@ -567,6 +581,7 @@ impl Validate for Party38Choice1 {
 
 // PartyIdentification1351: Country in which a person resides (the place of a person's home). In the case of a company, it is the country from which the affairs of that company are directed.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct PartyIdentification1351 {
     #[serde(rename = "Nm", skip_serializing_if = "Option::is_none")]
     pub nm: Option<String>,
@@ -628,6 +643,7 @@ impl Validate for PartyIdentification1351 {
 //
 // Usage: The instructed agent is the party receiving the status message and not the party that received the original instruction that is being reported on.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct PaymentTransaction1101 {
     #[serde(rename = "OrgnlGrpInf")]
     pub orgnl_grp_inf: OriginalGroupInformation291,
@@ -777,6 +793,7 @@ impl Validate for PaymentTransaction1101 {
 
 // PersonIdentification131: Unique identification of a person, as assigned by an institution, using an identification scheme.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct PersonIdentification131 {
     #[serde(rename = "DtAndPlcOfBirth", skip_serializing_if = "Option::is_none")]
     pub dt_and_plc_of_birth: Option<DateAndPlaceOfBirth11>,
@@ -807,6 +824,7 @@ impl Validate for PersonIdentification131 {
 
 // PersonIdentificationSchemeName1Choice1: Name of the identification scheme, in a free text form.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct PersonIdentificationSchemeName1Choice1 {
     #[serde(rename = "Cd", skip_serializing_if = "Option::is_none")]
     pub cd: Option<String>,
@@ -853,6 +871,7 @@ impl Validate for PersonIdentificationSchemeName1Choice1 {
 
 // PostalAddress241: Information that locates and identifies a specific address, as defined by postal services, presented in free format text.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct PostalAddress241 {
     #[serde(rename = "Dept", skip_serializing_if = "Option::is_none")]
     pub dept: Option<String>,
@@ -1201,6 +1220,7 @@ impl Validate for PostalAddress241 {
 
 // StatusReason6Choice1: Reason for the status, in a proprietary form.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct StatusReason6Choice1 {
     #[serde(rename = "Cd", skip_serializing_if = "Option::is_none")]
     pub cd: Option<String>,
@@ -1249,6 +1269,7 @@ impl Validate for StatusReason6Choice1 {
 //
 // Usage: Additional information can be used for several purposes such as the reporting of repaired information.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct StatusReasonInformation121 {
     #[serde(rename = "Orgtr", skip_serializing_if = "Option::is_none")]
     pub orgtr: Option<PartyIdentification1351>,

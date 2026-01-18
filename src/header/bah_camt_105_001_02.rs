@@ -22,6 +22,7 @@ use serde::{Deserialize, Serialize};
 
 // BranchAndFinancialInstitutionIdentification61: Unique and unambiguous identification of a financial institution, as assigned under an internationally recognised or proprietary identification scheme.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct BranchAndFinancialInstitutionIdentification61 {
     #[serde(rename = "FinInstnId")]
     pub fin_instn_id: FinancialInstitutionIdentification181,
@@ -36,6 +37,7 @@ impl Validate for BranchAndFinancialInstitutionIdentification61 {
 
 // BusinessApplicationHeader51: Relative indication of the processing precedence of the message over a (set of) Business Messages with assigned priorities.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct BusinessApplicationHeader51 {
     #[serde(rename = "CharSet", skip_serializing_if = "Option::is_none")]
     pub char_set: Option<String>,
@@ -111,6 +113,7 @@ impl Validate for BusinessApplicationHeader51 {
 // BusinessApplicationHeaderV02: Specifies the Business Application Header(s) of the Business Message(s) to which this Business Message relates.
 // Can be used when replying to a query; can also be used when canceling or amending.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 #[serde(rename = "AppHdr")]
 pub struct BusinessApplicationHeaderV02 {
     #[serde(rename = "CharSet", skip_serializing_if = "Option::is_none")]
@@ -198,6 +201,7 @@ impl Validate for BusinessApplicationHeaderV02 {
 
 // ClearingSystemIdentification2Choice: Identification code for a clearing system, that has not yet been identified in the list of clearing systems.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct ClearingSystemIdentification2Choice {
     #[serde(rename = "Cd", skip_serializing_if = "Option::is_none")]
     pub cd: Option<String>,
@@ -234,6 +238,7 @@ impl Validate for ClearingSystemIdentification2Choice {
 
 // ClearingSystemMemberIdentification22: Identification of a member of a clearing system.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct ClearingSystemMemberIdentification22 {
     #[serde(rename = "ClrSysId", skip_serializing_if = "Option::is_none")]
     pub clr_sys_id: Option<ClearingSystemIdentification2Choice>,
@@ -270,6 +275,7 @@ impl Validate for ClearingSystemMemberIdentification22 {
 
 // CopyDuplicate1Code: Message is for information/confirmation purposes. It is a duplicate of a message previously sent.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub enum CopyDuplicate1Code {
     #[default]
     #[serde(rename = "CODU")]
@@ -288,6 +294,7 @@ impl Validate for CopyDuplicate1Code {
 
 // FinancialInstitutionIdentification181: Legal entity identifier of the financial institution.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct FinancialInstitutionIdentification181 {
     #[serde(rename = "BICFI")]
     pub bicfi: String,
@@ -328,6 +335,7 @@ impl Validate for FinancialInstitutionIdentification181 {
 // ImplementationSpecification1: Identifier which unambiguously identifies, within the implementation specification registry, the implementation specification to which the ISO 20022 message is compliant. This can be done via a URN. It can also contain a version number or date.
 // For instance, "2018-01-01 – Version 2" or "urn:uuid:6e8bc430-9c3a-11d9-9669-0800200c9a66".
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct ImplementationSpecification1 {
     #[serde(rename = "Regy")]
     pub regy: String,
@@ -360,6 +368,7 @@ impl Validate for ImplementationSpecification1 {
 
 // Max35Text_fixed: swift.cbprplus.02
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub enum Max35Textfixed {
     #[default]
     #[serde(rename = "swift.cbprplus.02")]
@@ -374,6 +383,7 @@ impl Validate for Max35Textfixed {
 
 // Party44Choice1: Identification of a financial institution.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct Party44Choice1 {
     #[serde(rename = "FIId", skip_serializing_if = "Option::is_none")]
     pub fi_id: Option<BranchAndFinancialInstitutionIdentification61>,
@@ -391,6 +401,7 @@ impl Validate for Party44Choice1 {
 
 // Priority2Code: Priority level is normal.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub enum Priority2Code {
     #[default]
     #[serde(rename = "HIGH")]

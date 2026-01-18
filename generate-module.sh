@@ -81,6 +81,10 @@ for f in `find $output_directory -iname "*.rs" -type f -print`; do
     # Replace serde rename AppHdr with flatten for XML serialization
     sed -i '' 's/pub struct BusinessApplicationHeaderV02 {/#[serde(rename = "AppHdr")]\npub struct BusinessApplicationHeaderV02 {/g' "$f"
 
+    # Add JsonSchema derive for schemars support (using literal newline for macOS compatibility)
+    sed -i '' 's/#\[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)\]/#[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]\
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]/g' "$f"
+
 done
 
 # python3 generate-common.py $output_directory

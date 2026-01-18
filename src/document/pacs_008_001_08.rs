@@ -22,6 +22,7 @@ use serde::{Deserialize, Serialize};
 
 // AccountIdentification4Choice1: Unique identification of an account, as assigned by the account servicer, using an identification scheme.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct AccountIdentification4Choice1 {
     #[serde(rename = "IBAN", skip_serializing_if = "Option::is_none")]
     pub iban: Option<String>,
@@ -51,6 +52,7 @@ impl Validate for AccountIdentification4Choice1 {
 
 // AccountSchemeName1Choice1: Name of the identification scheme, in a free text form.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct AccountSchemeName1Choice1 {
     #[serde(rename = "Cd", skip_serializing_if = "Option::is_none")]
     pub cd: Option<String>,
@@ -97,6 +99,7 @@ impl Validate for AccountSchemeName1Choice1 {
 
 // ActiveOrHistoricCurrencyAndAmount: A number of monetary units specified in an active or a historic currency where the unit of currency is explicit and compliant with ISO 4217.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct ActiveOrHistoricCurrencyAndAmount {
     #[serde(rename = "@Ccy")]
     pub ccy: String,
@@ -110,6 +113,7 @@ impl Validate for ActiveOrHistoricCurrencyAndAmount {
 
 // BranchAndFinancialInstitutionIdentification61: Unique and unambiguous identification of a financial institution, as assigned under an internationally recognised or proprietary identification scheme.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct BranchAndFinancialInstitutionIdentification61 {
     #[serde(rename = "FinInstnId")]
     pub fin_instn_id: FinancialInstitutionIdentification181,
@@ -124,6 +128,7 @@ impl Validate for BranchAndFinancialInstitutionIdentification61 {
 
 // BranchAndFinancialInstitutionIdentification62: Unique and unambiguous identification of a financial institution, as assigned under an internationally recognised or proprietary identification scheme.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct BranchAndFinancialInstitutionIdentification62 {
     #[serde(rename = "FinInstnId")]
     pub fin_instn_id: FinancialInstitutionIdentification182,
@@ -140,6 +145,7 @@ impl Validate for BranchAndFinancialInstitutionIdentification62 {
 //
 // Usage: This component should be used in case the identification information in the financial institution component does not provide identification up to branch level.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct BranchAndFinancialInstitutionIdentification63 {
     #[serde(rename = "FinInstnId")]
     pub fin_instn_id: FinancialInstitutionIdentification181,
@@ -161,6 +167,7 @@ impl Validate for BranchAndFinancialInstitutionIdentification63 {
 
 // BranchData31: Unique and unambiguous identification of a branch of a financial institution.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct BranchData31 {
     #[serde(rename = "Id", skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
@@ -194,6 +201,7 @@ impl Validate for BranchData31 {
 
 // CBPRAmount1: CBPR_Amount__1
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct CBPRAmount1 {
     #[serde(rename = "@Ccy")]
     pub ccy: String,
@@ -207,6 +215,7 @@ impl Validate for CBPRAmount1 {
 
 // CashAccount381: Specifies an alternate assumed name for the identification of the account.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct CashAccount381 {
     #[serde(rename = "Id")]
     pub id: AccountIdentification4Choice1,
@@ -270,6 +279,7 @@ impl Validate for CashAccount381 {
 
 // CashAccountType2Choice1: Nature or use of the account in a proprietary form.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct CashAccountType2Choice1 {
     #[serde(rename = "Cd", skip_serializing_if = "Option::is_none")]
     pub cd: Option<String>,
@@ -316,6 +326,7 @@ impl Validate for CashAccountType2Choice1 {
 
 // CategoryPurpose1Choice1: Category purpose, in a proprietary form.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct CategoryPurpose1Choice1 {
     #[serde(rename = "Cd", skip_serializing_if = "Option::is_none")]
     pub cd: Option<String>,
@@ -362,6 +373,7 @@ impl Validate for CategoryPurpose1Choice1 {
 
 // ChargeBearerType1Code__1: In a credit transfer context, means that transaction charges on the sender side are to be borne by the debtor, transaction charges on the receiver side are to be borne by the creditor. In a direct debit context, means that transaction charges on the sender side are to be borne by the creditor, transaction charges on the receiver side are to be borne by the debtor.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub enum ChargeBearerType1Code1 {
     #[default]
     #[serde(rename = "DEBT")]
@@ -380,6 +392,7 @@ impl Validate for ChargeBearerType1Code1 {
 
 // Charges71: Agent that takes the transaction charges or to which the transaction charges are due.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct Charges71 {
     #[serde(rename = "Amt")]
     pub amt: CBPRAmount1,
@@ -398,6 +411,7 @@ impl Validate for Charges71 {
 
 // ClearingChannel2Code: Payment through internal book transfer.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub enum ClearingChannel2Code {
     #[default]
     #[serde(rename = "RTGS")]
@@ -418,6 +432,7 @@ impl Validate for ClearingChannel2Code {
 
 // ClearingSystemIdentification2Choice1: Identification of a clearing system, in a coded form as published in an external list.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct ClearingSystemIdentification2Choice1 {
     #[serde(rename = "Cd", skip_serializing_if = "Option::is_none")]
     pub cd: Option<String>,
@@ -441,6 +456,7 @@ impl Validate for ClearingSystemIdentification2Choice1 {
 
 // ClearingSystemMemberIdentification21: Identification of a member of a clearing system.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct ClearingSystemMemberIdentification21 {
     #[serde(rename = "ClrSysId")]
     pub clr_sys_id: ClearingSystemIdentification2Choice1,
@@ -474,6 +490,7 @@ impl Validate for ClearingSystemMemberIdentification21 {
 
 // CreditDebitCode: Operation is a decrease.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub enum CreditDebitCode {
     #[default]
     #[serde(rename = "CRDT")]
@@ -490,6 +507,7 @@ impl Validate for CreditDebitCode {
 
 // CreditTransferTransaction391: Information supplied to enable the matching of an entry with the items that the transfer is intended to settle, such as commercial invoices in an accounts' receivable system.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct CreditTransferTransaction391 {
     #[serde(rename = "PmtId")]
     pub pmt_id: PaymentIdentification71,
@@ -820,6 +838,7 @@ impl Validate for CreditTransferTransaction391 {
 //
 // If the business context requires the use of a creditor reference or a payment remit identification, and only one identifier can be passed through the end-to-end chain, the creditor's reference or payment remittance identification should be quoted in the end-to-end transaction identification.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct CreditorReferenceInformation21 {
     #[serde(rename = "Tp", skip_serializing_if = "Option::is_none")]
     pub tp: Option<CreditorReferenceType21>,
@@ -860,6 +879,7 @@ impl Validate for CreditorReferenceInformation21 {
 
 // CreditorReferenceType1Choice1: Creditor reference type, in a proprietary form.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct CreditorReferenceType1Choice1 {
     #[serde(rename = "Cd", skip_serializing_if = "Option::is_none")]
     pub cd: Option<DocumentType3Code>,
@@ -900,6 +920,7 @@ impl Validate for CreditorReferenceType1Choice1 {
 
 // CreditorReferenceType21: Entity that assigns the credit reference type.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct CreditorReferenceType21 {
     #[serde(rename = "CdOrPrtry")]
     pub cd_or_prtry: CreditorReferenceType1Choice1,
@@ -937,6 +958,7 @@ impl Validate for CreditorReferenceType21 {
 
 // DateAndPlaceOfBirth11: Country where a person was born.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct DateAndPlaceOfBirth11 {
     #[serde(rename = "BirthDt")]
     pub birth_dt: String,
@@ -1001,6 +1023,7 @@ impl Validate for DateAndPlaceOfBirth11 {
 
 // DatePeriod2: End date of the range.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct DatePeriod2 {
     #[serde(rename = "FrDt")]
     pub fr_dt: String,
@@ -1014,6 +1037,7 @@ impl Validate for DatePeriod2 {
 
 // DiscountAmountAndType11: Amount of money, which has been typed.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct DiscountAmountAndType11 {
     #[serde(rename = "Tp", skip_serializing_if = "Option::is_none")]
     pub tp: Option<DiscountAmountType1Choice1>,
@@ -1035,6 +1059,7 @@ impl Validate for DiscountAmountAndType11 {
 
 // DiscountAmountType1Choice1: Specifies the amount type, in a free-text form.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct DiscountAmountType1Choice1 {
     #[serde(rename = "Cd", skip_serializing_if = "Option::is_none")]
     pub cd: Option<String>,
@@ -1081,6 +1106,7 @@ impl Validate for DiscountAmountType1Choice1 {
 
 // DocumentAdjustment11: Provides further details on the document adjustment.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct DocumentAdjustment11 {
     #[serde(rename = "Amt")]
     pub amt: ActiveOrHistoricCurrencyAndAmount,
@@ -1148,6 +1174,7 @@ impl Validate for DocumentAdjustment11 {
 
 // DocumentLineIdentification11: Date associated with the referred document line.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct DocumentLineIdentification11 {
     #[serde(rename = "Tp", skip_serializing_if = "Option::is_none")]
     pub tp: Option<DocumentLineType11>,
@@ -1190,6 +1217,7 @@ impl Validate for DocumentLineIdentification11 {
 
 // DocumentLineInformation11: Provides details on the amounts of the document line.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct DocumentLineInformation11 {
     #[serde(rename = "Id")]
     pub id: Vec<DocumentLineIdentification11>,
@@ -1235,6 +1263,7 @@ impl Validate for DocumentLineInformation11 {
 
 // DocumentLineType1Choice1: Proprietary identification of the type of the remittance document.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct DocumentLineType1Choice1 {
     #[serde(rename = "Cd", skip_serializing_if = "Option::is_none")]
     pub cd: Option<String>,
@@ -1281,6 +1310,7 @@ impl Validate for DocumentLineType1Choice1 {
 
 // DocumentLineType11: Identification of the issuer of the reference document line identificationtype.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct DocumentLineType11 {
     #[serde(rename = "CdOrPrtry")]
     pub cd_or_prtry: DocumentLineType1Choice1,
@@ -1318,6 +1348,7 @@ impl Validate for DocumentLineType11 {
 
 // DocumentType3Code: Document is a structured communication reference provided by the creditor to identify the referred transaction.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub enum DocumentType3Code {
     #[default]
     #[serde(rename = "RADM")]
@@ -1342,6 +1373,7 @@ impl Validate for DocumentType3Code {
 
 // DocumentType6Code: Document is a purchase order.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub enum DocumentType6Code {
     #[default]
     #[serde(rename = "MSIN")]
@@ -1386,6 +1418,7 @@ impl Validate for DocumentType6Code {
 
 // FIToFICustomerCreditTransferV08: Set of elements providing information specific to the individual credit transfer(s).
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct FIToFICustomerCreditTransferV08 {
     #[serde(rename = "GrpHdr")]
     pub grp_hdr: GroupHeader931,
@@ -1404,6 +1437,7 @@ impl Validate for FIToFICustomerCreditTransferV08 {
 
 // FinancialInstitutionIdentification181: Information that locates and identifies a specific address, as defined by postal services.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct FinancialInstitutionIdentification181 {
     #[serde(rename = "BICFI", skip_serializing_if = "Option::is_none")]
     pub bicfi: Option<String>,
@@ -1475,6 +1509,7 @@ impl Validate for FinancialInstitutionIdentification181 {
 
 // FinancialInstitutionIdentification182: Legal entity identifier of the financial institution.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct FinancialInstitutionIdentification182 {
     #[serde(rename = "BICFI")]
     pub bicfi: String,
@@ -1514,6 +1549,7 @@ impl Validate for FinancialInstitutionIdentification182 {
 
 // Garnishment31: Indicates if the employment of the person to whom the garnishment applies (that is, the ultimate debtor) has been terminated.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct Garnishment31 {
     #[serde(rename = "Tp")]
     pub tp: GarnishmentType11,
@@ -1582,6 +1618,7 @@ impl Validate for Garnishment31 {
 
 // GarnishmentType1Choice1: Proprietary identification of the type of garnishment.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct GarnishmentType1Choice1 {
     #[serde(rename = "Cd", skip_serializing_if = "Option::is_none")]
     pub cd: Option<String>,
@@ -1628,6 +1665,7 @@ impl Validate for GarnishmentType1Choice1 {
 
 // GarnishmentType11: Identification of the issuer of the garnishment type.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct GarnishmentType11 {
     #[serde(rename = "CdOrPrtry")]
     pub cd_or_prtry: GarnishmentType1Choice1,
@@ -1665,6 +1703,7 @@ impl Validate for GarnishmentType11 {
 
 // GenericAccountIdentification11: Entity that assigns the identification.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct GenericAccountIdentification11 {
     #[serde(rename = "Id")]
     pub id: String,
@@ -1724,6 +1763,7 @@ impl Validate for GenericAccountIdentification11 {
 
 // GenericOrganisationIdentification11: Entity that assigns the identification.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct GenericOrganisationIdentification11 {
     #[serde(rename = "Id")]
     pub id: String,
@@ -1783,6 +1823,7 @@ impl Validate for GenericOrganisationIdentification11 {
 
 // GenericOrganisationIdentification12: Entity that assigns the identification.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct GenericOrganisationIdentification12 {
     #[serde(rename = "Id")]
     pub id: String,
@@ -1839,6 +1880,7 @@ impl Validate for GenericOrganisationIdentification12 {
 
 // GenericOrganisationIdentification13: Entity that assigns the identification.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct GenericOrganisationIdentification13 {
     #[serde(rename = "Id")]
     pub id: String,
@@ -1898,6 +1940,7 @@ impl Validate for GenericOrganisationIdentification13 {
 
 // GenericPersonIdentification11: Entity that assigns the identification.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct GenericPersonIdentification11 {
     #[serde(rename = "Id")]
     pub id: String,
@@ -1957,6 +2000,7 @@ impl Validate for GenericPersonIdentification11 {
 
 // GenericPersonIdentification12: Entity that assigns the identification.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct GenericPersonIdentification12 {
     #[serde(rename = "Id")]
     pub id: String,
@@ -2013,6 +2057,7 @@ impl Validate for GenericPersonIdentification12 {
 
 // GenericPersonIdentification13: Entity that assigns the identification.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct GenericPersonIdentification13 {
     #[serde(rename = "Id")]
     pub id: String,
@@ -2072,6 +2117,7 @@ impl Validate for GenericPersonIdentification13 {
 
 // GroupHeader931: Specifies the details on how the settlement of the transaction(s) between the instructing agent and the instructed agent is completed.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct GroupHeader931 {
     #[serde(rename = "MsgId")]
     pub msg_id: String,
@@ -2119,6 +2165,7 @@ impl Validate for GroupHeader931 {
 
 // Instruction3Code: Please advise/contact (ultimate) creditor/claimant by the most efficient means of telecommunication.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub enum Instruction3Code {
     #[default]
     #[serde(rename = "CHQB")]
@@ -2139,6 +2186,7 @@ impl Validate for Instruction3Code {
 
 // InstructionForCreditorAgent11: Further information complementing the coded instruction or instruction to the creditor's agent that is bilaterally agreed or specific to a user community.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct InstructionForCreditorAgent11 {
     #[serde(rename = "Cd", skip_serializing_if = "Option::is_none")]
     pub cd: Option<Instruction3Code>,
@@ -2179,6 +2227,7 @@ impl Validate for InstructionForCreditorAgent11 {
 
 // InstructionForNextAgent11: Further information complementing the coded instruction or instruction to the next agent that is bilaterally agreed or specific to a user community.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct InstructionForNextAgent11 {
     #[serde(rename = "InstrInf", skip_serializing_if = "Option::is_none")]
     pub instr_inf: Option<String>,
@@ -2212,6 +2261,7 @@ impl Validate for InstructionForNextAgent11 {
 
 // LocalInstrument2Choice1: Specifies the local instrument, as a proprietary code.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct LocalInstrument2Choice1 {
     #[serde(rename = "Cd", skip_serializing_if = "Option::is_none")]
     pub cd: Option<String>,
@@ -2258,6 +2308,7 @@ impl Validate for LocalInstrument2Choice1 {
 
 // Max15NumericText_fixed: 1
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub enum Max15NumericTextfixed {
     #[default]
     #[serde(rename = "1")]
@@ -2272,6 +2323,7 @@ impl Validate for Max15NumericTextfixed {
 
 // NameAndAddress161: Postal address of a party.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct NameAndAddress161 {
     #[serde(rename = "Nm")]
     pub nm: String,
@@ -2305,6 +2357,7 @@ impl Validate for NameAndAddress161 {
 
 // OrganisationIdentification291: Unique identification of an organisation, as assigned by an institution, using an identification scheme.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct OrganisationIdentification291 {
     #[serde(rename = "AnyBIC", skip_serializing_if = "Option::is_none")]
     pub any_bic: Option<String>,
@@ -2348,6 +2401,7 @@ impl Validate for OrganisationIdentification291 {
 
 // OrganisationIdentification292: Unique identification of an organisation, as assigned by an institution, using an identification scheme.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct OrganisationIdentification292 {
     #[serde(rename = "AnyBIC", skip_serializing_if = "Option::is_none")]
     pub any_bic: Option<String>,
@@ -2391,6 +2445,7 @@ impl Validate for OrganisationIdentification292 {
 
 // OrganisationIdentification293: Unique identification of an organisation, as assigned by an institution, using an identification scheme.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct OrganisationIdentification293 {
     #[serde(rename = "AnyBIC", skip_serializing_if = "Option::is_none")]
     pub any_bic: Option<String>,
@@ -2434,6 +2489,7 @@ impl Validate for OrganisationIdentification293 {
 
 // OrganisationIdentificationSchemeName1Choice1: Name of the identification scheme, in a free text form.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct OrganisationIdentificationSchemeName1Choice1 {
     #[serde(rename = "Cd", skip_serializing_if = "Option::is_none")]
     pub cd: Option<String>,
@@ -2480,6 +2536,7 @@ impl Validate for OrganisationIdentificationSchemeName1Choice1 {
 
 // OrganisationIdentificationSchemeName1Choice2: Name of the identification scheme, in a coded form as published in an external list.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct OrganisationIdentificationSchemeName1Choice2 {
     #[serde(rename = "Cd", skip_serializing_if = "Option::is_none")]
     pub cd: Option<String>,
@@ -2503,6 +2560,7 @@ impl Validate for OrganisationIdentificationSchemeName1Choice2 {
 
 // OrganisationIdentificationSchemeName1Choice3: Name of the identification scheme, in a free text form.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct OrganisationIdentificationSchemeName1Choice3 {
     #[serde(rename = "Cd", skip_serializing_if = "Option::is_none")]
     pub cd: Option<String>,
@@ -2549,6 +2607,7 @@ impl Validate for OrganisationIdentificationSchemeName1Choice3 {
 
 // Party38Choice1: Unique and unambiguous identification of a person, for example a passport.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct Party38Choice1 {
     #[serde(rename = "OrgId", skip_serializing_if = "Option::is_none")]
     pub org_id: Option<OrganisationIdentification291>,
@@ -2573,6 +2632,7 @@ impl Validate for Party38Choice1 {
 
 // Party38Choice2: Unique and unambiguous identification of a person, for example a passport.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct Party38Choice2 {
     #[serde(rename = "OrgId", skip_serializing_if = "Option::is_none")]
     pub org_id: Option<OrganisationIdentification292>,
@@ -2597,6 +2657,7 @@ impl Validate for Party38Choice2 {
 
 // Party38Choice3: Unique and unambiguous identification of a person, for example a passport.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct Party38Choice3 {
     #[serde(rename = "OrgId", skip_serializing_if = "Option::is_none")]
     pub org_id: Option<OrganisationIdentification293>,
@@ -2621,6 +2682,7 @@ impl Validate for Party38Choice3 {
 
 // PartyIdentification1351: Country in which a person resides (the place of a person's home). In the case of a company, it is the country from which the affairs of that company are directed.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct PartyIdentification1351 {
     #[serde(rename = "Nm", skip_serializing_if = "Option::is_none")]
     pub nm: Option<String>,
@@ -2680,6 +2742,7 @@ impl Validate for PartyIdentification1351 {
 
 // PartyIdentification1352: Country in which a person resides (the place of a person's home). In the case of a company, it is the country from which the affairs of that company are directed.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct PartyIdentification1352 {
     #[serde(rename = "Nm", skip_serializing_if = "Option::is_none")]
     pub nm: Option<String>,
@@ -2739,6 +2802,7 @@ impl Validate for PartyIdentification1352 {
 
 // PartyIdentification1353: Country in which a person resides (the place of a person's home). In the case of a company, it is the country from which the affairs of that company are directed.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct PartyIdentification1353 {
     #[serde(rename = "Nm", skip_serializing_if = "Option::is_none")]
     pub nm: Option<String>,
@@ -2798,6 +2862,7 @@ impl Validate for PartyIdentification1353 {
 
 // PartyIdentification1354: Country in which a person resides (the place of a person's home). In the case of a company, it is the country from which the affairs of that company are directed.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct PartyIdentification1354 {
     #[serde(rename = "Nm", skip_serializing_if = "Option::is_none")]
     pub nm: Option<String>,
@@ -2857,6 +2922,7 @@ impl Validate for PartyIdentification1354 {
 
 // PaymentIdentification71: Unique reference, as assigned by a clearing system, to unambiguously identify the instruction.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct PaymentIdentification71 {
     #[serde(rename = "InstrId")]
     pub instr_id: String,
@@ -2962,6 +3028,7 @@ impl Validate for PaymentIdentification71 {
 // PaymentTypeInformation281: Specifies the high level purpose of the instruction based on a set of pre-defined categories.
 // Usage: This is used by the initiating party to provide information concerning the processing of the payment. It is likely to trigger special processing by any of the agents involved in the payment chain.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct PaymentTypeInformation281 {
     #[serde(rename = "InstrPrty", skip_serializing_if = "Option::is_none")]
     pub instr_prty: Option<Priority2Code>,
@@ -3009,6 +3076,7 @@ impl Validate for PaymentTypeInformation281 {
 
 // PersonIdentification131: Unique identification of a person, as assigned by an institution, using an identification scheme.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct PersonIdentification131 {
     #[serde(rename = "DtAndPlcOfBirth", skip_serializing_if = "Option::is_none")]
     pub dt_and_plc_of_birth: Option<DateAndPlaceOfBirth11>,
@@ -3039,6 +3107,7 @@ impl Validate for PersonIdentification131 {
 
 // PersonIdentification132: Unique identification of a person, as assigned by an institution, using an identification scheme.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct PersonIdentification132 {
     #[serde(rename = "DtAndPlcOfBirth", skip_serializing_if = "Option::is_none")]
     pub dt_and_plc_of_birth: Option<DateAndPlaceOfBirth11>,
@@ -3069,6 +3138,7 @@ impl Validate for PersonIdentification132 {
 
 // PersonIdentification133: Unique identification of a person, as assigned by an institution, using an identification scheme.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct PersonIdentification133 {
     #[serde(rename = "DtAndPlcOfBirth", skip_serializing_if = "Option::is_none")]
     pub dt_and_plc_of_birth: Option<DateAndPlaceOfBirth11>,
@@ -3099,6 +3169,7 @@ impl Validate for PersonIdentification133 {
 
 // PersonIdentificationSchemeName1Choice1: Name of the identification scheme, in a free text form.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct PersonIdentificationSchemeName1Choice1 {
     #[serde(rename = "Cd", skip_serializing_if = "Option::is_none")]
     pub cd: Option<String>,
@@ -3145,6 +3216,7 @@ impl Validate for PersonIdentificationSchemeName1Choice1 {
 
 // PersonIdentificationSchemeName1Choice2: Name of the identification scheme, in a coded form as published in an external list.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct PersonIdentificationSchemeName1Choice2 {
     #[serde(rename = "Cd", skip_serializing_if = "Option::is_none")]
     pub cd: Option<String>,
@@ -3168,6 +3240,7 @@ impl Validate for PersonIdentificationSchemeName1Choice2 {
 
 // PersonIdentificationSchemeName1Choice3: Name of the identification scheme, in a free text form.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct PersonIdentificationSchemeName1Choice3 {
     #[serde(rename = "Cd", skip_serializing_if = "Option::is_none")]
     pub cd: Option<String>,
@@ -3214,6 +3287,7 @@ impl Validate for PersonIdentificationSchemeName1Choice3 {
 
 // PostalAddress241: Information that locates and identifies a specific address, as defined by postal services, presented in free format text.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct PostalAddress241 {
     #[serde(rename = "Dept", skip_serializing_if = "Option::is_none")]
     pub dept: Option<String>,
@@ -3562,6 +3636,7 @@ impl Validate for PostalAddress241 {
 
 // PostalAddress242: Information that locates and identifies a specific address, as defined by postal services, presented in free format text.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct PostalAddress242 {
     #[serde(rename = "Dept", skip_serializing_if = "Option::is_none")]
     pub dept: Option<String>,
@@ -3904,6 +3979,7 @@ impl Validate for PostalAddress242 {
 
 // Priority2Code: Priority level is normal.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub enum Priority2Code {
     #[default]
     #[serde(rename = "HIGH")]
@@ -3920,6 +3996,7 @@ impl Validate for Priority2Code {
 
 // Priority3Code: Priority level is normal.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub enum Priority3Code {
     #[default]
     #[serde(rename = "URGT")]
@@ -3938,6 +4015,7 @@ impl Validate for Priority3Code {
 
 // ProxyAccountIdentification11: Identification used to indicate the account identification under another specified name.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct ProxyAccountIdentification11 {
     #[serde(rename = "Tp", skip_serializing_if = "Option::is_none")]
     pub tp: Option<ProxyAccountType1Choice1>,
@@ -3974,6 +4052,7 @@ impl Validate for ProxyAccountIdentification11 {
 
 // ProxyAccountType1Choice1: Name of the identification scheme, in a free text form.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct ProxyAccountType1Choice1 {
     #[serde(rename = "Cd", skip_serializing_if = "Option::is_none")]
     pub cd: Option<String>,
@@ -4020,6 +4099,7 @@ impl Validate for ProxyAccountType1Choice1 {
 
 // Purpose2Choice1: Purpose, in a proprietary form.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct Purpose2Choice1 {
     #[serde(rename = "Cd", skip_serializing_if = "Option::is_none")]
     pub cd: Option<String>,
@@ -4066,6 +4146,7 @@ impl Validate for Purpose2Choice1 {
 
 // ReferredDocumentInformation71: Set of elements used to provide the content of the referred document line.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct ReferredDocumentInformation71 {
     #[serde(rename = "Tp", skip_serializing_if = "Option::is_none")]
     pub tp: Option<ReferredDocumentType41>,
@@ -4117,6 +4198,7 @@ impl Validate for ReferredDocumentInformation71 {
 
 // ReferredDocumentType3Choice1: Proprietary identification of the type of the remittance document.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct ReferredDocumentType3Choice1 {
     #[serde(rename = "Cd", skip_serializing_if = "Option::is_none")]
     pub cd: Option<DocumentType6Code>,
@@ -4157,6 +4239,7 @@ impl Validate for ReferredDocumentType3Choice1 {
 
 // ReferredDocumentType41: Identification of the issuer of the reference document type.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct ReferredDocumentType41 {
     #[serde(rename = "CdOrPrtry")]
     pub cd_or_prtry: ReferredDocumentType3Choice1,
@@ -4194,6 +4277,7 @@ impl Validate for ReferredDocumentType41 {
 
 // RegulatoryAuthority21: Country of the entity that requires the regulatory reporting information.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct RegulatoryAuthority21 {
     #[serde(rename = "Nm", skip_serializing_if = "Option::is_none")]
     pub nm: Option<String>,
@@ -4239,6 +4323,7 @@ impl Validate for RegulatoryAuthority21 {
 
 // RegulatoryReporting31: Set of elements used to provide details on the regulatory reporting information.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct RegulatoryReporting31 {
     #[serde(rename = "DbtCdtRptgInd", skip_serializing_if = "Option::is_none")]
     pub dbt_cdt_rptg_ind: Option<RegulatoryReportingType1Code>,
@@ -4276,6 +4361,7 @@ impl Validate for RegulatoryReporting31 {
 
 // RegulatoryReportingType1Code: Regulatory information applies to both credit and debit sides.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub enum RegulatoryReportingType1Code {
     #[default]
     #[serde(rename = "CRED")]
@@ -4294,6 +4380,7 @@ impl Validate for RegulatoryReportingType1Code {
 
 // RemittanceAmount21: Amount of money remitted for the referred document.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct RemittanceAmount21 {
     #[serde(rename = "DuePyblAmt", skip_serializing_if = "Option::is_none")]
     pub due_pybl_amt: Option<ActiveOrHistoricCurrencyAndAmount>,
@@ -4360,6 +4447,7 @@ impl Validate for RemittanceAmount21 {
 
 // RemittanceAmount31: Amount of money remitted.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct RemittanceAmount31 {
     #[serde(rename = "DuePyblAmt", skip_serializing_if = "Option::is_none")]
     pub due_pybl_amt: Option<ActiveOrHistoricCurrencyAndAmount>,
@@ -4426,6 +4514,7 @@ impl Validate for RemittanceAmount31 {
 
 // RemittanceInformation161: Information supplied to enable the matching/reconciliation of an entry with the items that the payment is intended to settle, such as commercial invoices in an accounts' receivable system, in a structured form.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct RemittanceInformation161 {
     #[serde(rename = "Ustrd", skip_serializing_if = "Option::is_none")]
     pub ustrd: Option<String>,
@@ -4468,6 +4557,7 @@ impl Validate for RemittanceInformation161 {
 
 // RemittanceLocation71: Set of elements used to provide information on the location and/or delivery of the remittance information.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct RemittanceLocation71 {
     #[serde(rename = "RmtId", skip_serializing_if = "Option::is_none")]
     pub rmt_id: Option<String>,
@@ -4510,6 +4600,7 @@ impl Validate for RemittanceLocation71 {
 
 // RemittanceLocationData11: Postal address to which an agent is to send the remittance information.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct RemittanceLocationData11 {
     #[serde(rename = "Mtd")]
     pub mtd: RemittanceLocationMethod2Code,
@@ -4554,6 +4645,7 @@ impl Validate for RemittanceLocationData11 {
 
 // RemittanceLocationMethod2Code: Remittance advice information must be sent through by phone as a short message service (SMS).
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub enum RemittanceLocationMethod2Code {
     #[default]
     #[serde(rename = "FAXI")]
@@ -4578,6 +4670,7 @@ impl Validate for RemittanceLocationMethod2Code {
 
 // ServiceLevel8Choice1: Specifies a pre-agreed service or level of service between the parties, as a proprietary code.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct ServiceLevel8Choice1 {
     #[serde(rename = "Cd", skip_serializing_if = "Option::is_none")]
     pub cd: Option<String>,
@@ -4624,6 +4717,7 @@ impl Validate for ServiceLevel8Choice1 {
 
 // SettlementDateTimeIndication11: Date and time at which a payment has been credited at the transaction administrator. In the case of TARGET, the date and time at which the payment has been credited at the receiving central bank, expressed in Central European Time (CET).
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct SettlementDateTimeIndication11 {
     #[serde(rename = "DbtDtTm", skip_serializing_if = "Option::is_none")]
     pub dbt_dt_tm: Option<String>,
@@ -4658,6 +4752,7 @@ impl Validate for SettlementDateTimeIndication11 {
 
 // SettlementInstruction71: Unambiguous identification of the account of the third reimbursement agent account at its servicing agent in the payment chain.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct SettlementInstruction71 {
     #[serde(rename = "SttlmMtd")]
     pub sttlm_mtd: SettlementMethod1Code1,
@@ -4754,6 +4849,7 @@ impl Validate for SettlementInstruction71 {
 
 // SettlementMethod1Code__1: Settlement is done through a cover payment.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub enum SettlementMethod1Code1 {
     #[default]
     #[serde(rename = "INDA")]
@@ -4772,6 +4868,7 @@ impl Validate for SettlementMethod1Code1 {
 
 // SettlementTimeRequest21: Time by when the payment must be settled to avoid rejection.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct SettlementTimeRequest21 {
     #[serde(rename = "CLSTm", skip_serializing_if = "Option::is_none")]
     pub cls_tm: Option<String>,
@@ -4830,6 +4927,7 @@ impl Validate for SettlementTimeRequest21 {
 
 // StructuredRegulatoryReporting31: Additional details that cater for specific domestic regulatory requirements.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct StructuredRegulatoryReporting31 {
     #[serde(rename = "Tp", skip_serializing_if = "Option::is_none")]
     pub tp: Option<String>,
@@ -4934,6 +5032,7 @@ impl Validate for StructuredRegulatoryReporting31 {
 
 // StructuredRemittanceInformation161: Additional information, in free text form, to complement the structured remittance information.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct StructuredRemittanceInformation161 {
     #[serde(rename = "RfrdDocInf", skip_serializing_if = "Option::is_none")]
     pub rfrd_doc_inf: Option<Vec<ReferredDocumentInformation71>>,
@@ -5022,6 +5121,7 @@ impl Validate for StructuredRemittanceInformation161 {
 
 // TaxAmount2: Set of elements used to provide details on the tax period and amount.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct TaxAmount2 {
     #[serde(rename = "Rate", skip_serializing_if = "Option::is_none")]
     pub rate: Option<f64>,
@@ -5061,6 +5161,7 @@ impl Validate for TaxAmount2 {
 
 // TaxAmountAndType11: Amount of money, which has been typed.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct TaxAmountAndType11 {
     #[serde(rename = "Tp", skip_serializing_if = "Option::is_none")]
     pub tp: Option<TaxAmountType1Choice1>,
@@ -5082,6 +5183,7 @@ impl Validate for TaxAmountAndType11 {
 
 // TaxAmountType1Choice1: Specifies the amount type, in a free-text form.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct TaxAmountType1Choice1 {
     #[serde(rename = "Cd", skip_serializing_if = "Option::is_none")]
     pub cd: Option<String>,
@@ -5128,6 +5230,7 @@ impl Validate for TaxAmountType1Choice1 {
 
 // TaxAuthorisation11: Name of the debtor or the debtor's authorised representative.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct TaxAuthorisation11 {
     #[serde(rename = "Titl", skip_serializing_if = "Option::is_none")]
     pub titl: Option<String>,
@@ -5184,6 +5287,7 @@ impl Validate for TaxAuthorisation11 {
 
 // TaxInformation71: Record of tax details.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct TaxInformation71 {
     #[serde(rename = "Cdtr", skip_serializing_if = "Option::is_none")]
     pub cdtr: Option<TaxParty11>,
@@ -5315,6 +5419,7 @@ impl Validate for TaxInformation71 {
 
 // TaxParty11: Type of tax payer.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct TaxParty11 {
     #[serde(rename = "TaxId", skip_serializing_if = "Option::is_none")]
     pub tax_id: Option<String>,
@@ -5394,6 +5499,7 @@ impl Validate for TaxParty11 {
 
 // TaxParty21: Details of the authorised tax paying party.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct TaxParty21 {
     #[serde(rename = "TaxId", skip_serializing_if = "Option::is_none")]
     pub tax_id: Option<String>,
@@ -5480,6 +5586,7 @@ impl Validate for TaxParty21 {
 
 // TaxPeriod2: Range of time between a start date and an end date for which the tax report is provided.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct TaxPeriod2 {
     #[serde(rename = "Yr", skip_serializing_if = "Option::is_none")]
     pub yr: Option<String>,
@@ -5506,6 +5613,7 @@ impl Validate for TaxPeriod2 {
 
 // TaxRecord21: Further details of the tax record.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct TaxRecord21 {
     #[serde(rename = "Tp", skip_serializing_if = "Option::is_none")]
     pub tp: Option<String>,
@@ -5691,6 +5799,7 @@ impl Validate for TaxRecord21 {
 
 // TaxRecordDetails2: Underlying tax amount related to the specified period.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct TaxRecordDetails2 {
     #[serde(rename = "Prd", skip_serializing_if = "Option::is_none")]
     pub prd: Option<TaxPeriod2>,
@@ -5712,6 +5821,7 @@ impl Validate for TaxRecordDetails2 {
 
 // TaxRecordPeriod1Code: Tax is related to the second half of the period.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub enum TaxRecordPeriod1Code {
     #[default]
     #[serde(rename = "MM01")]

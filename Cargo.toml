@@ -32,6 +32,17 @@ dataflow-rs = "2.0"
 async-trait = "0.1"
 tracing = "0.1"
 
+# JSON Schema generation (optional)
+schemars = { version = "0.8", optional = true }
+
+[features]
+default = []
+jsonschema = ["dep:schemars"]
+
 [dev-dependencies]
 tempfile = "3.23"
 tokio = { version = "1.48", features = ["rt", "macros", "test-util"] }
+
+[[example]]
+name = "generate_manifest"
+required-features = ["jsonschema"]

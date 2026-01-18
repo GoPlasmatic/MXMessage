@@ -22,6 +22,7 @@ use serde::{Deserialize, Serialize};
 
 // BranchAndFinancialInstitutionIdentification81: Unique and unambiguous identification of a financial institution, as assigned under an internationally recognised or proprietary identification scheme.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct BranchAndFinancialInstitutionIdentification81 {
     #[serde(rename = "FinInstnId")]
     pub fin_instn_id: FinancialInstitutionIdentification231,
@@ -36,6 +37,7 @@ impl Validate for BranchAndFinancialInstitutionIdentification81 {
 
 // CorrespondenceNotification11: Provides information about the notification in narrative form.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct CorrespondenceNotification11 {
     #[serde(rename = "SndrNtfctnId")]
     pub sndr_ntfctn_id: String,
@@ -92,6 +94,7 @@ impl Validate for CorrespondenceNotification11 {
 
 // FinancialInstitutionIdentification231: Code allocated to a financial institution by the ISO 9362 Registration Authority as described in ISO 9362 "Banking - Banking telecommunication messages - Business identifier code (BIC)".
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct FinancialInstitutionIdentification231 {
     #[serde(rename = "BICFI")]
     pub bicfi: String,
@@ -112,6 +115,7 @@ impl Validate for FinancialInstitutionIdentification231 {
 
 // GroupHeader1291: Party that receives the notification.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct GroupHeader1291 {
     #[serde(rename = "MsgId")]
     pub msg_id: String,
@@ -159,6 +163,7 @@ impl Validate for GroupHeader1291 {
 
 // NotificationOfCorrespondenceV01: Set of elements used to provide further details on the notification.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct NotificationOfCorrespondenceV01 {
     #[serde(rename = "GrpHdr")]
     pub grp_hdr: GroupHeader1291,
@@ -177,6 +182,7 @@ impl Validate for NotificationOfCorrespondenceV01 {
 
 // NotificationType1Choice1: Notification type, as published in an external notification type code set.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct NotificationType1Choice1 {
     #[serde(rename = "Cd", skip_serializing_if = "Option::is_none")]
     pub cd: Option<String>,
@@ -200,6 +206,7 @@ impl Validate for NotificationType1Choice1 {
 
 // Party50Choice1: Identification of a financial institution.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct Party50Choice1 {
     #[serde(rename = "Agt", skip_serializing_if = "Option::is_none")]
     pub agt: Option<BranchAndFinancialInstitutionIdentification81>,

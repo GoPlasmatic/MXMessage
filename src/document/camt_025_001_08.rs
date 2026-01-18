@@ -22,6 +22,7 @@ use serde::{Deserialize, Serialize};
 
 // MessageHeader91: Date and time at which the message was created.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct MessageHeader91 {
     #[serde(rename = "MsgId")]
     pub msg_id: String,
@@ -61,6 +62,7 @@ impl Validate for MessageHeader91 {
 
 // OriginalMessageAndIssuer11: Specifies the original message name identifier to which the message refers.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct OriginalMessageAndIssuer11 {
     #[serde(rename = "MsgId")]
     pub msg_id: String,
@@ -109,6 +111,7 @@ impl Validate for OriginalMessageAndIssuer11 {
 
 // Receipt61: Gives the status of the request.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct Receipt61 {
     #[serde(rename = "OrgnlMsgId")]
     pub orgnl_msg_id: OriginalMessageAndIssuer11,
@@ -127,6 +130,7 @@ impl Validate for Receipt61 {
 
 // ReceiptV08: Details of the receipt.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct ReceiptV08 {
     #[serde(rename = "MsgHdr")]
     pub msg_hdr: MessageHeader91,
@@ -146,6 +150,7 @@ impl Validate for ReceiptV08 {
 
 // RequestHandling31: Provides detailed information on the status reason.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct RequestHandling31 {
     #[serde(rename = "Sts")]
     pub sts: RequestStatus1Choice1,
@@ -167,6 +172,7 @@ impl Validate for RequestHandling31 {
 
 // RequestStatus1Choice1: Request status, as published in an external request status code set.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct RequestStatus1Choice1 {
     #[serde(rename = "Cd", skip_serializing_if = "Option::is_none")]
     pub cd: Option<String>,
@@ -190,6 +196,7 @@ impl Validate for RequestStatus1Choice1 {
 
 // StatusReason6Choice1: Reason for the status, as published in an external reason code list.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct StatusReason6Choice1 {
     #[serde(rename = "Cd", skip_serializing_if = "Option::is_none")]
     pub cd: Option<String>,
@@ -215,6 +222,7 @@ impl Validate for StatusReason6Choice1 {
 //
 // Usage: Additional information can be used for several purposes such as the reporting of repaired information.
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 pub struct StatusReasonInformation141 {
     #[serde(rename = "Rsn", skip_serializing_if = "Option::is_none")]
     pub rsn: Option<StatusReason6Choice1>,
