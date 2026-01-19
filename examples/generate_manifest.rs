@@ -155,6 +155,8 @@ define_envelope!(Camt105McEnvelope, Camt105McDocument);
 define_document_wrapper!(Camt106McDocument, document::camt_106_001_02_mc::ChargesPaymentRequestV02, "ChrgsPmtReq");
 define_envelope!(Camt106McEnvelope, Camt106McDocument);
 
+use std::collections::HashMap;
+
 #[derive(Serialize)]
 struct Manifest {
     name: String,
@@ -164,6 +166,7 @@ struct Manifest {
     license: String,
     authors: Vec<String>,
     supported_messages: Vec<MessageInfo>,
+    plugin_functions: HashMap<String, String>,
 }
 
 #[derive(Serialize)]
@@ -278,6 +281,13 @@ fn main() {
     generate_schema!(output_dir, version, Camt105McEnvelope, "camt.105.001.02.mc", messages);
     generate_schema!(output_dir, version, Camt106McEnvelope, "camt.106.001.02.mc", messages);
 
+    // Create plugin functions map (generic operation -> specific function name)
+    let mut plugin_functions = HashMap::new();
+    plugin_functions.insert("parse".to_string(), "parse_mx".to_string());
+    plugin_functions.insert("publish".to_string(), "publish_mx".to_string());
+    plugin_functions.insert("validate".to_string(), "validate_mx".to_string());
+    plugin_functions.insert("generate".to_string(), "generate_mx".to_string());
+
     // Create manifest
     let manifest = Manifest {
         name: "mx-message".to_string(),
@@ -289,6 +299,7 @@ fn main() {
         license: "Apache-2.0".to_string(),
         authors: vec!["Plasmatic Engineering <shankar@goplasmatic.io>".to_string()],
         supported_messages: messages,
+        plugin_functions,
     };
 
     let manifest_json =
